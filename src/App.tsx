@@ -1,110 +1,97 @@
-import { useEffect } from 'react'
-import { Route, Switch, Link } from 'react-router-dom'
-import tempApi from 'services/tempApi'
+import * as React from 'react'
+import _ from 'lodash'
+import { Route, Switch, Redirect } from 'react-router-dom'
 import { useAppDispatch } from 'store/hooks'
 import { toggleMode } from 'store/slices/userDefault'
 import { styled } from '@mui/material/styles'
+import Grid from '@mui/material/Grid'
+import AppBar from '@mui/material/AppBar'
+import Tabs, { TabsProps } from '@mui/material/Tabs'
+import Tab, { TabProps } from '@mui/material/Tab'
+import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
-import MuiLink from '@mui/material/Link'
-import logo from './logo.svg'
-import './App.scss'
+import Editor from 'components/Editor'
 
-const PREFIX = 'App'
-const classes = {
-    root: `${PREFIX}-root`,
-}
-const Root = styled('div')(({ theme }) => ({
-    [`&.${classes.root}`]: {
-        textAlign: 'center',
-        backgroundColor: theme.palette.background.default,
-    },
-}))
+const Grow = styled('div')({
+    flexGrow: 1,
+})
+
+const StyledTabs = styled((props: TabsProps) => <Tabs {...props} />)(
+    ({ theme }) => ({
+        '& .MuiTabs-indicator': {
+            backgroundColor: theme.palette.common.white,
+        },
+    })
+)
+
+const StyledTab = styled((props: TabProps) => <Tab {...props} />)(
+    ({ theme }) => ({
+        '&.Mui-selected': {
+            color: theme.palette.common.white,
+        },
+    })
+)
 
 export default function App() {
+    const paths = {
+        editor: { value: 'editor', path: '/editor', label: '編輯' },
+        analysis: { value: 'analysis', path: '/analysis', label: '報告' },
+    }
+    const [currentPath, setPath] = React.useState(paths.editor.value)
+
     const dispatch = useAppDispatch()
     const handleToggle = () => {
         dispatch(toggleMode())
     }
 
-    useEffect(() => {
-        tempApi
-            .greet()
-            .then((str) => console.log(str))
-            .catch((error) => console.log(error))
-    }, [])
+    const handleChangePath = (
+        event: React.SyntheticEvent,
+        newValue: string
+    ) => {
+        setPath(newValue)
+    }
+
+    React.useEffect(() => {}, [])
 
     return (
-        <Root className={classes.root}>
+        <Grid container sx={{ m: 0 }}>
+            <AppBar position="static">
+                <Toolbar>
+                    <Typography variant="h6" component="div">
+                        超市調
+                    </Typography>
+                    <Grow />
+                    <StyledTabs
+                        value={currentPath}
+                        onChange={handleChangePath}
+                        centered
+                    >
+                        {_.map(paths, ({ label, value }) => (
+                            <StyledTab
+                                key={value}
+                                label={label}
+                                value={value}
+                            />
+                        ))}
+                    </StyledTabs>
+                    <Grow />
+                    <Button color="inherit">Login</Button>
+                </Toolbar>
+            </AppBar>
             <>
                 <Switch>
+                    <Route path={paths.editor.path}>
+                        <Editor />
+                    </Route>
+
                     <Route
                         exact
                         path="/"
-                        render={() => (
-                            <header className="App-header">
-                                <img
-                                    src={logo}
-                                    className="App-logo"
-                                    alt="logo"
-                                />
-                                <Typography variant="h5" gutterBottom>
-                                    Edit <code>src/App.tsx</code> and save to
-                                    reload.
-                                </Typography>
-
-                                <div style={{ marginBottom: 24 }}>
-                                    <Link
-                                        style={{ color: '#61dafb' }}
-                                        to="/info"
-                                    >
-                                        Go to info
-                                    </Link>
-                                </div>
-
-                                <Button
-                                    variant="contained"
-                                    onClick={handleToggle}
-                                >
-                                    Toggle Theme
-                                </Button>
-                            </header>
-                        )}
-                    />
-                    <Route
-                        path="/info"
-                        render={() => (
-                            <header className="App-header">
-                                <img
-                                    src={logo}
-                                    className="App-logo"
-                                    alt="logo"
-                                />
-
-                                <Typography variant="h5" gutterBottom>
-                                    Edit <code>src/App.tsx</code> and save to
-                                    reload.
-                                </Typography>
-
-                                <div style={{ marginBottom: 24 }}>
-                                    <Link style={{ color: '#61dafb' }} to="/">
-                                        Go back
-                                    </Link>
-                                </div>
-
-                                <MuiLink
-                                    className="App-link"
-                                    href="https://reactjs.org"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    Learn React!!
-                                </MuiLink>
-                            </header>
-                        )}
+                        render={() => <Redirect to={paths.editor.path} />}
                     />
                 </Switch>
             </>
-        </Root>
+        </Grid>
     )
 }
