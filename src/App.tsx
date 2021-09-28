@@ -4,7 +4,6 @@ import { Route, Switch, Redirect } from 'react-router-dom'
 import { useAppDispatch } from 'store/hooks'
 import { toggleMode } from 'store/slices/userDefault'
 import { styled } from '@mui/material/styles'
-import Grid from '@mui/material/Grid'
 import AppBar from '@mui/material/AppBar'
 import Tabs, { TabsProps } from '@mui/material/Tabs'
 import Tab, { TabProps } from '@mui/material/Tab'
@@ -17,21 +16,17 @@ const Grow = styled('div')({
     flexGrow: 1,
 })
 
-const StyledTabs = styled((props: TabsProps) => <Tabs {...props} />)(
-    ({ theme }) => ({
-        '& .MuiTabs-indicator': {
-            backgroundColor: theme.palette.common.white,
-        },
-    })
-)
+const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
+    '& .MuiTabs-indicator': {
+        backgroundColor: theme.palette.common.white,
+    },
+}))
 
-const StyledTab = styled((props: TabProps) => <Tab {...props} />)(
-    ({ theme }) => ({
-        '&.Mui-selected': {
-            color: theme.palette.common.white,
-        },
-    })
-)
+const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({
+    '&.Mui-selected': {
+        color: theme.palette.common.white,
+    },
+}))
 
 export default function App() {
     const paths = {
@@ -55,7 +50,7 @@ export default function App() {
     React.useEffect(() => {}, [])
 
     return (
-        <Grid container sx={{ m: 0 }}>
+        <>
             <AppBar position="static">
                 <Toolbar>
                     <Typography variant="h6" component="div">
@@ -92,6 +87,6 @@ export default function App() {
                     />
                 </Switch>
             </>
-        </Grid>
+        </>
     )
 }
