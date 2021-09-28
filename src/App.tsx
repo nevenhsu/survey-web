@@ -1,8 +1,6 @@
 import * as React from 'react'
 import _ from 'lodash'
-import { Route, Switch, Redirect } from 'react-router-dom'
-import { useAppDispatch } from 'store/hooks'
-import { toggleMode } from 'store/slices/userDefault'
+import { Route, Switch, Redirect, useHistory } from 'react-router-dom'
 import { styled } from '@mui/material/styles'
 import AppBar from '@mui/material/AppBar'
 import Tabs, { TabsProps } from '@mui/material/Tabs'
@@ -33,18 +31,17 @@ export default function App() {
         editor: { value: 'editor', path: '/editor', label: '編輯' },
         analysis: { value: 'analysis', path: '/analysis', label: '報告' },
     }
-    const [currentPath, setPath] = React.useState(paths.editor.value)
 
-    const dispatch = useAppDispatch()
-    const handleToggle = () => {
-        dispatch(toggleMode())
-    }
+    const history = useHistory()
+
+    const [currentPath, setPath] = React.useState(paths.editor.value)
 
     const handleChangePath = (
         event: React.SyntheticEvent,
         newValue: string
     ) => {
         setPath(newValue)
+        history.push(newValue)
     }
 
     React.useEffect(() => {}, [])
