@@ -74,8 +74,6 @@ export default function Editor() {
             <Tabs
                 value={currentStep}
                 onChange={handleChangeStep}
-                textColor="secondary"
-                indicatorColor="secondary"
                 sx={{
                     borderBottom: '1px solid',
                     borderBottomColor: 'common.black',

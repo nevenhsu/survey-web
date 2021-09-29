@@ -1,6 +1,10 @@
 import * as React from 'react'
 import _ from 'lodash'
 import Grid from '@mui/material/Grid'
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
+import AppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
 import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
 import Box from '@mui/material/Box'
@@ -53,6 +57,8 @@ export default function PickForm() {
         {}
     ) as OptionsObj
     const [option3, setOption3] = React.useState('')
+
+    const [currentTab, setCurrentTab] = React.useState(0)
 
     const handleChangeMode = (event: React.ChangeEvent<HTMLInputElement>) => {
         updateQuery({ mode: event.target.value })
@@ -159,6 +165,55 @@ export default function PickForm() {
                     </>
                 )}
             </Grid>
+
+            <Box sx={{ p: 3, backgroundColor: 'grey.300' }}>
+                <Typography variant="subtitle1" gutterBottom>
+                    測驗範本推薦
+                </Typography>
+
+                <Grid
+                    container
+                    alignItems="center"
+                    justifyContent="space-between"
+                >
+                    <Grid item>
+                        <Tabs
+                            value={currentTab}
+                            onChange={(_, newValue) => setCurrentTab(newValue)}
+                            sx={{
+                                '& .MuiTabs-indicator': {
+                                    top: 0,
+                                },
+                                '& .MuiTab-root': {
+                                    backgroundColor: 'grey.100',
+                                },
+                                '& .Mui-selected': {
+                                    backgroundColor: 'common.white',
+                                },
+                            }}
+                        >
+                            <Tab label="預覽測驗內容" />
+                            <Tab label="預覽分析結果" />
+                            <Tab label="測驗設計說明" />
+                        </Tabs>
+                    </Grid>
+                </Grid>
+
+                <Box
+                    sx={{ backgroundColor: 'common.white', height: 480 }}
+                ></Box>
+            </Box>
+
+            <AppBar
+                position="fixed"
+                color="default"
+                sx={{ top: 'auto', bottom: 0 }}
+            >
+                <Toolbar>
+                    <Box sx={{ flexGrow: 1 }} />
+                    <Button variant="outlined">建立測驗</Button>
+                </Toolbar>
+            </AppBar>
         </>
     )
 }
