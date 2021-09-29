@@ -11,7 +11,7 @@ const initialState = {
     mode: 'light',
 } as UserDefaultState
 
-export const userDefault = createSlice({
+export const userDefaultSlice = createSlice({
     name: 'userDefault',
     initialState,
     reducers: {
@@ -22,5 +22,5 @@ export const userDefault = createSlice({
     },
 })
 
-export const { toggleMode } = userDefault.actions
+export const { toggleMode } = userDefaultSlice.actions
 export const selectMode = (state: RootState) => state.userDefault.mode

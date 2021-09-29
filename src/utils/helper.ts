@@ -8,3 +8,18 @@ export function setClasses<T extends string, U = { [K in T]: string }>(
     const values = names.map((el) => `${prefix}-${el}`)
     return _.zipObject(arr, values) as unknown as U
 }
+
+export function parseJson(val: string | object, fallback = {}) {
+    try {
+        if (!val) {
+            return fallback
+        }
+        if (_.isObject(val)) {
+            return val
+        }
+
+        return JSON.parse(val)
+    } catch {
+        return fallback
+    }
+}

@@ -5,15 +5,26 @@ import Grid from '@mui/material/Grid'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Box, { BoxProps } from '@mui/material/Box'
-import PickForm from 'components/PickForm'
+import PickForm from 'components/Editor/PickForm'
+import QuizForm from 'components/Editor/QuizForm'
+import ResultForm from 'components/Editor/ResultForm'
+import FinalForm from 'components/Editor/FinalForm'
+import LaunchForm from 'components/Editor/LaunchForm'
 import { setClasses } from 'utils/helper'
 
+enum EditorStep {
+    pick = 'pick',
+    quiz = 'quiz',
+    result = 'result',
+    final = 'final',
+    launch = 'launch',
+}
+
 type StepsType = {
-    [key: string]: {
-        value: string
+    [key in keyof typeof EditorStep]: {
+        value: key
         label: string
         num: string
-        info: string
     }
 }
 
@@ -28,45 +39,57 @@ const Root = styled(Box)<BoxProps>(({ theme }) => ({
 
 export default function Editor() {
     const steps: StepsType = {
-        pick: {
-            value: 'pick',
+        [EditorStep.pick]: {
+            value: EditorStep.pick,
             label: '選擇測驗類型',
             num: '01',
-            info: '請選擇您的測驗需求，讓我們為您推薦測驗範本',
         },
-        quiz: {
-            value: 'quiz',
+        [EditorStep.quiz]: {
+            value: EditorStep.quiz,
             label: '編輯測驗內容',
             num: '02',
-            info: '請選擇您的測驗需求，讓我們為您推薦測驗範本',
         },
-        result: {
-            value: 'result',
+        [EditorStep.result]: {
+            value: EditorStep.result,
             label: '編輯個人化測驗結果',
             num: '03',
-            info: '請選擇您的測驗需求，讓我們為您推薦測驗範本',
         },
-        final: {
-            value: 'final',
+        [EditorStep.final]: {
+            value: EditorStep.final,
             label: '編輯測驗結果',
             num: '04',
-            info: '請選擇您的測驗需求，讓我們為您推薦測驗範本',
         },
-        launch: {
-            value: 'launch',
+        [EditorStep.launch]: {
+            value: EditorStep.launch,
             label: '發布',
             num: '05',
-            info: '請選擇您的測驗需求，讓我們為您推薦測驗範本',
         },
     }
 
-    const [currentStep, setCurrentStep] = React.useState(steps.pick.value)
+    const [currentStep, setCurrentStep] = React.useState<EditorStep>(
+        steps.pick.value as EditorStep
+    )
 
     const handleChangeStep = (
         event: React.SyntheticEvent,
-        newValue: string
+        newValue: EditorStep
     ) => {
         setCurrentStep(newValue)
+    }
+
+    const renderForm = (step: EditorStep) => {
+        switch (step) {
+            case EditorStep.pick:
+                return <PickForm />
+            case EditorStep.quiz:
+                return <QuizForm />
+            case EditorStep.result:
+                return <ResultForm />
+            case EditorStep.final:
+                return <FinalForm />
+            case EditorStep.launch:
+                return <LaunchForm />
+        }
     }
 
     return (
@@ -84,7 +107,7 @@ export default function Editor() {
                 ))}
             </Tabs>
 
-            <PickForm />
+            {renderForm(currentStep)}
         </Root>
     )
 }

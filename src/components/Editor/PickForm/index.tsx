@@ -70,7 +70,7 @@ export default function PickForm() {
                 container
                 alignItems="center"
                 justifyContent="space-between"
-                sx={{ p: 3 }}
+                sx={{ p: 3, borderBottom: '1px solid' }}
             >
                 <Grid item>
                     <Typography variant="h6">選擇測驗類型</Typography>
@@ -95,7 +95,7 @@ export default function PickForm() {
                     <Grid item xs={4}>
                         <TextField
                             select
-                            value={query.mode}
+                            value={query.mode ?? ''}
                             onChange={handleChangeMode}
                             fullWidth
                         >
