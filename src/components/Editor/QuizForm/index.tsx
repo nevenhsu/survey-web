@@ -4,8 +4,11 @@ import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
+import Forms from 'utils/forms'
 
 export default function QuizForm() {
+    const forms = Forms.getInstance()
+
     return (
         <>
             <Grid

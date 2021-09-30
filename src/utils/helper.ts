@@ -9,7 +9,10 @@ export function setClasses<T extends string, U = { [K in T]: string }>(
     return _.zipObject(arr, values) as unknown as U
 }
 
-export function parseJson(val: string | object, fallback = {}) {
+export function parseJson<T extends object = {}>(
+    val: string | T,
+    fallback: T
+): T {
     try {
         if (!val) {
             return fallback
