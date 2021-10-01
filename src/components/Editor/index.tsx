@@ -1,5 +1,6 @@
 import * as React from 'react'
 import _ from 'lodash'
+import { EditorStep } from 'types/customTypes'
 import { styled } from '@mui/material/styles'
 import Grid from '@mui/material/Grid'
 import Tabs from '@mui/material/Tabs'
@@ -11,14 +12,7 @@ import ResultForm from 'components/Editor/ResultForm'
 import FinalForm from 'components/Editor/FinalForm'
 import LaunchForm from 'components/Editor/LaunchForm'
 import { setClasses } from 'utils/helper'
-
-enum EditorStep {
-    pick = 'pick',
-    quiz = 'quiz',
-    result = 'result',
-    final = 'final',
-    launch = 'launch',
-}
+import User from 'utils/user'
 
 type StepsType = {
     [key in keyof typeof EditorStep]: {
@@ -74,8 +68,19 @@ export default function Editor() {
         event: React.SyntheticEvent,
         newValue: EditorStep
     ) => {
+        const user = User.getInstance()
+        user.setValue({ currentStep: newValue })
         setCurrentStep(newValue)
     }
+
+    React.useEffect(() => {
+        const user = User.getInstance()
+        const { currentStep } = user.getValue()
+        // TODO: check form value first
+        if (!_.isNil(currentStep)) {
+            setCurrentStep(currentStep)
+        }
+    }, [])
 
     const renderForm = (step: EditorStep) => {
         switch (step) {

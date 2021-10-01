@@ -1,4 +1,9 @@
 import _ from 'lodash'
+import cryptoRandomString from 'crypto-random-string'
+
+export function setId(length = 6) {
+    return cryptoRandomString({ length })
+}
 
 export function setClasses<T extends string, U = { [K in T]: string }>(
     prefix: string,
@@ -25,4 +30,16 @@ export function parseJson<T extends object = {}>(
     } catch {
         return fallback
     }
+}
+
+export function reorder<T, U extends Iterable<T>>(
+    list: U,
+    startIndex: number,
+    endIndex: number
+) {
+    const result = Array.from(list)
+    const [removed] = result.splice(startIndex, 1)
+    result.splice(endIndex, 0, removed)
+
+    return result
 }
