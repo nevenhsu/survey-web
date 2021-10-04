@@ -3,17 +3,22 @@ import _ from 'lodash'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { styled } from '@mui/material/styles'
 import Grid, { GridProps } from '@mui/material/Grid'
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import FormControl from '@mui/material/FormControl'
-import MenuItem from '@mui/material/MenuItem'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Switch from '@mui/material/Switch'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
 import MenuSwapIcon from 'mdi-react/DragHorizontalVariantIcon'
 import AddIcon from 'mdi-react/AddIcon'
+import QuizWrapper from 'components/Quiz/QuizWrapper'
 import { reorder, setId } from 'utils/helper'
 import Forms from 'utils/forms'
-import { QuizMode, Quiz, SelectionQuiz, Quizzes } from 'types/customTypes'
+import { QuizMode, SelectionQuiz, QuizType } from 'types/customTypes'
 
 type QuizProps = GridProps & {
     isDragging: boolean
@@ -27,11 +32,15 @@ const quizModes = {
     },
     [QuizMode.selection]: {
         value: QuizMode.selection,
-        label: '選擇題',
+        label: '複選',
     },
     [QuizMode.slider]: {
         value: QuizMode.slider,
         label: '拉桿',
+    },
+    [QuizMode.fill]: {
+        value: QuizMode.fill,
+        label: '填空',
     },
     [QuizMode.sort]: {
         value: QuizMode.sort,
@@ -55,18 +64,84 @@ const QuizItem = styled(Grid, {
         : theme.palette.common.white,
 }))
 
+const QuizBar = styled(Grid)(({ theme }) => {
+    const color = theme.palette.common.white
+
+    return {
+        color,
+        backgroundColor: theme.palette.grey[800],
+        position: 'relative',
+        height: 48,
+        '& .MuiSelect-select': {
+            color,
+        },
+        '& .MuiSelect-icon': {
+            color,
+        },
+        '& .MuiInput-root:before, & .MuiInput-root:after': {
+            opacity: 0,
+        },
+    }
+})
+
+const QuizTabs = styled(Tabs)(({ theme }) => ({
+    '& .Mui-selected': {
+        backgroundColor: theme.palette.grey[700],
+    },
+    '& .MuiTabs-indicator': {
+        display: 'none',
+    },
+    '& .MuiTab-root': {
+        color: theme.palette.common.white,
+    },
+}))
+
+const QuizSelector = (props: {
+    quiz?: QuizType
+    handleChange: (event: SelectChangeEvent) => void
+}) => {
+    const { quiz, handleChange } = props
+    const { id = '', mode = '' } = quiz ?? {}
+    return (
+        <FormControl
+            variant="standard"
+            sx={{
+                maxWidth: 80,
+            }}
+        >
+            <Select
+                name={id}
+                value={mode}
+                onChange={id ? handleChange : undefined}
+                autoWidth
+            >
+                {_.map(quizModes, (el) => (
+                    <MenuItem key={el.value} value={el.value}>
+                        {el.label}
+                    </MenuItem>
+                ))}
+            </Select>
+        </FormControl>
+    )
+}
+
 export default function QuizForm() {
     const forms = Forms.getInstance()
 
-    const [editing, setEditing] = React.useState('')
+    const [selectedId, setSelectedId] = React.useState('')
+    const [tab, setTab] = React.useState(0)
 
-    const [quizzes, setQuizzes] = React.useState<Array<Quizzes>>([
+    const [quizzes, setQuizzes] = React.useState<Array<QuizType>>([
         {
             id: setId(),
             mode: QuizMode.cover,
             title: '問券標題',
         },
     ])
+
+    const selectedQuiz: QuizType | undefined = React.useMemo(() => {
+        return _.find(quizzes, { id: selectedId })
+    }, [selectedId, quizzes])
 
     const onDragEnd = (result: any) => {
         // dropped outside the list
@@ -79,8 +154,8 @@ export default function QuizForm() {
     }
 
     const updateQuiz = (
-        newValue: Partial<Quizzes>,
-        predicate: (el: Quizzes) => boolean
+        newValue: Partial<QuizType>,
+        predicate: (el: QuizType) => boolean
     ) => {
         setQuizzes((state) =>
             Array.from(state).map((el) =>
@@ -115,8 +190,15 @@ export default function QuizForm() {
         )
     }
 
+    const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        updateQuiz(
+            { required: event.target.checked },
+            (el) => el.id === event.target.name
+        )
+    }
+
     React.useEffect(() => {
-        setEditing(_.get(quizzes, '0.id', ''))
+        setSelectedId(_.get(quizzes, '0.id', ''))
     }, [])
 
     return (
@@ -174,7 +256,7 @@ export default function QuizForm() {
                                                         snapshot.isDragging
                                                     }
                                                     isEditing={
-                                                        el.id === editing
+                                                        el.id === selectedId
                                                     }
                                                     style={
                                                         provided.draggableProps
@@ -183,7 +265,7 @@ export default function QuizForm() {
                                                     alignItems="center"
                                                     alignContent="space-between"
                                                     onClick={() =>
-                                                        setEditing(el.id)
+                                                        setSelectedId(el.id)
                                                     }
                                                 >
                                                     <Grid
@@ -224,40 +306,12 @@ export default function QuizForm() {
                                                             textAlign: 'right',
                                                         }}
                                                     >
-                                                        <FormControl
-                                                            variant="standard"
-                                                            sx={{
-                                                                right: 8,
-                                                                maxWidth: 80,
-                                                            }}
-                                                        >
-                                                            <Select
-                                                                name={el.id}
-                                                                value={el.mode}
-                                                                onChange={
-                                                                    handleModeChange
-                                                                }
-                                                                autoWidth
-                                                            >
-                                                                {_.map(
-                                                                    quizModes,
-                                                                    (el) => (
-                                                                        <MenuItem
-                                                                            key={
-                                                                                el.value
-                                                                            }
-                                                                            value={
-                                                                                el.value
-                                                                            }
-                                                                        >
-                                                                            {
-                                                                                el.label
-                                                                            }
-                                                                        </MenuItem>
-                                                                    )
-                                                                )}
-                                                            </Select>
-                                                        </FormControl>
+                                                        <QuizSelector
+                                                            quiz={el}
+                                                            handleChange={
+                                                                handleModeChange
+                                                            }
+                                                        />
                                                     </Grid>
                                                 </QuizItem>
                                             )}
@@ -286,7 +340,90 @@ export default function QuizForm() {
                             height: '100%',
                             backgroundColor: 'grey.700',
                         }}
-                    ></Box>
+                    >
+                        <QuizBar container alignItems="center" sx={{ px: 2 }}>
+                            <Typography
+                                variant="h6"
+                                color="inherit"
+                                sx={{
+                                    display: 'inline',
+                                    maxWidth: '20vw',
+                                    mr: 4,
+                                }}
+                                noWrap
+                            >
+                                {selectedQuiz?.title ?? ''}
+                            </Typography>
+
+                            <Grid item sx={{ mr: 2 }}>
+                                <QuizSelector
+                                    quiz={selectedQuiz}
+                                    handleChange={handleModeChange}
+                                />
+                            </Grid>
+
+                            <Grid item>
+                                <FormControlLabel
+                                    control={
+                                        <Switch
+                                            name={selectedQuiz?.id}
+                                            color="primary"
+                                            checked={
+                                                selectedQuiz?.required ?? false
+                                            }
+                                            onChange={handleSwitchChange}
+                                            disabled={!selectedQuiz}
+                                        />
+                                    }
+                                    label="必填"
+                                    labelPlacement="start"
+                                />
+                            </Grid>
+
+                            <Box
+                                className="absolute-vertical"
+                                sx={{ right: 0 }}
+                            >
+                                <QuizTabs
+                                    value={tab}
+                                    onChange={(_, v) => setTab(v)}
+                                >
+                                    <Tab label="編輯題目" />
+                                    <Tab label="答項標籤" />
+                                    <Tab label="邏輯" />
+                                </QuizTabs>
+                            </Box>
+                        </QuizBar>
+
+                        <Box
+                            sx={{
+                                position: 'relative',
+                                width: '100%',
+                                height: 'calc(100% - 48px)',
+                            }}
+                        >
+                            <Box
+                                className="absolute-center"
+                                sx={{ width: '80%', height: 0, pt: '60%' }}
+                            >
+                                <Box
+                                    sx={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        width: '100%',
+                                        height: '100%',
+                                        backgroundColor: 'common.white',
+                                    }}
+                                >
+                                    <QuizWrapper
+                                        mode={selectedQuiz?.mode}
+                                        editing
+                                    />
+                                </Box>
+                            </Box>
+                        </Box>
+                    </Box>
                 </Grid>
             </Grid>
         </>

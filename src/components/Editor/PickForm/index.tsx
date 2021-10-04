@@ -10,7 +10,6 @@ import MenuItem from '@mui/material/MenuItem'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
-import { useQuery } from 'hooks'
 import { Mode } from 'types/customTypes'
 
 type OptionType = {
@@ -49,7 +48,7 @@ export default function PickForm() {
         },
     ]
 
-    const [query, updateQuery] = useQuery(['mode'])
+    const [mode, setMode] = React.useState<Mode>(Mode.customer)
     const [option2, setOption2] = React.useState('')
     const options3 = _.get(
         customerOptions,
@@ -61,7 +60,7 @@ export default function PickForm() {
     const [currentTab, setCurrentTab] = React.useState(0)
 
     const handleChangeMode = (event: React.ChangeEvent<HTMLInputElement>) => {
-        updateQuery({ mode: event.target.value })
+        setMode(event.target.value as Mode)
     }
 
     return (
@@ -95,7 +94,7 @@ export default function PickForm() {
                     <Grid item xs={4}>
                         <TextField
                             select
-                            value={query.mode ?? ''}
+                            value={mode}
                             onChange={handleChangeMode}
                             fullWidth
                         >
@@ -110,7 +109,7 @@ export default function PickForm() {
                         </TextField>
                     </Grid>
                 </Grid>
-                {query.mode === Mode.customer && (
+                {mode === Mode.customer && (
                     <>
                         <Grid item xs={12} container alignItems="center">
                             <Grid item xs={4}>

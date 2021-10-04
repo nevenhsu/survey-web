@@ -13,6 +13,7 @@ export enum EditorStep {
 
 export enum QuizMode {
     cover = 'cover',
+    fill = 'fill',
     selection = 'selection',
     sort = 'sort',
     slider = 'slider',
@@ -48,4 +49,8 @@ export type SliderQuiz = Quiz & {
     value: number
 }
 
-export type Quizzes = Quiz | SelectionQuiz | SliderQuiz
+export type FillQuiz = Quiz & {
+    value: string
+}
+
+export type QuizType = Quiz | SelectionQuiz | SliderQuiz | FillQuiz
