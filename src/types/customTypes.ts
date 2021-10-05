@@ -30,6 +30,15 @@ export type Quiz = {
     backgroundImage?: string
 }
 
+export type CustomButton = {
+    buttonText?: string
+    buttonTextColor?: string
+    buttonColor?: string
+    buttonVariant?: 'contained' | 'outlined' | 'text'
+}
+
+export type TransitionQuiz = Quiz & CustomButton
+
 export type Choice = {
     id: string
     label: string
@@ -55,7 +64,12 @@ export type FillQuiz = Quiz & {
     value: string
 }
 
-export type QuizType = Quiz | SelectionQuiz | SliderQuiz | FillQuiz
+export type QuizType =
+    | Quiz
+    | SelectionQuiz
+    | SliderQuiz
+    | FillQuiz
+    | TransitionQuiz
 
 export type Form = {
     id: string

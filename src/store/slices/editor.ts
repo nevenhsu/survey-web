@@ -59,12 +59,11 @@ export const editorSlice = createSlice({
             state,
             action: PayloadAction<{ id: string; quizzes: QuizType[] }>
         ) => {
-            const localForms = LocalForms.getInstance()
             const { id, quizzes } = action.payload
             const { forms } = state
             const form = forms[id]
 
-            localForms.setFormById(id, { ...form, quizzes })
+            updateLocalForm(id, { ...form, quizzes })
 
             form.quizzes = quizzes
         },
@@ -101,8 +100,7 @@ export const editorSlice = createSlice({
                     : el
             )
 
-            const localForms = LocalForms.getInstance()
-            localForms.setFormById(id, { ...form, quizzes })
+            updateLocalForm(id, { ...form, quizzes })
 
             form.quizzes = quizzes
         },
@@ -148,3 +146,8 @@ export const selectCurrentId = (state: RootState) => state.editor.currentId
 
 export const selectForm = (state: RootState, id: string) =>
     state.editor.forms[id]
+
+const updateLocalForm = _.debounce((id: string, value: Form) => {
+    const localForms = LocalForms.getInstance()
+    localForms.setFormById(id, value)
+}, 1000)

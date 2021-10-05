@@ -15,7 +15,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import MenuSwapIcon from 'mdi-react/DragHorizontalVariantIcon'
 import AddIcon from 'mdi-react/AddIcon'
-import QuizWrapper from 'components/Quiz/QuizWrapper'
+import EditingQuiz from 'components/Quiz/EditingQuiz'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import {
     selectForm,
@@ -415,7 +415,10 @@ export default function QuizForm() {
                                         backgroundColor: 'common.white',
                                     }}
                                 >
-                                    <QuizWrapper quiz={selectedQuiz} editing />
+                                    <EditingQuiz
+                                        formId={currentId}
+                                        quiz={selectedQuiz}
+                                    />
                                 </Box>
                             </Box>
                         </Box>
