@@ -1,10 +1,11 @@
 export enum Mode {
-    customer = 'customer',
+    persona = 'persona',
     product = 'product',
 }
 
 export enum EditorStep {
     pick = 'pick',
+    product = 'product',
     quiz = 'quiz',
     result = 'result',
     final = 'final',
@@ -30,13 +31,14 @@ export type Quiz = {
 }
 
 export type Choice = {
+    id: string
     label: string
     image?: string
 }
 
 export type SelectionQuiz = Quiz & {
     choices: Choice[]
-    selected: Choice[]
+    values: string[]
     maxChoices: number
     showLabel: boolean
     showImage: boolean
@@ -54,3 +56,11 @@ export type FillQuiz = Quiz & {
 }
 
 export type QuizType = Quiz | SelectionQuiz | SliderQuiz | FillQuiz
+
+export type Form = {
+    id: string
+    createdAt: number
+    updatedAt: number
+    mode: Mode
+    quizzes: QuizType[]
+}

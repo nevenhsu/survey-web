@@ -16,8 +16,14 @@ import MenuItem from '@mui/material/MenuItem'
 import MenuSwapIcon from 'mdi-react/DragHorizontalVariantIcon'
 import AddIcon from 'mdi-react/AddIcon'
 import QuizWrapper from 'components/Quiz/QuizWrapper'
+import { useAppSelector, useAppDispatch } from 'hooks'
+import {
+    selectForm,
+    setQuizzes,
+    updateQuiz,
+    addQuiz,
+} from 'store/slices/editor'
 import { reorder, setId } from 'utils/helper'
-import Forms from 'utils/forms'
 import { QuizMode, SelectionQuiz, QuizType } from 'types/customTypes'
 
 type QuizProps = GridProps & {
@@ -126,74 +132,66 @@ const QuizSelector = (props: {
 }
 
 export default function QuizForm() {
-    const forms = Forms.getInstance()
+    const dispatch = useAppDispatch()
+    const currentId = useAppSelector((state) => state.editor.currentId)
+    const form = useAppSelector((state) => selectForm(state, currentId))
+
+    const { quizzes = [] } = form ?? {}
 
     const [selectedId, setSelectedId] = React.useState('')
     const [tab, setTab] = React.useState(0)
 
-    const [quizzes, setQuizzes] = React.useState<Array<QuizType>>([
-        {
-            id: setId(),
-            mode: QuizMode.cover,
-            title: '問券標題',
-        },
-    ])
-
     const selectedQuiz: QuizType | undefined = React.useMemo(() => {
         return _.find(quizzes, { id: selectedId })
     }, [selectedId, quizzes])
+
+    const updateQuizzes = (quizzes: QuizType[]) => {
+        dispatch(setQuizzes({ id: currentId, quizzes }))
+    }
 
     const onDragEnd = (result: any) => {
         // dropped outside the list
         if (!result.destination) {
             return
         }
-        setQuizzes((state) =>
-            reorder(state, result.source.index, result.destination.index)
-        )
-    }
 
-    const updateQuiz = (
-        newValue: Partial<QuizType>,
-        predicate: (el: QuizType) => boolean
-    ) => {
-        setQuizzes((state) =>
-            Array.from(state).map((el) =>
-                predicate(el)
-                    ? {
-                          ...el,
-                          ...newValue,
-                      }
-                    : el
-            )
+        updateQuizzes(
+            reorder(quizzes, result.source.index, result.destination.index)
         )
     }
 
     const handleAdd = () => {
-        const newQuiz: SelectionQuiz = {
+        const newValue: SelectionQuiz = {
             id: setId(),
             title: '新題目',
             mode: QuizMode.selection,
             choices: [],
-            selected: [],
+            values: [],
             maxChoices: 1,
             showLabel: true,
             showImage: false,
         }
-        setQuizzes((state) => [...state, newQuiz])
+
+        dispatch(addQuiz({ id: currentId, newValue }))
     }
 
     const handleModeChange = (event: SelectChangeEvent) => {
-        updateQuiz(
-            { mode: event.target.value as QuizMode },
-            (el) => el.id === event.target.name
+        dispatch(
+            updateQuiz({
+                id: currentId,
+                newValue: { mode: event.target.value as QuizMode },
+                predicate: (el) => el.id === event.target.name,
+            })
         )
     }
 
     const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        updateQuiz(
-            { required: event.target.checked },
-            (el) => el.id === event.target.name
+        dispatch(
+            updateQuiz({
+                id: currentId,
+                newValue: { required: event.target.checked },
+                predicate: (el) => el.id === event.target.name,
+            })
         )
     }
 
@@ -295,7 +293,8 @@ export default function QuizForm() {
                                                                 }}
                                                                 noWrap
                                                             >
-                                                                {el.title}
+                                                                {el.title ||
+                                                                    '未命名題目'}
                                                             </Typography>
                                                         </Box>
                                                     </Grid>
@@ -343,7 +342,7 @@ export default function QuizForm() {
                     >
                         <QuizBar container alignItems="center" sx={{ px: 2 }}>
                             <Typography
-                                variant="h6"
+                                variant="subtitle1"
                                 color="inherit"
                                 sx={{
                                     display: 'inline',
@@ -352,7 +351,7 @@ export default function QuizForm() {
                                 }}
                                 noWrap
                             >
-                                {selectedQuiz?.title ?? ''}
+                                {selectedQuiz?.title || '未命名題目'}
                             </Typography>
 
                             <Grid item sx={{ mr: 2 }}>
@@ -416,10 +415,7 @@ export default function QuizForm() {
                                         backgroundColor: 'common.white',
                                     }}
                                 >
-                                    <QuizWrapper
-                                        mode={selectedQuiz?.mode}
-                                        editing
-                                    />
+                                    <QuizWrapper quiz={selectedQuiz} editing />
                                 </Box>
                             </Box>
                         </Box>

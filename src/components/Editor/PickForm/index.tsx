@@ -10,7 +10,9 @@ import MenuItem from '@mui/material/MenuItem'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
-import { Mode } from 'types/customTypes'
+import { createNew, setMode, setStep } from 'store/slices/editor'
+import { useAppDispatch, useAppSelector } from 'hooks'
+import { Mode, EditorStep } from 'types/customTypes'
 
 type OptionType = {
     value: string
@@ -36,19 +38,22 @@ const customerOptions: { [k: string]: OptionsType } = {
     },
 }
 
-export default function PickForm() {
-    const options1 = [
-        {
-            value: Mode.customer,
-            label: '洞察消費者輪廓',
-        },
-        {
-            value: Mode.product,
-            label: '從多種商品中推薦商品給消費者',
-        },
-    ]
+const options1 = [
+    {
+        value: Mode.persona,
+        label: '洞察消費者輪廓',
+    },
+    {
+        value: Mode.product,
+        label: '從多種商品中推薦商品給消費者',
+    },
+]
 
-    const [mode, setMode] = React.useState<Mode>(Mode.customer)
+export default function PickForm() {
+    const dispatch = useAppDispatch()
+
+    const mode = useAppSelector((state) => state.editor.mode ?? '')
+
     const [option2, setOption2] = React.useState('')
     const options3 = _.get(
         customerOptions,
@@ -60,7 +65,25 @@ export default function PickForm() {
     const [currentTab, setCurrentTab] = React.useState(0)
 
     const handleChangeMode = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setMode(event.target.value as Mode)
+        dispatch(setMode(event.target.value as Mode))
+    }
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        if (mode) {
+            dispatch(createNew(mode))
+                .unwrap()
+                .then((result) => {
+                    // handle result here
+                    dispatch(
+                        setStep(
+                            mode === Mode.product
+                                ? EditorStep.product
+                                : EditorStep.quiz
+                        )
+                    )
+                })
+                .catch((error) => console.error(error))
+        }
     }
 
     return (
@@ -78,7 +101,9 @@ export default function PickForm() {
                     </Typography>
                 </Grid>
                 <Grid item>
-                    <Button variant="outlined">建立測驗</Button>
+                    <Button variant="outlined" onClick={handleClick}>
+                        建立測驗
+                    </Button>
                 </Grid>
             </Grid>
 
@@ -109,7 +134,7 @@ export default function PickForm() {
                         </TextField>
                     </Grid>
                 </Grid>
-                {mode === Mode.customer && (
+                {mode === Mode.persona && (
                     <>
                         <Grid item xs={12} container alignItems="center">
                             <Grid item xs={4}>

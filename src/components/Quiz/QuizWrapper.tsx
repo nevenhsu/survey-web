@@ -1,17 +1,17 @@
 import * as React from 'react'
 import Grid from '@mui/material/Grid'
-import { QuizMode } from 'types/customTypes'
+import type { QuizType } from 'types/customTypes'
 
 type QuizWrapperProps = {
-    mode?: QuizMode
+    quiz?: QuizType
     editing?: boolean
 }
 
 export default function QuizWrapper(props: QuizWrapperProps) {
-    const { mode, editing = false } = props
+    const { quiz, editing = false } = props
 
     const renderQuiz = () => {
-        if (!mode) {
+        if (!quiz) {
             return <div />
         }
 

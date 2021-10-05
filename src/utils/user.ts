@@ -1,13 +1,14 @@
 import Storage from './storage'
 import { parseJson } from 'utils/helper'
-import { EditorStep } from 'types/customTypes'
+import type { EditorStep, Mode } from 'types/customTypes'
 
 enum Locals {
     USER = 'user',
 }
 
 type UserType = {
-    currentStep?: EditorStep
+    step?: EditorStep
+    mode?: Mode
 }
 
 export default class User extends Storage<Locals> {

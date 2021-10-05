@@ -1,7 +1,7 @@
 import { useMemo, Props } from 'react'
 import CssBaseline from '@mui/material/CssBaseline'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
-import { useAppSelector } from 'store/hooks'
+import { useAppSelector } from 'hooks'
 import { selectMode } from 'store/slices/userDefault'
 import { getDesignTokens } from './palette'
 
