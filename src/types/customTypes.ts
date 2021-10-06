@@ -13,12 +13,11 @@ export enum EditorStep {
 }
 
 export enum QuizMode {
-    cover = 'cover',
+    page = 'page',
     fill = 'fill',
     selection = 'selection',
     sort = 'sort',
     slider = 'slider',
-    transition = 'transition',
 }
 
 export type Quiz = {
@@ -37,39 +36,47 @@ export type CustomButton = {
     buttonVariant?: 'contained' | 'outlined' | 'text'
 }
 
-export type TransitionQuiz = Quiz & CustomButton
+export type PageQuiz = Quiz & CustomButton
 
-export type Choice = {
+export type ChoiceType = CustomButton & {
     id: string
     label: string
+    tags: string[]
     image?: string
 }
 
-export type SelectionQuiz = Quiz & {
-    choices: Choice[]
+export type SelectionType = {
+    choices: ChoiceType[]
     values: string[]
     maxChoices: number
     showLabel: boolean
     showImage: boolean
-    align?: 'horizon' | 'vertical'
+    direction?: 'row' | 'column'
 }
 
-export type SliderQuiz = Quiz & {
-    max: number
-    min: number
-    value: number
+export type SelectionQuiz = Quiz & SelectionType
+
+export type SliderType = {
+    max?: number
+    min?: number
+    value?: number
 }
+
+export type SliderQuiz = Quiz & SliderType
 
 export type FillQuiz = Quiz & {
     value: string
 }
 
-export type QuizType =
-    | Quiz
-    | SelectionQuiz
-    | SliderQuiz
-    | FillQuiz
-    | TransitionQuiz
+export type QuizType = Quiz | SelectionQuiz | SliderQuiz | FillQuiz | PageQuiz
+
+export type Tags = {
+    [k: string]: {
+        id: string
+        name: string
+        values: string[]
+    }
+}
 
 export type Form = {
     id: string
@@ -77,4 +84,5 @@ export type Form = {
     updatedAt: number
     mode: Mode
     quizzes: QuizType[]
+    tags: Tags
 }

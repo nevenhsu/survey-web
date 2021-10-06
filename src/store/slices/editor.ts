@@ -82,17 +82,17 @@ export const editorSlice = createSlice({
         updateQuiz: (
             state,
             action: PayloadAction<{
-                id: string
+                formId: string
+                quizId: string
                 newValue: Partial<QuizType>
-                predicate: (el: QuizType) => boolean
             }>
         ) => {
-            const { id, newValue, predicate } = action.payload
+            const { formId, quizId, newValue } = action.payload
             const { forms } = state
-            const form = forms[id]
+            const form = forms[formId]
 
             const quizzes = Array.from(form.quizzes).map((el) =>
-                predicate(el)
+                el.id === quizId
                     ? {
                           ...el,
                           ...newValue,
@@ -100,7 +100,7 @@ export const editorSlice = createSlice({
                     : el
             )
 
-            updateLocalForm(id, { ...form, quizzes })
+            updateLocalForm(formId, { ...form, quizzes })
 
             form.quizzes = quizzes
         },

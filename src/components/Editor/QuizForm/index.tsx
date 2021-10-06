@@ -32,9 +32,9 @@ type QuizProps = GridProps & {
 }
 
 const quizModes = {
-    [QuizMode.cover]: {
-        value: QuizMode.cover,
-        label: '封面',
+    [QuizMode.page]: {
+        value: QuizMode.page,
+        label: '圖文',
     },
     [QuizMode.selection]: {
         value: QuizMode.selection,
@@ -51,10 +51,6 @@ const quizModes = {
     [QuizMode.sort]: {
         value: QuizMode.sort,
         label: '排序',
-    },
-    [QuizMode.transition]: {
-        value: QuizMode.transition,
-        label: '過場',
     },
 } as const
 
@@ -178,9 +174,9 @@ export default function QuizForm() {
     const handleModeChange = (event: SelectChangeEvent) => {
         dispatch(
             updateQuiz({
-                id: currentId,
+                formId: currentId,
+                quizId: event.target.name,
                 newValue: { mode: event.target.value as QuizMode },
-                predicate: (el) => el.id === event.target.name,
             })
         )
     }
@@ -188,9 +184,9 @@ export default function QuizForm() {
     const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(
             updateQuiz({
-                id: currentId,
+                formId: currentId,
+                quizId: event.target.name,
                 newValue: { required: event.target.checked },
-                predicate: (el) => el.id === event.target.name,
             })
         )
     }

@@ -19,10 +19,11 @@ const surveyApi = {
             quizzes: [
                 {
                     id: setId(),
-                    mode: QuizMode.cover,
+                    mode: QuizMode.page,
                     title: '測驗標題',
                 },
             ],
+            tags: {},
             updatedAt: data.createdAt,
         }
     },
