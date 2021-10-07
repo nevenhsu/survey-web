@@ -20,7 +20,14 @@ export enum QuizMode {
     slider = 'slider',
 }
 
-export type Quiz = {
+export type CustomButton = {
+    buttonText?: string
+    buttonTextColor?: string
+    buttonColor?: string
+    buttonVariant?: 'contained' | 'outlined' | 'text'
+}
+
+export type Quiz = CustomButton & {
     id: string
     mode: QuizMode
     title: string
@@ -29,16 +36,7 @@ export type Quiz = {
     backgroundImage?: string
 }
 
-export type CustomButton = {
-    buttonText?: string
-    buttonTextColor?: string
-    buttonColor?: string
-    buttonVariant?: 'contained' | 'outlined' | 'text'
-}
-
-export type PageQuiz = Quiz & CustomButton
-
-export type ChoiceType = CustomButton & {
+export type ChoiceType = Omit<CustomButton, 'buttonText'> & {
     id: string
     label: string
     tags: { [k: string]: string[] }
@@ -48,6 +46,7 @@ export type ChoiceType = CustomButton & {
 export type SelectionType = {
     choices: ChoiceType[]
     values: string[]
+    tagsId: string[]
     maxChoices: number
     showLabel: boolean
     showImage: boolean
@@ -68,7 +67,7 @@ export type FillQuiz = Quiz & {
     value: string
 }
 
-export type QuizType = Quiz | SelectionQuiz | SliderQuiz | FillQuiz | PageQuiz
+export type QuizType = Quiz | SelectionQuiz | SliderQuiz | FillQuiz
 
 export type Tags = {
     id: string

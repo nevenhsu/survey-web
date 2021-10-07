@@ -17,6 +17,7 @@ import MenuItem from '@mui/material/MenuItem'
 import MenuSwapIcon from 'mdi-react/DragHorizontalVariantIcon'
 import AddIcon from 'mdi-react/AddIcon'
 import EditingQuiz from 'components/Quiz/EditingQuiz'
+import TagsQuiz from 'components/Quiz/TagsQuiz'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import {
     selectForm,
@@ -25,7 +26,8 @@ import {
     addQuiz,
 } from 'store/slices/editor'
 import { reorder, setId, getDefaultQuiz } from 'utils/helper'
-import { QuizMode, SelectionQuiz, QuizType } from 'common/types'
+import { QuizMode, QuizType } from 'common/types'
+import type { SelectionQuiz } from 'common/types'
 
 type QuizProps = GridProps & {
     isDragging: boolean
@@ -35,7 +37,7 @@ type QuizProps = GridProps & {
 const quizModes = {
     [QuizMode.page]: {
         value: QuizMode.page,
-        label: '圖文    ',
+        label: '圖文',
     },
     [QuizMode.selection]: {
         value: QuizMode.selection,
@@ -97,6 +99,9 @@ const QuizTabs = styled(Tabs)(({ theme }) => ({
     '& .MuiTab-root': {
         color: theme.palette.common.white,
     },
+    '& .Mui-disabled': {
+        color: theme.palette.grey[700],
+    },
 }))
 
 const ModeSelector = (props: {
@@ -139,6 +144,11 @@ export default function QuizForm() {
         return _.find(quizzes, { id: selectedId })
     }, [selectedId, quizzes])
 
+    const disabledTab = ![QuizMode.selection, QuizMode.sort].includes(
+        selectedQuiz?.mode as any
+    )
+    const tabValue = disabledTab ? 0 : tab
+
     const updateQuizzes = (quizzes: QuizType[]) => {
         dispatch(setQuizzes({ id: currentId, quizzes }))
     }
@@ -165,11 +175,13 @@ export default function QuizForm() {
         if (!quizId) {
             return
         }
+        const mode = event.target.value as QuizMode
+
         dispatch(
             updateQuiz({
                 formId: currentId,
                 quizId,
-                newValue: { mode: event.target.value as QuizMode },
+                newValue: getDefaultQuiz(quizId, mode),
             })
         )
     }
@@ -186,6 +198,54 @@ export default function QuizForm() {
                 newValue: { required: event.target.checked },
             })
         )
+    }
+
+    const renderView = () => {
+        switch (tabValue) {
+            case 0: {
+                return (
+                    <Box
+                        className="absolute-center"
+                        sx={{ width: '80%', height: '80%' }}
+                    >
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                width: '100%',
+                                height: '100%',
+                                backgroundColor: 'common.white',
+                            }}
+                        >
+                            <EditingQuiz
+                                formId={currentId}
+                                quiz={selectedQuiz}
+                            />
+                        </Box>
+                    </Box>
+                )
+            }
+            case 1: {
+                return (
+                    <Box
+                        sx={{
+                            width: '100%',
+                            height: '100%',
+                            backgroundColor: 'grey.300',
+                        }}
+                    >
+                        <TagsQuiz
+                            formId={currentId}
+                            quiz={selectedQuiz as SelectionQuiz}
+                        />
+                    </Box>
+                )
+            }
+            case 2: {
+                return <div />
+            }
+        }
     }
 
     React.useEffect(() => {
@@ -377,12 +437,15 @@ export default function QuizForm() {
                                 sx={{ right: 0 }}
                             >
                                 <QuizTabs
-                                    value={tab}
+                                    value={tabValue}
                                     onChange={(_, v) => setTab(v)}
                                 >
                                     <Tab label="編輯題目" />
-                                    <Tab label="答項標籤" />
-                                    <Tab label="邏輯" />
+                                    <Tab
+                                        label="答項標籤"
+                                        disabled={disabledTab}
+                                    />
+                                    <Tab label="邏輯" disabled={disabledTab} />
                                 </QuizTabs>
                             </Box>
                         </QuizBar>
@@ -394,26 +457,7 @@ export default function QuizForm() {
                                 height: 'calc(100% - 48px)',
                             }}
                         >
-                            <Box
-                                className="absolute-center"
-                                sx={{ width: '80%', height: 0, pt: '60%' }}
-                            >
-                                <Box
-                                    sx={{
-                                        position: 'absolute',
-                                        top: 0,
-                                        left: 0,
-                                        width: '100%',
-                                        height: '100%',
-                                        backgroundColor: 'common.white',
-                                    }}
-                                >
-                                    <EditingQuiz
-                                        formId={currentId}
-                                        quiz={selectedQuiz}
-                                    />
-                                </Box>
-                            </Box>
+                            {renderView()}
                         </Box>
                     </Box>
                 </Grid>

@@ -153,5 +153,6 @@ export const selectForm = (state: RootState, id: string) =>
 
 const updateLocalForm = (id: string, value: Form) => {
     const localForms = LocalForms.getInstance()
+
     localForms.setFormById(id, value)
 }

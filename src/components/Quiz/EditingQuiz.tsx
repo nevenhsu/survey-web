@@ -17,7 +17,7 @@ import { QuizMode } from 'common/types'
 import type {
     QuizType,
     CustomButton,
-    PageQuiz,
+    Quiz,
     ChoiceType,
     SelectionType,
     SelectionQuiz,
@@ -53,12 +53,11 @@ const StyledTextField = styled(TextField)<StyledTextFieldProps>(
     })
 )
 
-const PageView = (props: {
-    textFieldProps: StyledTextFieldProps
+const QuizButton = (props: {
     buttonProps: CustomButton
     onChange: onInputChange
 }) => {
-    const { textFieldProps, buttonProps, onChange } = props
+    const { buttonProps, onChange } = props
     const {
         buttonVariant = 'contained',
         buttonText = '下一題',
@@ -80,16 +79,6 @@ const PageView = (props: {
 
     return (
         <>
-            <StyledTextField
-                variant="standard"
-                placeholder="請輸入您的文字"
-                name="title"
-                onChange={onChange}
-                {...textFieldProps}
-            />
-
-            <Box sx={{ height: 16 }} />
-
             <Button
                 variant={buttonVariant}
                 onClick={handleClick}
@@ -160,6 +149,30 @@ const PageView = (props: {
                     />
                 </Box>
             </Popover>
+        </>
+    )
+}
+
+const PageView = (props: {
+    textFieldProps: StyledTextFieldProps
+    buttonProps: CustomButton
+    onChange: onInputChange
+}) => {
+    const { textFieldProps, buttonProps, onChange } = props
+
+    return (
+        <>
+            <StyledTextField
+                variant="standard"
+                placeholder="請輸入您的文字"
+                name="title"
+                onChange={onChange}
+                {...textFieldProps}
+            />
+
+            <Box sx={{ height: 16 }} />
+
+            <QuizButton buttonProps={buttonProps} onChange={onChange} />
         </>
     )
 }
@@ -283,9 +296,10 @@ const ChoiceView = (props: {
 const SelectionView = (props: {
     textFieldProps: StyledTextFieldProps
     selectionProps: SelectionType
+    buttonProps: CustomButton
     onChange: onInputChange
 }) => {
-    const { textFieldProps, selectionProps, onChange } = props
+    const { textFieldProps, selectionProps, buttonProps, onChange } = props
     const {
         choices = [],
         maxChoices,
@@ -347,7 +361,6 @@ const SelectionView = (props: {
                 {...textFieldProps}
             />
             <Box sx={{ height: 16 }} />
-
             <Box sx={{ width: 4 / 5, textAlign: 'center' }}>
                 <Grid
                     container
@@ -376,6 +389,8 @@ const SelectionView = (props: {
                     </Grid>
                 </Grid>
             </Box>
+            <Box sx={{ height: 16 }} />
+            <QuizButton buttonProps={buttonProps} onChange={onChange} />
         </>
     )
 }
@@ -383,9 +398,10 @@ const SelectionView = (props: {
 const FillView = (props: {
     title: string
     value: string
+    buttonProps: CustomButton
     onChange: onInputChange
 }) => {
-    const { title, value, onChange } = props
+    const { title, value, buttonProps, onChange } = props
 
     return (
         <>
@@ -407,6 +423,8 @@ const FillView = (props: {
                 onChange={onChange}
                 sx={{ width: 4 / 5 }}
             />
+            <Box sx={{ height: 16 }} />
+            <QuizButton buttonProps={buttonProps} onChange={onChange} />
         </>
     )
 }
@@ -414,9 +432,10 @@ const FillView = (props: {
 const SliderView = (props: {
     title: string
     slider: SliderType
+    buttonProps: CustomButton
     onChange: onInputChange
 }) => {
-    const { title, slider, onChange } = props
+    const { title, slider, buttonProps, onChange } = props
     const { max, min, value } = slider
 
     return (
@@ -483,6 +502,9 @@ const SliderView = (props: {
                     />
                 </Stack>
             </Box>
+
+            <Box sx={{ height: 16 }} />
+            <QuizButton buttonProps={buttonProps} onChange={onChange} />
         </>
     )
 }
@@ -508,7 +530,21 @@ export default function EditingQuiz(props: EditingQuizProps) {
             return <div />
         }
 
-        const { mode, title } = quiz
+        const {
+            mode,
+            title,
+            buttonColor,
+            buttonText,
+            buttonTextColor,
+            buttonVariant,
+        } = quiz
+
+        const buttonProps = {
+            buttonColor,
+            buttonText,
+            buttonTextColor,
+            buttonVariant,
+        }
 
         switch (mode) {
             case QuizMode.page: {
@@ -517,18 +553,13 @@ export default function EditingQuiz(props: EditingQuizProps) {
                     buttonText,
                     buttonTextColor,
                     buttonVariant,
-                } = quiz as PageQuiz
+                } = quiz as Quiz
                 return (
                     <PageView
                         textFieldProps={{
                             value: title,
                         }}
-                        buttonProps={{
-                            buttonColor,
-                            buttonText,
-                            buttonTextColor,
-                            buttonVariant,
-                        }}
+                        buttonProps={buttonProps}
                         onChange={(event) => {
                             handleUpdateQuiz({
                                 [event.target.name]: event.target.value,
@@ -542,6 +573,7 @@ export default function EditingQuiz(props: EditingQuizProps) {
                 const {
                     choices = [],
                     values = [],
+                    tagsId = [],
                     maxChoices = 4,
                     showLabel = true,
                     showImage = false,
@@ -555,11 +587,13 @@ export default function EditingQuiz(props: EditingQuizProps) {
                         selectionProps={{
                             choices,
                             values,
+                            tagsId,
                             maxChoices,
                             showLabel,
                             showImage,
                             direction,
                         }}
+                        buttonProps={buttonProps}
                         onChange={(event) => {
                             handleUpdateQuiz({
                                 [event.target.name]: event.target.value,
@@ -569,11 +603,12 @@ export default function EditingQuiz(props: EditingQuizProps) {
                 )
             }
             case QuizMode.fill: {
-                const { title, value = '' } = quiz as FillQuiz
+                const { value = '' } = quiz as FillQuiz
                 return (
                     <FillView
                         title={title}
                         value={value}
+                        buttonProps={buttonProps}
                         onChange={(event) => {
                             handleUpdateQuiz({
                                 [event.target.name]: event.target.value,
@@ -583,11 +618,12 @@ export default function EditingQuiz(props: EditingQuizProps) {
                 )
             }
             case QuizMode.slider: {
-                const { title, value, min, max } = quiz as SliderQuiz
+                const { value, min, max } = quiz as SliderQuiz
                 return (
                     <SliderView
                         title={title}
                         slider={{ value, min, max }}
+                        buttonProps={buttonProps}
                         onChange={(event) => {
                             handleUpdateQuiz({
                                 [event.target.name]: event.target.value,
