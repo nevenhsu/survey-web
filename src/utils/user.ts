@@ -1,6 +1,6 @@
 import Storage from './storage'
 import { parseJson } from 'utils/helper'
-import type { EditorStep, Mode } from 'types/customTypes'
+import type { EditorStep, Mode } from 'common/types'
 
 enum Locals {
     USER = 'user',

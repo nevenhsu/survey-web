@@ -6,13 +6,14 @@ import { styled } from '@mui/material/styles'
 import NumberFormat from 'react-number-format'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
+import Stack from '@mui/material/Stack'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
 import Slider from '@mui/material/Slider'
 import Button from '@mui/material/Button'
 import Popover from '@mui/material/Popover'
-import { setId } from 'utils/helper'
-import { QuizMode } from 'types/customTypes'
+import { getDefaultChoice } from 'utils/helper'
+import { QuizMode } from 'common/types'
 import type {
     QuizType,
     CustomButton,
@@ -23,7 +24,7 @@ import type {
     FillQuiz,
     SliderType,
     SliderQuiz,
-} from 'types/customTypes'
+} from 'common/types'
 
 const variants = [
     { value: 'contained', label: '填滿' },
@@ -52,7 +53,7 @@ const StyledTextField = styled(TextField)<StyledTextFieldProps>(
     })
 )
 
-const PageQ = (props: {
+const PageView = (props: {
     textFieldProps: StyledTextFieldProps
     buttonProps: CustomButton
     onChange: onInputChange
@@ -79,27 +80,27 @@ const PageQ = (props: {
 
     return (
         <>
-            <Grid item>
-                <StyledTextField
-                    variant="standard"
-                    placeholder="請輸入您的文字"
-                    name="title"
-                    onChange={onChange}
-                    {...textFieldProps}
-                />
-            </Grid>
-            <Grid item>
-                <Button
-                    variant={buttonVariant}
-                    onClick={handleClick}
-                    sx={{
-                        color: buttonTextColor,
-                        backgroundColor: buttonColor,
-                    }}
-                >
-                    {buttonText || '下一題'}
-                </Button>
-            </Grid>
+            <StyledTextField
+                variant="standard"
+                placeholder="請輸入您的文字"
+                name="title"
+                onChange={onChange}
+                {...textFieldProps}
+            />
+
+            <Box sx={{ height: 16 }} />
+
+            <Button
+                variant={buttonVariant}
+                onClick={handleClick}
+                sx={{
+                    color: buttonTextColor,
+                    backgroundColor: buttonColor,
+                }}
+            >
+                {buttonText || '下一題'}
+            </Button>
+
             <Popover
                 open={open}
                 anchorEl={anchorEl}
@@ -163,7 +164,7 @@ const PageQ = (props: {
     )
 }
 
-const Choice = (props: {
+const ChoiceView = (props: {
     value: ChoiceType
     onChange: onInputChange
     onDelete: onButtonClink
@@ -279,7 +280,7 @@ const Choice = (props: {
     )
 }
 
-const SelectionQ = (props: {
+const SelectionView = (props: {
     textFieldProps: StyledTextFieldProps
     selectionProps: SelectionType
     onChange: onInputChange
@@ -292,6 +293,8 @@ const SelectionQ = (props: {
         showImage,
         direction,
     } = selectionProps
+
+    const xs = direction === 'row' ? 4 : 12
 
     const handleChoiceChange = (
         e: React.ChangeEvent<HTMLInputElement>,
@@ -323,15 +326,7 @@ const SelectionQ = (props: {
     }
 
     const handleAddChoice: onButtonClink = () => {
-        const newChoice: ChoiceType = {
-            id: setId(),
-            label: '點擊編輯此選項',
-            tags: [],
-            image: '',
-            buttonVariant: 'outlined',
-            buttonColor: '',
-            buttonTextColor: '',
-        }
+        const newChoice = getDefaultChoice()
         const event = {
             target: {
                 name: 'choices',
@@ -344,27 +339,26 @@ const SelectionQ = (props: {
 
     return (
         <>
-            <Grid item>
-                <StyledTextField
-                    variant="standard"
-                    placeholder="請輸入您的文字"
-                    name="title"
-                    onChange={onChange}
-                    {...textFieldProps}
-                />
-            </Grid>
-            <Grid item sx={{ width: 4 / 5, textAlign: 'center' }}>
+            <StyledTextField
+                variant="standard"
+                placeholder="請輸入您的文字"
+                name="title"
+                onChange={onChange}
+                {...textFieldProps}
+            />
+            <Box sx={{ height: 16 }} />
+
+            <Box sx={{ width: 4 / 5, textAlign: 'center' }}>
                 <Grid
                     container
                     direction={direction}
-                    alignItems="flex-start"
+                    alignItems="center"
                     justifyContent="center"
                     spacing={2}
-                    sx={{ ml: -1 }}
                 >
                     {choices.map((el) => (
-                        <Grid item xs={direction === 'row' ? 4 : 8}>
-                            <Choice
+                        <Grid key={el.id} item xs={xs}>
+                            <ChoiceView
                                 value={el}
                                 onChange={(event) =>
                                     handleChoiceChange(event, el.id)
@@ -375,18 +369,18 @@ const SelectionQ = (props: {
                             />
                         </Grid>
                     ))}
-                    <Grid item xs={direction === 'row' ? 4 : 8} sx={{}}>
+                    <Grid item xs={xs}>
                         <Button variant="outlined" onClick={handleAddChoice}>
                             新增選項
                         </Button>
                     </Grid>
                 </Grid>
-            </Grid>
+            </Box>
         </>
     )
 }
 
-const FillQ = (props: {
+const FillView = (props: {
     title: string
     value: string
     onChange: onInputChange
@@ -395,31 +389,29 @@ const FillQ = (props: {
 
     return (
         <>
-            <Grid item>
-                <StyledTextField
-                    variant="standard"
-                    placeholder="請輸入測驗問題"
-                    name="title"
-                    value={title}
-                    onChange={onChange}
-                    sx={{ mb: 3 }}
-                />
-            </Grid>
-            <Grid item>
-                <TextField
-                    label="自由填空"
-                    variant="outlined"
-                    name="value"
-                    value={value}
-                    onChange={onChange}
-                    fullWidth
-                />
-            </Grid>
+            <StyledTextField
+                variant="standard"
+                placeholder="請輸入測驗問題"
+                name="title"
+                value={title}
+                onChange={onChange}
+            />
+
+            <Box sx={{ height: 16 }} />
+
+            <TextField
+                label="自由填空"
+                variant="outlined"
+                name="value"
+                value={value}
+                onChange={onChange}
+                sx={{ width: 4 / 5 }}
+            />
         </>
     )
 }
 
-const SliderQ = (props: {
+const SliderView = (props: {
     title: string
     slider: SliderType
     onChange: onInputChange
@@ -427,61 +419,37 @@ const SliderQ = (props: {
     const { title, slider, onChange } = props
     const { max, min, value } = slider
 
-    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
-        null
-    )
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget)
-    }
-    const handleClose = () => {
-        setAnchorEl(null)
-    }
-
-    const open = Boolean(anchorEl)
-
     return (
         <>
-            <Grid item>
-                <StyledTextField
-                    variant="standard"
-                    placeholder="請輸入您的文字"
-                    name="title"
-                    value={title}
-                    onChange={onChange}
-                    sx={{ mb: 3 }}
-                />
-            </Grid>
+            <StyledTextField
+                variant="standard"
+                placeholder="請輸入您的文字"
+                name="title"
+                value={title}
+                onChange={onChange}
+                sx={{ mb: 3 }}
+            />
 
-            <Grid item sx={{ width: 4 / 5 }}>
+            <Box sx={{ width: 4 / 5 }}>
                 <Slider
                     defaultValue={_.floor(max ?? 0 / 2) ?? 0}
                     min={min}
                     max={max}
                     valueLabelDisplay="auto"
+                    sx={{ mb: 2 }}
                 />
-            </Grid>
 
-            <Grid item>
-                <Button variant="outlined" onClick={handleClick}>
-                    編輯數值
-                </Button>
-            </Grid>
-            <Popover
-                open={open}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-            >
-                <Box sx={{ p: 2, maxWidth: 180 }}>
+                <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                >
                     <NumberFormat
                         customInput={TextField}
-                        variant="standard"
+                        variant="outlined"
+                        size="small"
                         label="最小值"
                         value={min}
-                        fullWidth
                         onValueChange={({ value }) => {
                             const event = {
                                 target: {
@@ -492,15 +460,15 @@ const SliderQ = (props: {
 
                             onChange(event as any)
                         }}
-                        sx={{ mb: 2 }}
+                        sx={{ width: 96 }}
                     />
 
                     <NumberFormat
                         customInput={TextField}
-                        variant="standard"
+                        variant="outlined"
+                        size="small"
                         label="最大值"
                         value={max}
-                        fullWidth
                         onValueChange={({ value }) => {
                             const event = {
                                 target: {
@@ -511,9 +479,10 @@ const SliderQ = (props: {
 
                             onChange(event as any)
                         }}
+                        sx={{ width: 96 }}
                     />
-                </Box>
-            </Popover>
+                </Stack>
+            </Box>
         </>
     )
 }
@@ -539,10 +508,6 @@ export default function EditingQuiz(props: EditingQuizProps) {
             return <div />
         }
 
-        return renderView(quiz)
-    }
-
-    const renderView = (quiz: QuizType) => {
         const { mode, title } = quiz
 
         switch (mode) {
@@ -554,7 +519,7 @@ export default function EditingQuiz(props: EditingQuizProps) {
                     buttonVariant,
                 } = quiz as PageQuiz
                 return (
-                    <PageQ
+                    <PageView
                         textFieldProps={{
                             value: title,
                         }}
@@ -583,7 +548,7 @@ export default function EditingQuiz(props: EditingQuizProps) {
                     direction,
                 } = quiz as SelectionQuiz
                 return (
-                    <SelectionQ
+                    <SelectionView
                         textFieldProps={{
                             value: title,
                         }}
@@ -606,7 +571,7 @@ export default function EditingQuiz(props: EditingQuizProps) {
             case QuizMode.fill: {
                 const { title, value = '' } = quiz as FillQuiz
                 return (
-                    <FillQ
+                    <FillView
                         title={title}
                         value={value}
                         onChange={(event) => {
@@ -620,7 +585,7 @@ export default function EditingQuiz(props: EditingQuizProps) {
             case QuizMode.slider: {
                 const { title, value, min, max } = quiz as SliderQuiz
                 return (
-                    <SliderQ
+                    <SliderView
                         title={title}
                         slider={{ value, min, max }}
                         onChange={(event) => {
@@ -632,22 +597,19 @@ export default function EditingQuiz(props: EditingQuizProps) {
                 )
             }
         }
-
-        return <div />
     }
 
     return (
         <>
-            <Grid
-                container
+            <Stack
                 direction="column"
                 alignItems="center"
                 justifyContent="center"
-                rowSpacing={2}
+                spacing={2}
                 sx={{ width: '100%', height: '100%' }}
             >
                 {renderQuiz()}
-            </Grid>
+            </Stack>
         </>
     )
 }

@@ -3,9 +3,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import surveyApi from 'services/surveyApi'
 import User from 'utils/user'
 import LocalForms from 'utils/forms'
-import { setId } from 'utils/helper'
-import { EditorStep } from 'types/customTypes'
-import type { Mode, Form, Quiz, QuizType } from 'types/customTypes'
+import { EditorStep } from 'common/types'
+import type { Mode, Form, Quiz, QuizType } from 'common/types'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from 'store'
 
@@ -144,10 +143,15 @@ export const {
 
 export const selectCurrentId = (state: RootState) => state.editor.currentId
 
+export const selectCurrentForm = (state: RootState) => {
+    const { forms, currentId } = state.editor
+    return forms[currentId] || {}
+}
+
 export const selectForm = (state: RootState, id: string) =>
     state.editor.forms[id]
 
-const updateLocalForm = _.debounce((id: string, value: Form) => {
+const updateLocalForm = (id: string, value: Form) => {
     const localForms = LocalForms.getInstance()
     localForms.setFormById(id, value)
-}, 1000)
+}

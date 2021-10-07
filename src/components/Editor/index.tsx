@@ -12,8 +12,14 @@ import LaunchForm from 'components/Editor/LaunchForm'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import User from 'utils/user'
 import { setClasses } from 'utils/helper'
-import { EditorStep, Mode } from 'types/customTypes'
-import { setStep, setMode, reloadFromLocal } from 'store/slices/editor'
+import {
+    setStep,
+    setMode,
+    reloadFromLocal,
+    selectCurrentForm,
+} from 'store/slices/editor'
+import { EditorStep, Mode } from 'common/types'
+import type { Form } from 'common/types'
 
 type StepsType = {
     [key in keyof typeof EditorStep]: {
@@ -49,8 +55,15 @@ const steps: StepsType = {
     },
 }
 
-const getModeSteps = (mode?: Mode): Partial<StepsType> => {
-    switch (mode) {
+const getModeSteps = (form?: Form, mode?: Mode): Partial<StepsType> => {
+    const { pick } = steps
+    const m = form?.mode || mode
+
+    if (!form || form.mode !== mode) {
+        return { pick }
+    }
+
+    switch (m) {
         case Mode.product:
             return steps
 
@@ -59,7 +72,6 @@ const getModeSteps = (mode?: Mode): Partial<StepsType> => {
             return { pick, quiz, result, final, launch }
         }
         default: {
-            const { pick } = steps
             return { pick }
         }
     }
@@ -77,12 +89,14 @@ const Root = styled(Box)<BoxProps>(({ theme }) => ({
 export default function Editor() {
     const dispatch = useAppDispatch()
 
+    const currentForm = useAppSelector(selectCurrentForm)
+
     const { mode, step } = useAppSelector((state) => {
         const { mode, step } = state.editor
         return { mode, step }
     })
 
-    const modeSteps = getModeSteps(mode)
+    const modeSteps = getModeSteps(currentForm, mode)
 
     const handleChangeStep = (
         event: React.SyntheticEvent,

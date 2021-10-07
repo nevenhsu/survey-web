@@ -41,7 +41,7 @@ export type PageQuiz = Quiz & CustomButton
 export type ChoiceType = CustomButton & {
     id: string
     label: string
-    tags: string[]
+    tags: { [k: string]: string[] }
     image?: string
 }
 
@@ -71,11 +71,9 @@ export type FillQuiz = Quiz & {
 export type QuizType = Quiz | SelectionQuiz | SliderQuiz | FillQuiz | PageQuiz
 
 export type Tags = {
-    [k: string]: {
-        id: string
-        name: string
-        values: string[]
-    }
+    id: string
+    label: string
+    values: string[]
 }
 
 export type Form = {
@@ -84,5 +82,5 @@ export type Form = {
     updatedAt: number
     mode: Mode
     quizzes: QuizType[]
-    tags: Tags
+    tags: { [key: string]: Tags }
 }

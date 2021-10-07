@@ -9,10 +9,11 @@ import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import Button from '@mui/material/Button'
+import LoadingButton from '@mui/lab/LoadingButton'
 import { createNew, setMode, setStep } from 'store/slices/editor'
 import { useAppDispatch, useAppSelector } from 'hooks'
-import { Mode, EditorStep } from 'types/customTypes'
+import { Mode, EditorStep } from 'common/types'
+import AddIcon from 'mdi-react/AddIcon'
 
 type OptionType = {
     value: string
@@ -54,6 +55,8 @@ export default function PickForm() {
 
     const mode = useAppSelector((state) => state.editor.mode ?? '')
 
+    const [loading, setLoading] = React.useState(false)
+
     const [option2, setOption2] = React.useState('')
     const options3 = _.get(
         customerOptions,
@@ -68,12 +71,17 @@ export default function PickForm() {
         dispatch(setMode(event.target.value as Mode))
     }
 
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        if (mode) {
+    const handleClick = () => {
+        setLoading(true)
+    }
+
+    React.useEffect(() => {
+        if (loading && mode) {
             dispatch(createNew(mode))
                 .unwrap()
                 .then((result) => {
                     // handle result here
+                    setLoading(false)
                     dispatch(
                         setStep(
                             mode === Mode.product
@@ -82,9 +90,14 @@ export default function PickForm() {
                         )
                     )
                 })
-                .catch((error) => console.error(error))
+                .catch((error) => {
+                    console.error(error)
+                    setLoading(false)
+                })
+        } else {
+            setLoading(false)
         }
-    }
+    }, [loading])
 
     return (
         <>
@@ -101,9 +114,16 @@ export default function PickForm() {
                     </Typography>
                 </Grid>
                 <Grid item>
-                    <Button variant="outlined" onClick={handleClick}>
+                    <LoadingButton
+                        loading={loading}
+                        loadingPosition="start"
+                        startIcon={<AddIcon />}
+                        variant="outlined"
+                        onClick={handleClick}
+                        disabled={!mode}
+                    >
                         建立測驗
-                    </Button>
+                    </LoadingButton>
                 </Grid>
             </Grid>
 
@@ -235,7 +255,16 @@ export default function PickForm() {
             >
                 <Toolbar>
                     <Box sx={{ flexGrow: 1 }} />
-                    <Button variant="outlined">建立測驗</Button>
+                    <LoadingButton
+                        loading={loading}
+                        loadingPosition="start"
+                        startIcon={<AddIcon />}
+                        variant="outlined"
+                        onClick={handleClick}
+                        disabled={!mode}
+                    >
+                        建立測驗
+                    </LoadingButton>
                 </Toolbar>
             </AppBar>
         </>

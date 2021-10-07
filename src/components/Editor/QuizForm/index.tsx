@@ -8,7 +8,8 @@ import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
-import FormControl from '@mui/material/FormControl'
+import Modal from '@mui/material/Modal'
+import FormControl, { FormControlProps } from '@mui/material/FormControl'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Switch from '@mui/material/Switch'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
@@ -23,8 +24,8 @@ import {
     updateQuiz,
     addQuiz,
 } from 'store/slices/editor'
-import { reorder, setId } from 'utils/helper'
-import { QuizMode, SelectionQuiz, QuizType } from 'types/customTypes'
+import { reorder, setId, getDefaultQuiz } from 'utils/helper'
+import { QuizMode, SelectionQuiz, QuizType } from 'common/types'
 
 type QuizProps = GridProps & {
     isDragging: boolean
@@ -34,7 +35,7 @@ type QuizProps = GridProps & {
 const quizModes = {
     [QuizMode.page]: {
         value: QuizMode.page,
-        label: '圖文',
+        label: '圖文    ',
     },
     [QuizMode.selection]: {
         value: QuizMode.selection,
@@ -98,25 +99,16 @@ const QuizTabs = styled(Tabs)(({ theme }) => ({
     },
 }))
 
-const QuizSelector = (props: {
+const ModeSelector = (props: {
     quiz?: QuizType
-    handleChange: (event: SelectChangeEvent) => void
+    formControlProps?: FormControlProps
+    onChange: (event: SelectChangeEvent) => void
 }) => {
-    const { quiz, handleChange } = props
+    const { quiz, formControlProps, onChange } = props
     const { id = '', mode = '' } = quiz ?? {}
     return (
-        <FormControl
-            variant="standard"
-            sx={{
-                maxWidth: 80,
-            }}
-        >
-            <Select
-                name={id}
-                value={mode}
-                onChange={id ? handleChange : undefined}
-                autoWidth
-            >
+        <FormControl variant="standard" {...formControlProps}>
+            <Select name={id} value={mode} onChange={onChange} autoWidth>
                 {_.map(quizModes, (el) => (
                     <MenuItem key={el.value} value={el.value}>
                         {el.label}
@@ -136,6 +128,12 @@ export default function QuizForm() {
 
     const [selectedId, setSelectedId] = React.useState('')
     const [tab, setTab] = React.useState(0)
+
+    const [open, setOpen] = React.useState(false)
+    const handleOpen = () => setOpen(true)
+    const handleClose = () => setOpen(false)
+
+    const [mode, setMode] = React.useState<QuizMode>(QuizMode.page)
 
     const selectedQuiz: QuizType | undefined = React.useMemo(() => {
         return _.find(quizzes, { id: selectedId })
@@ -157,35 +155,34 @@ export default function QuizForm() {
     }
 
     const handleAdd = () => {
-        const newValue: SelectionQuiz = {
-            id: setId(),
-            title: '新題目',
-            mode: QuizMode.selection,
-            choices: [],
-            values: [],
-            maxChoices: 1,
-            showLabel: true,
-            showImage: false,
-        }
-
+        const newValue = getDefaultQuiz(setId(), mode)
         dispatch(addQuiz({ id: currentId, newValue }))
+        handleClose()
     }
 
     const handleModeChange = (event: SelectChangeEvent) => {
+        const quizId = event.target.name
+        if (!quizId) {
+            return
+        }
         dispatch(
             updateQuiz({
                 formId: currentId,
-                quizId: event.target.name,
+                quizId,
                 newValue: { mode: event.target.value as QuizMode },
             })
         )
     }
 
     const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const quizId = event.target.name
+        if (!quizId) {
+            return
+        }
         dispatch(
             updateQuiz({
                 formId: currentId,
-                quizId: event.target.name,
+                quizId,
                 newValue: { required: event.target.checked },
             })
         )
@@ -301,9 +298,9 @@ export default function QuizForm() {
                                                             textAlign: 'right',
                                                         }}
                                                     >
-                                                        <QuizSelector
+                                                        <ModeSelector
                                                             quiz={el}
-                                                            handleChange={
+                                                            onChange={
                                                                 handleModeChange
                                                             }
                                                         />
@@ -322,9 +319,9 @@ export default function QuizForm() {
                         <Button
                             variant="outlined"
                             startIcon={<AddIcon />}
-                            onClick={handleAdd}
+                            onClick={handleOpen}
                         >
-                            增加頁面
+                            增加題目
                         </Button>
                     </Box>
                 </Grid>
@@ -351,9 +348,9 @@ export default function QuizForm() {
                             </Typography>
 
                             <Grid item sx={{ mr: 2 }}>
-                                <QuizSelector
+                                <ModeSelector
                                     quiz={selectedQuiz}
-                                    handleChange={handleModeChange}
+                                    onChange={handleModeChange}
                                 />
                             </Grid>
 
@@ -421,6 +418,40 @@ export default function QuizForm() {
                     </Box>
                 </Grid>
             </Grid>
+
+            <Modal open={open} onClose={handleClose}>
+                <Box
+                    className="absolute-center"
+                    sx={{
+                        width: 480,
+                        bgcolor: 'background.paper',
+                        boxShadow: 24,
+                        borderRadius: 4,
+                        p: 4,
+                    }}
+                >
+                    <Typography variant="h6" component="h2">
+                        新增題目類型
+                    </Typography>
+
+                    <ModeSelector
+                        quiz={{ mode } as any}
+                        formControlProps={{
+                            variant: 'outlined',
+                            sx: { my: 2 },
+                        }}
+                        onChange={(event) =>
+                            setMode(event.target.value as QuizMode)
+                        }
+                    />
+
+                    <Box sx={{ textAlign: 'right' }}>
+                        <Button variant="contained" onClick={handleAdd}>
+                            新增
+                        </Button>
+                    </Box>
+                </Box>
+            </Modal>
         </>
     )
 }

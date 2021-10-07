@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { setId } from 'utils/helper'
-import { QuizMode } from 'types/customTypes'
-import type { Mode, Form } from 'types/customTypes'
+import { QuizMode } from 'common/types'
+import type { Mode, Form } from 'common/types'
 
 type CreateNewResponse = {
     id: string
@@ -13,7 +13,7 @@ const surveyApi = {
         const url = `${process.env.REACT_APP_URL}/survey`
         const { data } = await axios.post<CreateNewResponse>(url)
 
-        return {
+        const form: Form = {
             ...data,
             mode,
             quizzes: [
@@ -26,6 +26,8 @@ const surveyApi = {
             tags: {},
             updatedAt: data.createdAt,
         }
+
+        return form
     },
 }
 

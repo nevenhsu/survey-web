@@ -1,5 +1,13 @@
 import _ from 'lodash'
 import cryptoRandomString from 'crypto-random-string'
+import { QuizMode } from 'common/types'
+import type {
+    PageQuiz,
+    SelectionQuiz,
+    FillQuiz,
+    SliderQuiz,
+    ChoiceType,
+} from 'common/types'
 
 export function setId(length = 6) {
     return cryptoRandomString({ length })
@@ -42,4 +50,71 @@ export function reorder<T, U extends Iterable<T>>(
     result.splice(endIndex, 0, removed)
 
     return result
+}
+
+export function getDefaultQuiz(id: string, mode: QuizMode) {
+    switch (mode) {
+        case QuizMode.page: {
+            const quiz: PageQuiz = {
+                id,
+                mode,
+                title: '未命名題目',
+                buttonText: '下一題',
+                buttonVariant: 'contained',
+            }
+            return quiz
+        }
+        case QuizMode.selection:
+        case QuizMode.sort: {
+            const quiz: SelectionQuiz = {
+                id,
+                mode,
+                title: '請編輯標題',
+                choices: [],
+                values: [],
+                maxChoices: 4,
+                showLabel: true,
+                showImage: false,
+                direction: 'column',
+            }
+            return quiz
+        }
+        case QuizMode.slider: {
+            const quiz: SliderQuiz = {
+                id,
+                mode,
+                title: '請編輯標題',
+                max: 100,
+                min: 0,
+                value: 50,
+            }
+            return quiz
+        }
+        case QuizMode.fill: {
+            const quiz: FillQuiz = {
+                id,
+                mode,
+                title: '請編輯標題',
+                value: '',
+            }
+            return quiz
+        }
+        default: {
+            return {
+                id,
+                mode,
+                title: '請編輯標題',
+            }
+        }
+    }
+}
+
+export function getDefaultChoice() {
+    const choice: ChoiceType = {
+        id: setId(),
+        label: '點擊編輯此選項',
+        tags: {},
+        image: '',
+    }
+    return choice
 }

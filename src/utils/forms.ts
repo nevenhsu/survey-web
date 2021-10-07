@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import Storage from './storage'
 import { parseJson } from 'utils/helper'
-import { Form } from 'types/customTypes'
+import { Form } from 'common/types'
 
 enum Locals {
     FORMS_ID = 'forms_id',
