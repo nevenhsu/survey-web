@@ -235,10 +235,7 @@ export default function QuizForm() {
                             backgroundColor: 'grey.300',
                         }}
                     >
-                        <TagsQuiz
-                            formId={currentId}
-                            quiz={selectedQuiz as SelectionQuiz}
-                        />
+                        <TagsQuiz quiz={selectedQuiz as SelectionQuiz} />
                     </Box>
                 )
             }

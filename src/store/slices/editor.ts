@@ -103,6 +103,22 @@ export const editorSlice = createSlice({
 
             form.quizzes = quizzes
         },
+        updateForm: (
+            state,
+            action: PayloadAction<{
+                id: string
+                newValue: Partial<Form>
+            }>
+        ) => {
+            const { id, newValue } = action.payload
+            const { forms } = state
+            const form = forms[id]
+
+            forms[id] = {
+                ...form,
+                ...newValue,
+            }
+        },
         reloadFromLocal: (state, action: PayloadAction<void>) => {
             const localForms = LocalForms.getInstance()
             const currentId = localForms.getCurrentId() ?? ''
@@ -138,6 +154,7 @@ export const {
     setQuizzes,
     updateQuiz,
     addQuiz,
+    updateForm,
     reloadFromLocal,
 } = editorSlice.actions
 

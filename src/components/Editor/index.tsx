@@ -81,8 +81,7 @@ const classes = setClasses('Editor', ['root'])
 
 const Root = styled(Box)<BoxProps>(({ theme }) => ({
     [`&.${classes.root}`]: {
-        textAlign: 'center',
-        backgroundColor: theme.palette.background.default,
+        width: '100%',
     },
 }))
 
@@ -134,7 +133,7 @@ export default function Editor() {
     }
 
     return (
-        <Root sx={{ width: '100%' }}>
+        <Root className={classes.root}>
             <Tabs
                 value={step}
                 onChange={handleChangeStep}
