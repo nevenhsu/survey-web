@@ -18,6 +18,7 @@ import MenuSwapIcon from 'mdi-react/DragHorizontalVariantIcon'
 import AddIcon from 'mdi-react/AddIcon'
 import EditingQuiz from 'components/Quiz/EditingQuiz'
 import TagsQuiz from 'components/Quiz/TagsQuiz'
+import NextQuiz from 'components/Quiz/NextQuiz'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import {
     selectForm,
@@ -240,7 +241,17 @@ export default function QuizForm() {
                 )
             }
             case 2: {
-                return <div />
+                return (
+                    <Box
+                        sx={{
+                            width: '100%',
+                            height: '100%',
+                            backgroundColor: 'grey.300',
+                        }}
+                    >
+                        <NextQuiz quiz={selectedQuiz as SelectionQuiz} />
+                    </Box>
+                )
             }
         }
     }

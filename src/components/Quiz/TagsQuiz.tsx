@@ -14,7 +14,6 @@ import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
-import AddIcon from 'mdi-react/AddIcon'
 import PencilIcon from 'mdi-react/PencilIcon'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import { setClasses, setId } from 'utils/helper'
@@ -46,24 +45,6 @@ const Root = styled(Paper)(({ theme }) => ({
         backgroundColor: 'transparent',
     },
 }))
-
-function createData(
-    name: string,
-    calories: number,
-    fat: number,
-    carbs: number,
-    protein: number
-) {
-    return { name, calories, fat, carbs, protein }
-}
-
-const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-]
 
 export default function TagsQuiz(props: TagsQuizProps) {
     const dispatch = useAppDispatch()
@@ -103,37 +84,41 @@ export default function TagsQuiz(props: TagsQuizProps) {
     }
 
     const handleCreateTags = (values: { value: string; index: number }) => {
-        const { value, index } = values
-        const id = setId()
-        const newTags: Tags = {
-            id,
-            label: value,
-            values: [],
-        }
+        const { value: rawValue, index } = values
+        const value = _.trim(rawValue)
 
-        dispatch(
-            updateForm({
-                id: formId,
-                newValue: {
-                    tags: {
-                        ...tags,
-                        [id]: newTags,
-                    },
-                },
-            })
-        )
-
-        if (quizId) {
-            const newTagsId = Array.from(tagsId)
-            newTagsId[index] = id
+        if (value) {
+            const id = setId()
+            const newTags: Tags = {
+                id,
+                label: value,
+                values: [],
+            }
 
             dispatch(
-                updateQuiz({
-                    formId,
-                    quizId,
-                    newValue: { tagsId: newTagsId },
+                updateForm({
+                    id: formId,
+                    newValue: {
+                        tags: {
+                            ...tags,
+                            [id]: newTags,
+                        },
+                    },
                 })
             )
+
+            if (quizId) {
+                const newTagsId = Array.from(tagsId)
+                newTagsId[index] = id
+
+                dispatch(
+                    updateQuiz({
+                        formId,
+                        quizId,
+                        newValue: { tagsId: newTagsId },
+                    })
+                )
+            }
         }
     }
 
@@ -145,7 +130,9 @@ export default function TagsQuiz(props: TagsQuizProps) {
     ) => {
         if (quizId) {
             const { id: choiceId } = choice
-            const newValues = values.map((el) => el.value)
+            const newValues = values
+                .map((el) => _.trim(el.value))
+                .filter((el) => !_.isEmpty(el))
 
             const newChoices = choices.map((el) =>
                 el.id === choiceId
@@ -194,7 +181,7 @@ export default function TagsQuiz(props: TagsQuizProps) {
     }
 
     return (
-        <Root>
+        <Root className={classes.root}>
             <Toolbar>
                 <Typography
                     sx={{ flex: '1 1 100%' }}
@@ -215,7 +202,7 @@ export default function TagsQuiz(props: TagsQuizProps) {
                 <Table>
                     <TableHead sx={{ bgcolor: 'grey.200' }}>
                         <TableRow>
-                            <TableCell>選項名稱</TableCell>
+                            <TableCell>答項</TableCell>
                             {tagsId.map((id, index) => (
                                 <TableCell key={id || `${index}`}>
                                     <CreatableSelect<TagsOption>

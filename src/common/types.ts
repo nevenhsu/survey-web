@@ -41,6 +41,7 @@ export type ChoiceType = Omit<CustomButton, 'buttonText'> & {
     label: string
     tags: { [k: string]: string[] }
     image?: string
+    next?: string
 }
 
 export type SelectionType = {
