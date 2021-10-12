@@ -24,6 +24,7 @@ const surveyApi = {
                 },
             ],
             tags: {},
+            results: { selectedTags: [], list: {} },
             updatedAt: data.createdAt,
         }
 

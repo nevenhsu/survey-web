@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 
-export default function QuizForm() {
+export default function FinalForm() {
     return (
         <>
             <Grid

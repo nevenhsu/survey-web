@@ -70,7 +70,7 @@ const QuizItem = styled(Grid, {
         : theme.palette.common.white,
 }))
 
-const QuizBar = styled(Grid)(({ theme }) => {
+const StyledBar = styled(Grid)(({ theme }) => {
     const color = theme.palette.common.white
 
     return {
@@ -401,7 +401,7 @@ export default function QuizForm() {
                             backgroundColor: 'grey.700',
                         }}
                     >
-                        <QuizBar container alignItems="center" sx={{ px: 2 }}>
+                        <StyledBar container alignItems="center" sx={{ px: 2 }}>
                             <Typography
                                 variant="subtitle1"
                                 color="inherit"
@@ -456,7 +456,7 @@ export default function QuizForm() {
                                     <Tab label="邏輯" disabled={disabledTab} />
                                 </QuizTabs>
                             </Box>
-                        </QuizBar>
+                        </StyledBar>
 
                         <Box
                             sx={{

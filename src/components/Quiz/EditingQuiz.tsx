@@ -422,6 +422,8 @@ const FillView = (props: {
                 value={value}
                 onChange={onChange}
                 sx={{ width: 4 / 5 }}
+                maxRows={6}
+                multiline
             />
             <Box sx={{ height: 16 }} />
             <QuizButton buttonProps={buttonProps} onChange={onChange} />

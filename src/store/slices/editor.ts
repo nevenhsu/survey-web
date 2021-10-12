@@ -4,7 +4,7 @@ import surveyApi from 'services/surveyApi'
 import User from 'utils/user'
 import LocalForms from 'utils/forms'
 import { EditorStep } from 'common/types'
-import type { Mode, Form, Quiz, QuizType } from 'common/types'
+import type { Mode, Form, Quiz, QuizType, Results, Result } from 'common/types'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from 'store'
 
@@ -103,6 +103,42 @@ export const editorSlice = createSlice({
 
             form.quizzes = quizzes
         },
+        setResults: (
+            state,
+            action: PayloadAction<{
+                formId: string
+                newValue: Partial<Results>
+            }>
+        ) => {
+            const { formId, newValue } = action.payload
+            const { forms } = state
+            const form = forms[formId]
+            const newResult = {
+                ...form.results,
+                ...newValue,
+            }
+
+            updateLocalForm(formId, { ...form, results: newResult })
+
+            form.results = newResult
+        },
+        setResult: (
+            state,
+            action: PayloadAction<{
+                formId: string
+                resultId: string
+                newValue: Partial<Result>
+            }>
+        ) => {
+            const { formId, resultId, newValue } = action.payload
+            const { forms } = state
+            const form = forms[formId]
+            const { list = {} } = form.results ?? {}
+            list[resultId] = {
+                ...list[resultId],
+                ...newValue,
+            }
+        },
         updateForm: (
             state,
             action: PayloadAction<{
@@ -154,6 +190,8 @@ export const {
     setQuizzes,
     updateQuiz,
     addQuiz,
+    setResults,
+    setResult,
     updateForm,
     reloadFromLocal,
 } = editorSlice.actions

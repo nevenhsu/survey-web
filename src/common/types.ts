@@ -76,6 +76,39 @@ export type Tags = {
     values: string[]
 }
 
+export enum ComponentType {
+    title = 'title',
+    typography = 'typography',
+    clipboard = 'clipboard',
+    image = 'image',
+    link = 'link',
+    card = 'card',
+}
+
+export type Component = {
+    type: ComponentType
+    value?: string
+    display?: 'block' | 'inline-block'
+    align?: 'left' | 'center' | 'right' | 'justify'
+    width?: number | string
+    height?: number | string
+    fontSize?: number
+    color?: string
+}
+
+export type Result = {
+    id: string
+    label: string
+    components: Component[]
+}
+
+export type ResultList = { [key: string]: Result }
+
+export type Results = {
+    selectedTags: [string?, string?]
+    list: ResultList
+}
+
 export type Form = {
     id: string
     createdAt: number
@@ -83,4 +116,5 @@ export type Form = {
     mode: Mode
     quizzes: QuizType[]
     tags: { [key: string]: Tags }
+    results: Results
 }
