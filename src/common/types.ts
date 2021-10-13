@@ -98,7 +98,7 @@ export type Component = {
 
 export type Result = {
     id: string
-    label: string
+    labels: string[]
     components: Component[]
 }
 

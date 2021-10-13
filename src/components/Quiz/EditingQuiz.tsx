@@ -47,8 +47,7 @@ const StyledTextField = styled(TextField)<StyledTextFieldProps>(
         '& input': {
             ...theme.typography.h6,
             textAlign: 'center',
-            width: `${value?.length}ch`,
-            minWidth: 180,
+            minWidth: `${value?.length * 1.75}ch`,
         },
     })
 )

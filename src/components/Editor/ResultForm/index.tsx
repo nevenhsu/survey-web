@@ -3,6 +3,8 @@ import _ from 'lodash'
 import utils from 'utility'
 import { styled } from '@mui/material/styles'
 import Grid from '@mui/material/Grid'
+import Stack from '@mui/material/Stack'
+import Chip from '@mui/material/Chip'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
@@ -15,6 +17,10 @@ import Numeric1BoxIcon from 'mdi-react/Numeric1BoxIcon'
 import Numeric2BoxIcon from 'mdi-react/Numeric2BoxIcon'
 import { ComponentType } from 'common/types'
 import type { Result, ResultList } from 'common/types'
+
+const ListItem = styled('li')(({ theme }) => ({
+    margin: theme.spacing(0.5),
+}))
 
 const StyledBar = styled(Grid)(({ theme }) => {
     const color = theme.palette.common.white
@@ -45,6 +51,7 @@ export default function ResultForm() {
     const { selectedTags = [], list } = results ?? {}
 
     const tagsOptions = _.map(tags, (el) => ({ ...el, value: el.id }))
+    const resultItems = _.map(list, (el) => el)
 
     const handleTagsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value: v } = event.target
@@ -71,16 +78,14 @@ export default function ResultForm() {
 
         const labels =
             values.length && values2.length
-                ? _.flatten(
-                      values.map((v1) => values2.map((v2) => `${v1}.${v2}`))
-                  )
+                ? _.flatten(values.map((v1) => values2.map((v2) => [v1, v2])))
                 : values.length
-                ? values
-                : values2
+                ? values.map((el) => [el])
+                : values2.map((el) => [el])
 
         const hexed: Result[] = labels.map((el) => ({
-            id: utils.base64encode(el, true),
-            label: el,
+            id: utils.base64encode(_.join(el, '.'), true),
+            labels: el,
             components: [
                 {
                     type: ComponentType.title,
@@ -125,7 +130,9 @@ export default function ResultForm() {
             <Grid container sx={{ minHeight: 'calc(100vh - 218px)' }}>
                 <Grid
                     item
-                    sx={{ width: 288, height: '100%', overflowY: 'auto' }}
+                    sx={{
+                        width: 288,
+                    }}
                 >
                     <Box
                         sx={{
@@ -199,6 +206,41 @@ export default function ResultForm() {
                         <Typography variant="subtitle1" sx={{ mb: 2 }}>
                             測驗結果
                         </Typography>
+
+                        {resultItems.map((el) => (
+                            <Stack
+                                key={el.id}
+                                direction="row"
+                                justifyContent="space-between"
+                                alignItems="center"
+                                sx={{
+                                    border: (theme) =>
+                                        `1px solid ${theme.palette.grey[300]}`,
+                                    p: 1,
+                                    mb: 1,
+                                }}
+                            >
+                                <Typography noWrap>
+                                    {_.find(el.components, {
+                                        type: ComponentType.title,
+                                    })?.value || '未命名'}
+                                </Typography>
+                                <Stack
+                                    direction="row"
+                                    alignItems="center"
+                                    justifyContent="right"
+                                >
+                                    {el.labels.map((el) => (
+                                        <Chip
+                                            variant="outlined"
+                                            size="small"
+                                            label={el}
+                                            sx={{ ml: 0.5 }}
+                                        />
+                                    ))}
+                                </Stack>
+                            </Stack>
+                        ))}
                     </Box>
                 </Grid>
                 <Grid item xs>

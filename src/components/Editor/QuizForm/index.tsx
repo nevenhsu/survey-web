@@ -2,7 +2,8 @@ import * as React from 'react'
 import _ from 'lodash'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { styled } from '@mui/material/styles'
-import Grid, { GridProps } from '@mui/material/Grid'
+import Grid from '@mui/material/Grid'
+import Stack, { StackProps } from '@mui/material/Stack'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
@@ -29,8 +30,9 @@ import {
 import { reorder, setId, getDefaultQuiz } from 'utils/helper'
 import { QuizMode, QuizType } from 'common/types'
 import type { SelectionQuiz } from 'common/types'
+import { boxSizing } from '@mui/system'
 
-type QuizProps = GridProps & {
+type QuizProps = StackProps & {
     isDragging: boolean
     isEditing: boolean
 }
@@ -58,7 +60,7 @@ const quizModes = {
     },
 } as const
 
-const QuizItem = styled(Grid, {
+const QuizItem = styled(Stack, {
     shouldForwardProp: (prop) => !_.includes(['isDragging', 'isEditing'], prop),
 })<QuizProps>(({ isDragging, isEditing, theme }) => ({
     userSelect: 'none',
@@ -205,17 +207,10 @@ export default function QuizForm() {
         switch (tabValue) {
             case 0: {
                 return (
-                    <Box
-                        className="absolute-center"
-                        sx={{ width: '80%', height: '80%' }}
-                    >
+                    <Box sx={{ p: 4 }}>
                         <Box
                             sx={{
-                                position: 'absolute',
-                                top: 0,
-                                left: 0,
-                                width: '100%',
-                                height: '100%',
+                                p: 4,
                                 backgroundColor: 'common.white',
                             }}
                         >
@@ -283,10 +278,12 @@ export default function QuizForm() {
                     <Button variant="contained">編輯個人化測驗結果</Button>
                 </Grid>
             </Grid>
-            <Grid container sx={{ height: 'calc(100vh - 218px)' }}>
+            <Grid container sx={{ minHeight: 'calc(100vh - 218px)' }}>
                 <Grid
                     item
-                    sx={{ width: 288, height: '100%', overflowY: 'auto' }}
+                    sx={{
+                        width: 288,
+                    }}
                 >
                     <DragDropContext onDragEnd={onDragEnd}>
                         <Droppable droppableId="droppable">
@@ -310,7 +307,6 @@ export default function QuizForm() {
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
                                                     ref={provided.innerRef}
-                                                    container
                                                     isDragging={
                                                         snapshot.isDragging
                                                     }
@@ -321,18 +317,18 @@ export default function QuizForm() {
                                                         provided.draggableProps
                                                             .style
                                                     }
+                                                    direction="row"
+                                                    justifyContent="space-between"
                                                     alignItems="center"
-                                                    alignContent="space-between"
                                                     onClick={() =>
                                                         setSelectedId(el.id)
                                                     }
                                                 >
-                                                    <Grid
-                                                        item
-                                                        xs={8}
+                                                    <Box
                                                         sx={{
                                                             position:
                                                                 'relative',
+                                                            width: `calc(100% - 56px)`,
                                                         }}
                                                     >
                                                         <MenuSwapIcon
@@ -358,10 +354,8 @@ export default function QuizForm() {
                                                                     '未命名題目'}
                                                             </Typography>
                                                         </Box>
-                                                    </Grid>
-                                                    <Grid
-                                                        item
-                                                        xs
+                                                    </Box>
+                                                    <Box
                                                         sx={{
                                                             textAlign: 'right',
                                                         }}
@@ -372,7 +366,7 @@ export default function QuizForm() {
                                                                 handleModeChange
                                                             }
                                                         />
-                                                    </Grid>
+                                                    </Box>
                                                 </QuizItem>
                                             )}
                                         </Draggable>
@@ -462,7 +456,7 @@ export default function QuizForm() {
                             sx={{
                                 position: 'relative',
                                 width: '100%',
-                                height: 'calc(100% - 48px)',
+                                minHeight: 'calc(100% - 48px)',
                             }}
                         >
                             {renderView()}
