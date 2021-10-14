@@ -1,12 +1,13 @@
 import _ from 'lodash'
 import cryptoRandomString from 'crypto-random-string'
-import { QuizMode, QuizType } from 'common/types'
+import { QuizMode, QuizType, ComponentType } from 'common/types'
 import type {
     Quiz,
     SelectionQuiz,
     FillQuiz,
     SliderQuiz,
     ChoiceType,
+    Component,
 } from 'common/types'
 
 export function setId(length = 6) {
@@ -108,4 +109,80 @@ export function getDefaultChoice() {
         buttonVariant: 'outlined',
     }
     return choice
+}
+
+export function getDefaultComponent(type: ComponentType) {
+    const defaultComponent: Component = {
+        id: setId(),
+        type,
+    }
+
+    switch (type) {
+        case ComponentType.title: {
+            const component: Component = {
+                ...defaultComponent,
+                value: '未命名標題',
+                display: 'block',
+                align: 'center',
+                fontSize: '2.125rem',
+                color: 'text.primary',
+            }
+            return component
+        }
+        case ComponentType.typography: {
+            const component: Component = {
+                ...defaultComponent,
+                value: '',
+                display: 'block',
+                align: 'center',
+                fontSize: '1rem',
+                color: 'text.secondary',
+            }
+            return component
+        }
+        case ComponentType.image: {
+            const component: Component = {
+                ...defaultComponent,
+                value: '',
+                display: 'block',
+                align: 'center',
+                width: 'auto',
+                height: 'auto',
+            }
+            return component
+        }
+        case ComponentType.link: {
+            const component: Component = {
+                ...defaultComponent,
+                value: '',
+                display: 'inline-block',
+                align: 'center',
+                fontSize: '0.875rem',
+                color: 'primary.main',
+            }
+            return component
+        }
+        case ComponentType.clipboard: {
+            const component: Component = {
+                ...defaultComponent,
+                value: '',
+                display: 'block',
+                align: 'center',
+                fontSize: '1.25rem',
+                color: 'primary.main',
+            }
+            return component
+        }
+        case ComponentType.card: {
+            const component: Component = {
+                ...defaultComponent,
+                value: '',
+                display: 'inline-block',
+                align: 'center',
+                width: 320,
+                height: 'auto',
+            }
+            return component
+        }
+    }
 }

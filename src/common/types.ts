@@ -86,13 +86,14 @@ export enum ComponentType {
 }
 
 export type Component = {
+    id: string
     type: ComponentType
     value?: string
     display?: 'block' | 'inline-block'
     align?: 'left' | 'center' | 'right' | 'justify'
     width?: number | string
     height?: number | string
-    fontSize?: number
+    fontSize?: number | string
     color?: string
 }
 

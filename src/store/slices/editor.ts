@@ -4,7 +4,15 @@ import surveyApi from 'services/surveyApi'
 import User from 'utils/user'
 import LocalForms from 'utils/forms'
 import { EditorStep } from 'common/types'
-import type { Mode, Form, Quiz, QuizType, Results, Result } from 'common/types'
+import type {
+    Mode,
+    Form,
+    Quiz,
+    QuizType,
+    Results,
+    Result,
+    Component,
+} from 'common/types'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from 'store'
 
@@ -113,14 +121,14 @@ export const editorSlice = createSlice({
             const { formId, newValue } = action.payload
             const { forms } = state
             const form = forms[formId]
-            const newResult = {
+            const newResults = {
                 ...form.results,
                 ...newValue,
             }
 
-            updateLocalForm(formId, { ...form, results: newResult })
+            updateLocalForm(formId, { ...form, results: newResults })
 
-            form.results = newResult
+            form.results = newResults
         },
         setResult: (
             state,
@@ -132,11 +140,63 @@ export const editorSlice = createSlice({
         ) => {
             const { formId, resultId, newValue } = action.payload
             const { forms } = state
-            const form = forms[formId]
+            const form = forms[formId] ?? {}
             const { list = {} } = form.results ?? {}
             list[resultId] = {
                 ...list[resultId],
                 ...newValue,
+            }
+        },
+        addComponent: (
+            state,
+            action: PayloadAction<{
+                formId: string
+                resultId: string
+                newValue: Partial<Component>
+            }>
+        ) => {
+            const { formId, resultId, newValue } = action.payload
+            const { forms } = state
+            const form = forms[formId] ?? {}
+            const { list } = form.results ?? {}
+            const result = list[resultId]
+            if (result) {
+                result.components.push(newValue as Component)
+            }
+        },
+        updateComponent: (
+            state,
+            action: PayloadAction<{
+                formId: string
+                resultId: string
+                componentId: string
+                newValue: Partial<Component>
+            }>
+        ) => {
+            const { formId, resultId, componentId, newValue } = action.payload
+            const { forms } = state
+            const form = forms[formId] ?? {}
+            const { list } = form.results ?? {}
+            const result = list[resultId]
+
+            if (result) {
+                const components = Array.from(result.components).map((el) =>
+                    el.id === componentId ? { ...el, newValue } : el
+                )
+
+                const newResults = {
+                    ...form.results,
+                    list: {
+                        ...form.results.list,
+                        [resultId]: {
+                            ...result,
+                            components,
+                        },
+                    },
+                }
+                updateLocalForm(formId, { ...form, results: newResults })
+
+                result.components = components
             }
         },
         updateForm: (
@@ -192,6 +252,8 @@ export const {
     addQuiz,
     setResults,
     setResult,
+    addComponent,
+    updateComponent,
     updateForm,
     reloadFromLocal,
 } = editorSlice.actions

@@ -11,10 +11,13 @@ import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
 import InputAdornment from '@mui/material/InputAdornment'
+import EditingResult from 'components/Result/EditingResult'
+import { getDefaultComponent } from 'utils/helper'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import { selectCurrentForm, setResults } from 'store/slices/editor'
 import Numeric1BoxIcon from 'mdi-react/Numeric1BoxIcon'
 import Numeric2BoxIcon from 'mdi-react/Numeric2BoxIcon'
+import { setId } from 'utils/helper'
 import { ComponentType } from 'common/types'
 import type { Result, ResultList } from 'common/types'
 
@@ -45,10 +48,14 @@ const StyledBar = styled(Grid)(({ theme }) => {
 export default function ResultForm() {
     const dispatch = useAppDispatch()
 
+    const [selectedId, setSelectedId] = React.useState('')
+
     const form = useAppSelector(selectCurrentForm)
     const { id: formId, tags, results } = form ?? {}
 
     const { selectedTags = [], list } = results ?? {}
+
+    const selectedResult = list[selectedId] ?? {}
 
     const tagsOptions = _.map(tags, (el) => ({ ...el, value: el.id }))
     const resultItems = _.map(list, (el) => el)
@@ -86,12 +93,7 @@ export default function ResultForm() {
         const hexed: Result[] = labels.map((el) => ({
             id: utils.base64encode(_.join(el, '.'), true),
             labels: el,
-            components: [
-                {
-                    type: ComponentType.title,
-                    value: '未命名標題',
-                },
-            ],
+            components: [getDefaultComponent(ComponentType.title)],
         }))
 
         const list: ResultList = _.keyBy(hexed, 'id')
@@ -105,6 +107,11 @@ export default function ResultForm() {
             })
         )
     }, [selectedTags[0], selectedTags[1]])
+
+    React.useEffect(() => {
+        const { id = '' } = resultItems[0] ?? {}
+        setSelectedId(id)
+    }, [])
 
     return (
         <>
@@ -218,7 +225,12 @@ export default function ResultForm() {
                                         `1px solid ${theme.palette.grey[300]}`,
                                     p: 1,
                                     mb: 1,
+                                    bgcolor: (theme) =>
+                                        selectedId === el.id
+                                            ? theme.palette.grey[100]
+                                            : theme.palette.common.white,
                                 }}
+                                onClick={() => setSelectedId(el.id)}
                             >
                                 <Typography noWrap>
                                     {_.find(el.components, {
@@ -232,6 +244,7 @@ export default function ResultForm() {
                                 >
                                     {el.labels.map((el) => (
                                         <Chip
+                                            key={el}
                                             variant="outlined"
                                             size="small"
                                             label={el}
@@ -256,6 +269,25 @@ export default function ResultForm() {
                             alignItems="center"
                             sx={{ px: 2 }}
                         ></StyledBar>
+                        <Box
+                            sx={{
+                                position: 'relative',
+                                width: '100%',
+                                p: 4,
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    p: 4,
+                                    backgroundColor: 'common.white',
+                                }}
+                            >
+                                <EditingResult
+                                    formId={formId}
+                                    result={selectedResult}
+                                />
+                            </Box>
+                        </Box>
                     </Box>
                 </Grid>
             </Grid>

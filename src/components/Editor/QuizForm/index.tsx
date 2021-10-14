@@ -22,7 +22,7 @@ import TagsQuiz from 'components/Quiz/TagsQuiz'
 import NextQuiz from 'components/Quiz/NextQuiz'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import {
-    selectForm,
+    selectCurrentForm,
     setQuizzes,
     updateQuiz,
     addQuiz,
@@ -129,10 +129,8 @@ const ModeSelector = (props: {
 
 export default function QuizForm() {
     const dispatch = useAppDispatch()
-    const currentId = useAppSelector((state) => state.editor.currentId)
-    const form = useAppSelector((state) => selectForm(state, currentId))
-
-    const { quizzes = [] } = form ?? {}
+    const form = useAppSelector(selectCurrentForm)
+    const { id: formId, quizzes = [] } = form ?? {}
 
     const [selectedId, setSelectedId] = React.useState('')
     const [tab, setTab] = React.useState(0)
@@ -153,7 +151,7 @@ export default function QuizForm() {
     const tabValue = disabledTab ? 0 : tab
 
     const updateQuizzes = (quizzes: QuizType[]) => {
-        dispatch(setQuizzes({ id: currentId, quizzes }))
+        dispatch(setQuizzes({ id: formId, quizzes }))
     }
 
     const onDragEnd = (result: any) => {
@@ -169,7 +167,7 @@ export default function QuizForm() {
 
     const handleAdd = () => {
         const newValue = getDefaultQuiz(setId(), mode)
-        dispatch(addQuiz({ id: currentId, newValue }))
+        dispatch(addQuiz({ id: formId, newValue }))
         handleClose()
     }
 
@@ -182,7 +180,7 @@ export default function QuizForm() {
 
         dispatch(
             updateQuiz({
-                formId: currentId,
+                formId,
                 quizId,
                 newValue: getDefaultQuiz(quizId, mode),
             })
@@ -196,7 +194,7 @@ export default function QuizForm() {
         }
         dispatch(
             updateQuiz({
-                formId: currentId,
+                formId,
                 quizId,
                 newValue: { required: event.target.checked },
             })
@@ -214,10 +212,7 @@ export default function QuizForm() {
                                 backgroundColor: 'common.white',
                             }}
                         >
-                            <EditingQuiz
-                                formId={currentId}
-                                quiz={selectedQuiz}
-                            />
+                            <EditingQuiz formId={formId} quiz={selectedQuiz} />
                         </Box>
                     </Box>
                 )
@@ -456,7 +451,6 @@ export default function QuizForm() {
                             sx={{
                                 position: 'relative',
                                 width: '100%',
-                                minHeight: 'calc(100% - 48px)',
                             }}
                         >
                             {renderView()}

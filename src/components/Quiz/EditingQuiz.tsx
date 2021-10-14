@@ -637,16 +637,14 @@ export default function EditingQuiz(props: EditingQuizProps) {
     }
 
     return (
-        <>
-            <Stack
-                direction="column"
-                alignItems="center"
-                justifyContent="center"
-                spacing={2}
-                sx={{ width: '100%', height: '100%' }}
-            >
-                {renderQuiz()}
-            </Stack>
-        </>
+        <Stack
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+            spacing={2}
+            sx={{ width: '100%', height: '100%' }}
+        >
+            {renderQuiz()}
+        </Stack>
     )
 }
