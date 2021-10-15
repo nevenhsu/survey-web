@@ -9,6 +9,7 @@ enum Locals {
 type UserType = {
     step?: EditorStep
     mode?: Mode
+    components?: object
 }
 
 export default class User extends Storage<Locals> {

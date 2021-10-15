@@ -90,22 +90,30 @@ export default function ResultForm() {
                 ? values.map((el) => [el])
                 : values2.map((el) => [el])
 
-        const hexed: Result[] = labels.map((el) => ({
+        const hexed: Result[] = labels.map((el, index) => ({
             id: utils.base64encode(_.join(el, '.'), true),
             labels: el,
-            components: [getDefaultComponent(ComponentType.title)],
+            components:
+                index === 0 ? [getDefaultComponent(ComponentType.title)] : [],
         }))
 
-        const list: ResultList = _.keyBy(hexed, 'id')
+        const newList: ResultList = _.keyBy(hexed, 'id')
 
-        dispatch(
-            setResults({
-                formId,
-                newValue: {
-                    list,
-                },
-            })
-        )
+        const oldKeys = _.keys(list)
+        const newKeys = _.keys(newList)
+
+        const intersections = _.intersection(oldKeys, newKeys)
+
+        if (!newKeys.length || intersections.length !== newKeys.length) {
+            dispatch(
+                setResults({
+                    formId,
+                    newValue: {
+                        list: newList,
+                    },
+                })
+            )
+        }
     }, [selectedTags[0], selectedTags[1]])
 
     React.useEffect(() => {
@@ -256,7 +264,12 @@ export default function ResultForm() {
                         ))}
                     </Box>
                 </Grid>
-                <Grid item xs>
+                <Grid
+                    item
+                    sx={{
+                        width: 'calc(100vw - 288px)',
+                    }}
+                >
                     <Box
                         sx={{
                             width: '100%',
@@ -264,11 +277,12 @@ export default function ResultForm() {
                             backgroundColor: 'grey.700',
                         }}
                     >
-                        <StyledBar
+                        {/* <StyledBar
                             container
                             alignItems="center"
                             sx={{ px: 2 }}
-                        ></StyledBar>
+                        ></StyledBar> */}
+                        <Box sx={{ height: 72 }} />
                         <Box
                             sx={{
                                 position: 'relative',
@@ -276,17 +290,10 @@ export default function ResultForm() {
                                 p: 4,
                             }}
                         >
-                            <Box
-                                sx={{
-                                    p: 4,
-                                    backgroundColor: 'common.white',
-                                }}
-                            >
-                                <EditingResult
-                                    formId={formId}
-                                    result={selectedResult}
-                                />
-                            </Box>
+                            <EditingResult
+                                formId={formId}
+                                result={selectedResult}
+                            />
                         </Box>
                     </Box>
                 </Grid>

@@ -382,7 +382,12 @@ export default function QuizForm() {
                         </Button>
                     </Box>
                 </Grid>
-                <Grid item xs>
+                <Grid
+                    item
+                    sx={{
+                        width: 'calc(100vw - 288px)',
+                    }}
+                >
                     <Box
                         sx={{
                             width: '100%',

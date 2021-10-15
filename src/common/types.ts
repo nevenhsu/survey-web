@@ -1,3 +1,5 @@
+import type { Variant } from '@mui/material/styles/createTypography'
+
 export enum Mode {
     persona = 'persona',
     product = 'product',
@@ -89,12 +91,17 @@ export type Component = {
     id: string
     type: ComponentType
     value?: string
+    link?: string
+    underline?: 'always' | 'hover' | 'none'
     display?: 'block' | 'inline-block'
     align?: 'left' | 'center' | 'right' | 'justify'
+    typoVariant?: Variant
+    fontWeight?: string
     width?: number | string
     height?: number | string
-    fontSize?: number | string
     color?: string
+    bgcolor?: string
+    components?: Component[]
 }
 
 export type Result = {

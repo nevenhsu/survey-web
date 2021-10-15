@@ -124,7 +124,7 @@ export function getDefaultComponent(type: ComponentType) {
                 value: '未命名標題',
                 display: 'block',
                 align: 'center',
-                fontSize: '2.125rem',
+                typoVariant: 'h4',
                 color: 'text.primary',
             }
             return component
@@ -135,7 +135,7 @@ export function getDefaultComponent(type: ComponentType) {
                 value: '',
                 display: 'block',
                 align: 'center',
-                fontSize: '1rem',
+                typoVariant: 'body1',
                 color: 'text.secondary',
             }
             return component
@@ -155,9 +155,11 @@ export function getDefaultComponent(type: ComponentType) {
             const component: Component = {
                 ...defaultComponent,
                 value: '',
+                link: '',
+                underline: 'always',
                 display: 'inline-block',
                 align: 'center',
-                fontSize: '0.875rem',
+                typoVariant: 'button',
                 color: 'primary.main',
             }
             return component
@@ -168,7 +170,7 @@ export function getDefaultComponent(type: ComponentType) {
                 value: '',
                 display: 'block',
                 align: 'center',
-                fontSize: '1.25rem',
+                typoVariant: 'h6',
                 color: 'primary.main',
             }
             return component
@@ -181,6 +183,8 @@ export function getDefaultComponent(type: ComponentType) {
                 align: 'center',
                 width: 320,
                 height: 'auto',
+                components: [],
+                color: 'grey',
             }
             return component
         }

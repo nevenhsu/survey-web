@@ -1,9 +1,9 @@
 import _ from 'lodash'
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk, current } from '@reduxjs/toolkit'
 import surveyApi from 'services/surveyApi'
 import User from 'utils/user'
 import LocalForms from 'utils/forms'
-import { EditorStep } from 'common/types'
+import { EditorStep, ComponentType } from 'common/types'
 import type {
     Mode,
     Form,
@@ -69,10 +69,9 @@ export const editorSlice = createSlice({
             const { id, quizzes } = action.payload
             const { forms } = state
             const form = forms[id]
-
-            updateLocalForm(id, { ...form, quizzes })
-
             form.quizzes = quizzes
+
+            updateLocalForm(id, form)
         },
         addQuiz: (
             state,
@@ -107,9 +106,9 @@ export const editorSlice = createSlice({
                     : el
             )
 
-            updateLocalForm(formId, { ...form, quizzes })
-
             form.quizzes = quizzes
+
+            updateLocalForm(formId, form)
         },
         setResults: (
             state,
@@ -126,9 +125,8 @@ export const editorSlice = createSlice({
                 ...newValue,
             }
 
-            updateLocalForm(formId, { ...form, results: newResults })
-
             form.results = newResults
+            updateLocalForm(formId, form)
         },
         setResult: (
             state,
@@ -147,56 +145,32 @@ export const editorSlice = createSlice({
                 ...newValue,
             }
         },
-        addComponent: (
-            state,
-            action: PayloadAction<{
-                formId: string
-                resultId: string
-                newValue: Partial<Component>
-            }>
-        ) => {
-            const { formId, resultId, newValue } = action.payload
-            const { forms } = state
-            const form = forms[formId] ?? {}
-            const { list } = form.results ?? {}
-            const result = list[resultId]
-            if (result) {
-                result.components.push(newValue as Component)
-            }
-        },
         updateComponent: (
             state,
             action: PayloadAction<{
                 formId: string
                 resultId: string
-                componentId: string
-                newValue: Partial<Component>
+                idPath: string[]
+                newValue: Component
+                deleted?: boolean
             }>
         ) => {
-            const { formId, resultId, componentId, newValue } = action.payload
+            const {
+                formId,
+                resultId,
+                idPath,
+                newValue,
+                deleted = false,
+            } = action.payload
+
             const { forms } = state
             const form = forms[formId] ?? {}
             const { list } = form.results ?? {}
             const result = list[resultId]
 
             if (result) {
-                const components = Array.from(result.components).map((el) =>
-                    el.id === componentId ? { ...el, newValue } : el
-                )
-
-                const newResults = {
-                    ...form.results,
-                    list: {
-                        ...form.results.list,
-                        [resultId]: {
-                            ...result,
-                            components,
-                        },
-                    },
-                }
-                updateLocalForm(formId, { ...form, results: newResults })
-
-                result.components = components
+                setNewComponents(result, idPath, newValue, Boolean(deleted))
+                updateLocalForm(formId, form)
             }
         },
         updateForm: (
@@ -252,7 +226,6 @@ export const {
     addQuiz,
     setResults,
     setResult,
-    addComponent,
     updateComponent,
     updateForm,
     reloadFromLocal,
@@ -272,4 +245,55 @@ const updateLocalForm = (id: string, value: Form) => {
     const localForms = LocalForms.getInstance()
 
     localForms.setFormById(id, value)
+}
+
+function setNewComponents(
+    result: Result,
+    idPath: string[],
+    newValue: Component,
+    deleted: boolean = false
+) {
+    let i = 0
+    let components = result.components
+    let component: Component | undefined = undefined
+
+    while (i < idPath.length) {
+        const id = idPath[i]
+        const index = _.findIndex(components, { id })
+
+        if (index === -1) {
+            console.error(new Error(`no component ${id}`))
+            return
+        }
+
+        component = components[index]
+
+        if (_.isNil(component.components)) {
+            console.error(new Error(`no components ${id}`))
+            return
+        }
+
+        components = component.components
+        i += 1
+    }
+
+    if (deleted) {
+        console.log({
+            i,
+            components,
+            component,
+            idPath,
+            newValue,
+        })
+        _.remove(components, { id: newValue.id })
+        return
+    }
+
+    const targetIndex = _.findIndex(components, { id: newValue.id })
+
+    if (targetIndex > -1) {
+        components[targetIndex] = { ...components[targetIndex], ...newValue }
+    } else {
+        components.push(newValue)
+    }
 }
