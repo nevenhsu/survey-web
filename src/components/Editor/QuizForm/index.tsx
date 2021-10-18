@@ -30,7 +30,6 @@ import {
 import { reorder, setId, getDefaultQuiz } from 'utils/helper'
 import { QuizMode, QuizType } from 'common/types'
 import type { SelectionQuiz } from 'common/types'
-import { boxSizing } from '@mui/system'
 
 type QuizProps = StackProps & {
     isDragging: boolean

@@ -101,7 +101,7 @@ type StyledTextFieldProps = TextFieldProps & {
 const StyledTextField = styled(TextField, {
     shouldForwardProp: (prop) => prop !== 'typoVariant',
 })<StyledTextFieldProps>(({ value, theme, typoVariant }) => ({
-    '& input': {
+    '& .MuiInputBase-input': {
         ...theme.typography[typoVariant ?? 'body1'],
         textAlign: 'inherit',
         color: 'inherit',
@@ -501,6 +501,7 @@ function ComponentItem(
                         bgcolor,
                     }}
                     fullWidth
+                    multiline
                 />
             )
         }
@@ -594,8 +595,8 @@ function ComponentItem(
                 <Box
                     sx={{
                         display,
-                        width,
-                        height,
+                        width: '100%',
+                        height: '100%',
                         bgcolor,
                         textAlign: align,
                         borderRadius: 1,
@@ -641,30 +642,28 @@ function ComponentList(props: ComponentListProps) {
                         onSelect(el, idPath)
                     }}
                     xs={el.display === 'block' ? 12 : undefined}
+                    sx={{
+                        width: el.width,
+                        height: el.height,
+                        padding: 1,
+                        borderRadius: 1,
+                        borderWidth: 1,
+                        borderStyle: 'solid',
+                        borderColor:
+                            el.id === selectedComponent?.id
+                                ? 'primary.light'
+                                : 'transparent',
+                    }}
                     item
                 >
-                    <Box sx={{ padding: 1 }}>
-                        <Box
-                            sx={{
-                                borderRadius: 1,
-                                borderWidth: 1,
-                                borderStyle: 'solid',
-                                borderColor:
-                                    el.id === selectedComponent?.id
-                                        ? 'primary.light'
-                                        : 'transparent',
-                            }}
-                        >
-                            <ComponentItem
-                                component={el}
-                                idPath={[...idPath, el.id]}
-                                selectedComponent={selectedComponent}
-                                onAdd={onAdd}
-                                onSelect={onSelect}
-                                onChange={onChange}
-                            />
-                        </Box>
-                    </Box>
+                    <ComponentItem
+                        component={el}
+                        idPath={[...idPath, el.id]}
+                        selectedComponent={selectedComponent}
+                        onAdd={onAdd}
+                        onSelect={onSelect}
+                        onChange={onChange}
+                    />
                 </Grid>
             ))}
 

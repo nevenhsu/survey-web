@@ -119,7 +119,7 @@ export default function NextQuiz(props: NextQuizProps) {
                                                             : ''}
                                                     </MenuItem>
                                                 ) : (
-                                                    <></>
+                                                    <span />
                                                 )
                                             )}
                                         </TextField>
