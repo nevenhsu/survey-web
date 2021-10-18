@@ -207,8 +207,9 @@ export default function QuizForm() {
                     <Box sx={{ p: 4 }}>
                         <Box
                             sx={{
-                                p: 4,
+                                position: 'relative',
                                 backgroundColor: 'common.white',
+                                p: 4,
                             }}
                         >
                             <EditingQuiz formId={formId} quiz={selectedQuiz} />

@@ -3,6 +3,7 @@ import _ from 'lodash'
 import ImageUploading, { ImageListType } from 'react-images-uploading'
 import { Img } from 'react-image'
 import { styled } from '@mui/material'
+import Tooltip from '@mui/material/Tooltip'
 import Stack, { StackProps } from '@mui/material/Stack'
 import Box, { BoxProps } from '@mui/material/Box'
 import LinearProgress from '@mui/material/LinearProgress'
@@ -17,6 +18,7 @@ type ImageUploaderProps = {
     value?: ImageListType
     dataUrl?: string
     boxProps?: BoxProps
+    unloaderProps?: BoxProps
     stackProps?: StackProps
     onUploaded?: (dataUrl: string) => void
 }
@@ -25,25 +27,25 @@ type StyledBoxProps = BoxProps & {
     isDragging?: boolean
 }
 
-const Unloader = () => (
-    <Box
-        sx={{
-            position: 'relative',
-            width: '100%',
-            height: '100%',
-            minHeight: 48,
-            color: 'white',
-        }}
-    >
+const StyledUnloaderBox = styled(Box)(({ theme }) => ({
+    position: 'relative',
+    width: 'inherit',
+    height: 'inherit',
+    minHeight: 48,
+    color: 'white',
+    backgroundColor: theme.palette.grey[300],
+}))
+
+const Unloader = (props: BoxProps) => (
+    <StyledUnloaderBox {...props}>
         <ImageIcon className="absolute-center" />
-    </Box>
+    </StyledUnloaderBox>
 )
 
 const StyledBox = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'isDragging',
-})<StyledBoxProps>(({ theme, isDragging }) => ({
+})<StyledBoxProps>(({ isDragging }) => ({
     position: 'relative',
-    backgroundColor: theme.palette.grey[300],
     opacity: isDragging ? 0.9 : 1,
     '& img': {
         display: 'inherit',
@@ -63,6 +65,7 @@ export default function ImageUploader(props: ImageUploaderProps) {
     const {
         value,
         boxProps,
+        unloaderProps,
         stackProps,
         onUploaded,
         dataUrl = 'dataUrl',
@@ -98,6 +101,10 @@ export default function ImageUploader(props: ImageUploaderProps) {
         }
     }
 
+    React.useEffect(() => {
+        setImages(value ?? [])
+    }, value)
+
     return (
         <ImageUploading
             value={images}
@@ -122,11 +129,13 @@ export default function ImageUploader(props: ImageUploaderProps) {
                             key={image.file?.name ?? index}
                             src={image['dataUrl'] ?? ''}
                             alt=""
-                            unloader={<Unloader />}
+                            unloader={<Unloader {...unloaderProps} />}
                         />
                     ))}
 
-                    {images.length === 0 && <Unloader />}
+                    {!Boolean(imageList.length) && (
+                        <Unloader {...unloaderProps} />
+                    )}
 
                     {(failed || Boolean(errors)) && (
                         <Box
@@ -177,12 +186,21 @@ export default function ImageUploader(props: ImageUploaderProps) {
                         spacing={0.5}
                         {...stackProps}
                     >
-                        <IconButton onClick={onImageUpload} color="primary">
-                            <ImagePlusIcon />
-                        </IconButton>
-                        <IconButton onClick={onImageRemoveAll} color="error">
-                            <ImageRemoveIcon />
-                        </IconButton>
+                        <Tooltip title="上傳圖片">
+                            <IconButton onClick={onImageUpload} color="primary">
+                                <ImagePlusIcon />
+                            </IconButton>
+                        </Tooltip>
+                        {Boolean(imageList.length) && (
+                            <Tooltip title="刪除圖片">
+                                <IconButton
+                                    onClick={onImageRemoveAll}
+                                    color="error"
+                                >
+                                    <ImageRemoveIcon />
+                                </IconButton>
+                            </Tooltip>
+                        )}
                     </StyledStack>
                     {uploading && (
                         <LinearProgress

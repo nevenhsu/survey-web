@@ -9,7 +9,6 @@ import Tab, { TabProps } from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import Editor from 'components/Editor'
-import Dev from 'components/Dev'
 
 const Grow = styled('div')({
     flexGrow: 1,
@@ -31,7 +30,6 @@ export default function App() {
     const paths = {
         editor: { value: 'editor', path: '/editor', label: '編輯' },
         analysis: { value: 'analysis', path: '/analysis', label: '報告' },
-        dev: { value: 'dev', path: '/dev', label: '開發' },
     }
 
     const history = useHistory()
@@ -77,10 +75,6 @@ export default function App() {
                 <Switch>
                     <Route path={paths.editor.path}>
                         <Editor />
-                    </Route>
-
-                    <Route path={paths.dev.path}>
-                        <Dev />
                     </Route>
 
                     <Route

@@ -12,6 +12,7 @@ import MenuItem from '@mui/material/MenuItem'
 import Slider from '@mui/material/Slider'
 import Button from '@mui/material/Button'
 import Popover from '@mui/material/Popover'
+import ImageUploader from 'components/common/ImageUploader'
 import { getDefaultChoice } from 'utils/helper'
 import { QuizMode } from 'common/types'
 import type {
@@ -514,6 +515,8 @@ export default function EditingQuiz(props: EditingQuizProps) {
     const { formId, quiz } = props
     const dispatch = useAppDispatch()
 
+    const { backgroundColor, backgroundImage } = quiz ?? {}
+
     const handleUpdateQuiz = (newValue: Partial<QuizType>) => {
         if (formId && quiz) {
             dispatch(
@@ -644,6 +647,28 @@ export default function EditingQuiz(props: EditingQuizProps) {
             spacing={2}
             sx={{ width: '100%', height: '100%' }}
         >
+            <ImageUploader
+                value={[{ dataUrl: backgroundImage }]}
+                boxProps={{
+                    sx: {
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor,
+                        mt: `0 !important`,
+                    },
+                }}
+                unloaderProps={{
+                    sx: { opacity: 0, backgroundColor: 'transparent' },
+                }}
+                onUploaded={(backgroundImage) => {
+                    handleUpdateQuiz({
+                        backgroundImage,
+                    })
+                }}
+            />
             {renderQuiz()}
         </Stack>
     )
