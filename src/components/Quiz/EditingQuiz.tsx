@@ -648,7 +648,7 @@ export default function EditingQuiz(props: EditingQuizProps) {
             sx={{ width: '100%', height: '100%' }}
         >
             <ImageUploader
-                value={[{ dataUrl: backgroundImage }]}
+                bgImage={backgroundImage}
                 boxProps={{
                     sx: {
                         position: 'absolute',

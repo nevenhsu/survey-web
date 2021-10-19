@@ -6,7 +6,7 @@ import { styled } from '@mui/material'
 import Tooltip from '@mui/material/Tooltip'
 import Stack, { StackProps } from '@mui/material/Stack'
 import Box, { BoxProps } from '@mui/material/Box'
-import LinearProgress from '@mui/material/LinearProgress'
+import CircularProgress from '@mui/material/CircularProgress'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import ImageIcon from 'mdi-react/ImageIcon'
@@ -15,7 +15,7 @@ import ImageRemoveIcon from 'mdi-react/ImageRemoveIcon'
 import surveyApi from 'services/surveyApi'
 
 type ImageUploaderProps = {
-    value?: ImageListType
+    bgImage?: string
     dataUrl?: string
     boxProps?: BoxProps
     unloaderProps?: BoxProps
@@ -25,6 +25,7 @@ type ImageUploaderProps = {
 
 type StyledBoxProps = BoxProps & {
     isDragging?: boolean
+    bgImage?: string
 }
 
 const StyledUnloaderBox = styled(Box)(({ theme }) => ({
@@ -43,10 +44,11 @@ const Unloader = (props: BoxProps) => (
 )
 
 const StyledBox = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'isDragging',
-})<StyledBoxProps>(({ isDragging }) => ({
+    shouldForwardProp: (prop) => !_.includes(['bgImage', 'isDragging'], prop),
+})<StyledBoxProps>(({ isDragging, bgImage }) => ({
     position: 'relative',
     opacity: isDragging ? 0.9 : 1,
+    background: bgImage ? `center / cover no-repeat url(${bgImage})` : '',
     '& img': {
         display: 'inherit',
         width: 'inherit',
@@ -63,7 +65,7 @@ const StyledStack = styled(Stack)({
 
 export default function ImageUploader(props: ImageUploaderProps) {
     const {
-        value,
+        bgImage,
         boxProps,
         unloaderProps,
         stackProps,
@@ -71,7 +73,7 @@ export default function ImageUploader(props: ImageUploaderProps) {
         dataUrl = 'dataUrl',
     } = props
 
-    const [images, setImages] = React.useState<ImageListType>(value ?? [])
+    const [images, setImages] = React.useState<ImageListType>([])
     const [uploading, setUploading] = React.useState(false)
     const [failed, setFailed] = React.useState(false)
 
@@ -101,10 +103,6 @@ export default function ImageUploader(props: ImageUploaderProps) {
         }
     }
 
-    React.useEffect(() => {
-        setImages(value ?? [])
-    }, value)
-
     return (
         <ImageUploading
             value={images}
@@ -122,93 +120,104 @@ export default function ImageUploader(props: ImageUploaderProps) {
                 isDragging,
                 dragProps,
                 errors,
-            }) => (
-                <StyledBox isDragging={isDragging} {...boxProps} {...dragProps}>
-                    {imageList.map((image, index) => (
+            }) => {
+                const [img] = imageList
+
+                return (
+                    <StyledBox
+                        bgImage={bgImage}
+                        isDragging={isDragging}
+                        {...boxProps}
+                        {...dragProps}
+                    >
                         <Img
-                            key={image.file?.name ?? index}
-                            src={image['dataUrl'] ?? ''}
+                            src={img?.dataUrl ?? ''}
                             alt=""
                             unloader={<Unloader {...unloaderProps} />}
                         />
-                    ))}
 
-                    {!Boolean(imageList.length) && (
-                        <Unloader {...unloaderProps} />
-                    )}
+                        {(failed || Boolean(errors)) && (
+                            <Box
+                                sx={{
+                                    position: 'absolute',
+                                    p: 1,
+                                    left: 0,
+                                    bottom: 0,
+                                    color: 'white',
+                                    width: '100%',
+                                    bgcolor: (theme) =>
+                                        theme.palette.error.main,
+                                    opacity: 0.8,
+                                }}
+                            >
+                                {failed && (
+                                    <Typography variant="overline">
+                                        Slow or no internet connection
+                                    </Typography>
+                                )}
+                                {errors?.maxNumber && (
+                                    <Typography variant="overline">
+                                        Number of selected images exceed
+                                        maxNumber
+                                    </Typography>
+                                )}
+                                {errors?.acceptType && (
+                                    <Typography variant="overline">
+                                        Your selected file type is not allow
+                                    </Typography>
+                                )}
+                                {errors?.maxFileSize && (
+                                    <Typography variant="overline">
+                                        Selected file size exceed maxFileSize
+                                    </Typography>
+                                )}
+                                {errors?.resolution && (
+                                    <Typography variant="overline">
+                                        Selected file is not match your desired
+                                        resolution
+                                    </Typography>
+                                )}
+                            </Box>
+                        )}
 
-                    {(failed || Boolean(errors)) && (
-                        <Box
-                            sx={{
-                                position: 'absolute',
-                                p: 1,
-                                left: 0,
-                                bottom: 0,
-                                color: 'white',
-                                width: '100%',
-                                bgcolor: (theme) => theme.palette.error.main,
-                                opacity: 0.8,
-                            }}
+                        <StyledStack
+                            direction="row"
+                            justifyContent="right"
+                            alignItems="center"
+                            spacing={0.5}
+                            {...stackProps}
                         >
-                            {failed && (
-                                <Typography variant="overline">
-                                    Slow or no internet connection
-                                </Typography>
-                            )}
-                            {errors?.maxNumber && (
-                                <Typography variant="overline">
-                                    Number of selected images exceed maxNumber
-                                </Typography>
-                            )}
-                            {errors?.acceptType && (
-                                <Typography variant="overline">
-                                    Your selected file type is not allow
-                                </Typography>
-                            )}
-                            {errors?.maxFileSize && (
-                                <Typography variant="overline">
-                                    Selected file size exceed maxFileSize
-                                </Typography>
-                            )}
-                            {errors?.resolution && (
-                                <Typography variant="overline">
-                                    Selected file is not match your desired
-                                    resolution
-                                </Typography>
-                            )}
-                        </Box>
-                    )}
-
-                    <StyledStack
-                        direction="row"
-                        justifyContent="right"
-                        alignItems="center"
-                        spacing={0.5}
-                        {...stackProps}
-                    >
-                        <Tooltip title="上傳圖片">
-                            <IconButton onClick={onImageUpload} color="primary">
-                                <ImagePlusIcon />
-                            </IconButton>
-                        </Tooltip>
-                        {Boolean(imageList.length) && (
-                            <Tooltip title="刪除圖片">
+                            <Tooltip title="上傳圖片">
                                 <IconButton
-                                    onClick={onImageRemoveAll}
-                                    color="error"
+                                    onClick={
+                                        uploading ? undefined : onImageUpload
+                                    }
+                                    color="primary"
                                 >
-                                    <ImageRemoveIcon />
+                                    {uploading ? (
+                                        <CircularProgress
+                                            size={20}
+                                            thickness={6}
+                                        />
+                                    ) : (
+                                        <ImagePlusIcon />
+                                    )}
                                 </IconButton>
                             </Tooltip>
-                        )}
-                    </StyledStack>
-                    {uploading && (
-                        <LinearProgress
-                            sx={{ position: 'absolute', top: 0, width: '100%' }}
-                        />
-                    )}
-                </StyledBox>
-            )}
+                            {!uploading && Boolean(img) && (
+                                <Tooltip title="刪除圖片">
+                                    <IconButton
+                                        onClick={onImageRemoveAll}
+                                        color="error"
+                                    >
+                                        <ImageRemoveIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            )}
+                        </StyledStack>
+                    </StyledBox>
+                )
+            }}
         </ImageUploading>
     )
 }

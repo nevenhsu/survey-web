@@ -1,6 +1,7 @@
 import * as React from 'react'
 import _ from 'lodash'
 import Grid from '@mui/material/Grid'
+import Stack from '@mui/material/Stack'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import AppBar from '@mui/material/AppBar'
@@ -101,19 +102,19 @@ export default function PickForm() {
 
     return (
         <>
-            <Grid
-                container
+            <Stack
+                direction="row"
                 alignItems="center"
                 justifyContent="space-between"
                 sx={{ p: 3, borderBottom: '1px solid' }}
             >
-                <Grid item>
+                <Box>
                     <Typography variant="h6">選擇測驗類型</Typography>
                     <Typography variant="body1">
                         請選擇您的測驗需求，讓我們為您推薦測驗範本
                     </Typography>
-                </Grid>
-                <Grid item>
+                </Box>
+                <Box>
                     <LoadingButton
                         loading={loading}
                         loadingPosition="start"
@@ -124,8 +125,8 @@ export default function PickForm() {
                     >
                         建立測驗
                     </LoadingButton>
-                </Grid>
-            </Grid>
+                </Box>
+            </Stack>
 
             <Grid
                 container

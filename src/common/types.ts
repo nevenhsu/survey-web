@@ -41,7 +41,7 @@ export type Quiz = CustomButton & {
 export type ChoiceType = Omit<CustomButton, 'buttonText'> & {
     id: string
     label: string
-    tags: { [k: string]: string[] }
+    tags: { [id: string]: string[] }
     image?: string
     next?: string
 }
@@ -76,6 +76,7 @@ export type Tags = {
     id: string
     label: string
     values: string[]
+    color: string
 }
 
 export enum ComponentType {
@@ -106,11 +107,12 @@ export type Component = {
 
 export type Result = {
     id: string
-    labels: string[]
+    title?: string
+    tags: { [tagId: string]: string[] }
     components: Component[]
 }
 
-export type ResultList = { [key: string]: Result }
+export type ResultList = { [id: string]: Result }
 
 export type Results = {
     selectedTags: [string?, string?]
@@ -123,6 +125,6 @@ export type Form = {
     updatedAt: number
     mode: Mode
     quizzes: QuizType[]
-    tags: { [key: string]: Tags }
+    tags: { [id: string]: Tags }
     results: Results
 }

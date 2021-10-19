@@ -85,14 +85,21 @@ export default function ResultForm() {
 
         const labels =
             values.length && values2.length
-                ? _.flatten(values.map((v1) => values2.map((v2) => [v1, v2])))
+                ? _.flatten(
+                      values.map((v1) =>
+                          values2.map((v2) => ({
+                              [tagId1]: [v1],
+                              [tagId2]: [v2],
+                          }))
+                      )
+                  )
                 : values.length
-                ? values.map((el) => [el])
-                : values2.map((el) => [el])
+                ? values.map((el) => ({ [tagId1]: [el] }))
+                : values2.map((el) => ({ [tagId2]: [el] }))
 
         const hexed: Result[] = labels.map((el, index) => ({
-            id: utils.base64encode(_.join(el, '.'), true),
-            labels: el,
+            id: utils.base64encode(_.join(_.flatten(_.values(el)), '.'), true),
+            tags: el,
             components:
                 index === 0 ? [getDefaultComponent(ComponentType.title)] : [],
         }))
@@ -113,6 +120,7 @@ export default function ResultForm() {
                     },
                 })
             )
+            setSelectedId(newKeys[0])
         }
     }, [selectedTags[0], selectedTags[1]])
 
@@ -250,15 +258,17 @@ export default function ResultForm() {
                                     alignItems="center"
                                     justifyContent="right"
                                 >
-                                    {el.labels.map((el) => (
-                                        <Chip
-                                            key={el}
-                                            variant="outlined"
-                                            size="small"
-                                            label={el}
-                                            sx={{ ml: 0.5 }}
-                                        />
-                                    ))}
+                                    {_.map(el.tags, (labels, k) =>
+                                        labels.map((el) => (
+                                            <Chip
+                                                key={`${k}${el}`}
+                                                variant="outlined"
+                                                size="small"
+                                                label={el}
+                                                sx={{ ml: 0.5 }}
+                                            />
+                                        ))
+                                    )}
                                 </Stack>
                             </Stack>
                         ))}

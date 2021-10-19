@@ -16,7 +16,7 @@ import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import PencilIcon from 'mdi-react/PencilIcon'
 import { useAppSelector, useAppDispatch } from 'hooks'
-import { setClasses, setId } from 'utils/helper'
+import { setClasses, getDefaultTags } from 'utils/helper'
 import { selectCurrentForm, updateQuiz, updateForm } from 'store/slices/editor'
 import type { SelectionQuiz, Tags, ChoiceType } from 'common/types'
 import type { ActionMeta, OnChangeValue, MultiValue } from 'react-select'
@@ -88,12 +88,7 @@ export default function TagsQuiz(props: TagsQuizProps) {
         const value = _.trim(rawValue)
 
         if (value) {
-            const id = setId()
-            const newTags: Tags = {
-                id,
-                label: value,
-                values: [],
-            }
+            const newTags = getDefaultTags(value)
 
             dispatch(
                 updateForm({
@@ -101,7 +96,7 @@ export default function TagsQuiz(props: TagsQuizProps) {
                     newValue: {
                         tags: {
                             ...tags,
-                            [id]: newTags,
+                            [newTags.id]: newTags,
                         },
                     },
                 })
@@ -109,7 +104,7 @@ export default function TagsQuiz(props: TagsQuizProps) {
 
             if (quizId) {
                 const newTagsId = Array.from(tagsId)
-                newTagsId[index] = id
+                newTagsId[index] = newTags.id
 
                 dispatch(
                     updateQuiz({

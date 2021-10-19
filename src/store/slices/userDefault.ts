@@ -17,7 +17,7 @@ export const userDefaultSlice = createSlice({
     reducers: {
         toggleMode: (state, action: PayloadAction<void>) => {
             const { mode } = state
-            state.mode = mode === 'light' ? 'dark' : 'light'
+            state.mode = mode === 'dark' ? 'light' : 'dark'
         },
     },
 })

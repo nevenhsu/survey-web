@@ -1,6 +1,6 @@
 import * as React from 'react'
 import _ from 'lodash'
-import Grid from '@mui/material/Grid'
+import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 

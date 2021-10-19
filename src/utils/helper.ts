@@ -1,14 +1,18 @@
 import _ from 'lodash'
 import cryptoRandomString from 'crypto-random-string'
-import { QuizMode, QuizType, ComponentType } from 'common/types'
+import { personaTags, productTags } from 'common/defaultTags'
+import { QuizMode, QuizType, ComponentType, Mode } from 'common/types'
 import type {
+    Form,
     Quiz,
     SelectionQuiz,
     FillQuiz,
     SliderQuiz,
     ChoiceType,
     Component,
+    Tags,
 } from 'common/types'
+import { getMuiColor } from 'theme/palette'
 
 export function setId(length = 6) {
     return cryptoRandomString({ length })
@@ -51,6 +55,28 @@ export function reorder<T, U extends Iterable<T>>(
     result.splice(endIndex, 0, removed)
 
     return result
+}
+
+export function getDefaultForm(data: Partial<Form>): Form {
+    const { id = setId(), createdAt = Date.now(), mode = Mode.persona } = data
+    const tags = [...personaTags, ...productTags]
+
+    const form: Form = {
+        id,
+        createdAt,
+        mode,
+        updatedAt: createdAt,
+        quizzes: [
+            {
+                id: setId(),
+                mode: QuizMode.page,
+                title: '測驗標題',
+            },
+        ],
+        tags: mode === Mode.product ? _.keyBy(tags, 'id') : {},
+        results: { selectedTags: [], list: {} },
+    }
+    return form
 }
 
 export function getDefaultQuiz(id: string, mode: QuizMode): QuizType {
@@ -109,6 +135,15 @@ export function getDefaultChoice() {
         buttonVariant: 'outlined',
     }
     return choice
+}
+
+export function getDefaultTags(label: string): Tags {
+    return {
+        id: setId(),
+        label,
+        values: [],
+        color: getMuiColor().key,
+    }
 }
 
 export function getDefaultComponent(type: ComponentType) {

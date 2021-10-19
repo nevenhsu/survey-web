@@ -9,6 +9,7 @@ import QuizForm from 'components/Editor/QuizForm'
 import ResultForm from 'components/Editor/ResultForm'
 import FinalForm from 'components/Editor/FinalForm'
 import LaunchForm from 'components/Editor/LaunchForm'
+import ProductForm from 'components/Editor/ProductForm'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import User from 'utils/user'
 import { setClasses } from 'utils/helper'
@@ -129,6 +130,8 @@ export default function Editor() {
                 return <FinalForm />
             case EditorStep.launch:
                 return <LaunchForm />
+            case EditorStep.product:
+                return <ProductForm />
         }
     }
 

@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import axios from 'axios'
-import { setId } from 'utils/helper'
+import { setId, getDefaultForm } from 'utils/helper'
 import { QuizMode } from 'common/types'
 import type { Mode, Form } from 'common/types'
 
@@ -17,21 +17,7 @@ const surveyApi = {
     createNew: async (mode: Mode): Promise<Form> => {
         const url = `${process.env.REACT_APP_URL}/survey`
         const { data } = await axios.post<CreateNewResponse>(url)
-
-        const form: Form = {
-            ...data,
-            mode,
-            quizzes: [
-                {
-                    id: setId(),
-                    mode: QuizMode.page,
-                    title: '測驗標題',
-                },
-            ],
-            tags: {},
-            results: { selectedTags: [], list: {} },
-            updatedAt: data.createdAt,
-        }
+        const form = getDefaultForm({ ...data, mode })
 
         return form
     },

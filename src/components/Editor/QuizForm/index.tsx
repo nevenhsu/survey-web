@@ -252,27 +252,27 @@ export default function QuizForm() {
 
     return (
         <>
-            <Grid
-                container
+            <Stack
+                direction="row"
                 alignItems="center"
                 justifyContent="space-between"
                 sx={{ p: 3, borderBottom: '1px solid' }}
             >
-                <Grid item>
+                <Box>
                     <Typography variant="h6">編輯測驗內容</Typography>
                     <Typography variant="body1">
                         直接從預覽畫面中編輯測驗內容
                     </Typography>
-                </Grid>
-                <Grid item>
+                </Box>
+                <Box>
                     <Button variant="outlined">預覽測驗</Button>
                     <Box
                         component="span"
                         sx={{ display: 'inline-block', width: 8 }}
                     />
                     <Button variant="contained">編輯個人化測驗結果</Button>
-                </Grid>
-            </Grid>
+                </Box>
+            </Stack>
             <Grid container sx={{ minHeight: 'calc(100vh - 218px)' }}>
                 <Grid
                     item
