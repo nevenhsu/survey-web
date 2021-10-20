@@ -1,5 +1,7 @@
 import type { Variant } from '@mui/material/styles/createTypography'
 
+export type onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => void
+
 export enum Mode {
     persona = 'persona',
     product = 'product',

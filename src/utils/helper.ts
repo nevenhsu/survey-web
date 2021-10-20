@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import cryptoRandomString from 'crypto-random-string'
-import { personaTags, productTags } from 'common/defaultTags'
+import { defaultTags } from 'common/defaultTags'
 import { QuizMode, QuizType, ComponentType, Mode } from 'common/types'
 import type {
     Form,
@@ -11,6 +11,7 @@ import type {
     ChoiceType,
     Component,
     Tags,
+    Result,
 } from 'common/types'
 import { getMuiColor } from 'theme/palette'
 
@@ -59,7 +60,6 @@ export function reorder<T, U extends Iterable<T>>(
 
 export function getDefaultForm(data: Partial<Form>): Form {
     const { id = setId(), createdAt = Date.now(), mode = Mode.persona } = data
-    const tags = [...personaTags, ...productTags]
 
     const form: Form = {
         id,
@@ -73,7 +73,7 @@ export function getDefaultForm(data: Partial<Form>): Form {
                 title: '測驗標題',
             },
         ],
-        tags: mode === Mode.product ? _.keyBy(tags, 'id') : {},
+        tags: mode === Mode.product ? _.keyBy(defaultTags, 'id') : {},
         results: { selectedTags: [], list: {} },
     }
     return form
@@ -223,5 +223,14 @@ export function getDefaultComponent(type: ComponentType) {
             }
             return component
         }
+    }
+}
+
+export function getDefaultResult(): Result {
+    return {
+        id: setId(),
+        title: '',
+        tags: {},
+        components: [],
     }
 }

@@ -11,13 +11,13 @@ export const personaTags: Tags[] = [
         id: 'b00000',
         label: '人生階段',
         values: ['兒童', '青少年', '成年', '老年'],
-        color: 'blue',
+        color: 'lime',
     },
     {
         id: 'c00000',
         label: '性別',
         values: ['男', '女', '跨性別', '不限'],
-        color: 'brown',
+        color: 'blue',
     },
     {
         id: 'd00000',
@@ -29,7 +29,7 @@ export const personaTags: Tags[] = [
         id: 'e00000',
         label: '職業',
         values: ['創業家', '上班族', '自由業', '待業'],
-        color: 'indigo',
+        color: 'yellow',
     },
     {
         id: 'f00000',
@@ -59,3 +59,5 @@ export const productTags: Tags[] = [
         color: 'teal',
     },
 ]
+
+export const defaultTags = [...personaTags, ...productTags]

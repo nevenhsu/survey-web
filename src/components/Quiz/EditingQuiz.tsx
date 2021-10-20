@@ -25,6 +25,7 @@ import type {
     FillQuiz,
     SliderType,
     SliderQuiz,
+    onInputChange,
 } from 'common/types'
 
 const variants = [
@@ -33,7 +34,6 @@ const variants = [
     { value: 'text', label: '文字' },
 ]
 
-type onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => void
 type onButtonClink = (event: React.MouseEvent<HTMLButtonElement>) => void
 
 type EditingQuizProps = {

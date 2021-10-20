@@ -26,10 +26,9 @@ import { getDefaultComponent, setId } from 'utils/helper'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import { updateComponent, setResult } from 'store/slices/editor'
 import { ComponentType } from 'common/types'
-import type { Result, Component } from 'common/types'
+import type { Result, Component, onInputChange } from 'common/types'
 import type { Variant } from '@mui/material/styles/createTypography'
 
-type onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => void
 type onButtonClink = (event: React.MouseEvent<HTMLButtonElement>) => void
 
 type EditingQuizProps = {

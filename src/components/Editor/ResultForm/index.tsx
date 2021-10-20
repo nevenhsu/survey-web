@@ -4,7 +4,6 @@ import utils from 'utility'
 import { styled } from '@mui/material/styles'
 import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
-import Chip from '@mui/material/Chip'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
@@ -12,13 +11,13 @@ import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
 import InputAdornment from '@mui/material/InputAdornment'
 import EditingResult from 'components/Result/EditingResult'
+import StyledChip from 'components/common/StyledChip'
 import { getDefaultComponent } from 'utils/helper'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import { selectCurrentForm, setResults } from 'store/slices/editor'
 import Numeric1BoxIcon from 'mdi-react/Numeric1BoxIcon'
 import Numeric2BoxIcon from 'mdi-react/Numeric2BoxIcon'
-import { setId } from 'utils/helper'
-import { ComponentType } from 'common/types'
+import { ComponentType, Mode } from 'common/types'
 import type { Result, ResultList } from 'common/types'
 
 const ListItem = styled('li')(({ theme }) => ({
@@ -51,7 +50,7 @@ export default function ResultForm() {
     const [selectedId, setSelectedId] = React.useState('')
 
     const form = useAppSelector(selectCurrentForm)
-    const { id: formId, tags, results } = form ?? {}
+    const { id: formId, tags, results, mode } = form ?? {}
 
     const { selectedTags = [], list } = results ?? {}
 
@@ -78,49 +77,56 @@ export default function ResultForm() {
     }
 
     React.useEffect(() => {
-        const [tagId1 = '', tagId2 = ''] = selectedTags
+        if (mode === Mode.persona) {
+            const [tagId1 = '', tagId2 = ''] = selectedTags
 
-        const { values = [] } = tags[tagId1] ?? {}
-        const { values: values2 = [] } = tags[tagId2] ?? {}
+            const { values = [] } = tags[tagId1] ?? {}
+            const { values: values2 = [] } = tags[tagId2] ?? {}
 
-        const labels =
-            values.length && values2.length
-                ? _.flatten(
-                      values.map((v1) =>
-                          values2.map((v2) => ({
-                              [tagId1]: [v1],
-                              [tagId2]: [v2],
-                          }))
+            const labels =
+                values.length && values2.length
+                    ? _.flatten(
+                          values.map((v1) =>
+                              values2.map((v2) => ({
+                                  [tagId1]: [v1],
+                                  [tagId2]: [v2],
+                              }))
+                          )
                       )
-                  )
-                : values.length
-                ? values.map((el) => ({ [tagId1]: [el] }))
-                : values2.map((el) => ({ [tagId2]: [el] }))
+                    : values.length
+                    ? values.map((el) => ({ [tagId1]: [el] }))
+                    : values2.map((el) => ({ [tagId2]: [el] }))
 
-        const hexed: Result[] = labels.map((el, index) => ({
-            id: utils.base64encode(_.join(_.flatten(_.values(el)), '.'), true),
-            tags: el,
-            components:
-                index === 0 ? [getDefaultComponent(ComponentType.title)] : [],
-        }))
+            const hexed: Result[] = labels.map((el, index) => ({
+                id: utils.base64encode(
+                    _.join(_.flatten(_.values(el)), '.'),
+                    true
+                ),
+                tags: el,
+                components:
+                    index === 0
+                        ? [getDefaultComponent(ComponentType.title)]
+                        : [],
+            }))
 
-        const newList: ResultList = _.keyBy(hexed, 'id')
+            const newList: ResultList = _.keyBy(hexed, 'id')
 
-        const oldKeys = _.keys(list)
-        const newKeys = _.keys(newList)
+            const oldKeys = _.keys(list)
+            const newKeys = _.keys(newList)
 
-        const intersections = _.intersection(oldKeys, newKeys)
+            const intersections = _.intersection(oldKeys, newKeys)
 
-        if (!newKeys.length || intersections.length !== newKeys.length) {
-            dispatch(
-                setResults({
-                    formId,
-                    newValue: {
-                        list: newList,
-                    },
-                })
-            )
-            setSelectedId(newKeys[0])
+            if (!newKeys.length || intersections.length !== newKeys.length) {
+                dispatch(
+                    setResults({
+                        formId,
+                        newValue: {
+                            list: newList,
+                        },
+                    })
+                )
+                setSelectedId(newKeys[0])
+            }
         }
     }, [selectedTags[0], selectedTags[1]])
 
@@ -237,10 +243,11 @@ export default function ResultForm() {
                                 justifyContent="space-between"
                                 alignItems="center"
                                 sx={{
-                                    border: (theme) =>
-                                        `1px solid ${theme.palette.grey[300]}`,
+                                    overflowX: 'auto',
                                     p: 1,
                                     mb: 1,
+                                    border: (theme) =>
+                                        `1px solid ${theme.palette.grey[300]}`,
                                     bgcolor: (theme) =>
                                         selectedId === el.id
                                             ? theme.palette.grey[100]
@@ -248,10 +255,12 @@ export default function ResultForm() {
                                 }}
                                 onClick={() => setSelectedId(el.id)}
                             >
-                                <Typography noWrap>
-                                    {_.find(el.components, {
-                                        type: ComponentType.title,
-                                    })?.value || '未命名'}
+                                <Typography noWrap sx={{ minWidth: '12ch' }}>
+                                    {el.title ||
+                                        _.find(el.components, {
+                                            type: ComponentType.title,
+                                        })?.value ||
+                                        '未命名'}
                                 </Typography>
                                 <Stack
                                     direction="row"
@@ -259,12 +268,13 @@ export default function ResultForm() {
                                     justifyContent="right"
                                 >
                                     {_.map(el.tags, (labels, k) =>
-                                        labels.map((el) => (
-                                            <Chip
+                                        _.compact(labels).map((el) => (
+                                            <StyledChip
                                                 key={`${k}${el}`}
                                                 variant="outlined"
                                                 size="small"
                                                 label={el}
+                                                colorKey={tags[k].color}
                                                 sx={{ ml: 0.5 }}
                                             />
                                         ))

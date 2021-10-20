@@ -144,6 +144,8 @@ export const editorSlice = createSlice({
                 ...list[resultId],
                 ...newValue,
             }
+
+            updateLocalForm(formId, form)
         },
         updateComponent: (
             state,
