@@ -75,6 +75,7 @@ export function getDefaultForm(data: Partial<Form>): Form {
         ],
         tags: mode === Mode.product ? _.keyBy(defaultTags, 'id') : {},
         results: { selectedTags: [], list: {} },
+        setting: { showProgress: true },
     }
     return form
 }
@@ -97,7 +98,6 @@ export function getDefaultQuiz(id: string, mode: QuizMode): QuizType {
                 values: [],
                 tagsId: [],
                 maxChoices: 4,
-                showLabel: true,
                 showImage: false,
                 direction: 'column',
             }

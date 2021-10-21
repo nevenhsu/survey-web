@@ -4,22 +4,20 @@ import ImageUploading, { ImageListType } from 'react-images-uploading'
 import { Img } from 'react-image'
 import { styled } from '@mui/material'
 import Tooltip from '@mui/material/Tooltip'
-import Stack, { StackProps } from '@mui/material/Stack'
 import Box, { BoxProps } from '@mui/material/Box'
-import CircularProgress from '@mui/material/CircularProgress'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
-import ImageIcon from 'mdi-react/ImageIcon'
-import ImagePlusIcon from 'mdi-react/ImagePlusIcon'
+import LoadingButton from '@mui/lab/LoadingButton'
+import AddIcon from 'mdi-react/AddIcon'
 import ImageRemoveIcon from 'mdi-react/ImageRemoveIcon'
 import surveyApi from 'services/surveyApi'
 
-type ImageUploaderProps = {
+type ImageUploaderProps = BoxProps & {
     bgImage?: string
     dataUrl?: string
-    boxProps?: BoxProps
-    unloaderProps?: BoxProps
-    stackProps?: StackProps
+    hideButton?: boolean
+    hideDeleteButton?: boolean
+    hideImage?: boolean
     onUploaded?: (dataUrl: string) => void
 }
 
@@ -27,21 +25,6 @@ type StyledBoxProps = BoxProps & {
     isDragging?: boolean
     bgImage?: string
 }
-
-const StyledUnloaderBox = styled(Box)(({ theme }) => ({
-    position: 'relative',
-    width: 'inherit',
-    height: 'inherit',
-    minHeight: 48,
-    color: 'white',
-    backgroundColor: theme.palette.grey[300],
-}))
-
-const Unloader = (props: BoxProps) => (
-    <StyledUnloaderBox {...props}>
-        <ImageIcon className="absolute-center" />
-    </StyledUnloaderBox>
-)
 
 const StyledBox = styled(Box, {
     shouldForwardProp: (prop) => !_.includes(['bgImage', 'isDragging'], prop),
@@ -57,20 +40,15 @@ const StyledBox = styled(Box, {
     },
 }))
 
-const StyledStack = styled(Stack)({
-    position: 'absolute',
-    top: 0,
-    right: 0,
-})
-
 export default function ImageUploader(props: ImageUploaderProps) {
     const {
         bgImage,
-        boxProps,
-        unloaderProps,
-        stackProps,
         onUploaded,
+        hideButton,
+        hideDeleteButton,
+        hideImage,
         dataUrl = 'dataUrl',
+        ...rest
     } = props
 
     const [images, setImages] = React.useState<ImageListType>([])
@@ -122,21 +100,18 @@ export default function ImageUploader(props: ImageUploaderProps) {
                 errors,
             }) => {
                 const [img] = imageList
+                const imgSrc = img?.dataUrl ?? bgImage ?? ''
 
                 return (
                     <StyledBox
-                        bgImage={bgImage}
+                        bgImage={hideImage ? '' : bgImage}
                         isDragging={isDragging}
-                        {...boxProps}
+                        {...rest}
                         {...dragProps}
                     >
-                        <Img
-                            src={img?.dataUrl ?? ''}
-                            alt=""
-                            unloader={<Unloader {...unloaderProps} />}
-                        />
+                        {!hideImage && <Img src={imgSrc} alt="" />}
 
-                        {(failed || Boolean(errors)) && (
+                        {!hideImage && (failed || Boolean(errors)) && (
                             <Box
                                 sx={{
                                     position: 'absolute',
@@ -180,41 +155,35 @@ export default function ImageUploader(props: ImageUploaderProps) {
                             </Box>
                         )}
 
-                        <StyledStack
-                            direction="row"
-                            justifyContent="right"
-                            alignItems="center"
-                            spacing={0.5}
-                            {...stackProps}
-                        >
-                            <Tooltip title="上傳圖片">
+                        {!hideButton && (
+                            <LoadingButton
+                                className="absolute-center"
+                                loading={uploading}
+                                loadingPosition="start"
+                                startIcon={<AddIcon />}
+                                variant="outlined"
+                                onClick={onImageUpload}
+                                disabled={uploading}
+                            >
+                                新增圖片
+                            </LoadingButton>
+                        )}
+
+                        {!hideDeleteButton && !uploading && Boolean(imgSrc) && (
+                            <Tooltip title="刪除圖片">
                                 <IconButton
-                                    onClick={
-                                        uploading ? undefined : onImageUpload
-                                    }
-                                    color="primary"
+                                    onClick={onImageRemoveAll}
+                                    color="error"
+                                    sx={{
+                                        position: 'absolute',
+                                        top: 8,
+                                        right: 8,
+                                    }}
                                 >
-                                    {uploading ? (
-                                        <CircularProgress
-                                            size={20}
-                                            thickness={6}
-                                        />
-                                    ) : (
-                                        <ImagePlusIcon />
-                                    )}
+                                    <ImageRemoveIcon />
                                 </IconButton>
                             </Tooltip>
-                            {!uploading && Boolean(img) && (
-                                <Tooltip title="刪除圖片">
-                                    <IconButton
-                                        onClick={onImageRemoveAll}
-                                        color="error"
-                                    >
-                                        <ImageRemoveIcon />
-                                    </IconButton>
-                                </Tooltip>
-                            )}
-                        </StyledStack>
+                        )}
                     </StyledBox>
                 )
             }}

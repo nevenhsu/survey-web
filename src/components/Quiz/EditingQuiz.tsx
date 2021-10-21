@@ -13,6 +13,7 @@ import Slider from '@mui/material/Slider'
 import Button from '@mui/material/Button'
 import Popover from '@mui/material/Popover'
 import ImageUploader from 'components/common/ImageUploader'
+import ThemeProvider from 'theme/ThemeProvider'
 import { getDefaultChoice } from 'utils/helper'
 import { QuizMode } from 'common/types'
 import type {
@@ -25,7 +26,7 @@ import type {
     FillQuiz,
     SliderType,
     SliderQuiz,
-    onInputChange,
+    OnInputChange,
 } from 'common/types'
 
 const variants = [
@@ -55,7 +56,7 @@ const StyledTextField = styled(TextField)<StyledTextFieldProps>(
 
 const QuizButton = (props: {
     buttonProps: CustomButton
-    onChange: onInputChange
+    onChange: OnInputChange
 }) => {
     const { buttonProps, onChange } = props
     const {
@@ -156,7 +157,7 @@ const QuizButton = (props: {
 const PageView = (props: {
     textFieldProps: StyledTextFieldProps
     buttonProps: CustomButton
-    onChange: onInputChange
+    onChange: OnInputChange
 }) => {
     const { textFieldProps, buttonProps, onChange } = props
 
@@ -179,18 +180,11 @@ const PageView = (props: {
 
 const ChoiceView = (props: {
     value: ChoiceType
-    onChange: onInputChange
+    onChange: OnInputChange
     onDelete: onButtonClink
     showImage?: boolean
-    showLabel?: boolean
 }) => {
-    const {
-        value,
-        onChange,
-        onDelete,
-        showLabel = true,
-        showImage = false,
-    } = props
+    const { value, onChange, onDelete, showImage = false } = props
 
     const {
         id,
@@ -223,7 +217,7 @@ const ChoiceView = (props: {
                     backgroundColor: buttonColor,
                 }}
             >
-                {showLabel ? label || '選項' : ''}
+                {label || '選項'}
             </Button>
             <Popover
                 open={open}
@@ -297,16 +291,10 @@ const SelectionView = (props: {
     textFieldProps: StyledTextFieldProps
     selectionProps: SelectionType
     buttonProps: CustomButton
-    onChange: onInputChange
+    onChange: OnInputChange
 }) => {
     const { textFieldProps, selectionProps, buttonProps, onChange } = props
-    const {
-        choices = [],
-        maxChoices,
-        showLabel,
-        showImage,
-        direction,
-    } = selectionProps
+    const { choices = [], maxChoices, showImage, direction } = selectionProps
 
     const xs = direction === 'row' ? 4 : 12
 
@@ -377,7 +365,6 @@ const SelectionView = (props: {
                                     handleChoiceChange(event, el.id)
                                 }
                                 onDelete={() => handleChoiceDelete(el.id)}
-                                showLabel={showLabel}
                                 showImage={showImage}
                             />
                         </Grid>
@@ -399,7 +386,7 @@ const FillView = (props: {
     title: string
     value: string
     buttonProps: CustomButton
-    onChange: onInputChange
+    onChange: OnInputChange
 }) => {
     const { title, value, buttonProps, onChange } = props
 
@@ -435,7 +422,7 @@ const SliderView = (props: {
     title: string
     slider: SliderType
     buttonProps: CustomButton
-    onChange: onInputChange
+    onChange: OnInputChange
 }) => {
     const { title, slider, buttonProps, onChange } = props
     const { max, min, value } = slider
@@ -515,7 +502,7 @@ export default function EditingQuiz(props: EditingQuizProps) {
     const { formId, quiz } = props
     const dispatch = useAppDispatch()
 
-    const { backgroundColor, backgroundImage } = quiz ?? {}
+    const { image, backgroundColor, backgroundImage } = quiz ?? {}
 
     const handleUpdateQuiz = (newValue: Partial<QuizType>) => {
         if (formId && quiz) {
@@ -579,7 +566,6 @@ export default function EditingQuiz(props: EditingQuizProps) {
                     values = [],
                     tagsId = [],
                     maxChoices = 4,
-                    showLabel = true,
                     showImage = false,
                     direction,
                 } = quiz as SelectionQuiz
@@ -593,7 +579,6 @@ export default function EditingQuiz(props: EditingQuizProps) {
                             values,
                             tagsId,
                             maxChoices,
-                            showLabel,
                             showImage,
                             direction,
                         }}
@@ -640,36 +625,45 @@ export default function EditingQuiz(props: EditingQuizProps) {
     }
 
     return (
-        <Stack
-            direction="column"
-            alignItems="center"
-            justifyContent="center"
-            spacing={2}
-            sx={{ width: '100%', height: '100%' }}
-        >
-            <ImageUploader
-                bgImage={backgroundImage}
-                boxProps={{
-                    sx: {
+        <ThemeProvider mode="light">
+            <Stack
+                direction="column"
+                alignItems="center"
+                justifyContent="center"
+                spacing={2}
+                sx={{ width: '100%', height: '100%', backgroundColor }}
+            >
+                <ImageUploader
+                    bgImage={backgroundImage}
+                    sx={{
                         position: 'absolute',
                         top: 0,
                         left: 0,
                         width: '100%',
                         height: '100%',
-                        backgroundColor,
                         mt: `0 !important`,
-                    },
-                }}
-                unloaderProps={{
-                    sx: { opacity: 0, backgroundColor: 'transparent' },
-                }}
-                onUploaded={(backgroundImage) => {
-                    handleUpdateQuiz({
-                        backgroundImage,
-                    })
-                }}
-            />
-            {renderQuiz()}
-        </Stack>
+                    }}
+                    onUploaded={(backgroundImage) => {
+                        handleUpdateQuiz({
+                            backgroundImage,
+                        })
+                    }}
+                    hideButton
+                />
+
+                <ImageUploader
+                    bgImage={image}
+                    sx={{ width: '80%', mt: `0 !important` }}
+                    onUploaded={(image) => {
+                        handleUpdateQuiz({
+                            image,
+                        })
+                    }}
+                    hideButton={Boolean(image)}
+                />
+
+                {renderQuiz()}
+            </Stack>
+        </ThemeProvider>
     )
 }

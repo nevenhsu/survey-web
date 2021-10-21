@@ -190,6 +190,8 @@ export const editorSlice = createSlice({
                 ...form,
                 ...newValue,
             }
+
+            updateLocalForm(id, forms[id])
         },
         reloadFromLocal: (state, action: PayloadAction<void>) => {
             const localForms = LocalForms.getInstance()

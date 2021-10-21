@@ -15,7 +15,7 @@ import { useAppDispatch, useAppSelector } from 'hooks'
 import { getDefaultResult } from 'utils/helper'
 import { personaTags, productTags, defaultTags } from 'common/defaultTags'
 import { selectCurrentForm, setResult, setResults } from 'store/slices/editor'
-import type { Tags, onInputChange } from 'common/types'
+import type { Tags, OnInputChange } from 'common/types'
 
 type EditingTagType = {
     tagId?: string
@@ -75,7 +75,7 @@ export default function ProductForm() {
         dispatch(setResult({ formId, resultId: newValue.id, newValue }))
     }
 
-    const handleChange: onInputChange = (event) => {
+    const handleChange: OnInputChange = (event) => {
         const { id: resultId, name, value } = event.target
         const newValue = { [name]: value }
         dispatch(setResult({ formId, resultId, newValue }))

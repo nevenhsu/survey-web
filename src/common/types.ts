@@ -1,6 +1,6 @@
 import type { Variant } from '@mui/material/styles/createTypography'
 
-export type onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => void
+export type OnInputChange = (event: React.ChangeEvent<HTMLInputElement>) => void
 
 export enum Mode {
     persona = 'persona',
@@ -36,6 +36,7 @@ export type Quiz = CustomButton & {
     mode: QuizMode
     title: string
     required?: boolean
+    image?: string
     backgroundColor?: string
     backgroundImage?: string
 }
@@ -43,7 +44,7 @@ export type Quiz = CustomButton & {
 export type ChoiceType = Omit<CustomButton, 'buttonText'> & {
     id: string
     label: string
-    tags: { [id: string]: string[] }
+    tags: { [tagId: string]: string[] }
     image?: string
     next?: string
 }
@@ -53,7 +54,6 @@ export type SelectionType = {
     values: string[]
     tagsId: string[]
     maxChoices: number
-    showLabel: boolean
     showImage: boolean
     direction?: 'row' | 'column'
 }
@@ -121,6 +121,10 @@ export type Results = {
     list: ResultList
 }
 
+export type Setting = {
+    showProgress: boolean
+}
+
 export type Form = {
     id: string
     createdAt: number
@@ -129,4 +133,5 @@ export type Form = {
     quizzes: QuizType[]
     tags: { [id: string]: Tags }
     results: Results
+    setting: Setting
 }

@@ -26,7 +26,7 @@ import { getDefaultComponent, setId } from 'utils/helper'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import { updateComponent, setResult } from 'store/slices/editor'
 import { ComponentType } from 'common/types'
-import type { Result, Component, onInputChange } from 'common/types'
+import type { Result, Component, OnInputChange } from 'common/types'
 import type { Variant } from '@mui/material/styles/createTypography'
 
 type onButtonClink = (event: React.MouseEvent<HTMLButtonElement>) => void
@@ -42,7 +42,7 @@ type ComponentListProps = {
     selectedComponent?: Component
     onAdd: (idPath: string[], type: ComponentType) => void
     onSelect: (component: Component, idPath: string[]) => void
-    onChange: onInputChange
+    onChange: OnInputChange
 }
 
 const options = [
@@ -168,7 +168,7 @@ const AddButton = (props: {
 
 function ToolBar(props: {
     component?: Component
-    onChange: onInputChange
+    onChange: OnInputChange
     onDelete: onButtonClink
 }) {
     const { component, onChange, onDelete } = props
