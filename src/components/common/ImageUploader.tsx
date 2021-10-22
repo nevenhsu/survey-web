@@ -1,7 +1,6 @@
 import * as React from 'react'
 import _ from 'lodash'
 import ImageUploading, { ImageListType } from 'react-images-uploading'
-import { Img } from 'react-image'
 import { styled } from '@mui/material'
 import Tooltip from '@mui/material/Tooltip'
 import Box, { BoxProps } from '@mui/material/Box'
@@ -74,6 +73,7 @@ export default function ImageUploader(props: ImageUploaderProps) {
                     setUploading(false)
                 })
                 .catch((err) => {
+                    // TODO: send error by snackbar
                     console.error(err)
                     setFailed(true)
                     setUploading(false)
@@ -109,7 +109,9 @@ export default function ImageUploader(props: ImageUploaderProps) {
                         {...rest}
                         {...dragProps}
                     >
-                        {!hideImage && <Img src={imgSrc} alt="" />}
+                        {!hideImage && Boolean(imgSrc) && (
+                            <img src={imgSrc} alt="" />
+                        )}
 
                         {!hideImage && (failed || Boolean(errors)) && (
                             <Box

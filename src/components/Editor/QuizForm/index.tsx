@@ -12,18 +12,8 @@ import IconButton from '@mui/material/IconButton'
 import Divider from '@mui/material/Divider'
 import Box, { BoxProps } from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
-import FormControl, { FormControlProps } from '@mui/material/FormControl'
-import Switch from '@mui/material/Switch'
-import Select, { SelectChangeEvent } from '@mui/material/Select'
-import MenuItem from '@mui/material/MenuItem'
-import NumberFormat from 'react-number-format'
-import TextField from '@mui/material/TextField'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableRow from '@mui/material/TableRow'
-import ImageUploader from 'components/common/ImageUploader'
+import QuizTool from 'components/Editor/QuizForm/QuizTool'
+import ModeSelector from 'components/Editor/QuizForm/ModeSelector'
 import EditingQuiz from 'components/Quiz/EditingQuiz'
 import TagsQuiz from 'components/Quiz/TagsQuiz'
 import NextQuiz from 'components/Quiz/NextQuiz'
@@ -33,17 +23,11 @@ import LaptopIcon from 'mdi-react/LaptopIcon'
 import CellphoneIcon from 'mdi-react/CellphoneIcon'
 import DesktopMacIcon from 'mdi-react/DesktopMacIcon'
 import { useAppSelector, useAppDispatch } from 'hooks'
-import {
-    selectCurrentForm,
-    setQuizzes,
-    updateQuiz,
-    updateForm,
-    addQuiz,
-} from 'store/slices/editor'
+import { selectCurrentForm, setQuizzes, addQuiz } from 'store/slices/editor'
 import { reorder, setId, getDefaultQuiz } from 'utils/helper'
 import ThemeProvider from 'theme/ThemeProvider'
-import { Mode, QuizMode, QuizType } from 'common/types'
-import type { SelectionQuiz, OnInputChange } from 'common/types'
+import { QuizMode, QuizType } from 'common/types'
+import type { SelectionQuiz } from 'common/types'
 
 type QuizProps = StackProps & {
     isDragging: boolean
@@ -54,29 +38,6 @@ type DeviceType = 'mobile' | 'laptop' | 'desktop'
 type StyledBoxProps = BoxProps & {
     device: DeviceType
 }
-
-const quizModes = {
-    [QuizMode.page]: {
-        value: QuizMode.page,
-        label: '圖文',
-    },
-    [QuizMode.selection]: {
-        value: QuizMode.selection,
-        label: '複選',
-    },
-    [QuizMode.slider]: {
-        value: QuizMode.slider,
-        label: '拉桿',
-    },
-    [QuizMode.fill]: {
-        value: QuizMode.fill,
-        label: '填空',
-    },
-    [QuizMode.sort]: {
-        value: QuizMode.sort,
-        label: '排序',
-    },
-} as const
 
 const QuizItem = styled(Stack, {
     shouldForwardProp: (prop) => !_.includes(['isDragging', 'isEditing'], prop),
@@ -105,35 +66,6 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
     },
 }))
 
-const ModeSelector = (props: {
-    quiz?: QuizType
-    formControlProps?: FormControlProps
-    onChange: (event: SelectChangeEvent) => void
-}) => {
-    const { quiz, formControlProps, onChange } = props
-    const { id = '', mode = '' } = quiz ?? {}
-    return (
-        <FormControl variant="standard" {...formControlProps}>
-            <Select
-                name={id}
-                value={mode}
-                onChange={onChange}
-                autoWidth
-                sx={{
-                    '&.MuiInput-root:before': { opacity: 0 },
-                    '&.MuiInput-root:after': { opacity: 0 },
-                }}
-            >
-                {_.map(quizModes, (el) => (
-                    <MenuItem key={el.value} value={el.value}>
-                        {el.label}
-                    </MenuItem>
-                ))}
-            </Select>
-        </FormControl>
-    )
-}
-
 const StyledBox = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'device',
 })<StyledBoxProps>(({ theme, device }) => {
@@ -149,6 +81,7 @@ const StyledBox = styled(Box, {
             left: 0,
             width: '100%',
             height: '100%',
+            overflowY: 'auto',
         },
     }
 })
@@ -171,8 +104,6 @@ export default function QuizForm() {
     const selectedQuiz: QuizType | undefined = React.useMemo(() => {
         return _.find(quizzes, { id: selectedId })
     }, [selectedId, quizzes])
-
-    const { backgroundColor, backgroundImage } = selectedQuiz ?? {}
 
     const disabledTab = ![QuizMode.selection, QuizMode.sort].includes(
         selectedQuiz?.mode as any
@@ -198,78 +129,6 @@ export default function QuizForm() {
         const newValue = getDefaultQuiz(setId(), mode)
         dispatch(addQuiz({ id: formId, newValue }))
         handleClose()
-    }
-
-    const handleChangeMode = (event: SelectChangeEvent) => {
-        const quizId = event.target.name
-        if (!quizId) {
-            return
-        }
-        const mode = event.target.value as QuizMode
-
-        dispatch(
-            updateQuiz({
-                formId,
-                quizId,
-                newValue: getDefaultQuiz(quizId, mode),
-            })
-        )
-    }
-
-    const handleChange: OnInputChange = (event) => {
-        const { id: quizId, name, value } = event.target
-        if (!quizId) {
-            return
-        }
-        dispatch(
-            updateQuiz({
-                formId,
-                quizId,
-                newValue: { [name]: value },
-            })
-        )
-    }
-
-    const handleUpdateQuiz = (newValue: Partial<QuizType>) => {
-        const { id: quizId } = selectedQuiz ?? {}
-        if (quizId) {
-            dispatch(
-                updateQuiz({
-                    formId,
-                    quizId,
-                    newValue,
-                })
-            )
-        }
-    }
-
-    const handleSwitch = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { id: quizId, name, checked } = event.target
-
-        if (!quizId) {
-            return
-        }
-
-        dispatch(
-            updateQuiz({
-                formId,
-                quizId,
-                newValue: { [name]: checked },
-            })
-        )
-    }
-
-    const handleSwitchSetting = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        const { name, checked } = event.target
-
-        dispatch(
-            updateForm({
-                id: formId,
-                newValue: { setting: { ...setting, [name]: checked } },
-            })
-        )
     }
 
     const renderView = () => {
@@ -471,10 +330,8 @@ export default function QuizForm() {
                                                         }}
                                                     >
                                                         <ModeSelector
+                                                            formId={formId}
                                                             quiz={el}
-                                                            onChange={
-                                                                handleChangeMode
-                                                            }
                                                         />
                                                     </Box>
                                                 </QuizItem>
@@ -536,244 +393,25 @@ export default function QuizForm() {
                         </Box>
                     </Grid>
 
-                    <Grid
-                        item
-                        sx={{
-                            width: 288,
-                        }}
-                    >
-                        <Box
+                    {tab === 0 && (
+                        <Grid
+                            item
                             sx={{
-                                position: 'relative',
-                                width: '100%',
-                                height: '100%',
-                                bgcolor: (theme) => theme.palette.grey[800],
+                                width: 288,
                             }}
                         >
-                            <TableContainer>
-                                <Table size="small">
-                                    <TableBody>
-                                        <TableRow
-                                            sx={{
-                                                position: 'relative',
-                                                height: 48,
-                                                bgcolor: (theme) =>
-                                                    theme.palette.grey[900],
-                                            }}
-                                        >
-                                            <TableCell
-                                                className="absolute-center"
-                                                sx={{
-                                                    borderBottom: 0,
-                                                }}
-                                            >
-                                                題目設定
-                                            </TableCell>
-                                            <TableCell></TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>題目類型</TableCell>
-                                            <TableCell>
-                                                <ModeSelector
-                                                    quiz={selectedQuiz}
-                                                    onChange={handleChangeMode}
-                                                />
-                                            </TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>必填</TableCell>
-                                            <TableCell>
-                                                <Switch
-                                                    id={selectedQuiz?.id}
-                                                    name="required"
-                                                    color="primary"
-                                                    checked={
-                                                        selectedQuiz?.required ??
-                                                        false
-                                                    }
-                                                    onChange={handleSwitch}
-                                                    disabled={!selectedQuiz}
-                                                />
-                                            </TableCell>
-                                        </TableRow>
-                                        <TableRow
-                                            sx={{
-                                                position: 'relative',
-                                                height: 48,
-                                                bgcolor: (theme) =>
-                                                    theme.palette.grey[900],
-                                            }}
-                                        >
-                                            <TableCell
-                                                className="absolute-center"
-                                                sx={{
-                                                    borderBottom: 0,
-                                                }}
-                                            >
-                                                外觀設定
-                                            </TableCell>
-                                            <TableCell></TableCell>
-                                        </TableRow>
-
-                                        <TableRow>
-                                            <TableCell>進度條</TableCell>
-                                            <TableCell>
-                                                <Switch
-                                                    name="showProgress"
-                                                    color="primary"
-                                                    checked={
-                                                        setting?.showProgress ??
-                                                        false
-                                                    }
-                                                    onChange={
-                                                        handleSwitchSetting
-                                                    }
-                                                    disabled={!selectedQuiz}
-                                                />
-                                            </TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>背景顏色</TableCell>
-                                            <TableCell>
-                                                <TextField
-                                                    id={selectedQuiz?.id}
-                                                    name="backgroundColor"
-                                                    value={
-                                                        backgroundColor ?? ''
-                                                    }
-                                                    variant="standard"
-                                                    onChange={handleChange}
-                                                    fullWidth
-                                                />
-                                            </TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>背景圖片</TableCell>
-                                            <TableCell>
-                                                <ImageUploader
-                                                    onUploaded={(
-                                                        backgroundImage
-                                                    ) => {
-                                                        handleUpdateQuiz({
-                                                            backgroundImage,
-                                                        })
-                                                    }}
-                                                    sx={{ display: 'grid' }}
-                                                    hideImage
-                                                    hideDeleteButton
-                                                />
-                                            </TableCell>
-                                        </TableRow>
-
-                                        {_.includes(
-                                            [QuizMode.selection, QuizMode.sort],
-                                            selectedQuiz?.mode
-                                        ) && (
-                                            <>
-                                                <TableRow
-                                                    sx={{
-                                                        position: 'relative',
-                                                        height: 48,
-                                                        bgcolor: (theme) =>
-                                                            theme.palette
-                                                                .grey[900],
-                                                    }}
-                                                >
-                                                    <TableCell
-                                                        className="absolute-center"
-                                                        sx={{
-                                                            borderBottom: 0,
-                                                        }}
-                                                    >
-                                                        答項設定
-                                                    </TableCell>
-                                                    <TableCell></TableCell>
-                                                </TableRow>
-                                                <TableRow>
-                                                    <TableCell>
-                                                        答項排序
-                                                    </TableCell>
-                                                    <TableCell></TableCell>
-                                                </TableRow>
-                                                <TableRow>
-                                                    <TableCell
-                                                        sx={{
-                                                            textAlign: 'center',
-                                                        }}
-                                                    >
-                                                        <Button>水平</Button>
-                                                    </TableCell>
-                                                    <TableCell
-                                                        sx={{
-                                                            textAlign: 'center',
-                                                        }}
-                                                    >
-                                                        <Button>垂直</Button>
-                                                    </TableCell>
-                                                </TableRow>
-                                                <TableRow>
-                                                    <TableCell>圖片</TableCell>
-                                                    <TableCell>
-                                                        <Switch
-                                                            id={
-                                                                selectedQuiz?.id
-                                                            }
-                                                            name="showImage"
-                                                            color="primary"
-                                                            checked={
-                                                                (
-                                                                    selectedQuiz as SelectionQuiz
-                                                                )?.showImage ??
-                                                                false
-                                                            }
-                                                            onChange={
-                                                                handleSwitch
-                                                            }
-                                                            disabled={
-                                                                !selectedQuiz
-                                                            }
-                                                        />
-                                                    </TableCell>
-                                                </TableRow>
-                                                <TableRow>
-                                                    <TableCell>
-                                                        最高可選
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        <NumberFormat
-                                                            customInput={
-                                                                TextField
-                                                            }
-                                                            variant="standard"
-                                                            value={
-                                                                (
-                                                                    selectedQuiz as SelectionQuiz
-                                                                )?.maxChoices ??
-                                                                '1'
-                                                            }
-                                                            onValueChange={({
-                                                                value,
-                                                            }) => {
-                                                                handleUpdateQuiz(
-                                                                    {
-                                                                        maxChoices:
-                                                                            Number(
-                                                                                value
-                                                                            ),
-                                                                    }
-                                                                )
-                                                            }}
-                                                            fullWidth
-                                                        />
-                                                    </TableCell>
-                                                </TableRow>
-                                            </>
-                                        )}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                        </Box>
-                    </Grid>
+                            <Box
+                                sx={{
+                                    position: 'relative',
+                                    width: '100%',
+                                    height: '100%',
+                                    bgcolor: (theme) => theme.palette.grey[800],
+                                }}
+                            >
+                                <QuizTool formId={formId} quiz={selectedQuiz} />
+                            </Box>
+                        </Grid>
+                    )}
                 </ThemeProvider>
             </Grid>
 

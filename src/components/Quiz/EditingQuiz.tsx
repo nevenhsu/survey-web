@@ -631,7 +631,12 @@ export default function EditingQuiz(props: EditingQuizProps) {
                 alignItems="center"
                 justifyContent="center"
                 spacing={2}
-                sx={{ width: '100%', height: '100%', backgroundColor }}
+                sx={{
+                    width: '100%',
+                    minHeight: '100%',
+                    p: 3,
+                    backgroundColor,
+                }}
             >
                 <ImageUploader
                     bgImage={backgroundImage}
@@ -653,7 +658,7 @@ export default function EditingQuiz(props: EditingQuizProps) {
 
                 <ImageUploader
                     bgImage={image}
-                    sx={{ width: '80%', mt: `0 !important` }}
+                    sx={{ width: 'auto', height: '16vh', mt: `0 !important` }}
                     onUploaded={(image) => {
                         handleUpdateQuiz({
                             image,

@@ -63,19 +63,9 @@ export default function NextQuiz(props: NextQuizProps) {
 
     return (
         <Root className={classes.root}>
-            <Toolbar>
-                <Typography
-                    sx={{ flex: '1 1 100%' }}
-                    variant="h6"
-                    id="tableTitle"
-                    component="div"
-                >
-                    編輯跳答邏輯
-                </Typography>
-            </Toolbar>
             <TableContainer>
                 <Table>
-                    <TableHead sx={{ bgcolor: 'grey.200' }}>
+                    <TableHead>
                         <TableRow>
                             <TableCell>答項</TableCell>
                             <TableCell>跳答</TableCell>

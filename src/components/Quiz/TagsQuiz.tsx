@@ -10,12 +10,9 @@ import TablePagination from '@mui/material/TablePagination'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
-import Tooltip from '@mui/material/Tooltip'
-import PencilIcon from 'mdi-react/PencilIcon'
+import components, { styles } from 'components/common/MuiSelectComponents'
 import { useAppSelector, useAppDispatch } from 'hooks'
+import { getMuiColor } from 'theme/palette'
 import { setClasses, getDefaultTags } from 'utils/helper'
 import { selectCurrentForm, updateQuiz, updateForm } from 'store/slices/editor'
 import type { SelectionQuiz, Tags, ChoiceType } from 'common/types'
@@ -177,30 +174,16 @@ export default function TagsQuiz(props: TagsQuizProps) {
 
     return (
         <Root className={classes.root}>
-            <Toolbar>
-                <Typography
-                    sx={{ flex: '1 1 100%' }}
-                    variant="h6"
-                    id="tableTitle"
-                    component="div"
-                >
-                    編輯標籤組
-                </Typography>
-
-                <Tooltip title="編輯標籤組">
-                    <IconButton>
-                        <PencilIcon />
-                    </IconButton>
-                </Tooltip>
-            </Toolbar>
             <TableContainer>
                 <Table>
-                    <TableHead sx={{ bgcolor: 'grey.200' }}>
+                    <TableHead>
                         <TableRow>
                             <TableCell>答項</TableCell>
                             {tagsId.map((id, index) => (
                                 <TableCell key={id || `${index}`}>
                                     <CreatableSelect<TagsOption>
+                                        components={components}
+                                        styles={styles as any}
                                         menuPosition="fixed"
                                         className={classes.selectContainer}
                                         value={_.find(tagsOptions, { id })}
@@ -238,6 +221,32 @@ export default function TagsQuiz(props: TagsQuizProps) {
                                                     TagOption,
                                                     true
                                                 >
+                                                    components={components}
+                                                    styles={{
+                                                        ...(styles as any),
+                                                        multiValue: (base) => ({
+                                                            ...base,
+                                                            borderRadius: 99,
+                                                            backgroundColor:
+                                                                getMuiColor(
+                                                                    tags[id]
+                                                                        ?.color
+                                                                ).color[500],
+                                                        }),
+                                                        multiValueRemove: (
+                                                            base
+                                                        ) => ({
+                                                            ...base,
+                                                            borderRadius: 99,
+                                                            opacity: 0.6,
+                                                            color: 'white',
+                                                            ':hover': {
+                                                                opacity: 1,
+                                                                backgroundColor:
+                                                                    'unset',
+                                                            },
+                                                        }),
+                                                    }}
                                                     menuPosition="fixed"
                                                     className={
                                                         classes.selectContainer
