@@ -26,7 +26,7 @@ import type {
     FillQuiz,
     SliderType,
     SliderQuiz,
-    OnInputChange,
+    OnChangeInput,
 } from 'common/types'
 
 const variants = [
@@ -56,7 +56,7 @@ const StyledTextField = styled(TextField)<StyledTextFieldProps>(
 
 const QuizButton = (props: {
     buttonProps: CustomButton
-    onChange: OnInputChange
+    onChange: OnChangeInput
 }) => {
     const { buttonProps, onChange } = props
     const {
@@ -157,7 +157,7 @@ const QuizButton = (props: {
 const PageView = (props: {
     textFieldProps: StyledTextFieldProps
     buttonProps: CustomButton
-    onChange: OnInputChange
+    onChange: OnChangeInput
 }) => {
     const { textFieldProps, buttonProps, onChange } = props
 
@@ -180,7 +180,7 @@ const PageView = (props: {
 
 const ChoiceView = (props: {
     value: ChoiceType
-    onChange: OnInputChange
+    onChange: OnChangeInput
     onDelete: onButtonClink
     showImage?: boolean
 }) => {
@@ -291,7 +291,7 @@ const SelectionView = (props: {
     textFieldProps: StyledTextFieldProps
     selectionProps: SelectionType
     buttonProps: CustomButton
-    onChange: OnInputChange
+    onChange: OnChangeInput
 }) => {
     const { textFieldProps, selectionProps, buttonProps, onChange } = props
     const { choices = [], maxChoices, showImage, direction } = selectionProps
@@ -386,7 +386,7 @@ const FillView = (props: {
     title: string
     value: string
     buttonProps: CustomButton
-    onChange: OnInputChange
+    onChange: OnChangeInput
 }) => {
     const { title, value, buttonProps, onChange } = props
 
@@ -422,7 +422,7 @@ const SliderView = (props: {
     title: string
     slider: SliderType
     buttonProps: CustomButton
-    onChange: OnInputChange
+    onChange: OnChangeInput
 }) => {
     const { title, slider, buttonProps, onChange } = props
     const { max, min, value } = slider

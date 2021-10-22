@@ -4,42 +4,67 @@ import utils from 'utility'
 import { styled } from '@mui/material/styles'
 import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
-import Box from '@mui/material/Box'
+import IconButton from '@mui/material/IconButton'
+import Divider from '@mui/material/Divider'
+import Box, { BoxProps } from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
 import InputAdornment from '@mui/material/InputAdornment'
 import EditingResult from 'components/Result/EditingResult'
 import StyledChip from 'components/common/StyledChip'
+import ResultTool from 'components/Editor/ResultForm/ResultTool'
 import { getDefaultComponent } from 'utils/helper'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import { selectCurrentForm, setResults } from 'store/slices/editor'
+import ThemeProvider from 'theme/ThemeProvider'
+import ComponentProvider from 'components/Editor/ResultForm/ComponentProvider'
 import Numeric1BoxIcon from 'mdi-react/Numeric1BoxIcon'
 import Numeric2BoxIcon from 'mdi-react/Numeric2BoxIcon'
+import LaptopIcon from 'mdi-react/LaptopIcon'
+import CellphoneIcon from 'mdi-react/CellphoneIcon'
+import DesktopMacIcon from 'mdi-react/DesktopMacIcon'
 import { ComponentType, Mode } from 'common/types'
-import type { Result, ResultList } from 'common/types'
+import type { Result, ResultList, DeviceType } from 'common/types'
 
-const ListItem = styled('li')(({ theme }) => ({
-    margin: theme.spacing(0.5),
+type StyledBoxProps = BoxProps & {
+    device: DeviceType
+}
+
+const StyledTabs = styled(Tabs)(({ theme }) => ({
+    '& .MuiTab-root': {
+        color: theme.palette.common.white,
+    },
+    '& .Mui-selected': {
+        backgroundColor: theme.palette.grey[700],
+    },
+    '& .MuiTabs-indicator': {
+        display: 'none',
+    },
+    '& .Mui-disabled': {
+        color: theme.palette.grey[700],
+    },
 }))
 
-const StyledBar = styled(Grid)(({ theme }) => {
-    const color = theme.palette.common.white
+const StyledBox = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'device',
+})<StyledBoxProps>(({ theme, device }) => {
+    const style = getDeviceStyle(device)
 
     return {
-        color,
-        backgroundColor: theme.palette.grey[800],
+        ...style,
         position: 'relative',
-        height: 48,
-        '& .MuiSelect-select': {
-            color,
-        },
-        '& .MuiSelect-icon': {
-            color,
-        },
-        '& .MuiInput-root:before, & .MuiInput-root:after': {
-            opacity: 0,
+        backgroundColor: theme.palette.common.white,
+        '& > div': {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            overflowY: 'auto',
         },
     }
 })
@@ -48,6 +73,7 @@ export default function ResultForm() {
     const dispatch = useAppDispatch()
 
     const [selectedId, setSelectedId] = React.useState('')
+    const [device, setDevice] = React.useState<DeviceType>('mobile')
 
     const form = useAppSelector(selectCurrentForm)
     const { id: formId, tags, results, mode } = form ?? {}
@@ -136,7 +162,7 @@ export default function ResultForm() {
     }, [])
 
     return (
-        <>
+        <ComponentProvider>
             <Grid
                 container
                 alignItems="center"
@@ -284,40 +310,161 @@ export default function ResultForm() {
                         ))}
                     </Box>
                 </Grid>
-                <Grid
-                    item
-                    sx={{
-                        width: 'calc(100vw - 288px)',
-                    }}
-                >
-                    <Box
-                        sx={{
-                            width: '100%',
-                            height: '100%',
-                            backgroundColor: 'grey.700',
-                        }}
-                    >
-                        {/* <StyledBar
-                            container
-                            alignItems="center"
-                            sx={{ px: 2 }}
-                        ></StyledBar> */}
-                        <Box sx={{ height: 72 }} />
+                <ThemeProvider mode="dark">
+                    <Grid item xs>
                         <Box
                             sx={{
                                 position: 'relative',
                                 width: '100%',
-                                p: 4,
+                                height: '100%',
+                                bgcolor: (theme) => theme.palette.grey[700],
                             }}
                         >
-                            <EditingResult
-                                formId={formId}
-                                result={selectedResult}
-                            />
+                            <Box
+                                sx={{
+                                    bgcolor: (theme) => theme.palette.grey[800],
+                                }}
+                            >
+                                <StyledTabs value={0}>
+                                    <Tab label="編輯結果" />
+                                </StyledTabs>
+                            </Box>
+
+                            <Box
+                                sx={{
+                                    position: 'relative',
+                                    width: '100%',
+                                }}
+                            >
+                                <Box
+                                    sx={{
+                                        p: 4,
+                                        width: getDeviceWidth(device),
+                                        mx: 'auto',
+                                    }}
+                                >
+                                    <StyledBox device={device}>
+                                        <div>
+                                            <EditingResult
+                                                formId={formId}
+                                                result={selectedResult}
+                                            />
+                                        </div>
+                                    </StyledBox>
+
+                                    <Stack
+                                        direction="row"
+                                        justifyContent="center"
+                                        spacing={2}
+                                        divider={
+                                            <Divider
+                                                orientation="vertical"
+                                                flexItem
+                                            />
+                                        }
+                                        sx={{
+                                            position: 'fixed',
+                                            bottom: 8,
+                                            left: 'calc(50vw - 84px)',
+                                        }}
+                                    >
+                                        <IconButton
+                                            color={
+                                                device === 'mobile'
+                                                    ? 'primary'
+                                                    : undefined
+                                            }
+                                            onClick={() => setDevice('mobile')}
+                                            size="small"
+                                        >
+                                            <CellphoneIcon />
+                                        </IconButton>
+                                        <IconButton
+                                            color={
+                                                device === 'laptop'
+                                                    ? 'primary'
+                                                    : undefined
+                                            }
+                                            onClick={() => setDevice('laptop')}
+                                            size="small"
+                                        >
+                                            <LaptopIcon />
+                                        </IconButton>
+                                        <IconButton
+                                            color={
+                                                device === 'desktop'
+                                                    ? 'primary'
+                                                    : undefined
+                                            }
+                                            onClick={() => setDevice('desktop')}
+                                            size="small"
+                                        >
+                                            <DesktopMacIcon />
+                                        </IconButton>
+                                    </Stack>
+                                </Box>
+                            </Box>
                         </Box>
-                    </Box>
-                </Grid>
+                    </Grid>
+                    <Grid
+                        item
+                        sx={{
+                            width: 288,
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                position: 'relative',
+                                width: '100%',
+                                height: '100%',
+                                bgcolor: (theme) => theme.palette.grey[800],
+                            }}
+                        >
+                            <ResultTool formId={formId} resultId={selectedId} />
+                        </Box>
+                    </Grid>
+                </ThemeProvider>
             </Grid>
-        </>
+        </ComponentProvider>
     )
+}
+
+function getDeviceStyle(device: DeviceType) {
+    switch (device) {
+        case 'mobile': {
+            return {
+                width: '100%',
+                paddingTop: '177%',
+                height: 0,
+            }
+        }
+        case 'laptop': {
+            return {
+                width: '100%',
+                paddingTop: '75%',
+                height: 0,
+            }
+        }
+        case 'desktop': {
+            return {
+                width: '100%',
+                paddingTop: '56.25%',
+                height: 0,
+            }
+        }
+    }
+}
+
+function getDeviceWidth(device: DeviceType) {
+    switch (device) {
+        case 'mobile': {
+            return 375
+        }
+        case 'laptop': {
+            return 'calc(100vw - 576px)'
+        }
+        case 'desktop': {
+            return 'calc(100vw - 576px)'
+        }
+    }
 }

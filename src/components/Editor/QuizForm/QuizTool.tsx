@@ -15,8 +15,8 @@ import ImageUploader from 'components/common/ImageUploader'
 import ModeSelector from 'components/Editor/QuizForm/ModeSelector'
 import { useAppDispatch, useAppSelector } from 'hooks'
 import { updateQuiz, updateForm, selectCurrentForm } from 'store/slices/editor'
-import { QuizMode, QuizType } from 'common/types'
-import type { SelectionQuiz, OnInputChange } from 'common/types'
+import { QuizMode } from 'common/types'
+import type { SelectionQuiz, OnChangeInput, QuizType } from 'common/types'
 import CardHorizonImage from 'assets/images/CardHorizonImage'
 import CardVerticalImage from 'assets/images/CardVerticalImage'
 
@@ -49,6 +49,7 @@ const Header = (props: { title: string }) => {
                 sx={{
                     borderBottom: 0,
                 }}
+                component="th"
             >
                 {title}
             </TableCell>
@@ -68,7 +69,7 @@ export default function QuizTool(props: QuizToolProps) {
     const { id: quizId, mode, backgroundColor } = quiz ?? {}
     const { direction, showImage, maxChoices } = (quiz as SelectionQuiz) ?? {}
 
-    const handleChange: OnInputChange = (event) => {
+    const handleChange: OnChangeInput = (event) => {
         const { name, value } = event.target
         const newValue = {
             [name]: value,
@@ -118,7 +119,13 @@ export default function QuizTool(props: QuizToolProps) {
     }
 
     return (
-        <TableContainer>
+        <TableContainer
+            sx={{
+                '& td': {
+                    height: 48,
+                },
+            }}
+        >
             <Table size="small">
                 <TableBody>
                     <Header title="題目設定" />
@@ -187,8 +194,8 @@ export default function QuizTool(props: QuizToolProps) {
                         <>
                             <Header title="答項設定" />
                             <TableRow>
-                                <TableCell>答項排序</TableCell>
-                                <TableCell></TableCell>
+                                <TableCell component="th">答項排序</TableCell>
+                                <TableCell component="th"></TableCell>
                             </TableRow>
                             <TableRow sx={{ position: 'relative', height: 80 }}>
                                 <TableCell
@@ -196,6 +203,7 @@ export default function QuizTool(props: QuizToolProps) {
                                     sx={{
                                         p: 0,
                                         width: '100%',
+                                        height: '100% !important',
                                     }}
                                 >
                                     <Stack

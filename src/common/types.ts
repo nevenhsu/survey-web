@@ -1,6 +1,6 @@
 import type { Variant } from '@mui/material/styles/createTypography'
 
-export type OnInputChange = (event: React.ChangeEvent<HTMLInputElement>) => void
+export type OnChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => void
 
 export enum Mode {
     persona = 'persona',
@@ -135,3 +135,5 @@ export type Form = {
     results: Results
     setting: Setting
 }
+
+export type DeviceType = 'mobile' | 'laptop' | 'desktop'

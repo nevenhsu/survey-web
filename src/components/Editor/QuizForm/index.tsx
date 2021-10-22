@@ -27,14 +27,13 @@ import { selectCurrentForm, setQuizzes, addQuiz } from 'store/slices/editor'
 import { reorder, setId, getDefaultQuiz } from 'utils/helper'
 import ThemeProvider from 'theme/ThemeProvider'
 import { QuizMode, QuizType } from 'common/types'
-import type { SelectionQuiz } from 'common/types'
+import type { SelectionQuiz, DeviceType } from 'common/types'
 
 type QuizProps = StackProps & {
     isDragging: boolean
     isEditing: boolean
 }
 
-type DeviceType = 'mobile' | 'laptop' | 'desktop'
 type StyledBoxProps = BoxProps & {
     device: DeviceType
 }

@@ -282,13 +282,6 @@ function setNewComponents(
     }
 
     if (deleted) {
-        console.log({
-            i,
-            components,
-            component,
-            idPath,
-            newValue,
-        })
         _.remove(components, { id: newValue.id })
         return
     }
