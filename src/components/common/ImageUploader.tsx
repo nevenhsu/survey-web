@@ -1,6 +1,10 @@
 import * as React from 'react'
 import _ from 'lodash'
-import ImageUploading, { ImageListType } from 'react-images-uploading'
+import ImageUploading, {
+    ImageListType,
+    ErrorsType,
+} from 'react-images-uploading'
+import { VariantType, useSnackbar } from 'notistack'
 import { styled } from '@mui/material'
 import Tooltip from '@mui/material/Tooltip'
 import Box, { BoxProps } from '@mui/material/Box'
@@ -31,6 +35,8 @@ const StyledBox = styled(Box, {
     position: 'relative',
     opacity: isDragging ? 0.9 : 1,
     background: bgImage ? `center / cover no-repeat url(${bgImage})` : '',
+    width: 'auto',
+    height: 'auto',
     '& img': {
         display: 'inherit',
         width: 'inherit',
@@ -50,6 +56,8 @@ export default function ImageUploader(props: ImageUploaderProps) {
         ...rest
     } = props
 
+    const { enqueueSnackbar } = useSnackbar()
+
     const [images, setImages] = React.useState<ImageListType>([])
     const [uploading, setUploading] = React.useState(false)
     const [failed, setFailed] = React.useState(false)
@@ -59,7 +67,6 @@ export default function ImageUploader(props: ImageUploaderProps) {
         addUpdateIndex?: Array<number>
     ) => {
         setImages(value)
-        setFailed(false)
 
         if (_.isFunction(onUploaded)) {
             const [image = {}] = value
@@ -73,11 +80,38 @@ export default function ImageUploader(props: ImageUploaderProps) {
                     setUploading(false)
                 })
                 .catch((err) => {
-                    // TODO: send error by snackbar
                     console.error(err)
-                    setFailed(true)
                     setUploading(false)
+                    notify('Slow or no internet connection', 'error')
                 })
+        }
+    }
+
+    const notify = (message: string, variant: VariantType) => () => {
+        // variant could be success, error, warning, info, or default
+        enqueueSnackbar(message, { variant })
+    }
+
+    const handleError = (errors: ErrorsType) => {
+        if (errors) {
+            if (errors.maxNumber) {
+                notify('Number of selected images exceed 1 image', 'error')
+            }
+
+            if (errors.acceptType) {
+                notify('Your selected file type is not allow', 'error')
+            }
+
+            if (errors.maxFileSize) {
+                notify('Selected file size exceed 10MB', 'error')
+            }
+
+            if (errors.resolution) {
+                notify(
+                    'Selected file is not match your desired resolution',
+                    'error'
+                )
+            }
         }
     }
 
@@ -102,6 +136,8 @@ export default function ImageUploader(props: ImageUploaderProps) {
                 const [img] = imageList
                 const imgSrc = img?.dataUrl ?? bgImage ?? ''
 
+                handleError(errors)
+
                 return (
                     <StyledBox
                         bgImage={hideImage ? '' : bgImage}
@@ -111,50 +147,6 @@ export default function ImageUploader(props: ImageUploaderProps) {
                     >
                         {!hideImage && Boolean(imgSrc) && (
                             <img src={imgSrc} alt="" />
-                        )}
-
-                        {!hideImage && (failed || Boolean(errors)) && (
-                            <Box
-                                sx={{
-                                    position: 'absolute',
-                                    p: 1,
-                                    left: 0,
-                                    bottom: 0,
-                                    color: 'white',
-                                    width: '100%',
-                                    bgcolor: (theme) =>
-                                        theme.palette.error.main,
-                                    opacity: 0.8,
-                                }}
-                            >
-                                {failed && (
-                                    <Typography variant="overline">
-                                        Slow or no internet connection
-                                    </Typography>
-                                )}
-                                {errors?.maxNumber && (
-                                    <Typography variant="overline">
-                                        Number of selected images exceed
-                                        maxNumber
-                                    </Typography>
-                                )}
-                                {errors?.acceptType && (
-                                    <Typography variant="overline">
-                                        Your selected file type is not allow
-                                    </Typography>
-                                )}
-                                {errors?.maxFileSize && (
-                                    <Typography variant="overline">
-                                        Selected file size exceed maxFileSize
-                                    </Typography>
-                                )}
-                                {errors?.resolution && (
-                                    <Typography variant="overline">
-                                        Selected file is not match your desired
-                                        resolution
-                                    </Typography>
-                                )}
-                            </Box>
                         )}
 
                         {!hideButton && (

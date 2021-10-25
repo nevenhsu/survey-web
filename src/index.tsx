@@ -3,6 +3,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'connected-react-router'
+import { SnackbarProvider } from 'notistack'
 import { store, history } from 'store'
 import ThemeProvider from 'theme/ThemeProvider'
 import App from './App'
@@ -13,7 +14,9 @@ ReactDOM.render(
         <Provider store={store}>
             <ConnectedRouter history={history}>
                 <ThemeProvider withBaseline>
-                    <App />
+                    <SnackbarProvider maxSnack={3}>
+                        <App />
+                    </SnackbarProvider>
                 </ThemeProvider>
             </ConnectedRouter>
         </Provider>
