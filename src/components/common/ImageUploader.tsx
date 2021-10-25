@@ -8,9 +8,8 @@ import { VariantType, useSnackbar } from 'notistack'
 import { styled } from '@mui/material'
 import Tooltip from '@mui/material/Tooltip'
 import Box, { BoxProps } from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
-import LoadingButton from '@mui/lab/LoadingButton'
+import IconButton, { IconButtonProps } from '@mui/material/IconButton'
+import LoadingButton, { LoadingButtonProps } from '@mui/lab/LoadingButton'
 import AddIcon from 'mdi-react/AddIcon'
 import ImageRemoveIcon from 'mdi-react/ImageRemoveIcon'
 import surveyApi from 'services/surveyApi'
@@ -22,6 +21,8 @@ type ImageUploaderProps = BoxProps & {
     hideDeleteButton?: boolean
     hideImage?: boolean
     onUploaded?: (dataUrl: string) => void
+    loadingButtonProps?: LoadingButtonProps
+    deleteButtonProps?: IconButtonProps
 }
 
 type StyledBoxProps = BoxProps & {
@@ -35,8 +36,9 @@ const StyledBox = styled(Box, {
     position: 'relative',
     opacity: isDragging ? 0.9 : 1,
     background: bgImage ? `center / cover no-repeat url(${bgImage})` : '',
-    width: 'auto',
+    width: '100%',
     height: 'auto',
+    minWidth: 88,
     '& img': {
         display: 'inherit',
         width: 'inherit',
@@ -45,6 +47,16 @@ const StyledBox = styled(Box, {
     },
 }))
 
+const StyledLoadingButton = styled(LoadingButton)({
+    whiteSpace: 'nowrap',
+})
+
+const StyledIconButton = styled(IconButton)({
+    position: 'absolute',
+    top: 4,
+    right: 4,
+})
+
 export default function ImageUploader(props: ImageUploaderProps) {
     const {
         bgImage,
@@ -52,6 +64,8 @@ export default function ImageUploader(props: ImageUploaderProps) {
         hideButton,
         hideDeleteButton,
         hideImage,
+        loadingButtonProps,
+        deleteButtonProps,
         dataUrl = 'dataUrl',
         ...rest
     } = props
@@ -150,32 +164,31 @@ export default function ImageUploader(props: ImageUploaderProps) {
                         )}
 
                         {!hideButton && (
-                            <LoadingButton
+                            <StyledLoadingButton
                                 className="absolute-center"
-                                loading={uploading}
+                                variant="outlined"
+                                size="small"
                                 loadingPosition="start"
                                 startIcon={<AddIcon />}
-                                variant="outlined"
                                 onClick={onImageUpload}
+                                loading={uploading}
                                 disabled={uploading}
+                                {...loadingButtonProps}
                             >
                                 新增圖片
-                            </LoadingButton>
+                            </StyledLoadingButton>
                         )}
 
                         {!hideDeleteButton && !uploading && Boolean(imgSrc) && (
                             <Tooltip title="刪除圖片">
-                                <IconButton
-                                    onClick={onImageRemoveAll}
+                                <StyledIconButton
+                                    size="small"
                                     color="error"
-                                    sx={{
-                                        position: 'absolute',
-                                        top: 8,
-                                        right: 8,
-                                    }}
+                                    onClick={onImageRemoveAll}
+                                    {...deleteButtonProps}
                                 >
                                     <ImageRemoveIcon />
-                                </IconButton>
+                                </StyledIconButton>
                             </Tooltip>
                         )}
                     </StyledBox>

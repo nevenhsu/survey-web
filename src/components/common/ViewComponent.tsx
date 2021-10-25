@@ -1,5 +1,6 @@
 import * as React from 'react'
 import _ from 'lodash'
+import ImageUploader from 'components/common/ImageUploader'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { styled } from '@mui/material/styles'
 import Grid from '@mui/material/Grid'
@@ -233,15 +234,17 @@ function ComponentItem(
         }
         case ComponentType.image: {
             return (
-                <Box sx={{ display, bgcolor, width, height, textAlign: align }}>
-                    <img
-                        src={val}
-                        style={{
-                            width: 'inherit',
-                            height: 'inherit',
-                        }}
-                    />
-                </Box>
+                <ImageUploader
+                    bgImage={val}
+                    onUploaded={(value) => {
+                        onChange({
+                            target: { name: 'value', value },
+                        } as any)
+                    }}
+                    hideDeleteButton
+                    hideButton
+                    sx={{ display, bgcolor, width, height, textAlign: align }}
+                />
             )
         }
         case ComponentType.card:
@@ -287,6 +290,7 @@ export function ComponentList(props: ComponentListProps) {
             alignItems="center"
             justifyContent="center"
             sx={{ width: '100%', height: '100%' }}
+            rowSpacing={2}
         >
             {components.map((el) => (
                 <Grid
@@ -299,7 +303,6 @@ export function ComponentList(props: ComponentListProps) {
                     sx={{
                         width: el.width,
                         height: el.height,
-                        padding: 1,
                         borderRadius: 1,
                         borderWidth: 1,
                         borderStyle: 'solid',

@@ -5,7 +5,7 @@ import { updateQuiz } from 'store/slices/editor'
 import { styled } from '@mui/material/styles'
 import NumberFormat from 'react-number-format'
 import Box from '@mui/material/Box'
-import Grid from '@mui/material/Grid'
+import Grid, { GridSize } from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
@@ -213,10 +213,39 @@ const ChoiceView = (props: {
                 variant={buttonVariant}
                 onClick={handleClick}
                 sx={{
+                    width: '100%',
                     color: buttonTextColor,
                     backgroundColor: buttonColor,
+                    flexDirection: 'column',
+                    padding: showImage ? '0 0 5px' : '5px 15px',
+                    overflow: 'hidden',
                 }}
             >
+                {showImage && (
+                    <span onClick={(e) => e.stopPropagation()}>
+                        <ImageUploader
+                            bgImage={image}
+                            onUploaded={(image) => {
+                                onChange({
+                                    target: {
+                                        value: image,
+                                        name: 'image',
+                                    },
+                                } as any)
+                            }}
+                            sx={{
+                                width: '100%',
+                                minHeight: 48,
+                                mb: 2,
+                            }}
+                            loadingButtonProps={{
+                                variant: 'text',
+                            }}
+                            hideButton={Boolean(image)}
+                        />
+                    </span>
+                )}
+
                 {label || '選項'}
             </Button>
             <Popover
@@ -296,7 +325,8 @@ const SelectionView = (props: {
     const { textFieldProps, selectionProps, buttonProps, onChange } = props
     const { choices = [], maxChoices, showImage, direction } = selectionProps
 
-    const xs = direction === 'row' ? 4 : 12
+    const responsive: { [key: string]: GridSize } =
+        direction === 'row' ? { xs: 6 } : { xs: 12 }
 
     const handleChoiceChange = (
         e: React.ChangeEvent<HTMLInputElement>,
@@ -358,7 +388,7 @@ const SelectionView = (props: {
                     spacing={2}
                 >
                     {choices.map((el) => (
-                        <Grid key={el.id} item xs={xs}>
+                        <Grid key={el.id} item {...responsive}>
                             <ChoiceView
                                 value={el}
                                 onChange={(event) =>
@@ -369,7 +399,7 @@ const SelectionView = (props: {
                             />
                         </Grid>
                     ))}
-                    <Grid item xs={xs}>
+                    <Grid item {...responsive}>
                         <Button variant="outlined" onClick={handleAddChoice}>
                             新增選項
                         </Button>
@@ -634,7 +664,7 @@ export default function EditingQuiz(props: EditingQuizProps) {
                 sx={{
                     width: '100%',
                     minHeight: '100%',
-                    p: 3,
+                    p: 1,
                     backgroundColor,
                 }}
             >

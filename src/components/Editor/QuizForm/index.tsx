@@ -12,6 +12,7 @@ import IconButton from '@mui/material/IconButton'
 import Divider from '@mui/material/Divider'
 import Box, { BoxProps } from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
+import LinearProgress from '@mui/material/LinearProgress'
 import QuizTool from 'components/Editor/QuizForm/QuizTool'
 import ModeSelector from 'components/Editor/QuizForm/ModeSelector'
 import EditingQuiz from 'components/Quiz/EditingQuiz'
@@ -89,10 +90,12 @@ export default function QuizForm() {
     const dispatch = useAppDispatch()
     const form = useAppSelector(selectCurrentForm)
     const { id: formId, quizzes = [], setting } = form ?? {}
+    const { showProgress } = setting ?? {}
 
     const [selectedId, setSelectedId] = React.useState('')
     const [tab, setTab] = React.useState(0)
     const [device, setDevice] = React.useState<DeviceType>('mobile')
+    const [progress, setProgress] = React.useState(0)
 
     const [open, setOpen] = React.useState(false)
     const handleOpen = () => setOpen(true)
@@ -139,6 +142,18 @@ export default function QuizForm() {
                     >
                         <StyledBox device={device}>
                             <div>
+                                {showProgress && (
+                                    <LinearProgress
+                                        variant="determinate"
+                                        value={progress}
+                                        sx={{
+                                            position: 'absolute',
+                                            top: 0,
+                                            width: '100%',
+                                        }}
+                                    />
+                                )}
+
                                 <EditingQuiz
                                     formId={formId}
                                     quiz={selectedQuiz}
@@ -222,6 +237,17 @@ export default function QuizForm() {
     React.useEffect(() => {
         setSelectedId(_.get(quizzes, '0.id', ''))
     }, [])
+
+    React.useEffect(() => {
+        if (selectedQuiz && quizzes.length) {
+            const { id } = selectedQuiz
+            const num = _.findIndex(quizzes, { id }) + 1
+            const val = _.round((num / quizzes.length) * 100)
+            setProgress(val)
+            return
+        }
+        setProgress(0)
+    }, [selectedQuiz, quizzes])
 
     return (
         <>

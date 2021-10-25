@@ -21,7 +21,9 @@ export default function ResultTool(props: ResultToolProps) {
         const { name, value } = event.target
         const newValue = {
             ...component,
-            [name]: Number(value) || value || undefined,
+            [name]: !_.isNaN(Number(value))
+                ? Number(value)
+                : value || undefined,
         } as Component
 
         if (formId && resultId && idPath && component) {

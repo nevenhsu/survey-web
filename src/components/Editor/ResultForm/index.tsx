@@ -17,11 +17,12 @@ import InputAdornment from '@mui/material/InputAdornment'
 import EditingResult from 'components/Result/EditingResult'
 import StyledChip from 'components/common/StyledChip'
 import ResultTool from 'components/Editor/ResultForm/ResultTool'
+import ComponentProvider from 'components/Editor/ResultForm/ComponentProvider'
 import { getDefaultComponent } from 'utils/helper'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import { selectCurrentForm, setResults } from 'store/slices/editor'
 import ThemeProvider from 'theme/ThemeProvider'
-import ComponentProvider from 'components/Editor/ResultForm/ComponentProvider'
+import { getMuiColor } from 'theme/palette'
 import Numeric1BoxIcon from 'mdi-react/Numeric1BoxIcon'
 import Numeric2BoxIcon from 'mdi-react/Numeric2BoxIcon'
 import LaptopIcon from 'mdi-react/LaptopIcon'
@@ -209,7 +210,21 @@ export default function ResultForm() {
                             variant="outlined"
                             InputProps={{
                                 startAdornment: (
-                                    <InputAdornment position="start">
+                                    <InputAdornment
+                                        position="start"
+                                        sx={{
+                                            color: getMuiColor(
+                                                _.get(
+                                                    tags,
+                                                    [
+                                                        selectedTags[0] as any,
+                                                        'color',
+                                                    ],
+                                                    'grey'
+                                                )
+                                            ).color[500],
+                                        }}
+                                    >
                                         <Numeric1BoxIcon />
                                     </InputAdornment>
                                 ),
@@ -237,7 +252,21 @@ export default function ResultForm() {
                             variant="outlined"
                             InputProps={{
                                 startAdornment: (
-                                    <InputAdornment position="start">
+                                    <InputAdornment
+                                        position="start"
+                                        sx={{
+                                            color: getMuiColor(
+                                                _.get(
+                                                    tags,
+                                                    [
+                                                        selectedTags[1] as any,
+                                                        'color',
+                                                    ],
+                                                    'grey'
+                                                )
+                                            ).color[500],
+                                        }}
+                                    >
                                         <Numeric2BoxIcon />
                                     </InputAdornment>
                                 ),

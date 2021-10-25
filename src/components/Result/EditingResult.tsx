@@ -116,7 +116,6 @@ export default function EditingResult(props: EditingQuizProps) {
                     }
                 }}
                 sx={{
-                    p: 4,
                     backgroundColor: 'common.white',
                 }}
             >
