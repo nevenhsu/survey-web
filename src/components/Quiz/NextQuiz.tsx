@@ -42,6 +42,12 @@ export default function NextQuiz(props: NextQuizProps) {
     const { id: formId, quizzes = [] } = useAppSelector(selectCurrentForm)
     const nextQuizIndex = _.findIndex(quizzes, { id: quizId }) + 1
 
+    const currentChoices = React.useMemo(
+        () =>
+            choices.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+        [page, rowsPerPage]
+    )
+
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - choices.length) : 0
 
@@ -72,50 +78,46 @@ export default function NextQuiz(props: NextQuizProps) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {choices
-                            .slice(
-                                page * rowsPerPage,
-                                page * rowsPerPage + rowsPerPage
-                            )
-                            .map((choice) => (
-                                <TableRow key={choice.id}>
-                                    <TableCell component="th" scope="row">
-                                        {choice.label}
-                                    </TableCell>
-                                    <TableCell>
-                                        <TextField
-                                            name={choice.id}
-                                            value={choice.next || ' '}
-                                            onChange={handleChange}
-                                            select
-                                        >
-                                            <MenuItem value={' '}>
-                                                跳到下一題
-                                            </MenuItem>
-                                            {quizzes.map((quiz, i) =>
-                                                quiz.id !== quizId &&
-                                                i !== nextQuizIndex ? (
-                                                    <MenuItem
-                                                        key={quiz.id}
-                                                        value={quiz.id}
-                                                    >
-                                                        跳到第{i + 1}題:{' '}
-                                                        {quiz.title.substring(
-                                                            0,
-                                                            18
-                                                        )}
-                                                        {quiz.title.length > 18
-                                                            ? '...'
-                                                            : ''}
-                                                    </MenuItem>
-                                                ) : (
-                                                    <span />
-                                                )
-                                            )}
-                                        </TextField>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
+                        {currentChoices.map((choice) => (
+                            <TableRow key={choice.id}>
+                                <TableCell component="th" scope="row">
+                                    {choice.label}
+                                </TableCell>
+                                <TableCell>
+                                    <TextField
+                                        name={choice.id}
+                                        value={choice.next || ' '}
+                                        onChange={handleChange}
+                                        select
+                                    >
+                                        <MenuItem value={' '}>
+                                            跳到下一題
+                                        </MenuItem>
+                                        {quizzes
+                                            .filter(
+                                                (quiz, i) =>
+                                                    quiz.id !== quizId &&
+                                                    i !== nextQuizIndex
+                                            )
+                                            .map((quiz, i) => (
+                                                <MenuItem
+                                                    key={quiz.id}
+                                                    value={quiz.id}
+                                                >
+                                                    跳到第{i + 1}題:{' '}
+                                                    {quiz.title.substring(
+                                                        0,
+                                                        18
+                                                    )}
+                                                    {quiz.title.length > 18
+                                                        ? '...'
+                                                        : ''}
+                                                </MenuItem>
+                                            ))}
+                                    </TextField>
+                                </TableCell>
+                            </TableRow>
+                        ))}
                         {emptyRows > 0 && (
                             <TableRow sx={{ height: 71 * emptyRows }}>
                                 <TableCell colSpan={4} />

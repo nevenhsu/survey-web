@@ -4,12 +4,6 @@ import { styled } from '@mui/material/styles'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Box, { BoxProps } from '@mui/material/Box'
-import PickForm from 'components/Editor/PickForm'
-import QuizForm from 'components/Editor/QuizForm'
-import ResultForm from 'components/Editor/ResultForm'
-import FinalForm from 'components/Editor/FinalForm'
-import LaunchForm from 'components/Editor/LaunchForm'
-import ProductForm from 'components/Editor/ProductForm'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import User from 'utils/user'
 import { setClasses } from 'utils/helper'
@@ -21,6 +15,13 @@ import {
 } from 'store/slices/editor'
 import { EditorStep, Mode } from 'common/types'
 import type { Form } from 'common/types'
+
+const PickForm = React.lazy(() => import('components/Editor/PickForm'))
+const QuizForm = React.lazy(() => import('components/Editor/QuizForm'))
+const ResultForm = React.lazy(() => import('components/Editor/ResultForm'))
+const FinalForm = React.lazy(() => import('components/Editor/FinalForm'))
+const LaunchForm = React.lazy(() => import('components/Editor/LaunchForm'))
+const ProductForm = React.lazy(() => import('components/Editor/ProductForm'))
 
 type StepsType = {
     [key in keyof typeof EditorStep]: {
@@ -96,7 +97,10 @@ export default function Editor() {
         return { mode, step }
     })
 
-    const modeSteps = getModeSteps(currentForm, mode)
+    const modeSteps = React.useMemo(
+        () => getModeSteps(currentForm, mode),
+        [currentForm, mode]
+    )
 
     const handleChangeStep = (
         event: React.SyntheticEvent,
@@ -157,7 +161,9 @@ export default function Editor() {
                 })}
             </Tabs>
 
-            {renderForm(step)}
+            <React.Suspense fallback={<div />}>
+                {renderForm(step)}
+            </React.Suspense>
         </Root>
     )
 }

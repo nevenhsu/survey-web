@@ -15,9 +15,6 @@ import Modal from '@mui/material/Modal'
 import LinearProgress from '@mui/material/LinearProgress'
 import QuizTool from 'components/Editor/QuizForm/QuizTool'
 import ModeSelector from 'components/Editor/QuizForm/ModeSelector'
-import EditingQuiz from 'components/Quiz/EditingQuiz'
-import TagsQuiz from 'components/Quiz/TagsQuiz'
-import NextQuiz from 'components/Quiz/NextQuiz'
 import MenuSwapIcon from 'mdi-react/DragHorizontalVariantIcon'
 import AddIcon from 'mdi-react/AddIcon'
 import LaptopIcon from 'mdi-react/LaptopIcon'
@@ -29,6 +26,10 @@ import { reorder, setId, getDefaultQuiz } from 'utils/helper'
 import ThemeProvider from 'theme/ThemeProvider'
 import { QuizMode, QuizType } from 'common/types'
 import type { SelectionQuiz, DeviceType } from 'common/types'
+
+const EditingQuiz = React.lazy(() => import('components/Quiz/EditingQuiz'))
+const TagsQuiz = React.lazy(() => import('components/Quiz/TagsQuiz'))
+const NextQuiz = React.lazy(() => import('components/Quiz/NextQuiz'))
 
 type QuizProps = StackProps & {
     isDragging: boolean
@@ -137,29 +138,42 @@ export default function QuizForm() {
         switch (tabValue) {
             case 0: {
                 return (
-                    <Box
-                        sx={{ p: 4, width: getDeviceWidth(device), mx: 'auto' }}
-                    >
-                        <StyledBox device={device}>
-                            <div>
-                                {showProgress && (
-                                    <LinearProgress
-                                        variant="determinate"
-                                        value={progress}
-                                        sx={{
-                                            position: 'absolute',
-                                            top: 0,
-                                            width: '100%',
-                                        }}
-                                    />
-                                )}
+                    <>
+                        <Box
+                            sx={{
+                                position: 'relative',
+                                width: '100%',
+                                my: 3,
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    width: getDeviceWidth(device),
+                                    mx: 'auto',
+                                }}
+                            >
+                                <StyledBox device={device}>
+                                    <div>
+                                        {showProgress && (
+                                            <LinearProgress
+                                                variant="determinate"
+                                                value={progress}
+                                                sx={{
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    width: '100%',
+                                                }}
+                                            />
+                                        )}
 
-                                <EditingQuiz
-                                    formId={formId}
-                                    quiz={selectedQuiz}
-                                />
-                            </div>
-                        </StyledBox>
+                                        <EditingQuiz
+                                            formId={formId}
+                                            quiz={selectedQuiz}
+                                        />
+                                    </div>
+                                </StyledBox>
+                            </Box>
+                        </Box>
 
                         <Stack
                             direction="row"
@@ -168,11 +182,7 @@ export default function QuizForm() {
                             divider={
                                 <Divider orientation="vertical" flexItem />
                             }
-                            sx={{
-                                position: 'fixed',
-                                bottom: 8,
-                                left: 'calc(50vw - 84px)',
-                            }}
+                            sx={{ mb: 2 }}
                         >
                             <IconButton
                                 color={
@@ -202,7 +212,7 @@ export default function QuizForm() {
                                 <DesktopMacIcon />
                             </IconButton>
                         </Stack>
-                    </Box>
+                    </>
                 )
             }
             case 1: {
@@ -413,7 +423,9 @@ export default function QuizForm() {
                                     width: '100%',
                                 }}
                             >
-                                {renderView()}
+                                <React.Suspense fallback={<div />}>
+                                    {renderView()}
+                                </React.Suspense>
                             </Box>
                         </Box>
                     </Grid>
@@ -509,10 +521,10 @@ function getDeviceWidth(device: DeviceType) {
             return 375
         }
         case 'laptop': {
-            return 'calc(100vw - 576px)'
+            return 'calc(100vw - 656px)'
         }
         case 'desktop': {
-            return 'calc(100vw - 576px)'
+            return 'calc(100vw - 656px)'
         }
     }
 }

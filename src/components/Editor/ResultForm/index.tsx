@@ -363,11 +363,11 @@ export default function ResultForm() {
                                 sx={{
                                     position: 'relative',
                                     width: '100%',
+                                    my: 3,
                                 }}
                             >
                                 <Box
                                     sx={{
-                                        p: 4,
                                         width: getDeviceWidth(device),
                                         mx: 'auto',
                                     }}
@@ -380,59 +380,52 @@ export default function ResultForm() {
                                             />
                                         </div>
                                     </StyledBox>
-
-                                    <Stack
-                                        direction="row"
-                                        justifyContent="center"
-                                        spacing={2}
-                                        divider={
-                                            <Divider
-                                                orientation="vertical"
-                                                flexItem
-                                            />
-                                        }
-                                        sx={{
-                                            position: 'fixed',
-                                            bottom: 8,
-                                            left: 'calc(50vw - 84px)',
-                                        }}
-                                    >
-                                        <IconButton
-                                            color={
-                                                device === 'mobile'
-                                                    ? 'primary'
-                                                    : undefined
-                                            }
-                                            onClick={() => setDevice('mobile')}
-                                            size="small"
-                                        >
-                                            <CellphoneIcon />
-                                        </IconButton>
-                                        <IconButton
-                                            color={
-                                                device === 'laptop'
-                                                    ? 'primary'
-                                                    : undefined
-                                            }
-                                            onClick={() => setDevice('laptop')}
-                                            size="small"
-                                        >
-                                            <LaptopIcon />
-                                        </IconButton>
-                                        <IconButton
-                                            color={
-                                                device === 'desktop'
-                                                    ? 'primary'
-                                                    : undefined
-                                            }
-                                            onClick={() => setDevice('desktop')}
-                                            size="small"
-                                        >
-                                            <DesktopMacIcon />
-                                        </IconButton>
-                                    </Stack>
                                 </Box>
                             </Box>
+
+                            <Stack
+                                direction="row"
+                                justifyContent="center"
+                                spacing={2}
+                                divider={
+                                    <Divider orientation="vertical" flexItem />
+                                }
+                                sx={{ mb: 2 }}
+                            >
+                                <IconButton
+                                    color={
+                                        device === 'mobile'
+                                            ? 'primary'
+                                            : undefined
+                                    }
+                                    onClick={() => setDevice('mobile')}
+                                    size="small"
+                                >
+                                    <CellphoneIcon />
+                                </IconButton>
+                                <IconButton
+                                    color={
+                                        device === 'laptop'
+                                            ? 'primary'
+                                            : undefined
+                                    }
+                                    onClick={() => setDevice('laptop')}
+                                    size="small"
+                                >
+                                    <LaptopIcon />
+                                </IconButton>
+                                <IconButton
+                                    color={
+                                        device === 'desktop'
+                                            ? 'primary'
+                                            : undefined
+                                    }
+                                    onClick={() => setDevice('desktop')}
+                                    size="small"
+                                >
+                                    <DesktopMacIcon />
+                                </IconButton>
+                            </Stack>
                         </Box>
                     </Grid>
                     <Grid
@@ -490,10 +483,10 @@ function getDeviceWidth(device: DeviceType) {
             return 375
         }
         case 'laptop': {
-            return 'calc(100vw - 576px)'
+            return 'calc(100vw - 656px)'
         }
         case 'desktop': {
-            return 'calc(100vw - 576px)'
+            return 'calc(100vw - 656px)'
         }
     }
 }

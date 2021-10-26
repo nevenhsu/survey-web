@@ -8,7 +8,8 @@ import Tabs, { TabsProps } from '@mui/material/Tabs'
 import Tab, { TabProps } from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
-import Editor from 'components/Editor'
+
+const Editor = React.lazy(() => import('components/Editor'))
 
 const Grow = styled('div')({
     flexGrow: 1,
@@ -71,7 +72,7 @@ export default function App() {
                     <Button color="inherit">Login</Button>
                 </Toolbar>
             </AppBar>
-            <>
+            <React.Suspense fallback={<div />}>
                 <Switch>
                     <Route path={paths.editor.path}>
                         <Editor />
@@ -83,7 +84,7 @@ export default function App() {
                         render={() => <Redirect to={paths.editor.path} />}
                     />
                 </Switch>
-            </>
+            </React.Suspense>
         </>
     )
 }
