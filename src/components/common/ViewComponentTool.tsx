@@ -96,6 +96,7 @@ export default function ViewComponentTool(props: ViewComponentTool) {
     const { component, onChange, onDelete } = props
 
     const {
+        id,
         type,
         value,
         link,
@@ -108,6 +109,7 @@ export default function ViewComponentTool(props: ViewComponentTool) {
         height,
         color,
         bgcolor,
+        buttonColor,
     } = component ?? {}
 
     return (
@@ -153,6 +155,7 @@ export default function ViewComponentTool(props: ViewComponentTool) {
                                     name="value"
                                     value={value ?? ''}
                                     variant="standard"
+                                    placeholder={id ? '請輸入文字...' : ''}
                                     onChange={onChange}
                                     fullWidth
                                 />
@@ -169,6 +172,7 @@ export default function ViewComponentTool(props: ViewComponentTool) {
                                         name="link"
                                         value={link ?? ''}
                                         variant="standard"
+                                        placeholder="https://..."
                                         onChange={onChange}
                                         fullWidth
                                     />
@@ -279,6 +283,14 @@ export default function ViewComponentTool(props: ViewComponentTool) {
                                         value={typoVariant ?? ''}
                                         variant="standard"
                                         onChange={onChange}
+                                        InputProps={{
+                                            // @ts-ignore
+                                            sx: (theme) => ({
+                                                '& .MuiTypography-root': {
+                                                    ...theme.typography.body1,
+                                                },
+                                            }),
+                                        }}
                                         select
                                         fullWidth
                                     >
@@ -315,30 +327,37 @@ export default function ViewComponentTool(props: ViewComponentTool) {
                                                 key={el.value}
                                                 value={el.value}
                                             >
-                                                {el.label}
+                                                <Typography
+                                                    fontWeight={el.value}
+                                                    noWrap
+                                                >
+                                                    {el.label}
+                                                </Typography>
                                             </MenuItem>
                                         ))}
                                     </StyledTextField>
                                 </TableCell>
                             </TableRow>
-
-                            <TableRow>
-                                <TableCell>
-                                    {type === ComponentType.card
-                                        ? '邊框顏色'
-                                        : '文字顏色'}
-                                </TableCell>
-                                <TableCell>
-                                    <StyledTextField
-                                        name="color"
-                                        value={color ?? ''}
-                                        variant="standard"
-                                        onChange={onChange}
-                                        fullWidth
-                                    />
-                                </TableCell>
-                            </TableRow>
                         </>
+                    )}
+
+                    {type !== ComponentType.image && (
+                        <TableRow>
+                            <TableCell>
+                                {type === ComponentType.card
+                                    ? '邊框顏色'
+                                    : '文字顏色'}
+                            </TableCell>
+                            <TableCell>
+                                <StyledTextField
+                                    name="color"
+                                    value={color ?? ''}
+                                    variant="standard"
+                                    onChange={onChange}
+                                    fullWidth
+                                />
+                            </TableCell>
+                        </TableRow>
                     )}
 
                     <TableRow>
@@ -353,6 +372,21 @@ export default function ViewComponentTool(props: ViewComponentTool) {
                             />
                         </TableCell>
                     </TableRow>
+
+                    {type === ComponentType.clipboard && (
+                        <TableRow>
+                            <TableCell>按鈕顏色</TableCell>
+                            <TableCell>
+                                <StyledTextField
+                                    name="buttonColor"
+                                    value={buttonColor ?? ''}
+                                    variant="standard"
+                                    onChange={onChange}
+                                    fullWidth
+                                />
+                            </TableCell>
+                        </TableRow>
+                    )}
                 </TableBody>
             </Table>
 

@@ -1,7 +1,13 @@
 import _ from 'lodash'
 import cryptoRandomString from 'crypto-random-string'
 import { defaultTags } from 'common/defaultTags'
-import { QuizMode, QuizType, ComponentType, Mode } from 'common/types'
+import {
+    QuizMode,
+    QuizType,
+    ComponentType,
+    Mode,
+    FinalMode,
+} from 'common/types'
 import type {
     Form,
     Quiz,
@@ -76,6 +82,7 @@ export function getDefaultForm(data: Partial<Form>): Form {
         tags: mode === Mode.product ? _.keyBy(defaultTags, 'id') : {},
         results: { selectedTags: [], list: {} },
         setting: { showProgress: true },
+        final: { mode: FinalMode.info, components: [] },
     }
     return form
 }
@@ -161,6 +168,7 @@ export function getDefaultComponent(type: ComponentType) {
                 align: 'center',
                 typoVariant: 'h4',
                 color: 'text.primary',
+                width: '100%',
             }
             return component
         }
@@ -172,6 +180,7 @@ export function getDefaultComponent(type: ComponentType) {
                 align: 'center',
                 typoVariant: 'body1',
                 color: 'text.secondary',
+                width: '100%',
             }
             return component
         }
@@ -181,7 +190,7 @@ export function getDefaultComponent(type: ComponentType) {
                 value: '',
                 display: 'block',
                 align: 'center',
-                width: 'auto',
+                width: '100%',
                 height: 'auto',
             }
             return component
@@ -196,6 +205,7 @@ export function getDefaultComponent(type: ComponentType) {
                 align: 'center',
                 typoVariant: 'button',
                 color: 'primary.main',
+                width: '100%',
             }
             return component
         }
@@ -207,6 +217,8 @@ export function getDefaultComponent(type: ComponentType) {
                 align: 'center',
                 typoVariant: 'h6',
                 color: 'primary.main',
+                buttonColor: 'primary.main',
+                width: '100%',
             }
             return component
         }

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import _ from 'lodash'
 import CreatableSelect from 'react-select/creatable'
-import { styled } from '@mui/material/styles'
+import { styled, useTheme } from '@mui/material/styles'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -12,7 +12,7 @@ import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import components, { styles } from 'components/common/MuiSelectComponents'
 import { useAppSelector, useAppDispatch } from 'hooks'
-import { getMuiColor } from 'theme/palette'
+import { getMuiColor, getContrastText } from 'theme/palette'
 import { setClasses, getDefaultTags } from 'utils/helper'
 import { selectCurrentForm, updateQuiz, updateForm } from 'store/slices/editor'
 import type { SelectionQuiz, Tags, ChoiceType } from 'common/types'
@@ -49,6 +49,7 @@ export default function TagsQuiz(props: TagsQuizProps) {
     const { quiz } = props
     const { id: quizId, choices = [], tagsId: ids = [] } = quiz ?? {}
 
+    const theme = useTheme()
     const [page, setPage] = React.useState(0)
     const [rowsPerPage, setRowsPerPage] = React.useState(5)
 
@@ -214,68 +215,78 @@ export default function TagsQuiz(props: TagsQuizProps) {
                                     <TableCell component="th" scope="row">
                                         {el.label}
                                     </TableCell>
-                                    {tagsId.map((id, i) => (
-                                        <TableCell key={id || `${i}`}>
-                                            {id ? (
-                                                <CreatableSelect<
-                                                    TagOption,
-                                                    true
-                                                >
-                                                    components={components}
-                                                    styles={{
-                                                        ...(styles as any),
-                                                        multiValue: (base) => ({
-                                                            ...base,
-                                                            borderRadius: 99,
-                                                            backgroundColor:
-                                                                getMuiColor(
-                                                                    tags[id]
-                                                                        ?.color
-                                                                ).color[500],
-                                                        }),
-                                                        multiValueRemove: (
-                                                            base
-                                                        ) => ({
-                                                            ...base,
-                                                            borderRadius: 99,
-                                                            opacity: 0.6,
-                                                            color: 'white',
-                                                            ':hover': {
-                                                                opacity: 1,
-                                                                backgroundColor:
-                                                                    'unset',
-                                                            },
-                                                        }),
-                                                    }}
-                                                    menuPosition="fixed"
-                                                    className={
-                                                        classes.selectContainer
-                                                    }
-                                                    value={getTagValues(
-                                                        el.tags[id]
-                                                    )}
-                                                    onChange={(
-                                                        values,
-                                                        actionMeta
-                                                    ) =>
-                                                        handleTagsChange(
-                                                            el,
-                                                            id,
+                                    {tagsId.map((id, i) => {
+                                        const backgroundColor = getMuiColor(
+                                            tags[id]?.color
+                                        ).color[500]
+
+                                        const { textColor } = getContrastText(
+                                            theme,
+                                            backgroundColor,
+                                            '#333'
+                                        )
+                                        return (
+                                            <TableCell key={id || `${i}`}>
+                                                {id ? (
+                                                    <CreatableSelect<
+                                                        TagOption,
+                                                        true
+                                                    >
+                                                        components={components}
+                                                        styles={{
+                                                            ...(styles as any),
+                                                            multiValue: (
+                                                                base
+                                                            ) => ({
+                                                                ...base,
+                                                                borderRadius: 99,
+                                                                color: textColor,
+                                                                backgroundColor,
+                                                            }),
+                                                            multiValueRemove: (
+                                                                base
+                                                            ) => ({
+                                                                ...base,
+                                                                borderRadius: 99,
+                                                                opacity: 0.6,
+                                                                color: textColor,
+                                                                ':hover': {
+                                                                    opacity: 1,
+                                                                    backgroundColor:
+                                                                        'unset',
+                                                                },
+                                                            }),
+                                                        }}
+                                                        menuPosition="fixed"
+                                                        className={
+                                                            classes.selectContainer
+                                                        }
+                                                        value={getTagValues(
+                                                            el.tags[id]
+                                                        )}
+                                                        onChange={(
                                                             values,
                                                             actionMeta
-                                                        )
-                                                    }
-                                                    options={getTagOptions(
-                                                        tags[id]
-                                                    )}
-                                                    isMulti
-                                                    isClearable
-                                                />
-                                            ) : (
-                                                ''
-                                            )}
-                                        </TableCell>
-                                    ))}
+                                                        ) =>
+                                                            handleTagsChange(
+                                                                el,
+                                                                id,
+                                                                values,
+                                                                actionMeta
+                                                            )
+                                                        }
+                                                        options={getTagOptions(
+                                                            tags[id]
+                                                        )}
+                                                        isMulti
+                                                        isClearable
+                                                    />
+                                                ) : (
+                                                    ''
+                                                )}
+                                            </TableCell>
+                                        )
+                                    })}
                                 </TableRow>
                             ))}
                         {emptyRows > 0 && (

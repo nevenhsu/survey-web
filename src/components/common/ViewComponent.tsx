@@ -11,6 +11,7 @@ import Button from '@mui/material/Button'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Box from '@mui/material/Box'
+import StyledButton from 'components/common/StyledButton'
 import AddIcon from 'mdi-react/AddIcon'
 import { ComponentType } from 'common/types'
 import type { Component, OnChangeInput } from 'common/types'
@@ -121,6 +122,7 @@ function ComponentItem(
         fontWeight,
         color,
         bgcolor,
+        buttonColor,
         components = [],
     } = component
 
@@ -152,7 +154,6 @@ function ComponentItem(
                         height,
                         bgcolor,
                     }}
-                    fullWidth
                     multiline
                 />
             )
@@ -185,18 +186,20 @@ function ComponentItem(
                             height,
                             bgcolor,
                         }}
-                        fullWidth
                     />
                 </Link>
             )
         }
         case ComponentType.clipboard: {
+            const margin = getMargin(align)
+
             return (
                 <Stack
                     direction="row"
                     alignItems="center"
-                    alignContent="center"
+                    justifyContent="center"
                     spacing={2}
+                    sx={{ width, ...margin }}
                 >
                     <StyledTextField
                         onChange={(e) => {
@@ -210,29 +213,31 @@ function ComponentItem(
                         InputProps={{
                             sx: {
                                 color,
-                                textAlign: align,
                             },
                         }}
                         placeholder="請輸入文字"
                         sx={{
-                            width,
+                            minWidth: 'calc(100% - 80px)',
                             height,
                             bgcolor,
                         }}
-                        fullWidth
+                        size="small"
                     />
                     <CopyToClipboard text={val} onCopy={() => setCopied(true)}>
-                        <Button
+                        <StyledButton
                             variant="contained"
                             sx={{ whiteSpace: 'nowrap' }}
+                            colorKey={buttonColor}
                         >
                             {copied ? '已複製' : '複製'}
-                        </Button>
+                        </StyledButton>
                     </CopyToClipboard>
                 </Stack>
             )
         }
         case ComponentType.image: {
+            const margin = getMargin(align)
+
             return (
                 <ImageUploader
                     bgImage={val}
@@ -241,9 +246,17 @@ function ComponentItem(
                             target: { name: 'value', value },
                         } as any)
                     }}
+                    hideButton={Boolean(val)}
                     hideDeleteButton
-                    hideButton
-                    sx={{ display, bgcolor, width, height, textAlign: align }}
+                    sx={{
+                        display,
+                        bgcolor,
+                        width,
+                        height,
+                        textAlign: align,
+                        minHeight: 32,
+                        ...margin,
+                    }}
                 />
             )
         }
@@ -258,6 +271,7 @@ function ComponentItem(
                         textAlign: align,
                         borderRadius: 1,
                         border: `1px solid ${color}`,
+                        overflow: 'hidden',
                     }}
                 >
                     <ComponentList
@@ -347,4 +361,15 @@ export function getComponent(
     }
 
     return component
+}
+
+function getMargin(align?: string) {
+    if (!align) {
+        return { mx: 'auto' }
+    }
+    return align === 'center'
+        ? { mx: 'auto' }
+        : align === 'right'
+        ? { ml: 'auto' }
+        : { mr: 'auto' }
 }

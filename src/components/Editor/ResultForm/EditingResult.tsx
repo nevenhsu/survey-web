@@ -23,12 +23,13 @@ export default function EditingResult(props: EditingQuizProps) {
         setComponent,
         idPath = [],
         setIdPath,
+        selectedId = '',
+        setSelectedId,
+        reset,
     } = React.useContext(ComponentContext)
 
     const { formId, result } = props
     const { id: resultId, components = [] } = result ?? {}
-
-    const [selectedId, setSelectedId] = React.useState<string>('')
 
     const selectedComponent = React.useMemo(() => {
         return getComponent(components, [...idPath, selectedId])
@@ -57,7 +58,7 @@ export default function EditingResult(props: EditingQuizProps) {
     }
 
     React.useEffect(() => {
-        if (components[0]) {
+        if (components[0] && setSelectedId) {
             setSelectedId(components[0].id)
         }
     }, [])
@@ -110,30 +111,30 @@ export default function EditingResult(props: EditingQuizProps) {
         <ThemeProvider mode="light">
             <Box
                 onClick={() => {
-                    setSelectedId('')
-                    if (setIdPath) {
-                        setIdPath([])
+                    if (reset) {
+                        reset()
                     }
                 }}
                 sx={{
                     backgroundColor: 'common.white',
                 }}
             >
-                <Box onClick={(e) => e.stopPropagation()}>
-                    <ComponentList
-                        components={components}
-                        idPath={[]}
-                        selectedComponent={selectedComponent}
-                        onAdd={handleAdd}
-                        onSelect={(component, idPath: string[]) => {
+                <ComponentList
+                    components={components}
+                    idPath={[]}
+                    selectedComponent={selectedComponent}
+                    onAdd={handleAdd}
+                    onSelect={(component, idPath: string[]) => {
+                        if (setSelectedId) {
                             setSelectedId(component.id)
-                            if (setIdPath) {
-                                setIdPath(idPath)
-                            }
-                        }}
-                        onChange={handleChange}
-                    />
-                </Box>
+                        }
+
+                        if (setIdPath) {
+                            setIdPath(idPath)
+                        }
+                    }}
+                    onChange={handleChange}
+                />
             </Box>
         </ThemeProvider>
     )

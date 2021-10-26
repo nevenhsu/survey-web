@@ -1,20 +1,19 @@
 import * as React from 'react'
 import _ from 'lodash'
 import ViewComponentTool from 'components/common/ViewComponentTool'
-import { ComponentContext } from 'components/Editor/ResultForm/ComponentProvider'
-import { useAppDispatch, useAppSelector } from 'hooks'
-import { updateComponent } from 'store/slices/editor'
+import { ComponentContext } from 'components/Editor/FinalForm/ComponentProvider'
+import { useAppDispatch } from 'hooks'
+import { updateFinalComponents } from 'store/slices/editor'
 import type { OnChangeInput, Component } from 'common/types'
 
-type ResultToolProps = {
+type FinalToolProps = {
     formId?: string
-    resultId?: string
 }
 
-export default function ResultTool(props: ResultToolProps) {
+export default function FinalTool(props: FinalToolProps) {
     const dispatch = useAppDispatch()
 
-    const { formId, resultId } = props
+    const { formId } = props
     const { component, idPath = [] } = React.useContext(ComponentContext)
 
     const handleChange: OnChangeInput = (event) => {
@@ -28,11 +27,10 @@ export default function ResultTool(props: ResultToolProps) {
             [name]: val,
         } as Component
 
-        if (formId && resultId && idPath && component) {
+        if (formId && idPath && component) {
             dispatch(
-                updateComponent({
+                updateFinalComponents({
                     formId,
-                    resultId,
                     idPath,
                     newValue,
                 })
@@ -41,11 +39,10 @@ export default function ResultTool(props: ResultToolProps) {
     }
 
     const handleDelete = () => {
-        if (formId && resultId && idPath && component) {
+        if (formId && idPath && component) {
             dispatch(
-                updateComponent({
+                updateFinalComponents({
                     formId,
-                    resultId,
                     idPath,
                     newValue: component,
                     deleted: true,

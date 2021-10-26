@@ -8,19 +8,16 @@ import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
-import IconButton from '@mui/material/IconButton'
-import Divider from '@mui/material/Divider'
 import Box, { BoxProps } from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
 import LinearProgress from '@mui/material/LinearProgress'
+import DeviceMode from 'components/common/DeviceMode'
 import QuizTool from 'components/Editor/QuizForm/QuizTool'
 import ModeSelector from 'components/Editor/QuizForm/ModeSelector'
 import MenuSwapIcon from 'mdi-react/DragHorizontalVariantIcon'
 import AddIcon from 'mdi-react/AddIcon'
-import LaptopIcon from 'mdi-react/LaptopIcon'
-import CellphoneIcon from 'mdi-react/CellphoneIcon'
-import DesktopMacIcon from 'mdi-react/DesktopMacIcon'
 import { useAppSelector, useAppDispatch } from 'hooks'
+import { selectDevice } from 'store/slices/userDefault'
 import { selectCurrentForm, setQuizzes, addQuiz } from 'store/slices/editor'
 import { reorder, setId, getDefaultQuiz } from 'utils/helper'
 import ThemeProvider from 'theme/ThemeProvider'
@@ -95,7 +92,6 @@ export default function QuizForm() {
 
     const [selectedId, setSelectedId] = React.useState('')
     const [tab, setTab] = React.useState(0)
-    const [device, setDevice] = React.useState<DeviceType>('mobile')
     const [progress, setProgress] = React.useState(0)
 
     const [open, setOpen] = React.useState(false)
@@ -103,6 +99,8 @@ export default function QuizForm() {
     const handleClose = () => setOpen(false)
 
     const [mode, setMode] = React.useState<QuizMode>(QuizMode.page)
+
+    const device = useAppSelector(selectDevice)
 
     const selectedQuiz: QuizType | undefined = React.useMemo(() => {
         return _.find(quizzes, { id: selectedId })
@@ -175,43 +173,7 @@ export default function QuizForm() {
                             </Box>
                         </Box>
 
-                        <Stack
-                            direction="row"
-                            justifyContent="center"
-                            spacing={2}
-                            divider={
-                                <Divider orientation="vertical" flexItem />
-                            }
-                            sx={{ mb: 2 }}
-                        >
-                            <IconButton
-                                color={
-                                    device === 'mobile' ? 'primary' : undefined
-                                }
-                                onClick={() => setDevice('mobile')}
-                                size="small"
-                            >
-                                <CellphoneIcon />
-                            </IconButton>
-                            <IconButton
-                                color={
-                                    device === 'laptop' ? 'primary' : undefined
-                                }
-                                onClick={() => setDevice('laptop')}
-                                size="small"
-                            >
-                                <LaptopIcon />
-                            </IconButton>
-                            <IconButton
-                                color={
-                                    device === 'desktop' ? 'primary' : undefined
-                                }
-                                onClick={() => setDevice('desktop')}
-                                size="small"
-                            >
-                                <DesktopMacIcon />
-                            </IconButton>
-                        </Stack>
+                        <DeviceMode sx={{ mb: 2 }} />
                     </>
                 )
             }

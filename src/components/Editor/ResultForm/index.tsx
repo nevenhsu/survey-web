@@ -8,26 +8,23 @@ import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
-import IconButton from '@mui/material/IconButton'
-import Divider from '@mui/material/Divider'
 import Box, { BoxProps } from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
 import InputAdornment from '@mui/material/InputAdornment'
-import EditingResult from 'components/Result/EditingResult'
 import StyledChip from 'components/common/StyledChip'
+import DeviceMode from 'components/common/DeviceMode'
+import EditingResult from 'components/Editor/ResultForm/EditingResult'
 import ResultTool from 'components/Editor/ResultForm/ResultTool'
 import ComponentProvider from 'components/Editor/ResultForm/ComponentProvider'
 import { getDefaultComponent } from 'utils/helper'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import { selectCurrentForm, setResults } from 'store/slices/editor'
+import { selectDevice } from 'store/slices/userDefault'
 import ThemeProvider from 'theme/ThemeProvider'
 import { getMuiColor } from 'theme/palette'
 import Numeric1BoxIcon from 'mdi-react/Numeric1BoxIcon'
 import Numeric2BoxIcon from 'mdi-react/Numeric2BoxIcon'
-import LaptopIcon from 'mdi-react/LaptopIcon'
-import CellphoneIcon from 'mdi-react/CellphoneIcon'
-import DesktopMacIcon from 'mdi-react/DesktopMacIcon'
 import { ComponentType, Mode } from 'common/types'
 import type { Result, ResultList, DeviceType } from 'common/types'
 
@@ -74,7 +71,8 @@ export default function ResultForm() {
     const dispatch = useAppDispatch()
 
     const [selectedId, setSelectedId] = React.useState('')
-    const [device, setDevice] = React.useState<DeviceType>('mobile')
+
+    const device = useAppSelector(selectDevice)
 
     const form = useAppSelector(selectCurrentForm)
     const { id: formId, tags, results, mode } = form ?? {}
@@ -164,25 +162,25 @@ export default function ResultForm() {
 
     return (
         <ComponentProvider>
-            <Grid
-                container
+            <Stack
+                direction="row"
                 alignItems="center"
                 justifyContent="space-between"
                 sx={{ p: 3, borderBottom: '1px solid' }}
             >
-                <Grid item>
+                <Box>
                     <Typography variant="h6">編輯個人化測驗結果</Typography>
                     <Typography variant="body1">（說明文字）</Typography>
-                </Grid>
-                <Grid item>
+                </Box>
+                <Box>
                     <Button variant="outlined">預覽測驗</Button>
                     <Box
                         component="span"
                         sx={{ display: 'inline-block', width: 8 }}
                     />
                     <Button variant="contained">編輯測驗結果</Button>
-                </Grid>
-            </Grid>
+                </Box>
+            </Stack>
             <Grid container sx={{ minHeight: 'calc(100vh - 218px)' }}>
                 <Grid
                     item
@@ -383,49 +381,7 @@ export default function ResultForm() {
                                 </Box>
                             </Box>
 
-                            <Stack
-                                direction="row"
-                                justifyContent="center"
-                                spacing={2}
-                                divider={
-                                    <Divider orientation="vertical" flexItem />
-                                }
-                                sx={{ mb: 2 }}
-                            >
-                                <IconButton
-                                    color={
-                                        device === 'mobile'
-                                            ? 'primary'
-                                            : undefined
-                                    }
-                                    onClick={() => setDevice('mobile')}
-                                    size="small"
-                                >
-                                    <CellphoneIcon />
-                                </IconButton>
-                                <IconButton
-                                    color={
-                                        device === 'laptop'
-                                            ? 'primary'
-                                            : undefined
-                                    }
-                                    onClick={() => setDevice('laptop')}
-                                    size="small"
-                                >
-                                    <LaptopIcon />
-                                </IconButton>
-                                <IconButton
-                                    color={
-                                        device === 'desktop'
-                                            ? 'primary'
-                                            : undefined
-                                    }
-                                    onClick={() => setDevice('desktop')}
-                                    size="small"
-                                >
-                                    <DesktopMacIcon />
-                                </IconButton>
-                            </Stack>
+                            <DeviceMode sx={{ mb: 2 }} />
                         </Box>
                     </Grid>
                     <Grid

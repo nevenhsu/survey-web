@@ -104,6 +104,7 @@ export type Component = {
     height?: number | string
     color?: string
     bgcolor?: string
+    buttonColor?: string
     components?: Component[]
 }
 
@@ -125,6 +126,15 @@ export type Setting = {
     showProgress: boolean
 }
 
+export enum FinalMode {
+    info = 'info',
+}
+
+export type Final = {
+    mode: FinalMode
+    components: Component[]
+}
+
 export type Form = {
     id: string
     createdAt: number
@@ -134,6 +144,7 @@ export type Form = {
     tags: { [id: string]: Tags }
     results: Results
     setting: Setting
+    final: Final
 }
 
 export type DeviceType = 'mobile' | 'laptop' | 'desktop'

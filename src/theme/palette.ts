@@ -20,7 +20,9 @@ import {
     teal,
     yellow,
 } from '@mui/material/colors'
+import styleFunctionSx from '@mui/system/styleFunctionSx'
 import type { PaletteMode, PaletteOptions } from '@mui/material'
+import type { Theme } from '@mui/material/styles/createTheme'
 
 type Color = {
     50: string
@@ -86,5 +88,24 @@ export const getMuiColor = (key?: string) => {
     return {
         key: k,
         color: colors[k],
+    }
+}
+
+export function getContrastText(
+    theme: Theme,
+    colorKey: string,
+    fallback: string
+) {
+    try {
+        const sx = { color: colorKey }
+        const style = styleFunctionSx({ sx, theme }) as any
+
+        const { color } = style ?? {}
+        const textColor = theme.palette.getContrastText(color)
+
+        return { color, textColor }
+    } catch (err) {
+        console.error(err)
+        return { color: colorKey, textColor: fallback }
     }
 }

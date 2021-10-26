@@ -1,9 +1,9 @@
 import _ from 'lodash'
-import { createSlice, createAsyncThunk, current } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import surveyApi from 'services/surveyApi'
 import User from 'utils/user'
 import LocalForms from 'utils/forms'
-import { EditorStep, ComponentType } from 'common/types'
+import { EditorStep } from 'common/types'
 import type {
     Mode,
     Form,
@@ -12,6 +12,7 @@ import type {
     Results,
     Result,
     Component,
+    Final,
 } from 'common/types'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from 'store'
@@ -175,6 +176,46 @@ export const editorSlice = createSlice({
                 updateLocalForm(formId, form)
             }
         },
+        updateFinal: (
+            state,
+            action: PayloadAction<{
+                formId: string
+                newValue: Partial<Final>
+            }>
+        ) => {
+            const { formId, newValue } = action.payload
+            const { forms } = state
+
+            const form = forms[formId]
+            form.final = { ...form.final, ...newValue }
+
+            updateLocalForm(formId, form)
+        },
+        updateFinalComponents: (
+            state,
+            action: PayloadAction<{
+                formId: string
+                idPath: string[]
+                newValue: Component
+                deleted?: boolean
+            }>
+        ) => {
+            const { formId, idPath, newValue, deleted = false } = action.payload
+
+            const { forms } = state
+            const form = forms[formId] ?? {}
+
+            if (form) {
+                const { final } = form
+
+                if (!final.components) {
+                    final.components = []
+                }
+
+                setNewComponents(final, idPath, newValue, Boolean(deleted))
+                updateLocalForm(formId, form)
+            }
+        },
         updateForm: (
             state,
             action: PayloadAction<{
@@ -231,6 +272,8 @@ export const {
     setResults,
     setResult,
     updateComponent,
+    updateFinal,
+    updateFinalComponents,
     updateForm,
     reloadFromLocal,
 } = editorSlice.actions
@@ -252,13 +295,13 @@ const updateLocalForm = (id: string, value: Form) => {
 }
 
 function setNewComponents(
-    result: Result,
+    data: { components: Component[] },
     idPath: string[],
     newValue: Component,
     deleted: boolean = false
 ) {
     let i = 0
-    let components = result.components
+    let components = data.components
     let component: Component | undefined = undefined
 
     while (i < idPath.length) {
