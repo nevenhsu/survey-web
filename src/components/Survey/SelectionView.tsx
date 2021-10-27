@@ -2,6 +2,8 @@ import * as React from 'react'
 import _ from 'lodash'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
+import Grid, { GridSize } from '@mui/material/Grid'
+import ChoiceView from 'components/Survey/ChoiceView'
 import QuizButton from 'components/Survey/QuizButton'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import type { CustomButton, OnChangeInput, SelectionType } from 'common/types'
@@ -14,14 +16,38 @@ type SelectionViewProps = {
 }
 
 export default function SelectionView(props: SelectionViewProps) {
-    const { title, selectionProps, buttonProps } = props
-    console.log({ selectionProps })
+    const { title, selectionProps, buttonProps, onChange } = props
+    const { choices = [], maxChoices, showImage, direction } = selectionProps
+
+    const responsive: { [key: string]: GridSize } =
+        direction === 'row' ? { xs: 6 } : { xs: 12 }
+
     return (
         <>
             <Typography variant="h6"> {title} </Typography>
-
             <Box sx={{ height: 16 }} />
-
+            <Box sx={{ width: 4 / 5, textAlign: 'center' }}>
+                <Grid
+                    container
+                    direction={direction}
+                    alignItems="center"
+                    justifyContent="center"
+                    spacing={2}
+                >
+                    {choices.map((el) => (
+                        <Grid key={el.id} item {...responsive}>
+                            <ChoiceView
+                                value={el}
+                                showImage={showImage}
+                                onClick={(event) => {
+                                    console.log(event.currentTarget.id)
+                                }}
+                            />
+                        </Grid>
+                    ))}
+                </Grid>
+            </Box>
+            <Box sx={{ height: 16 }} />
             <QuizButton buttonProps={buttonProps} />
         </>
     )
