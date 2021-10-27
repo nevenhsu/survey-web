@@ -97,7 +97,18 @@ export function getDefaultQuiz(id: string, mode: QuizMode): QuizType {
     }
 
     switch (mode) {
-        case QuizMode.selection:
+        case QuizMode.selection: {
+            const quiz: SelectionQuiz = {
+                ...defaultQuiz,
+                choices: [getDefaultChoice()],
+                values: [],
+                tagsId: [],
+                maxChoices: 1,
+                showImage: false,
+                direction: 'column',
+            }
+            return quiz
+        }
         case QuizMode.sort: {
             const quiz: SelectionQuiz = {
                 ...defaultQuiz,

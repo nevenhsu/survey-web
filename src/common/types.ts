@@ -16,6 +16,12 @@ export enum EditorStep {
     launch = 'launch',
 }
 
+export enum SurveyStep {
+    quiz = 'quiz',
+    result = 'result',
+    final = 'final',
+}
+
 export enum QuizMode {
     page = 'page',
     fill = 'fill',

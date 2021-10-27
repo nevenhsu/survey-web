@@ -1,7 +1,6 @@
 import _ from 'lodash'
 import axios from 'axios'
-import { setId, getDefaultForm } from 'utils/helper'
-import { QuizMode } from 'common/types'
+import { getDefaultForm } from 'utils/helper'
 import type { Mode, Form } from 'common/types'
 
 type CreateNewResponse = {
@@ -37,6 +36,20 @@ const surveyApi = {
         }
 
         return ''
+    },
+    getForm: async (id: string) => {
+        if (id) {
+            const url = `${process.env.REACT_APP_URL}/survey/${id}`
+            const { data } = await axios.get<Form>(url)
+            return data
+        }
+    },
+    putForm: async (id: string, form: Form) => {
+        if (id && form) {
+            const url = `${process.env.REACT_APP_URL}/survey/${id}`
+            const { data } = await axios.put<Form>(url, form)
+            return data
+        }
     },
 }
 

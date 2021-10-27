@@ -284,7 +284,6 @@ export default function ViewComponentTool(props: ViewComponentTool) {
                                         variant="standard"
                                         onChange={onChange}
                                         InputProps={{
-                                            // @ts-ignore
                                             sx: (theme) => ({
                                                 '& .MuiTypography-root': {
                                                     ...theme.typography.body1,
