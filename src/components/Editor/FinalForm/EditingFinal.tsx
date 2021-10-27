@@ -1,8 +1,8 @@
 import * as React from 'react'
 import _ from 'lodash'
 import Box from '@mui/material/Box'
-import { ComponentContext } from 'components/Editor/FinalForm/ComponentProvider'
-import { ComponentList, getComponent } from 'components/common/ViewComponent'
+import { Contexts } from 'components/common/ComponentView'
+import { ComponentList, getComponent } from 'components/common/ComponentView'
 import { getDefaultComponent } from 'utils/helper'
 import { useAppDispatch, useAppSelector } from 'hooks'
 import { updateFinalComponents, selectCurrentForm } from 'store/slices/editor'
@@ -15,6 +15,9 @@ export default function EditingFinal() {
     const { id: formId, final } = form
     const { mode, components = [] } = final ?? {}
 
+    const instance = Contexts.getInstance('final')
+    const { Context } = instance.getValue()
+
     const {
         setComponent,
         idPath = [],
@@ -22,7 +25,7 @@ export default function EditingFinal() {
         selectedId = '',
         setSelectedId,
         reset,
-    } = React.useContext(ComponentContext)
+    } = React.useContext(Context)
 
     const selectedComponent = React.useMemo(() => {
         return getComponent(components, [...idPath, selectedId])

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import _ from 'lodash'
-import ViewComponentTool from 'components/common/ViewComponentTool'
-import { ComponentContext } from 'components/Editor/FinalForm/ComponentProvider'
+import ComponentViewTool from 'components/common/ComponentView/Tool'
+import { Contexts } from 'components/common/ComponentView'
 import { useAppDispatch } from 'hooks'
 import { updateFinalComponents } from 'store/slices/editor'
 import type { OnChangeInput, Component } from 'common/types'
@@ -14,7 +14,11 @@ export default function FinalTool(props: FinalToolProps) {
     const dispatch = useAppDispatch()
 
     const { formId } = props
-    const { component, idPath = [] } = React.useContext(ComponentContext)
+
+    const instance = Contexts.getInstance('final')
+    const { Context } = instance.getValue()
+
+    const { component, idPath = [] } = React.useContext(Context)
 
     const handleChange: OnChangeInput = (event) => {
         const { name, value } = event.target
@@ -52,7 +56,7 @@ export default function FinalTool(props: FinalToolProps) {
     }
 
     return (
-        <ViewComponentTool
+        <ComponentViewTool
             component={component}
             onChange={handleChange}
             onDelete={handleDelete}

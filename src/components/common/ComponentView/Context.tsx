@@ -1,7 +1,7 @@
 import * as React from 'react'
 import type { Component } from 'common/types'
 
-type ComponentContextType = {
+type ContextType = {
     component?: Component
     setComponent?: React.Dispatch<React.SetStateAction<Component | undefined>>
     idPath?: string[]
@@ -11,9 +11,13 @@ type ComponentContextType = {
     reset?: () => void
 }
 
-export const ComponentContext = React.createContext<ComponentContextType>({})
+type ProviderProps = { context: React.Context<ContextType> }
 
-export default function ComponentProvider(props: React.PropsWithChildren<{}>) {
+type Key = 'result' | 'final'
+
+function ContextProvider(props: React.PropsWithChildren<ProviderProps>) {
+    const { context } = props
+
     const [component, setComponent] = React.useState<Component>()
     const [idPath, setIdPath] = React.useState<string[]>()
     const [selectedId, setSelectedId] = React.useState<string>()
@@ -37,9 +41,30 @@ export default function ComponentProvider(props: React.PropsWithChildren<{}>) {
         [component, idPath, selectedId]
     )
 
-    return (
-        <ComponentContext.Provider value={value}>
-            {props.children}
-        </ComponentContext.Provider>
-    )
+    return <context.Provider value={value}>{props.children}</context.Provider>
+}
+
+export default class Contexts {
+    private static instances: { [key: string]: Contexts } = {}
+    private context: React.Context<ContextType>
+    private provider: (
+        props: React.PropsWithChildren<ProviderProps>
+    ) => JSX.Element
+
+    public static getInstance(key: Key) {
+        if (!this.instances[key]) {
+            this.instances[key] = new Contexts()
+        }
+
+        return this.instances[key]
+    }
+
+    private constructor() {
+        this.context = React.createContext<ContextType>({})
+        this.provider = ContextProvider
+    }
+
+    public getValue() {
+        return { Context: this.context, Provider: this.provider }
+    }
 }

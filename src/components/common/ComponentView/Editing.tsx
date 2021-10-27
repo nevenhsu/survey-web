@@ -182,10 +182,10 @@ function ComponentItem(
                         }}
                         placeholder="請輸入文字"
                         sx={{
-                            width,
                             height,
                             bgcolor,
                         }}
+                        fullWidth
                     />
                 </Link>
             )

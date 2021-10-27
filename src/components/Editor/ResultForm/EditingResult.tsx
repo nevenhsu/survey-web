@@ -3,8 +3,8 @@ import _ from 'lodash'
 import Box from '@mui/material/Box'
 import User from 'utils/user'
 import ThemeProvider from 'theme/ThemeProvider'
-import { ComponentContext } from 'components/Editor/ResultForm/ComponentProvider'
-import { ComponentList, getComponent } from 'components/common/ViewComponent'
+import { Contexts } from 'components/common/ComponentView'
+import { ComponentList, getComponent } from 'components/common/ComponentView'
 import { getDefaultComponent, setId } from 'utils/helper'
 import { useAppDispatch } from 'hooks'
 import { updateComponent, setResult } from 'store/slices/editor'
@@ -19,6 +19,9 @@ type EditingQuizProps = {
 export default function EditingResult(props: EditingQuizProps) {
     const dispatch = useAppDispatch()
 
+    const instance = Contexts.getInstance('result')
+    const { Context } = instance.getValue()
+
     const {
         setComponent,
         idPath = [],
@@ -26,7 +29,7 @@ export default function EditingResult(props: EditingQuizProps) {
         selectedId = '',
         setSelectedId,
         reset,
-    } = React.useContext(ComponentContext)
+    } = React.useContext(Context)
 
     const { formId, result } = props
     const { id: resultId, components = [] } = result ?? {}
@@ -58,10 +61,10 @@ export default function EditingResult(props: EditingQuizProps) {
     }
 
     React.useEffect(() => {
-        if (components[0] && setSelectedId) {
+        if (!selectedId && components[0] && setSelectedId) {
             setSelectedId(components[0].id)
         }
-    }, [])
+    }, [selectedId, components])
 
     React.useEffect(() => {
         const user = User.getInstance()

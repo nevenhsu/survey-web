@@ -109,7 +109,13 @@ export default function QuizForm() {
     const disabledTab = ![QuizMode.selection, QuizMode.sort].includes(
         selectedQuiz?.mode as any
     )
-    const tabValue = disabledTab ? 0 : tab
+
+    const disabledNext =
+        [QuizMode.selection, QuizMode.sort].includes(
+            selectedQuiz?.mode as any
+        ) && (selectedQuiz as SelectionQuiz)?.maxChoices > 1
+
+    const tabValue = disabledTab ? 0 : disabledNext && tab === 2 ? 0 : tab
 
     const updateQuizzes = (quizzes: QuizType[]) => {
         dispatch(setQuizzes({ id: formId, quizzes }))
@@ -375,7 +381,10 @@ export default function QuizForm() {
                                         label="答項標籤"
                                         disabled={disabledTab}
                                     />
-                                    <Tab label="邏輯" disabled={disabledTab} />
+                                    <Tab
+                                        label="邏輯"
+                                        disabled={disabledTab || disabledNext}
+                                    />
                                 </StyledTabs>
                             </Box>
 

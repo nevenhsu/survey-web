@@ -16,7 +16,7 @@ import StyledChip from 'components/common/StyledChip'
 import DeviceMode from 'components/common/DeviceMode'
 import EditingResult from 'components/Editor/ResultForm/EditingResult'
 import ResultTool from 'components/Editor/ResultForm/ResultTool'
-import ComponentProvider from 'components/Editor/ResultForm/ComponentProvider'
+import { Contexts } from 'components/common/ComponentView'
 import { getDefaultComponent } from 'utils/helper'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import { selectCurrentForm, setResults } from 'store/slices/editor'
@@ -69,6 +69,9 @@ const StyledBox = styled(Box, {
 
 export default function ResultForm() {
     const dispatch = useAppDispatch()
+
+    const instance = Contexts.getInstance('result')
+    const { Provider, Context } = instance.getValue()
 
     const [selectedId, setSelectedId] = React.useState('')
 
@@ -161,7 +164,7 @@ export default function ResultForm() {
     }, [])
 
     return (
-        <ComponentProvider>
+        <Provider context={Context}>
             <Stack
                 direction="row"
                 alignItems="center"
@@ -403,7 +406,7 @@ export default function ResultForm() {
                     </Grid>
                 </ThemeProvider>
             </Grid>
-        </ComponentProvider>
+        </Provider>
     )
 }
 

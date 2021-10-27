@@ -15,7 +15,7 @@ import ImageUploader from 'components/common/ImageUploader'
 import { ComponentType } from 'common/types'
 import type { Component } from 'common/types'
 
-type ViewComponentTool = {
+type ComponentViewToolProps = {
     component?: Component
     onChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>
     onDelete: (event: React.MouseEvent<HTMLButtonElement>) => void
@@ -92,7 +92,7 @@ const Header = (props: { title: string }) => {
     )
 }
 
-export default function ViewComponentTool(props: ViewComponentTool) {
+export default function ComponentViewTool(props: ComponentViewToolProps) {
     const { component, onChange, onDelete } = props
 
     const {

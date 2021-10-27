@@ -8,9 +8,7 @@ import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import Box, { BoxProps } from '@mui/material/Box'
-import ComponentProvider, {
-    ComponentContext,
-} from 'components/Editor/FinalForm/ComponentProvider'
+import { Contexts } from 'components/common/ComponentView'
 import EditingFinal from 'components/Editor/FinalForm/EditingFinal'
 import FinalTool from 'components/Editor/FinalForm/FinalTool'
 import InfoForm from 'components/Final/InfoForm'
@@ -66,6 +64,9 @@ const modeOptions = [{ value: FinalMode.info, label: '搜集基本資料' }]
 export default function FinalForm() {
     const dispatch = useAppDispatch()
 
+    const instance = Contexts.getInstance('final')
+    const { Provider, Context } = instance.getValue()
+
     const form = useAppSelector(selectCurrentForm)
     const { id: formId, final } = form
     const { mode } = final ?? {}
@@ -88,7 +89,7 @@ export default function FinalForm() {
     }
 
     return (
-        <ComponentProvider>
+        <Provider context={Context}>
             <Stack
                 direction="row"
                 alignItems="center"
@@ -206,7 +207,7 @@ export default function FinalForm() {
                     </Grid>
                 </ThemeProvider>
             </Grid>
-        </ComponentProvider>
+        </Provider>
     )
 }
 
