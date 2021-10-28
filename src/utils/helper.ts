@@ -34,6 +34,32 @@ export function setClasses<T extends string, U = { [K in T]: string }>(
     return _.zipObject(arr, values) as unknown as U
 }
 
+export function toBool(value: any) {
+    if (
+        value === true ||
+        Number(value) === 1 ||
+        _.lowerCase(value) === 'true'
+    ) {
+        return true
+    }
+
+    return false
+}
+
+export function toNumber(value: any) {
+    if (value === '' || _.isNil(value)) {
+        return undefined
+    }
+
+    const num = _.toNumber(value)
+
+    if (_.isNaN(num)) {
+        return undefined
+    }
+
+    return num
+}
+
 export function parseJson<T extends object = {}>(
     val: string | T,
     fallback: T

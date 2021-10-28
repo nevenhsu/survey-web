@@ -11,7 +11,7 @@ import Box, { BoxProps } from '@mui/material/Box'
 import IconButton, { IconButtonProps } from '@mui/material/IconButton'
 import LoadingButton, { LoadingButtonProps } from '@mui/lab/LoadingButton'
 import AddIcon from 'mdi-react/AddIcon'
-import ImageRemoveIcon from 'mdi-react/ImageRemoveIcon'
+import CloseIcon from 'mdi-react/CloseIcon'
 import surveyApi from 'services/surveyApi'
 
 type ImageUploaderProps = BoxProps & {
@@ -21,8 +21,7 @@ type ImageUploaderProps = BoxProps & {
     hideDeleteButton?: boolean
     hideImage?: boolean
     onUploaded?: (dataUrl: string) => void
-    loadingButtonProps?: LoadingButtonProps
-    deleteButtonProps?: IconButtonProps
+    loadingButtonProps?: LoadingButtonProps<'div'>
 }
 
 type StyledBoxProps = BoxProps & {
@@ -47,16 +46,6 @@ const StyledBox = styled(Box, {
     },
 }))
 
-const StyledLoadingButton = styled(LoadingButton)({
-    whiteSpace: 'nowrap',
-})
-
-const StyledIconButton = styled(IconButton)({
-    position: 'absolute',
-    top: 4,
-    right: 4,
-})
-
 export default function ImageUploader(props: ImageUploaderProps) {
     const {
         bgImage,
@@ -65,7 +54,6 @@ export default function ImageUploader(props: ImageUploaderProps) {
         hideDeleteButton,
         hideImage,
         loadingButtonProps,
-        deleteButtonProps,
         dataUrl = 'dataUrl',
         ...rest
     } = props
@@ -74,7 +62,6 @@ export default function ImageUploader(props: ImageUploaderProps) {
 
     const [images, setImages] = React.useState<ImageListType>([])
     const [uploading, setUploading] = React.useState(false)
-    const [failed, setFailed] = React.useState(false)
 
     const handleChange = (
         value: ImageListType,
@@ -101,8 +88,7 @@ export default function ImageUploader(props: ImageUploaderProps) {
         }
     }
 
-    const notify = (message: string, variant: VariantType) => () => {
-        // variant could be success, error, warning, info, or default
+    const notify = (message: string, variant: VariantType) => {
         enqueueSnackbar(message, { variant })
     }
 
@@ -164,7 +150,7 @@ export default function ImageUploader(props: ImageUploaderProps) {
                         )}
 
                         {!hideButton && (
-                            <StyledLoadingButton
+                            <LoadingButton
                                 className="absolute-center"
                                 variant="outlined"
                                 size="small"
@@ -173,22 +159,35 @@ export default function ImageUploader(props: ImageUploaderProps) {
                                 onClick={onImageUpload}
                                 loading={uploading}
                                 disabled={uploading}
+                                component="div"
+                                sx={{
+                                    whiteSpace: 'nowrap',
+                                }}
                                 {...loadingButtonProps}
                             >
                                 新增圖片
-                            </StyledLoadingButton>
+                            </LoadingButton>
                         )}
 
                         {!hideDeleteButton && !uploading && Boolean(imgSrc) && (
                             <Tooltip title="刪除圖片">
-                                <StyledIconButton
+                                <IconButton
                                     size="small"
                                     color="error"
+                                    component="div"
                                     onClick={onImageRemoveAll}
-                                    {...deleteButtonProps}
+                                    sx={{
+                                        position: 'absolute',
+                                        top: 2,
+                                        right: 2,
+                                        opacity: 0.5,
+                                        '&:hover': {
+                                            opacity: 1,
+                                        },
+                                    }}
                                 >
-                                    <ImageRemoveIcon />
-                                </StyledIconButton>
+                                    <CloseIcon />
+                                </IconButton>
                             </Tooltip>
                         )}
                     </StyledBox>

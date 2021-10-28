@@ -1,9 +1,13 @@
 import * as React from 'react'
 import _ from 'lodash'
+import { VariantType, useSnackbar } from 'notistack'
 import { styled } from '@mui/material/styles'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Box, { BoxProps } from '@mui/material/Box'
+import LoadingButton from '@mui/lab/LoadingButton'
+import ArrowUpCircleIcon from 'mdi-react/ArrowUpCircleIcon'
+import CheckboxMarkedCircleIcon from 'mdi-react/CheckboxMarkedCircleIcon'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import User from 'utils/user'
 import { setClasses } from 'utils/helper'
@@ -12,6 +16,8 @@ import {
     setMode,
     reloadFromLocal,
     selectCurrentForm,
+    selectLastEditingAt,
+    saveForm,
 } from 'store/slices/editor'
 import { EditorStep, Mode } from 'common/types'
 import type { Form } from 'common/types'
@@ -83,14 +89,21 @@ const classes = setClasses('Editor', ['root'])
 
 const Root = styled(Box)<BoxProps>(({ theme }) => ({
     [`&.${classes.root}`]: {
+        position: 'relative',
         width: '100%',
     },
 }))
 
 export default function Editor() {
     const dispatch = useAppDispatch()
+    const { enqueueSnackbar } = useSnackbar()
+
+    const [uploading, setUploading] = React.useState(false)
 
     const currentForm = useAppSelector(selectCurrentForm)
+    const lastEditingAt = useAppSelector(selectLastEditingAt)
+
+    const updated = lastEditingAt === currentForm.updatedAt
 
     const { mode, step } = useAppSelector((state) => {
         const { mode, step } = state.editor
@@ -102,11 +115,39 @@ export default function Editor() {
         [currentForm, mode]
     )
 
+    const notify = (message: string, variant: VariantType) => {
+        enqueueSnackbar(message, { variant })
+    }
+
     const handleChangeStep = (
         event: React.SyntheticEvent,
         newValue: EditorStep
     ) => {
         dispatch(setStep(newValue))
+    }
+
+    const handleSave = () => {
+        const { id } = currentForm
+        if (id && !uploading && !updated) {
+            setUploading(() => {
+                save()
+                return true
+            })
+        }
+    }
+
+    const save = async () => {
+        dispatch(saveForm(currentForm))
+            .unwrap()
+            .then((result) => {
+                notify('儲存成功!', 'success')
+                setUploading(false)
+            })
+            .catch((err) => {
+                console.error(err)
+                notify('Oops! 請檢察網路連線狀態', 'error')
+                setUploading(false)
+            })
     }
 
     React.useEffect(() => {
@@ -160,6 +201,24 @@ export default function Editor() {
                     )
                 })}
             </Tabs>
+
+            <LoadingButton
+                variant="contained"
+                loadingPosition="end"
+                endIcon={
+                    updated ? (
+                        <CheckboxMarkedCircleIcon />
+                    ) : (
+                        <ArrowUpCircleIcon />
+                    )
+                }
+                loading={uploading}
+                disabled={uploading}
+                onClick={() => handleSave()}
+                sx={{ position: 'absolute', top: 6, right: 4 }}
+            >
+                儲存
+            </LoadingButton>
 
             <React.Suspense fallback={<div />}>
                 {renderForm(step)}

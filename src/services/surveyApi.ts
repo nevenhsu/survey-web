@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import axios from 'axios'
 import { getDefaultForm } from 'utils/helper'
+import { formFormatter } from 'utils/formatter'
 import type { Mode, Form } from 'common/types'
 
 type CreateNewResponse = {
@@ -41,14 +42,14 @@ const surveyApi = {
         if (id) {
             const url = `${process.env.REACT_APP_URL}/survey/${id}`
             const { data } = await axios.get<Form>(url)
-            return data
+            return formFormatter(data)
         }
     },
     putForm: async (id: string, form: Form) => {
         if (id && form) {
             const url = `${process.env.REACT_APP_URL}/survey/${id}`
             const { data } = await axios.put<Form>(url, form)
-            return data
+            return formFormatter(data)
         }
     },
 }

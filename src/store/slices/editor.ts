@@ -26,12 +26,31 @@ interface EditorState {
     forms: Forms
     step: EditorStep
     mode?: Mode
+    lastEditingAt?: number
 }
 
 export const createNew = createAsyncThunk(
     'editor/createNew',
     async (mode: Mode) => {
         const data = await surveyApi.createNew(mode)
+        return data
+    }
+)
+
+export const getForm = createAsyncThunk(
+    'editor/getForm',
+    async (id: string) => {
+        const data = await surveyApi.getForm(id)
+        return data
+    }
+)
+
+export const saveForm = createAsyncThunk(
+    'editor/saveForm',
+    async (form: Form) => {
+        const { id } = form
+        const updatedAt = Date.now()
+        const data = await surveyApi.putForm(id, { ...form, updatedAt })
         return data
     }
 )
@@ -73,6 +92,8 @@ export const editorSlice = createSlice({
             form.quizzes = quizzes
 
             updateLocalForm(id, form)
+
+            state.lastEditingAt = Date.now()
         },
         addQuiz: (
             state,
@@ -85,6 +106,8 @@ export const editorSlice = createSlice({
             const { forms } = state
             const form = forms[id]
             form.quizzes.push(newValue as Quiz)
+
+            state.lastEditingAt = Date.now()
         },
         updateQuiz: (
             state,
@@ -110,6 +133,8 @@ export const editorSlice = createSlice({
             form.quizzes = quizzes
 
             updateLocalForm(formId, form)
+
+            state.lastEditingAt = Date.now()
         },
         setResults: (
             state,
@@ -128,6 +153,8 @@ export const editorSlice = createSlice({
 
             form.results = newResults
             updateLocalForm(formId, form)
+
+            state.lastEditingAt = Date.now()
         },
         setResult: (
             state,
@@ -147,6 +174,8 @@ export const editorSlice = createSlice({
             }
 
             updateLocalForm(formId, form)
+
+            state.lastEditingAt = Date.now()
         },
         updateComponent: (
             state,
@@ -175,6 +204,8 @@ export const editorSlice = createSlice({
                 setNewComponents(result, idPath, newValue, Boolean(deleted))
                 updateLocalForm(formId, form)
             }
+
+            state.lastEditingAt = Date.now()
         },
         updateFinal: (
             state,
@@ -190,6 +221,8 @@ export const editorSlice = createSlice({
             form.final = { ...form.final, ...newValue }
 
             updateLocalForm(formId, form)
+
+            state.lastEditingAt = Date.now()
         },
         updateFinalComponents: (
             state,
@@ -214,6 +247,8 @@ export const editorSlice = createSlice({
 
                 setNewComponents(final, idPath, newValue, Boolean(deleted))
                 updateLocalForm(formId, form)
+
+                state.lastEditingAt = Date.now()
             }
         },
         updateForm: (
@@ -233,6 +268,8 @@ export const editorSlice = createSlice({
             }
 
             updateLocalForm(id, forms[id])
+
+            state.lastEditingAt = Date.now()
         },
         reloadFromLocal: (state, action: PayloadAction<void>) => {
             const localForms = LocalForms.getInstance()
@@ -240,8 +277,10 @@ export const editorSlice = createSlice({
             const form = localForms.getFormById(currentId)
 
             if (!_.isEmpty(form)) {
-                state.currentId = currentId
-                state.forms[currentId] = form
+                const { id, updatedAt } = form
+                state.currentId = id
+                state.forms[id] = form
+                state.lastEditingAt = updatedAt
             }
         },
     },
@@ -258,6 +297,28 @@ export const editorSlice = createSlice({
 
             forms[id] = form
             state.currentId = id
+        })
+        builder.addCase(getForm.fulfilled, (state, action) => {
+            const form = action.payload
+            if (form) {
+                const { id, updatedAt } = form
+
+                const { forms } = state
+                forms[id] = form
+                state.currentId = id
+                state.lastEditingAt = updatedAt
+            }
+        })
+        builder.addCase(saveForm.fulfilled, (state, action) => {
+            const form = action.payload
+            if (form) {
+                const { forms } = state
+
+                const { id, updatedAt } = form
+                state.lastEditingAt = updatedAt
+
+                forms[id].updatedAt = updatedAt
+            }
         })
     },
 })
@@ -279,6 +340,9 @@ export const {
 } = editorSlice.actions
 
 export const selectCurrentId = (state: RootState) => state.editor.currentId
+
+export const selectLastEditingAt = (state: RootState) =>
+    state.editor.lastEditingAt
 
 export const selectCurrentForm = (state: RootState) => {
     const { forms, currentId } = state.editor

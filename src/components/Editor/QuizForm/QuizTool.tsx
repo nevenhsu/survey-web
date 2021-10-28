@@ -276,7 +276,9 @@ export default function QuizTool(props: QuizToolProps) {
                                         value={maxChoices ?? 1}
                                         onValueChange={({ value }) => {
                                             handleUpdateQuiz({
-                                                maxChoices: Number(value),
+                                                maxChoices: value
+                                                    ? Number(value)
+                                                    : NaN,
                                             })
                                         }}
                                         fullWidth
