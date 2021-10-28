@@ -5,7 +5,6 @@ import Typography from '@mui/material/Typography'
 import Grid, { GridSize } from '@mui/material/Grid'
 import ChoiceView from 'components/Survey/ChoiceView'
 import QuizButton from 'components/Survey/QuizButton'
-import { useAppSelector, useAppDispatch } from 'hooks'
 import type { CustomButton, OnChangeInput, SelectionType } from 'common/types'
 
 type SelectionViewProps = {
@@ -13,10 +12,11 @@ type SelectionViewProps = {
     selectionProps: SelectionType
     buttonProps: CustomButton
     onChange: OnChangeInput
+    onNext: React.MouseEventHandler<HTMLButtonElement>
 }
 
 export default function SelectionView(props: SelectionViewProps) {
-    const { title, selectionProps, buttonProps, onChange } = props
+    const { title, selectionProps, buttonProps, onChange, onNext } = props
     const { choices = [], maxChoices, showImage, direction } = selectionProps
 
     const responsive: { [key: string]: GridSize } =
@@ -37,7 +37,7 @@ export default function SelectionView(props: SelectionViewProps) {
                     {choices.map((el) => (
                         <Grid key={el.id} item {...responsive}>
                             <ChoiceView
-                                value={el}
+                                choice={el}
                                 showImage={showImage}
                                 onClick={(event) => {
                                     console.log(event.currentTarget.id)
@@ -48,7 +48,7 @@ export default function SelectionView(props: SelectionViewProps) {
                 </Grid>
             </Box>
             <Box sx={{ height: 16 }} />
-            <QuizButton buttonProps={buttonProps} />
+            <QuizButton buttonProps={buttonProps} onClick={onNext} />
         </>
     )
 }

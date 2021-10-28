@@ -1,14 +1,35 @@
 import * as React from 'react'
-import Button from '@mui/material/Button'
+import _ from 'lodash'
+import { styled } from '@mui/material/styles'
+import Button, { ButtonProps } from '@mui/material/Button'
 import ImageBox from 'components/common/ImageBox'
 import type { ChoiceType } from 'common/types'
 
-export default function ChoiceView(props: {
-    value: ChoiceType
-    onClick: (event: React.MouseEvent<HTMLButtonElement>) => void
+type ChoiceViewProps = ButtonProps & {
+    choice: ChoiceType
     showImage?: boolean
-}) {
-    const { value, onClick, showImage = false } = props
+}
+
+type StyledButtonProps = ButtonProps & {
+    showImage: boolean
+    buttonTextColor: string
+    buttonColor: string
+}
+
+const StyledButton = styled(Button, {
+    shouldForwardProp: (prop) =>
+        !_.includes(['showImage', 'buttonTextColor', 'buttonColor'], prop),
+})<StyledButtonProps>(({ buttonTextColor, buttonColor, showImage }) => ({
+    width: '100%',
+    color: buttonTextColor,
+    backgroundColor: buttonColor,
+    flexDirection: 'column',
+    padding: showImage ? '0 0 5px' : '5px 15px',
+    overflow: 'hidden',
+}))
+
+export default function ChoiceView(props: ChoiceViewProps) {
+    const { choice, showImage = false, ...rest } = props
 
     const {
         id,
@@ -17,21 +38,16 @@ export default function ChoiceView(props: {
         buttonVariant = 'contained',
         buttonColor = '',
         buttonTextColor = '',
-    } = value
+    } = choice
 
     return (
-        <Button
+        <StyledButton
             id={id}
             variant={buttonVariant}
-            onClick={onClick}
-            sx={{
-                width: '100%',
-                color: buttonTextColor,
-                backgroundColor: buttonColor,
-                flexDirection: 'column',
-                padding: showImage ? '0 0 5px' : '5px 15px',
-                overflow: 'hidden',
-            }}
+            showImage={showImage}
+            buttonColor={buttonColor}
+            buttonTextColor={buttonTextColor}
+            {...rest}
         >
             {showImage && (
                 <ImageBox
@@ -44,6 +60,6 @@ export default function ChoiceView(props: {
             )}
 
             {label}
-        </Button>
+        </StyledButton>
     )
 }

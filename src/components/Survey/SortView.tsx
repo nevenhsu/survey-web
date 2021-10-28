@@ -5,7 +5,6 @@ import Typography from '@mui/material/Typography'
 import Grid, { GridSize } from '@mui/material/Grid'
 import ChoiceView from 'components/Survey/ChoiceView'
 import QuizButton from 'components/Survey/QuizButton'
-import { useAppSelector, useAppDispatch } from 'hooks'
 import type { CustomButton, OnChangeInput, SelectionType } from 'common/types'
 
 type SortViewProps = {
@@ -13,10 +12,11 @@ type SortViewProps = {
     selectionProps: SelectionType
     buttonProps: CustomButton
     onChange: OnChangeInput
+    onNext: React.MouseEventHandler<HTMLButtonElement>
 }
 
 export default function SortView(props: SortViewProps) {
-    const { title, selectionProps, buttonProps, onChange } = props
+    const { title, selectionProps, buttonProps, onChange, onNext } = props
     const { choices = [], maxChoices, showImage, direction } = selectionProps
 
     const responsive: { [key: string]: GridSize } =
@@ -25,7 +25,9 @@ export default function SortView(props: SortViewProps) {
     return (
         <>
             <Typography variant="h6"> {title} </Typography>
+
             <Box sx={{ height: 16 }} />
+
             <Box sx={{ width: 4 / 5, textAlign: 'center' }}>
                 <Grid
                     container
@@ -37,7 +39,7 @@ export default function SortView(props: SortViewProps) {
                     {choices.map((el) => (
                         <Grid key={el.id} item {...responsive}>
                             <ChoiceView
-                                value={el}
+                                choice={el}
                                 showImage={showImage}
                                 onClick={(event) => {
                                     console.log(event.currentTarget.id)
@@ -47,8 +49,10 @@ export default function SortView(props: SortViewProps) {
                     ))}
                 </Grid>
             </Box>
+
             <Box sx={{ height: 16 }} />
-            <QuizButton buttonProps={buttonProps} />
+
+            <QuizButton buttonProps={buttonProps} onClick={onNext} />
         </>
     )
 }

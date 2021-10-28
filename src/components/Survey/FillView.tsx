@@ -4,7 +4,6 @@ import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import QuizButton from 'components/Survey/QuizButton'
-import { useAppSelector, useAppDispatch } from 'hooks'
 import type { CustomButton, OnChangeInput } from 'common/types'
 
 type FillViewProps = {
@@ -12,10 +11,11 @@ type FillViewProps = {
     value: string
     buttonProps: CustomButton
     onChange: OnChangeInput
+    onNext: React.MouseEventHandler<HTMLButtonElement>
 }
 
 export default function FillView(props: FillViewProps) {
-    const { title, value, buttonProps, onChange } = props
+    const { title, value, buttonProps, onChange, onNext } = props
     return (
         <>
             <Typography variant="h6"> {title} </Typography>
@@ -35,7 +35,7 @@ export default function FillView(props: FillViewProps) {
 
             <Box sx={{ height: 16 }} />
 
-            <QuizButton buttonProps={buttonProps} />
+            <QuizButton buttonProps={buttonProps} onClick={onNext} />
         </>
     )
 }

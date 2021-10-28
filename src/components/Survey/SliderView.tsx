@@ -4,7 +4,6 @@ import Box from '@mui/material/Box'
 import Slider from '@mui/material/Slider'
 import Typography from '@mui/material/Typography'
 import QuizButton from 'components/Survey/QuizButton'
-import { useAppSelector, useAppDispatch } from 'hooks'
 import type { CustomButton, OnChangeInput, SliderType } from 'common/types'
 
 type SliderViewProps = {
@@ -12,10 +11,11 @@ type SliderViewProps = {
     slider: SliderType
     buttonProps: CustomButton
     onChange: OnChangeInput
+    onNext: React.MouseEventHandler<HTMLButtonElement>
 }
 
 export default function SliderView(props: SliderViewProps) {
-    const { title, slider, buttonProps, onChange } = props
+    const { title, slider, buttonProps, onChange, onNext } = props
     const { min, max, value } = slider
 
     return (
@@ -36,7 +36,8 @@ export default function SliderView(props: SliderViewProps) {
             </Box>
 
             <Box sx={{ height: 16 }} />
-            <QuizButton buttonProps={buttonProps} />
+
+            <QuizButton buttonProps={buttonProps} onClick={onNext} />
         </>
     )
 }

@@ -136,6 +136,10 @@ export enum FinalMode {
     info = 'info',
 }
 
+export type FinalInfo = {
+    name: string
+}
+
 export type Final = {
     mode: FinalMode
     components: Component[]
@@ -151,6 +155,19 @@ export type Form = {
     results: Results
     setting: Setting
     final: Final
+}
+
+export type Answers = Array<{
+    quizId: string
+    value: string | string[]
+}>
+
+export type Survey = {
+    id: string
+    createdAt: number
+    answers: Answers
+    resultId: string
+    final: FinalInfo
 }
 
 export type DeviceType = 'mobile' | 'laptop' | 'desktop'

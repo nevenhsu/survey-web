@@ -1,6 +1,8 @@
 import * as React from 'react'
 import _ from 'lodash'
 import Stack from '@mui/material/Stack'
+import { useAppSelector, useAppDispatch } from 'hooks'
+import { nextQuiz, updateQuiz } from 'store/slices/survey'
 import { QuizMode } from 'common/types'
 import type {
     QuizType,
@@ -25,9 +27,16 @@ export default function QuizView(props: QuizViewProps) {
     const { quiz } = props
     const { id: quizId } = quiz ?? {}
 
+    const dispatch = useAppDispatch()
+
     const handleUpdateQuiz = (newValue: Partial<QuizType>) => {
-        if (quizId) {
+        if (quizId && newValue) {
+            dispatch(updateQuiz({ quizId, newValue }))
         }
+    }
+
+    const handleNext = () => {
+        dispatch(nextQuiz())
     }
 
     const renderQuiz = (quiz?: QuizType) => {
@@ -53,7 +62,13 @@ export default function QuizView(props: QuizViewProps) {
 
         switch (mode) {
             case QuizMode.page: {
-                return <PageView title={title} buttonProps={buttonProps} />
+                return (
+                    <PageView
+                        title={title}
+                        buttonProps={buttonProps}
+                        onNext={handleNext}
+                    />
+                )
             }
             case QuizMode.selection: {
                 const {
@@ -82,6 +97,7 @@ export default function QuizView(props: QuizViewProps) {
                                 [event.target.name]: event.target.value,
                             })
                         }}
+                        onNext={handleNext}
                     />
                 )
             }
@@ -112,6 +128,7 @@ export default function QuizView(props: QuizViewProps) {
                                 [event.target.name]: event.target.value,
                             })
                         }}
+                        onNext={handleNext}
                     />
                 )
             }
@@ -127,6 +144,7 @@ export default function QuizView(props: QuizViewProps) {
                                 [event.target.name]: event.target.value,
                             })
                         }}
+                        onNext={handleNext}
                     />
                 )
             }
@@ -142,6 +160,7 @@ export default function QuizView(props: QuizViewProps) {
                                 [event.target.name]: event.target.value,
                             })
                         }}
+                        onNext={handleNext}
                     />
                 )
             }

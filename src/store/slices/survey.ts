@@ -1,8 +1,8 @@
 import _ from 'lodash'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import surveyApi from 'services/surveyApi'
-import { SurveyStep } from 'common/types'
-import type { Form } from 'common/types'
+import { SurveyStep, QuizMode } from 'common/types'
+import type { Form, SelectionQuiz, QuizType } from 'common/types'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from 'store'
 
@@ -27,7 +27,63 @@ const initialState: SurveyState = {
 export const surveySlice = createSlice({
     name: 'survey',
     initialState,
-    reducers: {},
+    reducers: {
+        updateQuiz: (
+            state,
+            action: PayloadAction<{
+                quizId: string
+                newValue: Partial<QuizType>
+            }>
+        ) => {
+            const { form } = state
+            const { quizId, newValue } = action.payload
+
+            if (form && quizId) {
+                const { quizzes = [] } = form
+                const index = _.findIndex(quizzes, { id: quizId })
+                quizzes[index] = {
+                    ...quizzes[index],
+                    ...newValue,
+                }
+            }
+        },
+        nextQuiz: (state, action: PayloadAction<void>) => {
+            const { quizId, form } = state
+            const { quizzes = [] } = form ?? {}
+
+            if (!quizId) {
+                state.quizId = quizzes[0]?.id
+                return
+            }
+
+            const index = _.findIndex(quizzes, { id: quizId })
+
+            if (index === -1) {
+                return
+            }
+
+            const quiz = quizzes[index]
+            const { mode } = quiz
+
+            if (_.includes([QuizMode.sort, QuizMode.selection], mode)) {
+                const next = getNextByChoice(quiz as SelectionQuiz)
+                if (next) {
+                    state.quizId = next
+                    return
+                }
+            }
+
+            const nextIndex = index + 1
+            const nextQuiz = quizzes[nextIndex]
+
+            if (nextQuiz) {
+                state.quizId = nextQuiz.id
+                return
+            }
+
+            state.step = SurveyStep.result
+        },
+    },
     extraReducers: (builder) => {
         builder.addCase(getForm.fulfilled, (state, action) => {
             const form = action.payload
@@ -36,6 +92,8 @@ export const surveySlice = createSlice({
         })
     },
 })
+
+export const { nextQuiz, updateQuiz } = surveySlice.actions
 
 export const selectForm = (state: RootState) => {
     const { form } = state.survey
@@ -50,4 +108,15 @@ export const selectQuizId = (state: RootState) => {
 export const selectStep = (state: RootState) => {
     const { step } = state.survey
     return step
+}
+
+function getNextByChoice(quiz: SelectionQuiz) {
+    const { maxChoices, values = [], choices = [] } = quiz
+    const value = values[0]
+    const choice = _.find(choices, { id: value })
+    const { next } = choice ?? {}
+
+    if (maxChoices === 1 && value && choice && next) {
+        return next
+    }
 }

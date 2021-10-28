@@ -163,6 +163,12 @@ export default function Editor() {
         dispatch(reloadFromLocal())
     }, [])
 
+    React.useEffect(() => {
+        if (step !== EditorStep.pick) {
+            handleSave()
+        }
+    }, [step])
+
     const renderForm = (step: EditorStep) => {
         switch (step) {
             case EditorStep.pick:
