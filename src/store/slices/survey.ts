@@ -25,8 +25,8 @@ interface EditorState {
     currentId: string
     surveys: Surveys
     step: SurveyStep
+    lastEditingAt: number
     mode?: Mode
-    lastEditingAt?: number
 }
 
 export const createNew = createAsyncThunk(
@@ -55,10 +55,22 @@ export const saveSurvey = createAsyncThunk(
     }
 )
 
+export const reloadFromCloud = createAsyncThunk(
+    'survey/reloadFromCloud',
+    async () => {
+        const localSurveys = LocalSurveys.getInstance()
+        const id = localSurveys.getCurrentId() ?? ''
+
+        const data = await surveyApi.getSurvey(id)
+        return data
+    }
+)
+
 const initialState: EditorState = {
     currentId: '',
     surveys: {},
     step: SurveyStep.pick,
+    lastEditingAt: 0,
 }
 
 export const surveySlice = createSlice({
@@ -305,6 +317,8 @@ export const surveySlice = createSlice({
                 state.currentId = id
                 state.surveys[id] = survey
                 state.lastEditingAt = updatedAt
+            } else {
+                state.step = SurveyStep.pick
             }
         },
     },
@@ -329,6 +343,9 @@ export const surveySlice = createSlice({
 
                 const { surveys } = state
                 surveys[id] = survey
+
+                updateLocalSurvey(id, survey)
+
                 state.currentId = id
                 state.lastEditingAt = updatedAt
             }
@@ -342,6 +359,28 @@ export const surveySlice = createSlice({
                 state.lastEditingAt = updatedAt
 
                 surveys[id].updatedAt = updatedAt
+            }
+        })
+        builder.addCase(reloadFromCloud.fulfilled, (state, action) => {
+            const survey = action.payload
+            if (survey) {
+                const { surveys } = state
+
+                const { id, updatedAt } = survey
+                const oldSurvey = surveys[id]
+
+                if (_.isEmpty(oldSurvey) || updatedAt > oldSurvey.updatedAt) {
+                    surveys[id] = survey
+
+                    updateLocalSurvey(id, survey)
+
+                    state.currentId = id
+                    state.lastEditingAt = updatedAt
+                } else {
+                    state.lastEditingAt = Date.now()
+                }
+            } else {
+                state.step = SurveyStep.pick
             }
         })
     },

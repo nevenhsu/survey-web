@@ -29,8 +29,8 @@ export default function SelectionView(props: SelectionViewProps) {
 
     const toggleSelected = (id: string) => {
         if (id) {
-            const checked = _.includes(values, id)
-            if (checked) {
+            const selected = _.includes(values, id)
+            if (selected) {
                 onChange({
                     target: {
                         name: 'values',
@@ -71,7 +71,7 @@ export default function SelectionView(props: SelectionViewProps) {
                                 choice={el}
                                 showImage={showImage}
                                 onClick={(event) => {
-                                    toggleSelected(event.currentTarget.id)
+                                    toggleSelected(el.id)
                                 }}
                                 variant={
                                     _.includes(values, el.id)

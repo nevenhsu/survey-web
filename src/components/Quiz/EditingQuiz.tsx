@@ -40,11 +40,13 @@ type EditingQuizProps = {
 type StyledTextFieldProps = TextFieldProps & { value: string }
 
 const StyledTextField = styled(TextField)<StyledTextFieldProps>(
-    ({ value, theme }) => ({
-        '& input': {
+    ({ theme, value }) => ({
+        width: '90%',
+        '& .MuiInputBase-input': {
             ...theme.typography.h6,
-            textAlign: 'center',
-            minWidth: `${value?.length * 1.75}ch`,
+            margin: 'auto',
+            maxWidth: '100%',
+            width: `${value?.length * 2}ch`,
         },
     })
 )
@@ -146,6 +148,7 @@ const PageView = (props: {
                 placeholder="請輸入您的文字"
                 name="title"
                 onChange={onChange}
+                multiline
                 {...textFieldProps}
             />
 
@@ -352,6 +355,7 @@ const SelectionView = (props: {
                 placeholder="請輸入您的文字"
                 name="title"
                 onChange={onChange}
+                multiline
                 {...textFieldProps}
             />
             <Typography variant="caption" color="GrayText">
@@ -407,6 +411,7 @@ const FillView = (props: {
                 name="title"
                 value={title}
                 onChange={onChange}
+                multiline
             />
 
             <Box sx={{ height: 16 }} />
@@ -445,6 +450,7 @@ const SliderView = (props: {
                 value={title}
                 onChange={onChange}
                 sx={{ mb: 3 }}
+                multiline
             />
 
             <Box sx={{ width: 4 / 5 }}>

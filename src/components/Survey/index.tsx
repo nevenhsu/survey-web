@@ -15,6 +15,7 @@ import {
     setStep,
     setMode,
     reloadFromLocal,
+    reloadFromCloud,
     selectCurrentSurvey,
     selectLastEditingAt,
     saveSurvey,
@@ -151,21 +152,26 @@ export default function Editor() {
     React.useEffect(() => {
         const user = User.getInstance()
         const { step, mode } = user.getValue()
-        // TODO: check survey value first
+
         if (!_.isNil(step)) {
             dispatch(setStep(step))
         }
         if (!_.isNil(mode)) {
             dispatch(setMode(mode))
         }
+
         dispatch(reloadFromLocal())
+
+        setTimeout(() => {
+            dispatch(reloadFromCloud())
+        }, 0)
     }, [])
 
-    React.useEffect(() => {
-        if (step !== SurveyStep.pick) {
-            handleSave()
-        }
-    }, [step])
+    // React.useEffect(() => {
+    //     if (step !== SurveyStep.pick) {
+    //         handleSave()
+    //     }
+    // }, [step])
 
     const renderForm = (step: SurveyStep) => {
         switch (step) {

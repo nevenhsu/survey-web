@@ -34,7 +34,7 @@ export function surveyFormatter(survey: Survey): Survey {
         }
     })
 
-    const { showProgress, ...s } = setting
+    const { showProgress, ...s } = setting ?? {}
 
     return {
         id,

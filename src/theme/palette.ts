@@ -50,7 +50,7 @@ export const getDesignTokens = (mode: PaletteMode): PaletteOptions => {
     }
 }
 
-export const getMuiColor = (key?: string) => {
+export function getMuiColor(key?: string) {
     const colors: {
         [key: string]: Color
     } = {
@@ -90,6 +90,16 @@ export const getMuiColor = (key?: string) => {
         key: k,
         color: colors[k],
     }
+}
+
+export function getThemeColor(
+    theme: Theme,
+    colorKey?: string
+): string | undefined {
+    const sx = { color: colorKey }
+    const style = styleFunctionSx({ sx, theme }) as any
+    const { color } = style ?? {}
+    return color
 }
 
 export function getContrastText(

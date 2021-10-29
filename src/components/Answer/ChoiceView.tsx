@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { styled } from '@mui/material/styles'
 import Button, { ButtonProps } from '@mui/material/Button'
 import ImageBox from 'components/common/ImageBox'
-import { lightenColor } from 'theme/palette'
+import { lightenColor, getThemeColor, getContrastText } from 'theme/palette'
 import type { ChoiceType } from 'common/types'
 
 type ChoiceViewProps = ButtonProps & {
@@ -22,19 +22,28 @@ const StyledButton = styled(Button, {
         !_.includes(['showImage', 'buttonTextColor', 'buttonColor'], prop),
 })<StyledButtonProps>(
     ({ theme, variant, buttonTextColor, buttonColor, showImage }) => {
-        const btnColor = buttonColor || theme.palette.primary.main
+        const textColor =
+            getThemeColor(theme, buttonTextColor) || theme.palette.primary.main
+        const btnColor =
+            getThemeColor(theme, buttonColor) || theme.palette.primary.main
         const lightColor = lightenColor(theme, btnColor, 0.92, '')
+        const lightColor2 = lightenColor(theme, btnColor, 0.08, '')
+
+        const contrastText = getContrastText(theme, btnColor, 'white').textColor
+
+        const selected = variant === 'contained'
 
         return {
             width: '100%',
-            color: buttonTextColor,
+            color: selected ? contrastText : textColor,
+            backgroundColor: selected ? btnColor : undefined,
             border: `1px solid ${btnColor}`,
             flexDirection: 'column',
             padding: showImage ? '0 0 5px' : '5px 15px',
             overflow: 'hidden',
             '&:hover': {
                 border: `1px solid ${btnColor}`,
-                backgroundColor: variant === 'outlined' ? lightColor : btnColor,
+                backgroundColor: selected ? lightColor2 : lightColor,
             },
             '& .MuiTouchRipple-root': {
                 color: btnColor,
@@ -57,6 +66,8 @@ export default function ChoiceView(props: ChoiceViewProps) {
     return (
         <StyledButton
             id={id}
+            // @ts-ignore
+            component="div"
             variant="outlined"
             showImage={showImage}
             buttonColor={buttonColor}
