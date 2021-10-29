@@ -11,9 +11,9 @@ import MenuItem from '@mui/material/MenuItem'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import LoadingButton from '@mui/lab/LoadingButton'
-import { createNew, setMode, setStep } from 'store/slices/editor'
+import { createNew, setMode, setStep } from 'store/slices/survey'
 import { useAppDispatch, useAppSelector } from 'hooks'
-import { Mode, EditorStep } from 'common/types'
+import { Mode, SurveyStep } from 'common/types'
 import AddIcon from 'mdi-react/AddIcon'
 
 type OptionType = {
@@ -54,7 +54,7 @@ const options1 = [
 export default function PickForm() {
     const dispatch = useAppDispatch()
 
-    const mode = useAppSelector((state) => state.editor.mode ?? '')
+    const mode = useAppSelector((state) => state.survey.mode ?? '')
 
     const [loading, setLoading] = React.useState(false)
 
@@ -86,8 +86,8 @@ export default function PickForm() {
                     dispatch(
                         setStep(
                             mode === Mode.product
-                                ? EditorStep.product
-                                : EditorStep.quiz
+                                ? SurveyStep.product
+                                : SurveyStep.quiz
                         )
                     )
                 })

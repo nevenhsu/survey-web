@@ -14,7 +14,11 @@ import components, { styles } from 'components/common/MuiSelectComponents'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import { getMuiColor, getContrastText } from 'theme/palette'
 import { setClasses, getDefaultTags } from 'utils/helper'
-import { selectCurrentForm, updateQuiz, updateForm } from 'store/slices/editor'
+import {
+    selectCurrentSurvey,
+    updateQuiz,
+    updateSurvey,
+} from 'store/slices/survey'
 import type { SelectionQuiz, Tags, ChoiceType } from 'common/types'
 import type { ActionMeta, OnChangeValue, MultiValue } from 'react-select'
 
@@ -53,7 +57,7 @@ export default function TagsQuiz(props: TagsQuizProps) {
     const [page, setPage] = React.useState(0)
     const [rowsPerPage, setRowsPerPage] = React.useState(5)
 
-    const { id: formId, tags } = useAppSelector(selectCurrentForm)
+    const { id: surveyId, tags } = useAppSelector(selectCurrentSurvey)
     const tagsOptions = getTagsOptions(_.values(tags), ids)
 
     const emptyRows =
@@ -73,7 +77,7 @@ export default function TagsQuiz(props: TagsQuizProps) {
 
             dispatch(
                 updateQuiz({
-                    formId,
+                    surveyId: surveyId,
                     quizId,
                     newValue: { tagsId: newTagsId },
                 })
@@ -89,8 +93,8 @@ export default function TagsQuiz(props: TagsQuizProps) {
             const newTags = getDefaultTags(value)
 
             dispatch(
-                updateForm({
-                    id: formId,
+                updateSurvey({
+                    id: surveyId,
                     newValue: {
                         tags: {
                             ...tags,
@@ -106,7 +110,7 @@ export default function TagsQuiz(props: TagsQuizProps) {
 
                 dispatch(
                     updateQuiz({
-                        formId,
+                        surveyId: surveyId,
                         quizId,
                         newValue: { tagsId: newTagsId },
                     })
@@ -155,8 +159,8 @@ export default function TagsQuiz(props: TagsQuizProps) {
                     }
 
                     dispatch(
-                        updateForm({
-                            id: formId,
+                        updateSurvey({
+                            id: surveyId,
                             newValue,
                         })
                     )
@@ -165,7 +169,7 @@ export default function TagsQuiz(props: TagsQuizProps) {
 
             dispatch(
                 updateQuiz({
-                    formId,
+                    surveyId: surveyId,
                     quizId,
                     newValue: { choices: newChoices },
                 })

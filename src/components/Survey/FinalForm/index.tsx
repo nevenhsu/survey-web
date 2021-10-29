@@ -9,13 +9,13 @@ import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import Box, { BoxProps } from '@mui/material/Box'
 import { Contexts } from 'components/common/ComponentView'
-import EditingFinal from 'components/Editor/FinalForm/EditingFinal'
-import FinalTool from 'components/Editor/FinalForm/FinalTool'
+import EditingFinal from 'components/Survey/FinalForm/EditingFinal'
+import FinalTool from 'components/Survey/FinalForm/FinalTool'
 import InfoForm from 'components/Final/InfoForm'
 import DeviceMode from 'components/common/DeviceMode'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import { selectDevice } from 'store/slices/userDefault'
-import { selectCurrentForm, updateFinal } from 'store/slices/editor'
+import { selectCurrentSurvey, updateFinal } from 'store/slices/survey'
 import ThemeProvider from 'theme/ThemeProvider'
 import { FinalMode } from 'common/types'
 import type { DeviceType } from 'common/types'
@@ -67,16 +67,16 @@ export default function FinalForm() {
     const instance = Contexts.getInstance('final')
     const { Provider, Context } = instance.getValue()
 
-    const form = useAppSelector(selectCurrentForm)
-    const { id: formId, final } = form
+    const survey = useAppSelector(selectCurrentSurvey)
+    const { id: surveyId, final } = survey
     const { mode } = final ?? {}
 
     const device = useAppSelector(selectDevice)
 
     const updateMode = (mode: FinalMode) => {
-        if (formId) {
+        if (surveyId) {
             const newValue = { mode }
-            dispatch(updateFinal({ formId, newValue }))
+            dispatch(updateFinal({ surveyId: surveyId, newValue }))
         }
     }
 
@@ -202,7 +202,7 @@ export default function FinalForm() {
                                 bgcolor: (theme) => theme.palette.grey[800],
                             }}
                         >
-                            <FinalTool formId={formId} />
+                            <FinalTool surveyId={surveyId} />
                         </Box>
                     </Grid>
                 </ThemeProvider>

@@ -1,15 +1,15 @@
 import _ from 'lodash'
 import Storage from './storage'
 import { parseJson } from 'utils/helper'
-import { Form } from 'common/types'
+import { Survey } from 'common/types'
 
 enum Locals {
-    FORMS_ID = 'forms_id',
+    SURVEYS_ID = 'surveys_id',
     CURRENT_ID = 'current_id',
 }
 
-export default class Forms extends Storage<string> {
-    private static instance?: Forms
+export default class Surveys extends Storage<string> {
+    private static instance?: Surveys
 
     private constructor() {
         super()
@@ -17,23 +17,23 @@ export default class Forms extends Storage<string> {
 
     public static getInstance() {
         if (!this.instance) {
-            this.instance = new Forms()
+            this.instance = new Surveys()
         }
 
         return this.instance
     }
 
-    public getFormsId() {
-        const str = this.get(Locals.FORMS_ID) ?? ''
+    public getSurveysId() {
+        const str = this.get(Locals.SURVEYS_ID) ?? ''
         return parseJson<string[]>(str, [])
     }
 
-    public setFormsId(id: string) {
-        const ids = this.getFormsId()
+    public setSurveyId(id: string) {
+        const ids = this.getSurveysId()
         const val = JSON.stringify(
             _.uniq([...ids, id]).filter((el) => !_.isEmpty(el))
         )
-        this.set(Locals.FORMS_ID, val)
+        this.set(Locals.SURVEYS_ID, val)
     }
 
     public getCurrentId() {
@@ -44,12 +44,12 @@ export default class Forms extends Storage<string> {
         this.set(Locals.CURRENT_ID, id)
     }
 
-    public getFormById(id: string) {
+    public getSurveyById(id: string) {
         const str = this.get(id) ?? ''
-        return parseJson(str, {}) as Form
+        return parseJson(str, {}) as Survey
     }
 
-    public setFormById(id: string, value: Form) {
+    public setSurveyById(id: string, value: Survey) {
         if (_.isPlainObject(value)) {
             const val = JSON.stringify(value)
             this.set(id, val)
@@ -57,9 +57,9 @@ export default class Forms extends Storage<string> {
     }
 
     public clear() {
-        const ids = this.getFormsId()
+        const ids = this.getSurveysId()
         this.clearItems(ids)
-        this.set(Locals.FORMS_ID, '')
+        this.set(Locals.SURVEYS_ID, '')
         this.setCurrentId('')
     }
 }

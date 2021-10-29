@@ -2,7 +2,7 @@ import * as React from 'react'
 import _ from 'lodash'
 import Stack from '@mui/material/Stack'
 import { useAppSelector, useAppDispatch } from 'hooks'
-import { nextQuiz, updateQuiz } from 'store/slices/survey'
+import { nextQuiz, updateQuiz } from 'store/slices/answer'
 import { QuizMode } from 'common/types'
 import type {
     QuizType,
@@ -11,12 +11,12 @@ import type {
     FillQuiz,
 } from 'common/types'
 
-const PageView = React.lazy(() => import('components/Survey/PageView'))
-const SortView = React.lazy(() => import('components/Survey/SortView'))
-const FillView = React.lazy(() => import('components/Survey/FillView'))
-const SliderView = React.lazy(() => import('components/Survey/SliderView'))
+const PageView = React.lazy(() => import('components/Answer/PageView'))
+const SortView = React.lazy(() => import('components/Answer/SortView'))
+const FillView = React.lazy(() => import('components/Answer/FillView'))
+const SliderView = React.lazy(() => import('components/Answer/SliderView'))
 const SelectionView = React.lazy(
-    () => import('components/Survey/SelectionView')
+    () => import('components/Answer/SelectionView')
 )
 
 type QuizViewProps = {

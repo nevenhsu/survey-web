@@ -2,7 +2,7 @@ import * as React from 'react'
 import _ from 'lodash'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import QuizButton from 'components/Survey/QuizButton'
+import QuizButton from 'components/Answer/QuizButton'
 import type { CustomButton } from 'common/types'
 
 type PageViewProps = {

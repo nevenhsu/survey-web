@@ -7,7 +7,7 @@ export enum Mode {
     product = 'product',
 }
 
-export enum EditorStep {
+export enum SurveyStep {
     pick = 'pick',
     product = 'product',
     quiz = 'quiz',
@@ -16,7 +16,7 @@ export enum EditorStep {
     launch = 'launch',
 }
 
-export enum SurveyStep {
+export enum AnswerStep {
     quiz = 'quiz',
     result = 'result',
     final = 'final',
@@ -136,16 +136,7 @@ export enum FinalMode {
     info = 'info',
 }
 
-export type FinalInfo = {
-    name: string
-}
-
-export type Final = {
-    mode: FinalMode
-    components: Component[]
-}
-
-export type Form = {
+export type Survey = {
     id: string
     createdAt: number
     updatedAt: number
@@ -157,17 +148,28 @@ export type Form = {
     final: Final
 }
 
-export type Answers = Array<{
-    quizId: string
-    value: string | string[]
-}>
+export type Final = {
+    mode: FinalMode
+    components: Component[]
+}
 
-export type Survey = {
+export type FinalInfo = {
+    name: string
+}
+
+export type Answer = {
     id: string
+    surveyId: string
     createdAt: number
-    answers: Answers
+    answers: AnswerValue[]
     resultId: string
     final: FinalInfo
+}
+
+export type AnswerValue = {
+    quizId: string
+    value: string | string[]
+    dwellTime?: number // ms
 }
 
 export type DeviceType = 'mobile' | 'laptop' | 'desktop'

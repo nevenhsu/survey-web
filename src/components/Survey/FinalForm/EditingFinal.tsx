@@ -5,14 +5,14 @@ import { Contexts } from 'components/common/ComponentView'
 import { ComponentList, getComponent } from 'components/common/ComponentView'
 import { getDefaultComponent } from 'utils/helper'
 import { useAppDispatch, useAppSelector } from 'hooks'
-import { updateFinalComponents, selectCurrentForm } from 'store/slices/editor'
+import { updateFinalComponents, selectCurrentSurvey } from 'store/slices/survey'
 import { ComponentType } from 'common/types'
 
 export default function EditingFinal() {
     const dispatch = useAppDispatch()
 
-    const form = useAppSelector(selectCurrentForm)
-    const { id: formId, final } = form
+    const survey = useAppSelector(selectCurrentSurvey)
+    const { id: surveyId, final } = survey
     const { mode, components = [] } = final ?? {}
 
     const instance = Contexts.getInstance('final')
@@ -32,16 +32,18 @@ export default function EditingFinal() {
     }, [selectedId, idPath, components])
 
     const handleAdd = (idPath: string[], type: ComponentType) => {
-        if (formId) {
+        if (surveyId) {
             const newValue = getDefaultComponent(type)
-            dispatch(updateFinalComponents({ formId, idPath, newValue }))
+            dispatch(
+                updateFinalComponents({ surveyId: surveyId, idPath, newValue })
+            )
         }
     }
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target
 
-        if (formId && selectedComponent) {
+        if (surveyId && selectedComponent) {
             let val: any = value === '' ? undefined : value
             val = Number(val) || val
 
@@ -49,7 +51,9 @@ export default function EditingFinal() {
                 ...selectedComponent,
                 [name]: val,
             }
-            dispatch(updateFinalComponents({ formId, idPath, newValue }))
+            dispatch(
+                updateFinalComponents({ surveyId: surveyId, idPath, newValue })
+            )
         }
     }
 

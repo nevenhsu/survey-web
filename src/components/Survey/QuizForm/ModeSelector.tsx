@@ -5,10 +5,10 @@ import MenuItem from '@mui/material/MenuItem'
 import { QuizMode, QuizType } from 'common/types'
 import { getDefaultQuiz } from 'utils/helper'
 import { useAppDispatch } from 'hooks'
-import { updateQuiz } from 'store/slices/editor'
+import { updateQuiz } from 'store/slices/survey'
 
 type ModeSelectorProps = {
-    formId?: string
+    surveyId?: string
     quiz?: QuizType
     formControlProps?: FormControlProps
     onChange?: (event: SelectChangeEvent<string>) => void
@@ -40,11 +40,11 @@ const quizModes = {
 export default function ModeSelector(props: ModeSelectorProps) {
     const dispatch = useAppDispatch()
 
-    const { formId, quiz, formControlProps, onChange } = props
+    const { surveyId, quiz, formControlProps, onChange } = props
     const { id: quizId, mode = '' } = quiz ?? {}
 
     const handleChange = (event: SelectChangeEvent) => {
-        if (!formId || !quizId) {
+        if (!surveyId || !quizId) {
             return
         }
 
@@ -52,7 +52,7 @@ export default function ModeSelector(props: ModeSelectorProps) {
 
         dispatch(
             updateQuiz({
-                formId,
+                surveyId: surveyId,
                 quizId,
                 newValue: getDefaultQuiz(quizId, mode),
             })

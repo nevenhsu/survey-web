@@ -1,13 +1,13 @@
 import Storage from './storage'
 import { parseJson } from 'utils/helper'
-import type { EditorStep, Mode } from 'common/types'
+import type { SurveyStep, Mode } from 'common/types'
 
 enum Locals {
     USER = 'user',
 }
 
 type UserType = {
-    step?: EditorStep
+    step?: SurveyStep
     mode?: Mode
     components?: object
 }

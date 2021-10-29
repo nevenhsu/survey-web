@@ -1,122 +1,428 @@
 import _ from 'lodash'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import surveyApi from 'services/surveyApi'
-import { SurveyStep, QuizMode } from 'common/types'
-import type { Form, SelectionQuiz, QuizType } from 'common/types'
+import User from 'utils/user'
+import LocalSurveys from 'utils/surveys'
+import { SurveyStep } from 'common/types'
+import type {
+    Mode,
+    Survey,
+    Quiz,
+    QuizType,
+    Results,
+    Result,
+    Component,
+    Final,
+} from 'common/types'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from 'store'
 
-export const getForm = createAsyncThunk(
-    'survey/getForm',
-    async (id: string) => {
-        const data = await surveyApi.getForm(id)
+type Surveys = {
+    [key: string]: Survey
+}
+
+interface EditorState {
+    currentId: string
+    surveys: Surveys
+    step: SurveyStep
+    mode?: Mode
+    lastEditingAt?: number
+}
+
+export const createNew = createAsyncThunk(
+    'survey/createNew',
+    async (mode: Mode) => {
+        const data = await surveyApi.createNew(mode)
         return data
     }
 )
 
-interface SurveyState {
-    step: SurveyStep
-    form?: Form
-    quizId?: string
-}
+export const getSurvey = createAsyncThunk(
+    'survey/getSurvey',
+    async (id: string) => {
+        const data = await surveyApi.getSurvey(id)
+        return data
+    }
+)
 
-const initialState: SurveyState = {
-    step: SurveyStep.quiz,
+export const saveSurvey = createAsyncThunk(
+    'survey/saveSurvey',
+    async (survey: Survey) => {
+        const { id } = survey
+        const updatedAt = Date.now()
+        const data = await surveyApi.putSurvey(id, { ...survey, updatedAt })
+        return data
+    }
+)
+
+const initialState: EditorState = {
+    currentId: '',
+    surveys: {},
+    step: SurveyStep.pick,
 }
 
 export const surveySlice = createSlice({
     name: 'survey',
     initialState,
     reducers: {
+        setCurrentId: (state, action: PayloadAction<string>) => {
+            state.currentId = action.payload
+        },
+        setStep: (state, action: PayloadAction<SurveyStep>) => {
+            const user = User.getInstance()
+            const step = action.payload
+            user.setValue({ step })
+
+            state.step = step
+        },
+        setMode: (state, action: PayloadAction<Mode>) => {
+            const user = User.getInstance()
+            const mode = action.payload
+            user.setValue({ mode })
+
+            state.mode = mode
+        },
+        setQuizzes: (
+            state,
+            action: PayloadAction<{ id: string; quizzes: QuizType[] }>
+        ) => {
+            const { id, quizzes } = action.payload
+            const { surveys } = state
+            const survey = surveys[id]
+            survey.quizzes = quizzes
+
+            updateLocalSurvey(id, survey)
+
+            state.lastEditingAt = Date.now()
+        },
+        addQuiz: (
+            state,
+            action: PayloadAction<{
+                id: string
+                newValue: Partial<QuizType>
+            }>
+        ) => {
+            const { id, newValue } = action.payload
+            const { surveys } = state
+            const survey = surveys[id]
+            survey.quizzes.push(newValue as Quiz)
+
+            state.lastEditingAt = Date.now()
+        },
         updateQuiz: (
             state,
             action: PayloadAction<{
+                surveyId: string
                 quizId: string
                 newValue: Partial<QuizType>
             }>
         ) => {
-            const { form } = state
-            const { quizId, newValue } = action.payload
+            const { surveyId, quizId, newValue } = action.payload
+            const { surveys } = state
+            const survey = surveys[surveyId]
 
-            if (form && quizId) {
-                const { quizzes = [] } = form
-                const index = _.findIndex(quizzes, { id: quizId })
-                quizzes[index] = {
-                    ...quizzes[index],
-                    ...newValue,
+            const quizzes = Array.from(survey.quizzes).map((el) =>
+                el.id === quizId
+                    ? {
+                          ...el,
+                          ...newValue,
+                      }
+                    : el
+            )
+
+            survey.quizzes = quizzes
+
+            updateLocalSurvey(surveyId, survey)
+
+            state.lastEditingAt = Date.now()
+        },
+        deleteQuiz: (
+            state,
+            action: PayloadAction<{
+                surveyId: string
+                quizId: string
+            }>
+        ) => {
+            const { surveyId, quizId } = action.payload
+            const { surveys } = state
+            const survey = surveys[surveyId]
+
+            const { quizzes = [] } = survey ?? {}
+            const newValue = quizzes.filter((el) => el.id !== quizId)
+            survey.quizzes = newValue
+
+            updateLocalSurvey(surveyId, survey)
+
+            state.lastEditingAt = Date.now()
+        },
+        setResults: (
+            state,
+            action: PayloadAction<{
+                surveyId: string
+                newValue: Partial<Results>
+            }>
+        ) => {
+            const { surveyId, newValue } = action.payload
+            const { surveys } = state
+            const survey = surveys[surveyId]
+            const newResults = {
+                ...survey.results,
+                ...newValue,
+            }
+
+            survey.results = newResults
+            updateLocalSurvey(surveyId, survey)
+
+            state.lastEditingAt = Date.now()
+        },
+        setResult: (
+            state,
+            action: PayloadAction<{
+                surveyId: string
+                resultId: string
+                newValue: Partial<Result>
+            }>
+        ) => {
+            const { surveyId, resultId, newValue } = action.payload
+            const { surveys } = state
+            const survey = surveys[surveyId] ?? {}
+            const { list = {} } = survey.results ?? {}
+            list[resultId] = {
+                ...list[resultId],
+                ...newValue,
+            }
+
+            updateLocalSurvey(surveyId, survey)
+
+            state.lastEditingAt = Date.now()
+        },
+        updateComponent: (
+            state,
+            action: PayloadAction<{
+                surveyId: string
+                resultId: string
+                idPath: string[]
+                newValue: Component
+                deleted?: boolean
+            }>
+        ) => {
+            const {
+                surveyId,
+                resultId,
+                idPath,
+                newValue,
+                deleted = false,
+            } = action.payload
+
+            const { surveys } = state
+            const survey = surveys[surveyId] ?? {}
+            const { list } = survey.results ?? {}
+            const result = list[resultId]
+
+            if (result) {
+                setNewComponents(result, idPath, newValue, Boolean(deleted))
+                updateLocalSurvey(surveyId, survey)
+            }
+
+            state.lastEditingAt = Date.now()
+        },
+        updateFinal: (
+            state,
+            action: PayloadAction<{
+                surveyId: string
+                newValue: Partial<Final>
+            }>
+        ) => {
+            const { surveyId, newValue } = action.payload
+            const { surveys } = state
+
+            const survey = surveys[surveyId]
+            survey.final = { ...survey.final, ...newValue }
+
+            updateLocalSurvey(surveyId, survey)
+
+            state.lastEditingAt = Date.now()
+        },
+        updateFinalComponents: (
+            state,
+            action: PayloadAction<{
+                surveyId: string
+                idPath: string[]
+                newValue: Component
+                deleted?: boolean
+            }>
+        ) => {
+            const {
+                surveyId,
+                idPath,
+                newValue,
+                deleted = false,
+            } = action.payload
+
+            const { surveys } = state
+            const survey = surveys[surveyId] ?? {}
+
+            if (survey) {
+                const { final } = survey
+
+                if (!final.components) {
+                    final.components = []
                 }
+
+                setNewComponents(final, idPath, newValue, Boolean(deleted))
+                updateLocalSurvey(surveyId, survey)
+
+                state.lastEditingAt = Date.now()
             }
         },
-        nextQuiz: (state, action: PayloadAction<void>) => {
-            const { quizId, form } = state
-            const { quizzes = [] } = form ?? {}
+        updateSurvey: (
+            state,
+            action: PayloadAction<{
+                id: string
+                newValue: Partial<Survey>
+            }>
+        ) => {
+            const { id, newValue } = action.payload
+            const { surveys } = state
+            const survey = surveys[id]
 
-            if (!quizId) {
-                state.quizId = quizzes[0]?.id
-                return
+            surveys[id] = {
+                ...survey,
+                ...newValue,
             }
 
-            const index = _.findIndex(quizzes, { id: quizId })
+            updateLocalSurvey(id, surveys[id])
 
-            if (index === -1) {
-                return
+            state.lastEditingAt = Date.now()
+        },
+        reloadFromLocal: (state, action: PayloadAction<void>) => {
+            const localSurveys = LocalSurveys.getInstance()
+            const currentId = localSurveys.getCurrentId() ?? ''
+            const survey = localSurveys.getSurveyById(currentId)
+
+            if (!_.isEmpty(survey)) {
+                const { id, updatedAt } = survey
+                state.currentId = id
+                state.surveys[id] = survey
+                state.lastEditingAt = updatedAt
             }
-
-            const quiz = quizzes[index]
-            const { mode } = quiz
-
-            if (_.includes([QuizMode.sort, QuizMode.selection], mode)) {
-                const next = getNextByChoice(quiz as SelectionQuiz)
-                if (next) {
-                    state.quizId = next
-                    return
-                }
-            }
-
-            const nextIndex = index + 1
-            const nextQuiz = quizzes[nextIndex]
-
-            if (nextQuiz) {
-                state.quizId = nextQuiz.id
-                return
-            }
-
-            state.step = SurveyStep.result
         },
     },
     extraReducers: (builder) => {
-        builder.addCase(getForm.fulfilled, (state, action) => {
-            const form = action.payload
-            state.form = form
-            state.quizId = _.get(form, ['quizzes', 0, 'id'])
+        builder.addCase(createNew.fulfilled, (state, action) => {
+            const { surveys } = state
+            const survey = action.payload
+            const { id } = survey
+
+            const localSurveys = LocalSurveys.getInstance()
+            localSurveys.setCurrentId(id)
+            localSurveys.setSurveyId(id)
+            localSurveys.setSurveyById(id, survey)
+
+            surveys[id] = survey
+            state.currentId = id
+        })
+        builder.addCase(getSurvey.fulfilled, (state, action) => {
+            const survey = action.payload
+            if (survey) {
+                const { id, updatedAt } = survey
+
+                const { surveys } = state
+                surveys[id] = survey
+                state.currentId = id
+                state.lastEditingAt = updatedAt
+            }
+        })
+        builder.addCase(saveSurvey.fulfilled, (state, action) => {
+            const survey = action.payload
+            if (survey) {
+                const { surveys } = state
+
+                const { id, updatedAt } = survey
+                state.lastEditingAt = updatedAt
+
+                surveys[id].updatedAt = updatedAt
+            }
         })
     },
 })
 
-export const { nextQuiz, updateQuiz } = surveySlice.actions
+export const {
+    setCurrentId,
+    setStep,
+    setMode,
+    setQuizzes,
+    updateQuiz,
+    addQuiz,
+    deleteQuiz,
+    setResults,
+    setResult,
+    updateComponent,
+    updateFinal,
+    updateFinalComponents,
+    updateSurvey,
+    reloadFromLocal,
+} = surveySlice.actions
 
-export const selectForm = (state: RootState) => {
-    const { form } = state.survey
-    return form
+export const selectCurrentId = (state: RootState) => state.survey.currentId
+
+export const selectLastEditingAt = (state: RootState) =>
+    state.survey.lastEditingAt
+
+export const selectCurrentSurvey = (state: RootState) => {
+    const { surveys, currentId } = state.survey
+    return surveys[currentId] || {}
 }
 
-export const selectQuizId = (state: RootState) => {
-    const { quizId } = state.survey
-    return quizId
+export const selectSurvey = (state: RootState, id: string) =>
+    state.survey.surveys[id]
+
+const updateLocalSurvey = (id: string, value: Survey) => {
+    const localSurveys = LocalSurveys.getInstance()
+
+    localSurveys.setSurveyById(id, value)
 }
 
-export const selectStep = (state: RootState) => {
-    const { step } = state.survey
-    return step
-}
+function setNewComponents(
+    data: { components: Component[] },
+    idPath: string[],
+    newValue: Component,
+    deleted: boolean = false
+) {
+    let i = 0
+    let components = data.components
+    let component: Component | undefined = undefined
 
-function getNextByChoice(quiz: SelectionQuiz) {
-    const { maxChoices, values = [], choices = [] } = quiz
-    const value = values[0]
-    const choice = _.find(choices, { id: value })
-    const { next } = choice ?? {}
+    while (i < idPath.length) {
+        const id = idPath[i]
+        const index = _.findIndex(components, { id })
 
-    if (maxChoices === 1 && value && choice && next) {
-        return next
+        if (index === -1) {
+            console.error(new Error(`no component ${id}`))
+            return
+        }
+
+        component = components[index]
+
+        if (_.isNil(component.components)) {
+            console.error(new Error(`no components ${id}`))
+            return
+        }
+
+        components = component.components
+        i += 1
+    }
+
+    if (deleted) {
+        _.remove(components, { id: newValue.id })
+        return
+    }
+
+    const targetIndex = _.findIndex(components, { id: newValue.id })
+
+    if (targetIndex > -1) {
+        components[targetIndex] = { ...components[targetIndex], ...newValue }
+    } else {
+        components.push(newValue)
     }
 }

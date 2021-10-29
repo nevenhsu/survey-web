@@ -11,17 +11,23 @@ import TableRow from '@mui/material/TableRow'
 import Switch from '@mui/material/Switch'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
+import Box from '@mui/material/Box'
 import ImageUploader from 'components/common/ImageUploader'
-import ModeSelector from 'components/Editor/QuizForm/ModeSelector'
+import ModeSelector from 'components/Survey/QuizForm/ModeSelector'
 import { useAppDispatch, useAppSelector } from 'hooks'
-import { updateQuiz, updateForm, selectCurrentForm } from 'store/slices/editor'
+import {
+    updateQuiz,
+    deleteQuiz,
+    updateSurvey,
+    selectCurrentSurvey,
+} from 'store/slices/survey'
 import { QuizMode } from 'common/types'
 import type { SelectionQuiz, OnChangeInput, QuizType } from 'common/types'
 import CardHorizonImage from 'assets/images/CardHorizonImage'
 import CardVerticalImage from 'assets/images/CardVerticalImage'
 
 type QuizToolProps = {
-    formId: string
+    surveyId: string
     quiz?: QuizType
 }
 
@@ -61,10 +67,10 @@ const Header = (props: { title: string }) => {
 export default function QuizTool(props: QuizToolProps) {
     const dispatch = useAppDispatch()
 
-    const { formId, quiz } = props
+    const { surveyId, quiz } = props
 
-    const form = useAppSelector(selectCurrentForm)
-    const { setting } = form
+    const survey = useAppSelector(selectCurrentSurvey)
+    const { setting } = survey
 
     const { id: quizId, mode, backgroundColor } = quiz ?? {}
     const { direction, showImage, maxChoices } = (quiz as SelectionQuiz) ?? {}
@@ -86,12 +92,23 @@ export default function QuizTool(props: QuizToolProps) {
     }
 
     const handleUpdateQuiz = (newValue: Partial<QuizType>) => {
-        if (formId && quizId) {
+        if (surveyId && quizId) {
             dispatch(
                 updateQuiz({
-                    formId,
+                    surveyId: surveyId,
                     quizId,
                     newValue,
+                })
+            )
+        }
+    }
+
+    const handleDelete = () => {
+        if (surveyId && quizId) {
+            dispatch(
+                deleteQuiz({
+                    surveyId: surveyId,
+                    quizId,
                 })
             )
         }
@@ -108,10 +125,10 @@ export default function QuizTool(props: QuizToolProps) {
             },
         }
 
-        if (formId) {
+        if (surveyId) {
             dispatch(
-                updateForm({
-                    id: formId,
+                updateSurvey({
+                    id: surveyId,
                     newValue,
                 })
             )
@@ -132,7 +149,7 @@ export default function QuizTool(props: QuizToolProps) {
                     <TableRow>
                         <TableCell>題目類型</TableCell>
                         <TableCell>
-                            <ModeSelector formId={formId} quiz={quiz} />
+                            <ModeSelector surveyId={surveyId} quiz={quiz} />
                         </TableCell>
                     </TableRow>
                     <TableRow>
@@ -193,68 +210,83 @@ export default function QuizTool(props: QuizToolProps) {
                     {_.includes([QuizMode.selection, QuizMode.sort], mode) && (
                         <>
                             <Header title="答項設定" />
-                            <TableRow>
-                                <TableCell component="th">答項排序</TableCell>
-                                <TableCell component="th"></TableCell>
-                            </TableRow>
-                            <TableRow sx={{ position: 'relative', height: 80 }}>
-                                <TableCell
-                                    className="absolute-center"
-                                    sx={{
-                                        p: 0,
-                                        width: '100%',
-                                        height: '100% !important',
-                                    }}
-                                >
-                                    <Stack
-                                        direction="row"
-                                        justifyContent="space-around"
-                                        alignItems="center"
+
+                            {mode === QuizMode.selection && (
+                                <>
+                                    <TableRow>
+                                        <TableCell component="th">
+                                            答項排序
+                                        </TableCell>
+                                        <TableCell component="th"></TableCell>
+                                    </TableRow>
+                                    <TableRow
+                                        sx={{
+                                            position: 'relative',
+                                            height: 80,
+                                        }}
                                     >
-                                        <Button
-                                            onClick={() =>
-                                                handleUpdateQuiz({
-                                                    direction: 'row',
-                                                })
-                                            }
+                                        <TableCell
+                                            className="absolute-center"
                                             sx={{
-                                                width: '50%',
-                                                bgcolor: (theme) =>
-                                                    direction === 'row'
-                                                        ? theme.palette
-                                                              .grey[900]
-                                                        : '',
+                                                p: 0,
+                                                width: '100%',
+                                                height: '100% !important',
                                             }}
                                         >
-                                            <Stack direction="column">
-                                                <CardHorizonImage />
-                                                水平
+                                            <Stack
+                                                direction="row"
+                                                justifyContent="space-around"
+                                                alignItems="center"
+                                            >
+                                                <Button
+                                                    onClick={() =>
+                                                        handleUpdateQuiz({
+                                                            direction: 'row',
+                                                        })
+                                                    }
+                                                    sx={{
+                                                        width: '50%',
+                                                        bgcolor: (theme) =>
+                                                            direction === 'row'
+                                                                ? theme.palette
+                                                                      .grey[900]
+                                                                : '',
+                                                    }}
+                                                >
+                                                    <Stack direction="column">
+                                                        <CardHorizonImage />
+                                                        水平
+                                                    </Stack>
+                                                </Button>
+                                                <Button
+                                                    onClick={() =>
+                                                        handleUpdateQuiz({
+                                                            direction: 'column',
+                                                        })
+                                                    }
+                                                    sx={{
+                                                        width: '50%',
+                                                        bgcolor: (theme) =>
+                                                            direction ===
+                                                            'column'
+                                                                ? theme.palette
+                                                                      .grey[900]
+                                                                : '',
+                                                    }}
+                                                >
+                                                    <Stack direction="column">
+                                                        <CardVerticalImage />
+                                                        垂直
+                                                    </Stack>
+                                                </Button>
                                             </Stack>
-                                        </Button>
-                                        <Button
-                                            onClick={() =>
-                                                handleUpdateQuiz({
-                                                    direction: 'column',
-                                                })
-                                            }
-                                            sx={{
-                                                width: '50%',
-                                                bgcolor: (theme) =>
-                                                    direction === 'column'
-                                                        ? theme.palette
-                                                              .grey[900]
-                                                        : '',
-                                            }}
-                                        >
-                                            <Stack direction="column">
-                                                <CardVerticalImage />
-                                                垂直
-                                            </Stack>
-                                        </Button>
-                                    </Stack>
-                                </TableCell>
-                                <TableCell sx={{ borderBottom: 0 }}></TableCell>
-                            </TableRow>
+                                        </TableCell>
+                                        <TableCell
+                                            sx={{ borderBottom: 0 }}
+                                        ></TableCell>
+                                    </TableRow>
+                                </>
+                            )}
                             <TableRow>
                                 <TableCell>圖片</TableCell>
                                 <TableCell>
@@ -289,6 +321,12 @@ export default function QuizTool(props: QuizToolProps) {
                     )}
                 </TableBody>
             </Table>
+
+            <Box sx={{ textAlign: 'center', py: 2 }}>
+                <Button variant="outlined" color="error" onClick={handleDelete}>
+                    刪除題目
+                </Button>
+            </Box>
         </TableContainer>
     )
 }

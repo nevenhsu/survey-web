@@ -12,7 +12,6 @@ const StyledChip = styled(Chip, {
     const { color } = getMuiColor(colorKey)
     const backgroundColor = variant === 'outlined' ? color[200] : color[300]
     const { textColor } = getContrastText(theme, backgroundColor, '#fff')
-    console.log({ textColor, backgroundColor })
 
     return {
         color: textColor,

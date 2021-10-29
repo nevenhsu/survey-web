@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { toBool, toNumber } from 'utils/helper'
 import { Mode, QuizMode, ComponentType, FinalMode } from 'common/types'
 import type {
-    Form,
+    Survey,
     QuizType,
     Quiz,
     SelectionQuiz,
@@ -11,7 +11,7 @@ import type {
     Final,
 } from 'common/types'
 
-export function formFormatter(form: Form): Form {
+export function surveyFormatter(survey: Survey): Survey {
     const {
         id,
         createdAt,
@@ -22,7 +22,7 @@ export function formFormatter(form: Form): Form {
         results,
         final,
         setting,
-    } = form
+    } = survey
 
     const { list, ...r } = results ?? {}
 

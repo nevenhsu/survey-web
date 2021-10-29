@@ -3,17 +3,17 @@ import _ from 'lodash'
 import ComponentViewTool from 'components/common/ComponentView/Tool'
 import { Contexts } from 'components/common/ComponentView'
 import { useAppDispatch } from 'hooks'
-import { updateFinalComponents } from 'store/slices/editor'
+import { updateFinalComponents } from 'store/slices/survey'
 import type { OnChangeInput, Component } from 'common/types'
 
 type FinalToolProps = {
-    formId?: string
+    surveyId?: string
 }
 
 export default function FinalTool(props: FinalToolProps) {
     const dispatch = useAppDispatch()
 
-    const { formId } = props
+    const { surveyId } = props
 
     const instance = Contexts.getInstance('final')
     const { Context } = instance.getValue()
@@ -31,10 +31,10 @@ export default function FinalTool(props: FinalToolProps) {
             [name]: val,
         } as Component
 
-        if (formId && idPath && component) {
+        if (surveyId && idPath && component) {
             dispatch(
                 updateFinalComponents({
-                    formId,
+                    surveyId: surveyId,
                     idPath,
                     newValue,
                 })
@@ -43,10 +43,10 @@ export default function FinalTool(props: FinalToolProps) {
     }
 
     const handleDelete = () => {
-        if (formId && idPath && component) {
+        if (surveyId && idPath && component) {
             dispatch(
                 updateFinalComponents({
-                    formId,
+                    surveyId: surveyId,
                     idPath,
                     newValue: component,
                     deleted: true,

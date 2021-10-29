@@ -14,7 +14,7 @@ import StyledChip from 'components/common/StyledChip'
 import { useAppDispatch, useAppSelector } from 'hooks'
 import { getDefaultResult } from 'utils/helper'
 import { personaTags, productTags, defaultTags } from 'common/defaultTags'
-import { selectCurrentForm, setResult, setResults } from 'store/slices/editor'
+import { selectCurrentSurvey, setResult, setResults } from 'store/slices/survey'
 import type { Tags, OnChangeInput } from 'common/types'
 
 type EditingTagType = {
@@ -57,7 +57,7 @@ const width = { xs: '25%', lg: '20%' }
 
 export default function ProductForm() {
     const dispatch = useAppDispatch()
-    const { id: formId, results, tags } = useAppSelector(selectCurrentForm)
+    const { id: surveyId, results, tags } = useAppSelector(selectCurrentSurvey)
     const { list = {} } = results ?? {}
 
     const customTags = getCustomTags(tags)
@@ -72,13 +72,15 @@ export default function ProductForm() {
 
     const handleAdd = () => {
         const newValue = getDefaultResult()
-        dispatch(setResult({ formId, resultId: newValue.id, newValue }))
+        dispatch(
+            setResult({ surveyId: surveyId, resultId: newValue.id, newValue })
+        )
     }
 
     const handleChange: OnChangeInput = (event) => {
         const { id: resultId, name, value } = event.target
         const newValue = { [name]: value }
-        dispatch(setResult({ formId, resultId, newValue }))
+        dispatch(setResult({ surveyId: surveyId, resultId, newValue }))
     }
 
     const handleChipClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -108,7 +110,7 @@ export default function ProductForm() {
         })
 
         const newValue = { list: clonedList }
-        dispatch(setResults({ formId, newValue }))
+        dispatch(setResults({ surveyId: surveyId, newValue }))
     }
 
     const handleUpdateTag = (tag: string) => {
@@ -119,7 +121,7 @@ export default function ProductForm() {
             const newValue = { tags: _.cloneDeep(tags) }
             _.set(newValue, ['tags', tagId, index], tag)
 
-            dispatch(setResult({ formId, resultId, newValue }))
+            dispatch(setResult({ surveyId: surveyId, resultId, newValue }))
         }
     }
 
@@ -134,14 +136,14 @@ export default function ProductForm() {
         const newValue = { tags: _.cloneDeep(tags) }
         newValue.tags[tagId].splice(index, 1)
 
-        dispatch(setResult({ formId, resultId, newValue }))
+        dispatch(setResult({ surveyId: surveyId, resultId, newValue }))
     }
 
     const handleDeleteResult = (resultId: string) => {
         const { [resultId]: deleted, ...rest } = results.list
         const newValue = { list: { ...rest } }
 
-        dispatch(setResults({ formId, newValue }))
+        dispatch(setResults({ surveyId: surveyId, newValue }))
     }
 
     const selectedTags = React.useMemo(() => {

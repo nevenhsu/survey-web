@@ -7,12 +7,12 @@ import { Contexts } from 'components/common/ComponentView'
 import { ComponentList, getComponent } from 'components/common/ComponentView'
 import { getDefaultComponent, setId } from 'utils/helper'
 import { useAppDispatch } from 'hooks'
-import { updateComponent, setResult } from 'store/slices/editor'
+import { updateComponent, setResult } from 'store/slices/survey'
 import { ComponentType } from 'common/types'
 import type { Result } from 'common/types'
 
 type EditingQuizProps = {
-    formId?: string
+    surveyId?: string
     result?: Result
 }
 
@@ -31,7 +31,7 @@ export default function EditingResult(props: EditingQuizProps) {
         reset,
     } = React.useContext(Context)
 
-    const { formId, result } = props
+    const { surveyId, result } = props
     const { id: resultId, components = [] } = result ?? {}
 
     const selectedComponent = React.useMemo(() => {
@@ -39,16 +39,23 @@ export default function EditingResult(props: EditingQuizProps) {
     }, [selectedId, idPath, components])
 
     const handleAdd = (idPath: string[], type: ComponentType) => {
-        if (formId && resultId) {
+        if (surveyId && resultId) {
             const newValue = getDefaultComponent(type)
-            dispatch(updateComponent({ formId, resultId, idPath, newValue }))
+            dispatch(
+                updateComponent({
+                    surveyId: surveyId,
+                    resultId,
+                    idPath,
+                    newValue,
+                })
+            )
         }
     }
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target
 
-        if (formId && resultId && selectedComponent) {
+        if (surveyId && resultId && selectedComponent) {
             let val: any = value === '' ? undefined : value
             val = Number(val) || val
 
@@ -56,7 +63,14 @@ export default function EditingResult(props: EditingQuizProps) {
                 ...selectedComponent,
                 [name]: val,
             }
-            dispatch(updateComponent({ formId, resultId, idPath, newValue }))
+            dispatch(
+                updateComponent({
+                    surveyId: surveyId,
+                    resultId,
+                    idPath,
+                    newValue,
+                })
+            )
         }
     }
 
@@ -77,7 +91,7 @@ export default function EditingResult(props: EditingQuizProps) {
         } else {
             const { components: componentsFormat = [] } = user.getValue()
             if (
-                formId &&
+                surveyId &&
                 resultId &&
                 _.isArray(componentsFormat) &&
                 componentsFormat.length
@@ -85,7 +99,7 @@ export default function EditingResult(props: EditingQuizProps) {
                 // TODO: preserve card components
                 dispatch(
                     setResult({
-                        formId,
+                        surveyId: surveyId,
                         resultId,
                         newValue: {
                             components: componentsFormat.map((el) => ({

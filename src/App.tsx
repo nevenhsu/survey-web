@@ -15,8 +15,8 @@ import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 
-const Editor = React.lazy(() => import('components/Editor'))
 const Survey = React.lazy(() => import('components/Survey'))
+const Answer = React.lazy(() => import('components/Answer'))
 
 const Grow = styled('div')({
     flexGrow: 1,
@@ -36,7 +36,7 @@ const StyledTab = styled(Tab)(({ theme }) => ({
 
 export default function App() {
     const paths = {
-        editor: { value: 'editor', path: '/editor', label: '編輯' },
+        survey: { value: 'survey', path: '/survey', label: '編輯' },
         analysis: { value: 'analysis', path: '/analysis', label: '報告' },
     }
 
@@ -44,7 +44,7 @@ export default function App() {
 
     const matchSurvey = useRouteMatch('/survey/:id')
 
-    const [currentPath, setPath] = React.useState(paths.editor.value)
+    const [currentPath, setPath] = React.useState(paths.survey.value)
 
     const handleChangePath = (
         event: React.SyntheticEvent,
@@ -85,18 +85,18 @@ export default function App() {
             )}
             <React.Suspense fallback={<div />}>
                 <Switch>
-                    <Route path={paths.editor.path}>
-                        <Editor />
+                    <Route path="/survey/:id">
+                        <Answer />
                     </Route>
 
-                    <Route path="/survey/:id">
+                    <Route path={paths.survey.path}>
                         <Survey />
                     </Route>
 
                     <Route
                         exact
                         path="/"
-                        render={() => <Redirect to={paths.editor.path} />}
+                        render={() => <Redirect to={paths.survey.path} />}
                     />
                 </Switch>
             </React.Suspense>

@@ -15,7 +15,7 @@ import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import { setClasses } from 'utils/helper'
-import { selectCurrentForm, updateQuiz } from 'store/slices/editor'
+import { selectCurrentSurvey, updateQuiz } from 'store/slices/survey'
 import type { SelectionQuiz } from 'common/types'
 
 interface NextQuizProps {
@@ -39,7 +39,7 @@ export default function NextQuiz(props: NextQuizProps) {
     const [page, setPage] = React.useState(0)
     const [rowsPerPage, setRowsPerPage] = React.useState(5)
 
-    const { id: formId, quizzes = [] } = useAppSelector(selectCurrentForm)
+    const { id: surveyId, quizzes = [] } = useAppSelector(selectCurrentSurvey)
     const nextQuizIndex = _.findIndex(quizzes, { id: quizId }) + 1
 
     const currentChoices = React.useMemo(
@@ -59,7 +59,7 @@ export default function NextQuiz(props: NextQuizProps) {
             )
             dispatch(
                 updateQuiz({
-                    formId,
+                    surveyId: surveyId,
                     quizId,
                     newValue: { choices: newChoices },
                 })

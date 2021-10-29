@@ -1,7 +1,7 @@
 import * as React from 'react'
 import _ from 'lodash'
 import { useAppDispatch } from 'hooks'
-import { updateQuiz } from 'store/slices/editor'
+import { updateQuiz } from 'store/slices/survey'
 import { styled } from '@mui/material/styles'
 import NumberFormat from 'react-number-format'
 import Box from '@mui/material/Box'
@@ -33,7 +33,7 @@ import type {
 type onButtonClink = (event: React.MouseEvent<HTMLButtonElement>) => void
 
 type EditingQuizProps = {
-    formId?: string
+    surveyId?: string
     quiz?: QuizType
 }
 
@@ -508,16 +508,16 @@ const SliderView = (props: {
 }
 
 export default function EditingQuiz(props: EditingQuizProps) {
-    const { formId, quiz } = props
+    const { surveyId, quiz } = props
     const dispatch = useAppDispatch()
 
     const { image, backgroundColor, backgroundImage } = quiz ?? {}
 
     const handleUpdateQuiz = (newValue: Partial<QuizType>) => {
-        if (formId && quiz) {
+        if (surveyId && quiz) {
             dispatch(
                 updateQuiz({
-                    formId,
+                    surveyId: surveyId,
                     quizId: quiz.id,
                     newValue,
                 })
@@ -526,7 +526,7 @@ export default function EditingQuiz(props: EditingQuizProps) {
     }
 
     const renderQuiz = () => {
-        if (!formId || !quiz) {
+        if (!surveyId || !quiz) {
             return <div />
         }
 

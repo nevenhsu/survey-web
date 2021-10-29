@@ -1,8 +1,8 @@
 import _ from 'lodash'
 import axios from 'axios'
-import { getDefaultForm } from 'utils/helper'
-import { formFormatter } from 'utils/formatter'
-import type { Mode, Form } from 'common/types'
+import { getDefaultSurvey } from 'utils/helper'
+import { surveyFormatter } from 'utils/formatter'
+import type { Mode, Survey } from 'common/types'
 
 type CreateNewResponse = {
     id: string
@@ -14,12 +14,12 @@ type UploadMediaResponse = {
 }
 
 const surveyApi = {
-    createNew: async (mode: Mode): Promise<Form> => {
+    createNew: async (mode: Mode): Promise<Survey> => {
         const url = `${process.env.REACT_APP_URL}/survey`
         const { data } = await axios.post<CreateNewResponse>(url)
-        const form = getDefaultForm({ ...data, mode })
+        const survey = getDefaultSurvey({ ...data, mode })
 
-        return form
+        return survey
     },
     uploadMedia: async (file?: string): Promise<string> => {
         if (file) {
@@ -38,20 +38,21 @@ const surveyApi = {
 
         return ''
     },
-    getForm: async (id: string) => {
+    getSurvey: async (id: string): Promise<Survey | undefined> => {
         if (id) {
             const url = `${process.env.REACT_APP_URL}/survey/${id}`
-            const { data } = await axios.get<Form>(url)
-            return formFormatter(data)
+            const { data } = await axios.get<Survey>(url)
+            return surveyFormatter(data)
         }
     },
-    putForm: async (id: string, form: Form) => {
-        if (id && form) {
+    putSurvey: async (id: string, survey: Survey) => {
+        if (id && survey) {
             const url = `${process.env.REACT_APP_URL}/survey/${id}`
-            const { data } = await axios.put<Form>(url, form)
-            return formFormatter(data)
+            const { data } = await axios.put<Survey>(url, survey)
+            return surveyFormatter(data)
         }
     },
+    createNewAnswer: async () => {},
 }
 
 export default surveyApi

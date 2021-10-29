@@ -12,13 +12,13 @@ import Box, { BoxProps } from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
 import LinearProgress from '@mui/material/LinearProgress'
 import DeviceMode from 'components/common/DeviceMode'
-import QuizTool from 'components/Editor/QuizForm/QuizTool'
-import ModeSelector from 'components/Editor/QuizForm/ModeSelector'
+import QuizTool from 'components/Survey/QuizForm/QuizTool'
+import ModeSelector from 'components/Survey/QuizForm/ModeSelector'
 import MenuSwapIcon from 'mdi-react/DragHorizontalVariantIcon'
 import AddIcon from 'mdi-react/AddIcon'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import { selectDevice } from 'store/slices/userDefault'
-import { selectCurrentForm, setQuizzes, addQuiz } from 'store/slices/editor'
+import { selectCurrentSurvey, setQuizzes, addQuiz } from 'store/slices/survey'
 import { reorder, setId, getDefaultQuiz } from 'utils/helper'
 import ThemeProvider from 'theme/ThemeProvider'
 import { QuizMode, QuizType } from 'common/types'
@@ -86,8 +86,8 @@ const StyledBox = styled(Box, {
 
 export default function QuizForm() {
     const dispatch = useAppDispatch()
-    const form = useAppSelector(selectCurrentForm)
-    const { id: formId, quizzes = [], setting } = form ?? {}
+    const survey = useAppSelector(selectCurrentSurvey)
+    const { id: surveyId, quizzes = [], setting } = survey ?? {}
     const { showProgress } = setting ?? {}
 
     const [selectedId, setSelectedId] = React.useState('')
@@ -118,7 +118,7 @@ export default function QuizForm() {
     const tabValue = disabledTab ? 0 : disabledNext && tab === 2 ? 0 : tab
 
     const updateQuizzes = (quizzes: QuizType[]) => {
-        dispatch(setQuizzes({ id: formId, quizzes }))
+        dispatch(setQuizzes({ id: surveyId, quizzes }))
     }
 
     const onDragEnd = (result: any) => {
@@ -133,8 +133,10 @@ export default function QuizForm() {
     }
 
     const handleAdd = () => {
-        const newValue = getDefaultQuiz(setId(), mode)
-        dispatch(addQuiz({ id: formId, newValue }))
+        const quizId = setId()
+        const newValue = getDefaultQuiz(quizId, mode)
+        dispatch(addQuiz({ id: surveyId, newValue }))
+        setSelectedId(quizId)
         handleClose()
     }
 
@@ -171,7 +173,7 @@ export default function QuizForm() {
                                         )}
 
                                         <EditingQuiz
-                                            formId={formId}
+                                            surveyId={surveyId}
                                             quiz={selectedQuiz}
                                         />
                                     </div>
@@ -226,6 +228,15 @@ export default function QuizForm() {
         }
         setProgress(0)
     }, [selectedQuiz, quizzes])
+
+    React.useEffect(() => {
+        if (selectedId) {
+            const quiz = _.find(quizzes, { id: selectedId })
+            if (_.isEmpty(quiz) && quizzes.length) {
+                setSelectedId(_.get(quizzes, '0.id', ''))
+            }
+        }
+    }, [selectedId, quizzes])
 
     return (
         <>
@@ -333,7 +344,7 @@ export default function QuizForm() {
                                                         }}
                                                     >
                                                         <ModeSelector
-                                                            formId={formId}
+                                                            surveyId={surveyId}
                                                             quiz={el}
                                                         />
                                                     </Box>
@@ -416,7 +427,10 @@ export default function QuizForm() {
                                     bgcolor: (theme) => theme.palette.grey[800],
                                 }}
                             >
-                                <QuizTool formId={formId} quiz={selectedQuiz} />
+                                <QuizTool
+                                    surveyId={surveyId}
+                                    quiz={selectedQuiz}
+                                />
                             </Box>
                         </Grid>
                     )}

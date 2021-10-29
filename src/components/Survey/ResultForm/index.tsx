@@ -14,12 +14,12 @@ import MenuItem from '@mui/material/MenuItem'
 import InputAdornment from '@mui/material/InputAdornment'
 import StyledChip from 'components/common/StyledChip'
 import DeviceMode from 'components/common/DeviceMode'
-import EditingResult from 'components/Editor/ResultForm/EditingResult'
-import ResultTool from 'components/Editor/ResultForm/ResultTool'
+import EditingResult from 'components/Survey/ResultForm/EditingResult'
+import ResultTool from 'components/Survey/ResultForm/ResultTool'
 import { Contexts } from 'components/common/ComponentView'
 import { getDefaultComponent } from 'utils/helper'
 import { useAppSelector, useAppDispatch } from 'hooks'
-import { selectCurrentForm, setResults } from 'store/slices/editor'
+import { selectCurrentSurvey, setResults } from 'store/slices/survey'
 import { selectDevice } from 'store/slices/userDefault'
 import ThemeProvider from 'theme/ThemeProvider'
 import { getMuiColor } from 'theme/palette'
@@ -77,8 +77,8 @@ export default function ResultForm() {
 
     const device = useAppSelector(selectDevice)
 
-    const form = useAppSelector(selectCurrentForm)
-    const { id: formId, tags, results, mode } = form ?? {}
+    const survey = useAppSelector(selectCurrentSurvey)
+    const { id: surveyId, tags, results, mode } = survey ?? {}
 
     const { selectedTags = [], list } = results ?? {}
 
@@ -93,7 +93,7 @@ export default function ResultForm() {
 
         dispatch(
             setResults({
-                formId,
+                surveyId: surveyId,
                 newValue: {
                     selectedTags:
                         name === '0'
@@ -147,7 +147,7 @@ export default function ResultForm() {
             if (!newKeys.length || intersections.length !== newKeys.length) {
                 dispatch(
                     setResults({
-                        formId,
+                        surveyId: surveyId,
                         newValue: {
                             list: newList,
                         },
@@ -376,7 +376,7 @@ export default function ResultForm() {
                                     <StyledBox device={device}>
                                         <div>
                                             <EditingResult
-                                                formId={formId}
+                                                surveyId={surveyId}
                                                 result={selectedResult}
                                             />
                                         </div>
@@ -401,7 +401,10 @@ export default function ResultForm() {
                                 bgcolor: (theme) => theme.palette.grey[800],
                             }}
                         >
-                            <ResultTool formId={formId} resultId={selectedId} />
+                            <ResultTool
+                                surveyId={surveyId}
+                                resultId={selectedId}
+                            />
                         </Box>
                     </Grid>
                 </ThemeProvider>

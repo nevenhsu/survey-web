@@ -9,7 +9,7 @@ import {
     FinalMode,
 } from 'common/types'
 import type {
-    Form,
+    Survey,
     Quiz,
     SelectionQuiz,
     FillQuiz,
@@ -90,10 +90,10 @@ export function reorder<T, U extends Iterable<T>>(
     return result
 }
 
-export function getDefaultForm(data: Partial<Form>): Form {
+export function getDefaultSurvey(data: Partial<Survey>): Survey {
     const { id = setId(), createdAt = Date.now(), mode = Mode.persona } = data
 
-    const form: Form = {
+    const survey: Survey = {
         id,
         createdAt,
         mode,
@@ -110,7 +110,7 @@ export function getDefaultForm(data: Partial<Form>): Form {
         setting: { showProgress: true },
         final: { mode: FinalMode.info, components: [] },
     }
-    return form
+    return survey
 }
 
 export function getDefaultQuiz(id: string, mode: QuizMode): QuizType {
