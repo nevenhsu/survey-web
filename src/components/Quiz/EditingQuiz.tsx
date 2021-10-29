@@ -7,14 +7,15 @@ import NumberFormat from 'react-number-format'
 import Box from '@mui/material/Box'
 import Grid, { GridSize } from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
-import MenuItem from '@mui/material/MenuItem'
 import Slider from '@mui/material/Slider'
 import Button from '@mui/material/Button'
 import Popover from '@mui/material/Popover'
 import ImageUploader from 'components/common/ImageUploader'
 import ThemeProvider from 'theme/ThemeProvider'
 import { getDefaultChoice } from 'utils/helper'
+import { lightenColor } from 'theme/palette'
 import { QuizMode } from 'common/types'
 import type {
     QuizType,
@@ -28,12 +29,6 @@ import type {
     SliderQuiz,
     OnChangeInput,
 } from 'common/types'
-
-const variants = [
-    { value: 'contained', label: '填滿' },
-    { value: 'outlined', label: '線框' },
-    { value: 'text', label: '文字' },
-]
 
 type onButtonClink = (event: React.MouseEvent<HTMLButtonElement>) => void
 
@@ -101,23 +96,6 @@ const QuizButton = (props: {
                 }}
             >
                 <Box sx={{ p: 2, maxWidth: 320 }}>
-                    <TextField
-                        select
-                        label="按鈕樣式"
-                        value={buttonVariant}
-                        name="buttonVariant"
-                        variant="standard"
-                        onChange={onChange}
-                        fullWidth
-                        sx={{ mb: 3 }}
-                    >
-                        {variants.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-
                     <TextField
                         label="按鈕文字"
                         name="buttonText"
@@ -190,7 +168,6 @@ const ChoiceView = (props: {
         id,
         label = '',
         image = '',
-        buttonVariant = 'contained',
         buttonColor = '',
         buttonTextColor = '',
     } = value
@@ -210,15 +187,31 @@ const ChoiceView = (props: {
     return (
         <>
             <Button
-                variant={buttonVariant}
+                variant="outlined"
                 onClick={handleClick}
-                sx={{
-                    width: '100%',
-                    color: buttonTextColor,
-                    backgroundColor: buttonColor,
-                    flexDirection: 'column',
-                    padding: showImage ? '0 0 5px' : '5px 15px',
-                    overflow: 'hidden',
+                sx={(theme) => {
+                    const lightColor = lightenColor(
+                        theme,
+                        buttonColor,
+                        0.92,
+                        ''
+                    )
+
+                    return {
+                        width: '100%',
+                        color: buttonTextColor,
+                        borderColor: buttonColor,
+                        flexDirection: 'column',
+                        padding: showImage ? '0 0 5px' : '5px 15px',
+                        overflow: 'hidden',
+                        '&:hover': {
+                            borderColor: buttonColor,
+                            backgroundColor: lightColor,
+                        },
+                        '& .MuiTouchRipple-root': {
+                            color: buttonColor,
+                        },
+                    }
                 }}
             >
                 {showImage && (
@@ -258,23 +251,6 @@ const ChoiceView = (props: {
                 }}
             >
                 <Box sx={{ p: 2, maxWidth: 320 }}>
-                    <TextField
-                        select
-                        label="選項樣式"
-                        value={buttonVariant}
-                        name="buttonVariant"
-                        variant="standard"
-                        onChange={onChange}
-                        fullWidth
-                        sx={{ mb: 3 }}
-                    >
-                        {variants.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-
                     <TextField
                         label="選項文字"
                         name="label"
@@ -378,6 +354,9 @@ const SelectionView = (props: {
                 onChange={onChange}
                 {...textFieldProps}
             />
+            <Typography variant="caption" color="GrayText">
+                最多可選擇{maxChoices}項
+            </Typography>
             <Box sx={{ height: 16 }} />
             <Box sx={{ width: 4 / 5, textAlign: 'center' }}>
                 <Grid

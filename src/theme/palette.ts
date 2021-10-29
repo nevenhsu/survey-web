@@ -21,6 +21,7 @@ import {
     yellow,
 } from '@mui/material/colors'
 import styleFunctionSx from '@mui/system/styleFunctionSx'
+import { lighten } from '@mui/material/styles'
 import type { PaletteMode, PaletteOptions } from '@mui/material'
 import type { Theme } from '@mui/material/styles/createTheme'
 
@@ -107,5 +108,26 @@ export function getContrastText(
     } catch (err) {
         console.error(err)
         return { color: colorKey, textColor: fallback }
+    }
+}
+
+export function lightenColor(
+    theme: Theme,
+    colorKey: string,
+    coefficient: number,
+    fallback: string
+) {
+    if (!colorKey) {
+        return fallback
+    }
+    try {
+        const sx = { color: colorKey }
+        const style = styleFunctionSx({ sx, theme }) as any
+        const { color } = style ?? {}
+        const lightColor = lighten(color, coefficient)
+        return lightColor
+    } catch (err) {
+        console.error(err)
+        return fallback
     }
 }

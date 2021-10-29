@@ -21,7 +21,7 @@ const quizModes = {
     },
     [QuizMode.selection]: {
         value: QuizMode.selection,
-        label: '複選',
+        label: '選擇',
     },
     [QuizMode.slider]: {
         value: QuizMode.slider,

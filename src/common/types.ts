@@ -47,7 +47,7 @@ export type Quiz = CustomButton & {
     backgroundImage?: string
 }
 
-export type ChoiceType = Omit<CustomButton, 'buttonText'> & {
+export type ChoiceType = Omit<CustomButton, 'buttonText' | 'buttonVariant'> & {
     id: string
     label: string
     tags: { [tagId: string]: string[] }

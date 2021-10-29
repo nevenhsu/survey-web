@@ -176,7 +176,6 @@ export function getDefaultChoice() {
         label: '未命名選項',
         tags: {},
         image: '',
-        buttonVariant: 'outlined',
     }
     return choice
 }

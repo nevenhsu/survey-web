@@ -25,6 +25,9 @@ export default function SortView(props: SortViewProps) {
     return (
         <>
             <Typography variant="h6"> {title} </Typography>
+            <Typography variant="caption" color="GrayText">
+                最多可選擇{maxChoices}項
+            </Typography>
 
             <Box sx={{ height: 16 }} />
 

@@ -25,6 +25,9 @@ export default function SelectionView(props: SelectionViewProps) {
     return (
         <>
             <Typography variant="h6"> {title} </Typography>
+            <Typography variant="caption" color="GrayText">
+                最多可選擇{maxChoices}項
+            </Typography>
             <Box sx={{ height: 16 }} />
             <Box sx={{ width: 4 / 5, textAlign: 'center' }}>
                 <Grid

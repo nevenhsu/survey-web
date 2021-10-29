@@ -3,6 +3,7 @@ import _ from 'lodash'
 import { styled } from '@mui/material/styles'
 import Button, { ButtonProps } from '@mui/material/Button'
 import ImageBox from 'components/common/ImageBox'
+import { lightenColor } from 'theme/palette'
 import type { ChoiceType } from 'common/types'
 
 type ChoiceViewProps = ButtonProps & {
@@ -19,14 +20,25 @@ type StyledButtonProps = ButtonProps & {
 const StyledButton = styled(Button, {
     shouldForwardProp: (prop) =>
         !_.includes(['showImage', 'buttonTextColor', 'buttonColor'], prop),
-})<StyledButtonProps>(({ buttonTextColor, buttonColor, showImage }) => ({
-    width: '100%',
-    color: buttonTextColor,
-    backgroundColor: buttonColor,
-    flexDirection: 'column',
-    padding: showImage ? '0 0 5px' : '5px 15px',
-    overflow: 'hidden',
-}))
+})<StyledButtonProps>(({ theme, buttonTextColor, buttonColor, showImage }) => {
+    const lightColor = lightenColor(theme, buttonColor, 0.92, '')
+
+    return {
+        width: '100%',
+        color: buttonTextColor,
+        borderColor: buttonColor,
+        flexDirection: 'column',
+        padding: showImage ? '0 0 5px' : '5px 15px',
+        overflow: 'hidden',
+        '&:hover': {
+            borderColor: buttonColor,
+            backgroundColor: lightColor,
+        },
+        '& .MuiTouchRipple-root': {
+            color: buttonColor,
+        },
+    }
+})
 
 export default function ChoiceView(props: ChoiceViewProps) {
     const { choice, showImage = false, ...rest } = props
@@ -35,7 +47,6 @@ export default function ChoiceView(props: ChoiceViewProps) {
         id,
         label = '',
         image = '',
-        buttonVariant = 'contained',
         buttonColor = '',
         buttonTextColor = '',
     } = choice
@@ -43,7 +54,7 @@ export default function ChoiceView(props: ChoiceViewProps) {
     return (
         <StyledButton
             id={id}
-            variant={buttonVariant}
+            variant="outlined"
             showImage={showImage}
             buttonColor={buttonColor}
             buttonTextColor={buttonTextColor}
