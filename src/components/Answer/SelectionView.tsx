@@ -4,23 +4,51 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Grid, { GridSize } from '@mui/material/Grid'
 import ChoiceView from 'components/Answer/ChoiceView'
-import QuizButton from 'components/Answer/QuizButton'
-import type { CustomButton, OnChangeInput, SelectionType } from 'common/types'
+import QuizButton, { QuizButtonProps } from 'components/Answer/QuizButton'
+import type { OnChangeInput, SelectionType } from 'common/types'
 
 type SelectionViewProps = {
     title: string
     selectionProps: SelectionType
-    buttonProps: CustomButton
+    quizButtonProps: QuizButtonProps
     onChange: OnChangeInput
-    onNext: React.MouseEventHandler<HTMLButtonElement>
 }
 
 export default function SelectionView(props: SelectionViewProps) {
-    const { title, selectionProps, buttonProps, onChange, onNext } = props
-    const { choices = [], maxChoices, showImage, direction } = selectionProps
+    const { title, selectionProps, quizButtonProps, onChange } = props
+    const {
+        values = [],
+        choices = [],
+        maxChoices,
+        showImage,
+        direction,
+    } = selectionProps
 
     const responsive: { [key: string]: GridSize } =
         direction === 'row' ? { xs: 6 } : { xs: 12 }
+
+    const toggleSelected = (id: string) => {
+        if (id) {
+            const checked = _.includes(values, id)
+            if (checked) {
+                onChange({
+                    target: {
+                        name: 'values',
+                        value: values.filter((el) => el !== id),
+                    },
+                } as any)
+            } else {
+                if (values.length < maxChoices) {
+                    onChange({
+                        target: {
+                            name: 'values',
+                            value: [...values, id],
+                        },
+                    } as any)
+                }
+            }
+        }
+    }
 
     return (
         <>
@@ -43,15 +71,20 @@ export default function SelectionView(props: SelectionViewProps) {
                                 choice={el}
                                 showImage={showImage}
                                 onClick={(event) => {
-                                    console.log(event.currentTarget.id)
+                                    toggleSelected(event.currentTarget.id)
                                 }}
+                                variant={
+                                    _.includes(values, el.id)
+                                        ? 'contained'
+                                        : 'outlined'
+                                }
                             />
                         </Grid>
                     ))}
                 </Grid>
             </Box>
             <Box sx={{ height: 16 }} />
-            <QuizButton buttonProps={buttonProps} onClick={onNext} />
+            <QuizButton {...quizButtonProps} />
         </>
     )
 }

@@ -20,6 +20,14 @@ export const getSurvey = createAsyncThunk(
     }
 )
 
+export const createNewAnswer = createAsyncThunk(
+    'answer/createNewAnswer',
+    async (id: string) => {
+        const data = await surveyApi.createNewAnswer(id)
+        return data
+    }
+)
+
 interface AnswerState {
     step: AnswerStep
     survey?: Survey
@@ -35,22 +43,24 @@ export const answerSlice = createSlice({
     name: 'answer',
     initialState,
     reducers: {
-        updateQuiz: (
+        updateAnswerValue: (
             state,
             action: PayloadAction<{
                 quizId: string
-                newValue: Partial<QuizType>
+                newValue: Partial<AnswerValue>
             }>
         ) => {
-            const { survey } = state
+            const { answer } = state
             const { quizId, newValue } = action.payload
 
-            if (survey && quizId) {
-                const { quizzes = [] } = survey
-                const index = _.findIndex(quizzes, { id: quizId })
-                quizzes[index] = {
-                    ...quizzes[index],
+            if (answer && quizId) {
+                const { answers } = answer
+                const answerValue = answers[quizId]
+
+                answers[quizId] = {
+                    ...answerValue,
                     ...newValue,
+                    quizId,
                 }
             }
         },
@@ -97,15 +107,38 @@ export const answerSlice = createSlice({
             state.survey = survey
             state.quizId = _.get(survey, ['quizzes', 0, 'id'])
         })
+
+        builder.addCase(createNewAnswer.fulfilled, (state, action) => {
+            const answer = action.payload
+            if (answer) {
+                answer.answers = {}
+                state.answer = answer
+            }
+        })
     },
 })
 
-export const { nextQuiz, updateQuiz } = answerSlice.actions
+export const { nextQuiz, updateAnswerValue } = answerSlice.actions
 
 export const selectSurvey = (state: RootState) => {
     const { survey } = state.answer
     return survey
 }
+
+export const selectAnswer = (state: RootState) => {
+    const { answer } = state.answer
+    return answer
+}
+
+export const selectAnswerValue =
+    (quizId?: string) =>
+    (state: RootState): AnswerValue | undefined => {
+        const { answer, survey } = state.answer
+        if (quizId && survey && answer) {
+            const { answers } = answer
+            return answers[quizId]
+        }
+    }
 
 export const selectQuizId = (state: RootState) => {
     const { quizId } = state.answer

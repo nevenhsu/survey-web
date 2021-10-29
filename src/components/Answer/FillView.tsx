@@ -3,19 +3,18 @@ import _ from 'lodash'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import QuizButton from 'components/Answer/QuizButton'
-import type { CustomButton, OnChangeInput } from 'common/types'
+import QuizButton, { QuizButtonProps } from 'components/Answer/QuizButton'
+import type { OnChangeInput } from 'common/types'
 
 type FillViewProps = {
     title: string
     value: string
-    buttonProps: CustomButton
+    quizButtonProps: QuizButtonProps
     onChange: OnChangeInput
-    onNext: React.MouseEventHandler<HTMLButtonElement>
 }
 
 export default function FillView(props: FillViewProps) {
-    const { title, value, buttonProps, onChange, onNext } = props
+    const { title, value, quizButtonProps, onChange } = props
     return (
         <>
             <Typography variant="h6"> {title} </Typography>
@@ -35,7 +34,7 @@ export default function FillView(props: FillViewProps) {
 
             <Box sx={{ height: 16 }} />
 
-            <QuizButton buttonProps={buttonProps} onClick={onNext} />
+            <QuizButton {...quizButtonProps} />
         </>
     )
 }

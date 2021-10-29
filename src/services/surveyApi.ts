@@ -2,7 +2,7 @@ import _ from 'lodash'
 import axios from 'axios'
 import { getDefaultSurvey } from 'utils/helper'
 import { surveyFormatter } from 'utils/formatter'
-import type { Mode, Survey } from 'common/types'
+import type { Mode, Survey, Answer } from 'common/types'
 
 type CreateNewResponse = {
     id: string
@@ -52,7 +52,13 @@ const surveyApi = {
             return surveyFormatter(data)
         }
     },
-    createNewAnswer: async () => {},
+    createNewAnswer: async (id: string) => {
+        if (id) {
+            const url = `${process.env.REACT_APP_URL}/survey/${id}/answer`
+            const { data } = await axios.post<Answer>(url)
+            return data
+        }
+    },
 }
 
 export default surveyApi

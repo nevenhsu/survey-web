@@ -20,25 +20,28 @@ type StyledButtonProps = ButtonProps & {
 const StyledButton = styled(Button, {
     shouldForwardProp: (prop) =>
         !_.includes(['showImage', 'buttonTextColor', 'buttonColor'], prop),
-})<StyledButtonProps>(({ theme, buttonTextColor, buttonColor, showImage }) => {
-    const lightColor = lightenColor(theme, buttonColor, 0.92, '')
+})<StyledButtonProps>(
+    ({ theme, variant, buttonTextColor, buttonColor, showImage }) => {
+        const btnColor = buttonColor || theme.palette.primary.main
+        const lightColor = lightenColor(theme, btnColor, 0.92, '')
 
-    return {
-        width: '100%',
-        color: buttonTextColor,
-        borderColor: buttonColor,
-        flexDirection: 'column',
-        padding: showImage ? '0 0 5px' : '5px 15px',
-        overflow: 'hidden',
-        '&:hover': {
-            borderColor: buttonColor,
-            backgroundColor: lightColor,
-        },
-        '& .MuiTouchRipple-root': {
-            color: buttonColor,
-        },
+        return {
+            width: '100%',
+            color: buttonTextColor,
+            border: `1px solid ${btnColor}`,
+            flexDirection: 'column',
+            padding: showImage ? '0 0 5px' : '5px 15px',
+            overflow: 'hidden',
+            '&:hover': {
+                border: `1px solid ${btnColor}`,
+                backgroundColor: variant === 'outlined' ? lightColor : btnColor,
+            },
+            '& .MuiTouchRipple-root': {
+                color: btnColor,
+            },
+        }
     }
-})
+)
 
 export default function ChoiceView(props: ChoiceViewProps) {
     const { choice, showImage = false, ...rest } = props

@@ -374,9 +374,6 @@ export const selectCurrentSurvey = (state: RootState) => {
     return surveys[currentId] || {}
 }
 
-export const selectSurvey = (state: RootState, id: string) =>
-    state.survey.surveys[id]
-
 const updateLocalSurvey = (id: string, value: Survey) => {
     const localSurveys = LocalSurveys.getInstance()
 

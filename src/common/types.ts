@@ -161,14 +161,15 @@ export type Answer = {
     id: string
     surveyId: string
     createdAt: number
-    answers: AnswerValue[]
-    resultId: string
-    final: FinalInfo
+    answers: { [quizId: string]: AnswerValue }
+    resultId?: string
+    final?: FinalInfo
 }
 
 export type AnswerValue = {
     quizId: string
-    value: string | string[]
+    value?: string | number
+    values?: string[]
     dwellTime?: number // ms
 }
 

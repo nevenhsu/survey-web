@@ -143,7 +143,7 @@ export default function Editor() {
             })
             .catch((err) => {
                 console.error(err)
-                notify('Oops! 請檢察網路連線狀態', 'error')
+                notify('Oops! 請檢查網路連線狀態', 'error')
                 setUploading(false)
             })
     }

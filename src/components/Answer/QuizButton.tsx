@@ -2,7 +2,7 @@ import * as React from 'react'
 import Button, { ButtonProps } from '@mui/material/Button'
 import type { CustomButton } from 'common/types'
 
-type QuizButtonProps = ButtonProps & {
+export type QuizButtonProps = ButtonProps & {
     buttonProps: CustomButton
 }
 

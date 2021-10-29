@@ -2,31 +2,33 @@ import * as React from 'react'
 import _ from 'lodash'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import Grid, { GridSize } from '@mui/material/Grid'
+import Grid from '@mui/material/Grid'
+import Badge from '@mui/material/Badge'
 import ChoiceView from 'components/Answer/ChoiceView'
-import QuizButton from 'components/Answer/QuizButton'
-import type { CustomButton, OnChangeInput, SelectionType } from 'common/types'
+import QuizButton, { QuizButtonProps } from 'components/Answer/QuizButton'
+import type { OnChangeInput, SelectionType } from 'common/types'
 
 type SortViewProps = {
     title: string
     selectionProps: SelectionType
-    buttonProps: CustomButton
+    quizButtonProps: QuizButtonProps
     onChange: OnChangeInput
-    onNext: React.MouseEventHandler<HTMLButtonElement>
 }
 
 export default function SortView(props: SortViewProps) {
-    const { title, selectionProps, buttonProps, onChange, onNext } = props
-    const { choices = [], maxChoices, showImage, direction } = selectionProps
+    const { title, selectionProps, quizButtonProps, onChange } = props
+    const { values = [], choices = [], maxChoices, showImage } = selectionProps
 
-    const responsive: { [key: string]: GridSize } =
-        direction === 'row' ? { xs: 6 } : { xs: 12 }
+    const toggleSelected = (id: string) => {
+        if (id) {
+        }
+    }
 
     return (
         <>
             <Typography variant="h6"> {title} </Typography>
             <Typography variant="caption" color="GrayText">
-                最多可選擇{maxChoices}項
+                最多可排序{maxChoices}項
             </Typography>
 
             <Box sx={{ height: 16 }} />
@@ -34,20 +36,35 @@ export default function SortView(props: SortViewProps) {
             <Box sx={{ width: 4 / 5, textAlign: 'center' }}>
                 <Grid
                     container
-                    direction={direction}
+                    direction="column"
                     alignItems="center"
                     justifyContent="center"
                     spacing={2}
                 >
                     {choices.map((el) => (
-                        <Grid key={el.id} item {...responsive}>
-                            <ChoiceView
-                                choice={el}
-                                showImage={showImage}
-                                onClick={(event) => {
-                                    console.log(event.currentTarget.id)
+                        <Grid key={el.id} item xs={12}>
+                            <Badge
+                                badgeContent={4}
+                                color="primary"
+                                invisible={false}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'left',
                                 }}
-                            />
+                            >
+                                <ChoiceView
+                                    choice={el}
+                                    showImage={showImage}
+                                    onClick={(event) => {
+                                        toggleSelected(event.currentTarget.id)
+                                    }}
+                                    variant={
+                                        _.includes(values, el.id)
+                                            ? 'contained'
+                                            : 'outlined'
+                                    }
+                                />
+                            </Badge>
                         </Grid>
                     ))}
                 </Grid>
@@ -55,7 +72,7 @@ export default function SortView(props: SortViewProps) {
 
             <Box sx={{ height: 16 }} />
 
-            <QuizButton buttonProps={buttonProps} onClick={onNext} />
+            <QuizButton {...quizButtonProps} />
         </>
     )
 }
