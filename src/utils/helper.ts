@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { isValid } from 'date-fns'
 import cryptoRandomString from 'crypto-random-string'
 import { defaultTags } from 'common/defaultTags'
 import {
@@ -108,7 +109,7 @@ export function getDefaultSurvey(data: Partial<Survey>): Survey {
         tags: mode === Mode.product ? _.keyBy(defaultTags, 'id') : {},
         results: { selectedTags: [], list: {} },
         setting: { showProgress: true },
-        final: { mode: FinalMode.info, components: [] },
+        final: { mode: FinalMode.info, components: [], data: {} },
     }
     return survey
 }
@@ -281,4 +282,23 @@ export function getDefaultResult(): Result {
         tags: {},
         components: [],
     }
+}
+
+export function toDate(value: any) {
+    const date = new Date(value)
+    if (isValid(date)) {
+        return date
+    }
+}
+
+export function toISOString(value?: Date) {
+    if (value) {
+        try {
+            return value.toISOString()
+        } catch (err) {
+            console.error(err)
+            return ''
+        }
+    }
+    return ''
 }

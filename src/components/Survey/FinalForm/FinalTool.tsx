@@ -34,7 +34,7 @@ export default function FinalTool(props: FinalToolProps) {
         if (surveyId && idPath && component) {
             dispatch(
                 updateFinalComponents({
-                    surveyId: surveyId,
+                    surveyId,
                     idPath,
                     newValue,
                 })
@@ -46,7 +46,7 @@ export default function FinalTool(props: FinalToolProps) {
         if (surveyId && idPath && component) {
             dispatch(
                 updateFinalComponents({
-                    surveyId: surveyId,
+                    surveyId,
                     idPath,
                     newValue: component,
                     deleted: true,

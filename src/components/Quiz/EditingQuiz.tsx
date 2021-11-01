@@ -523,7 +523,7 @@ export default function EditingQuiz(props: EditingQuizProps) {
         if (surveyId && quiz) {
             dispatch(
                 updateQuiz({
-                    surveyId: surveyId,
+                    surveyId,
                     quizId: quiz.id,
                     newValue,
                 })

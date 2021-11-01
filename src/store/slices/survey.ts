@@ -13,6 +13,7 @@ import type {
     Result,
     Component,
     Final,
+    FinalInfo,
 } from 'common/types'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from 'store'
@@ -255,6 +256,25 @@ export const surveySlice = createSlice({
 
             state.lastEditingAt = Date.now()
         },
+        updateFinalData: (
+            state,
+            action: PayloadAction<{
+                surveyId: string
+                newValue: Partial<FinalInfo>
+            }>
+        ) => {
+            const { surveyId, newValue } = action.payload
+            const { surveys } = state
+
+            const survey = surveys[surveyId]
+            const { final } = survey ?? {}
+            const { data } = final ?? {}
+
+            final.data = {
+                ...data,
+                ...newValue,
+            }
+        },
         updateFinalComponents: (
             state,
             action: PayloadAction<{
@@ -398,6 +418,7 @@ export const {
     setResult,
     updateComponent,
     updateFinal,
+    updateFinalData,
     updateFinalComponents,
     updateSurvey,
     reloadFromLocal,

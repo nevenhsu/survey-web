@@ -59,7 +59,7 @@ export default function NextQuiz(props: NextQuizProps) {
             )
             dispatch(
                 updateQuiz({
-                    surveyId: surveyId,
+                    surveyId,
                     quizId,
                     newValue: { choices: newChoices },
                 })

@@ -5,21 +5,25 @@ import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'connected-react-router'
 import { SnackbarProvider } from 'notistack'
 import { store, history } from 'store'
+import LocalizationProvider from '@mui/lab/LocalizationProvider'
+import DateAdapter from '@mui/lab/AdapterDateFns'
 import ThemeProvider from 'theme/ThemeProvider'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 
 ReactDOM.render(
     <React.StrictMode>
-        <Provider store={store}>
-            <ConnectedRouter history={history}>
-                <ThemeProvider withBaseline>
-                    <SnackbarProvider maxSnack={3}>
-                        <App />
-                    </SnackbarProvider>
-                </ThemeProvider>
-            </ConnectedRouter>
-        </Provider>
+        <LocalizationProvider dateAdapter={DateAdapter}>
+            <Provider store={store}>
+                <ConnectedRouter history={history}>
+                    <ThemeProvider withBaseline>
+                        <SnackbarProvider maxSnack={3}>
+                            <App />
+                        </SnackbarProvider>
+                    </ThemeProvider>
+                </ConnectedRouter>
+            </Provider>
+        </LocalizationProvider>
     </React.StrictMode>,
     document.getElementById('root')
 )

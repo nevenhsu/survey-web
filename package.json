@@ -4,6 +4,7 @@
     "private": true,
     "homepage": "/",
     "dependencies": {
+        "@date-io/date-fns": "^2.11.0",
         "@emotion/react": "^11.5.0",
         "@emotion/styled": "^11.3.0",
         "@mui/lab": "^5.0.0-alpha.53",
@@ -25,6 +26,7 @@
         "axios": "^0.21.4",
         "connected-react-router": "^6.9.1",
         "crypto-random-string": "^4.0.0",
+        "date-fns": "^2.25.0",
         "lodash": "^4.17.21",
         "mdi-react": "^7.5.0",
         "notistack": "^2.0.2",

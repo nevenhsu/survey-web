@@ -15,10 +15,14 @@ import InfoForm from 'components/Final/InfoForm'
 import DeviceMode from 'components/common/DeviceMode'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import { selectDevice } from 'store/slices/userDefault'
-import { selectCurrentSurvey, updateFinal } from 'store/slices/survey'
+import {
+    selectCurrentSurvey,
+    updateFinal,
+    updateFinalData,
+} from 'store/slices/survey'
 import ThemeProvider from 'theme/ThemeProvider'
 import { FinalMode } from 'common/types'
-import type { DeviceType } from 'common/types'
+import type { DeviceType, OnChangeInput } from 'common/types'
 
 type StyledBoxProps = BoxProps & {
     device: DeviceType
@@ -69,21 +73,33 @@ export default function FinalForm() {
 
     const survey = useAppSelector(selectCurrentSurvey)
     const { id: surveyId, final } = survey
-    const { mode } = final ?? {}
+    const { mode, data } = final ?? {}
 
     const device = useAppSelector(selectDevice)
 
     const updateMode = (mode: FinalMode) => {
         if (surveyId) {
             const newValue = { mode }
-            dispatch(updateFinal({ surveyId: surveyId, newValue }))
+            dispatch(updateFinal({ surveyId, newValue }))
+        }
+    }
+
+    const handleDataChange: OnChangeInput = (event) => {
+        if (surveyId) {
+            const { name, value } = event.target
+            const newValue = {
+                [name]: value,
+            }
+            dispatch(updateFinalData({ surveyId, newValue }))
         }
     }
 
     const renderMode = (mode: FinalMode) => {
         switch (mode) {
             case FinalMode.info: {
-                return <InfoForm />
+                return (
+                    <InfoForm data={data ?? {}} onChange={handleDataChange} />
+                )
             }
         }
     }

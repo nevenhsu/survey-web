@@ -95,7 +95,7 @@ export default function QuizTool(props: QuizToolProps) {
         if (surveyId && quizId) {
             dispatch(
                 updateQuiz({
-                    surveyId: surveyId,
+                    surveyId,
                     quizId,
                     newValue,
                 })
@@ -107,7 +107,7 @@ export default function QuizTool(props: QuizToolProps) {
         if (surveyId && quizId) {
             dispatch(
                 deleteQuiz({
-                    surveyId: surveyId,
+                    surveyId,
                     quizId,
                 })
             )

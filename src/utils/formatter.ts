@@ -143,11 +143,12 @@ export function componentFormatter(value: Component): Component {
 }
 
 export function finalFormatter(value: Final): Final {
-    const { components: compRaw = [], mode } = value
+    const { components: compRaw = [], mode, ...rest } = value
 
     const components = _.map(compRaw, (el) => componentFormatter(el))
 
     return {
+        ...rest,
         mode: FinalMode[mode],
         components,
     }

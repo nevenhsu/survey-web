@@ -43,7 +43,7 @@ export default function EditingResult(props: EditingQuizProps) {
             const newValue = getDefaultComponent(type)
             dispatch(
                 updateComponent({
-                    surveyId: surveyId,
+                    surveyId,
                     resultId,
                     idPath,
                     newValue,
@@ -65,7 +65,7 @@ export default function EditingResult(props: EditingQuizProps) {
             }
             dispatch(
                 updateComponent({
-                    surveyId: surveyId,
+                    surveyId,
                     resultId,
                     idPath,
                     newValue,
@@ -99,7 +99,7 @@ export default function EditingResult(props: EditingQuizProps) {
                 // TODO: preserve card components
                 dispatch(
                     setResult({
-                        surveyId: surveyId,
+                        surveyId,
                         resultId,
                         newValue: {
                             components: componentsFormat.map((el) => ({

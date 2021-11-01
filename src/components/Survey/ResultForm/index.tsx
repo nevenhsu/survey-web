@@ -93,7 +93,7 @@ export default function ResultForm() {
 
         dispatch(
             setResults({
-                surveyId: surveyId,
+                surveyId,
                 newValue: {
                     selectedTags:
                         name === '0'
@@ -147,7 +147,7 @@ export default function ResultForm() {
             if (!newKeys.length || intersections.length !== newKeys.length) {
                 dispatch(
                     setResults({
-                        surveyId: surveyId,
+                        surveyId,
                         newValue: {
                             list: newList,
                         },

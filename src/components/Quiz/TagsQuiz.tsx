@@ -77,7 +77,7 @@ export default function TagsQuiz(props: TagsQuizProps) {
 
             dispatch(
                 updateQuiz({
-                    surveyId: surveyId,
+                    surveyId,
                     quizId,
                     newValue: { tagsId: newTagsId },
                 })
@@ -110,7 +110,7 @@ export default function TagsQuiz(props: TagsQuizProps) {
 
                 dispatch(
                     updateQuiz({
-                        surveyId: surveyId,
+                        surveyId,
                         quizId,
                         newValue: { tagsId: newTagsId },
                     })
@@ -169,7 +169,7 @@ export default function TagsQuiz(props: TagsQuizProps) {
 
             dispatch(
                 updateQuiz({
-                    surveyId: surveyId,
+                    surveyId,
                     quizId,
                     newValue: { choices: newChoices },
                 })

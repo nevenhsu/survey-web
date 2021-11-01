@@ -151,10 +151,15 @@ export type Survey = {
 export type Final = {
     mode: FinalMode
     components: Component[]
+    data: FinalInfo
 }
 
 export type FinalInfo = {
-    name: string
+    name?: string
+    gender?: string
+    birthday?: string // ISO String
+    mobile?: string
+    email?: string
 }
 
 export type Answer = {

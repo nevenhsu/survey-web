@@ -34,9 +34,7 @@ export default function EditingFinal() {
     const handleAdd = (idPath: string[], type: ComponentType) => {
         if (surveyId) {
             const newValue = getDefaultComponent(type)
-            dispatch(
-                updateFinalComponents({ surveyId: surveyId, idPath, newValue })
-            )
+            dispatch(updateFinalComponents({ surveyId, idPath, newValue }))
         }
     }
 
@@ -51,9 +49,7 @@ export default function EditingFinal() {
                 ...selectedComponent,
                 [name]: val,
             }
-            dispatch(
-                updateFinalComponents({ surveyId: surveyId, idPath, newValue })
-            )
+            dispatch(updateFinalComponents({ surveyId, idPath, newValue }))
         }
     }
 

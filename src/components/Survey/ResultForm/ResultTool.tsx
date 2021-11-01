@@ -35,7 +35,7 @@ export default function ResultTool(props: ResultToolProps) {
         if (surveyId && resultId && idPath && component) {
             dispatch(
                 updateComponent({
-                    surveyId: surveyId,
+                    surveyId,
                     resultId,
                     idPath,
                     newValue,
@@ -48,7 +48,7 @@ export default function ResultTool(props: ResultToolProps) {
         if (surveyId && resultId && idPath && component) {
             dispatch(
                 updateComponent({
-                    surveyId: surveyId,
+                    surveyId,
                     resultId,
                     idPath,
                     newValue: component,

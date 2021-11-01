@@ -72,15 +72,13 @@ export default function ProductForm() {
 
     const handleAdd = () => {
         const newValue = getDefaultResult()
-        dispatch(
-            setResult({ surveyId: surveyId, resultId: newValue.id, newValue })
-        )
+        dispatch(setResult({ surveyId, resultId: newValue.id, newValue }))
     }
 
     const handleChange: OnChangeInput = (event) => {
         const { id: resultId, name, value } = event.target
         const newValue = { [name]: value }
-        dispatch(setResult({ surveyId: surveyId, resultId, newValue }))
+        dispatch(setResult({ surveyId, resultId, newValue }))
     }
 
     const handleChipClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -110,7 +108,7 @@ export default function ProductForm() {
         })
 
         const newValue = { list: clonedList }
-        dispatch(setResults({ surveyId: surveyId, newValue }))
+        dispatch(setResults({ surveyId, newValue }))
     }
 
     const handleUpdateTag = (tag: string) => {
@@ -121,7 +119,7 @@ export default function ProductForm() {
             const newValue = { tags: _.cloneDeep(tags) }
             _.set(newValue, ['tags', tagId, index], tag)
 
-            dispatch(setResult({ surveyId: surveyId, resultId, newValue }))
+            dispatch(setResult({ surveyId, resultId, newValue }))
         }
     }
 
@@ -136,14 +134,14 @@ export default function ProductForm() {
         const newValue = { tags: _.cloneDeep(tags) }
         newValue.tags[tagId].splice(index, 1)
 
-        dispatch(setResult({ surveyId: surveyId, resultId, newValue }))
+        dispatch(setResult({ surveyId, resultId, newValue }))
     }
 
     const handleDeleteResult = (resultId: string) => {
         const { [resultId]: deleted, ...rest } = results.list
         const newValue = { list: { ...rest } }
 
-        dispatch(setResults({ surveyId: surveyId, newValue }))
+        dispatch(setResults({ surveyId, newValue }))
     }
 
     const selectedTags = React.useMemo(() => {

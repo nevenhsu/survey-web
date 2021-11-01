@@ -52,7 +52,7 @@ export default function ModeSelector(props: ModeSelectorProps) {
 
         dispatch(
             updateQuiz({
-                surveyId: surveyId,
+                surveyId,
                 quizId,
                 newValue: getDefaultQuiz(quizId, mode),
             })
