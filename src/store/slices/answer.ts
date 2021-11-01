@@ -5,9 +5,9 @@ import { AnswerStep, QuizMode } from 'common/types'
 import type {
     Answer,
     SelectionQuiz,
-    QuizType,
     Survey,
     AnswerValue,
+    FinalInfo,
 } from 'common/types'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from 'store'
@@ -30,13 +30,18 @@ export const createNewAnswer = createAsyncThunk(
 
 interface AnswerState {
     step: AnswerStep
+    answer: Answer
     survey?: Survey
     quizId?: string
-    answer?: Answer
 }
 
 const initialState: AnswerState = {
     step: AnswerStep.quiz,
+    answer: {
+        id: '',
+        answers: {},
+        final: {},
+    },
 }
 
 export const answerSlice = createSlice({
@@ -100,6 +105,23 @@ export const answerSlice = createSlice({
 
             state.step = AnswerStep.result
         },
+        updateStep: (state, action: PayloadAction<AnswerStep>) => {
+            state.step = action.payload
+        },
+        updateFinal: (state, action: PayloadAction<FinalInfo>) => {
+            const { answer } = state
+            const { final } = answer ?? {}
+            answer.final = {
+                ...final,
+                ...action.payload,
+            }
+        },
+        updateAnswerData: (state, action: PayloadAction<Partial<Answer>>) => {
+            state.answer = {
+                ...state.answer,
+                ...action.payload,
+            }
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(getSurvey.fulfilled, (state, action) => {
@@ -118,7 +140,13 @@ export const answerSlice = createSlice({
     },
 })
 
-export const { nextQuiz, updateAnswerValue } = answerSlice.actions
+export const {
+    nextQuiz,
+    updateAnswerValue,
+    updateStep,
+    updateFinal,
+    updateAnswerData,
+} = answerSlice.actions
 
 export const selectSurvey = (state: RootState) => {
     const { survey } = state.answer

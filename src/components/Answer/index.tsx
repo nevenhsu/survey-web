@@ -19,6 +19,8 @@ type Params = {
 }
 
 const QuizView = React.lazy(() => import('components/Answer/QuizView'))
+const ResultView = React.lazy(() => import('components/Answer/ResultView'))
+const FinalView = React.lazy(() => import('components/Answer/FinalView'))
 
 export default function Survey() {
     const dispatch = useAppDispatch()
@@ -27,7 +29,11 @@ export default function Survey() {
     const { id } = useParams<Params>()
 
     const step = useAppSelector(selectStep)
-    const { id: surveyId, quizzes = [] } = useAppSelector(selectSurvey) ?? {}
+    const {
+        id: surveyId,
+        quizzes = [],
+        enable,
+    } = useAppSelector(selectSurvey) ?? {}
     const { id: answerId } = useAppSelector(selectAnswer) ?? {}
     const quizId = useAppSelector(selectQuizId)
 
@@ -46,6 +52,11 @@ export default function Survey() {
                     console.error(err)
                     notify('Oops! 請檢查網路連線狀態', 'error')
                 })
+        }
+    }, [id])
+
+    React.useEffect(() => {
+        if (id && enable) {
             dispatch(createNewAnswer(id))
                 .unwrap()
                 .catch((err) => {
@@ -53,12 +64,10 @@ export default function Survey() {
                     notify('Oops! 請檢查網路連線狀態', 'error')
                 })
         }
-    }, [id])
-
-    React.useEffect(() => {}, [])
+    }, [id, enable])
 
     const renderView = () => {
-        if (!surveyId || !answerId) {
+        if (!surveyId) {
             return <div />
         }
 
@@ -66,8 +75,11 @@ export default function Survey() {
             case AnswerStep.quiz: {
                 return <QuizView quiz={quiz} />
             }
-            case AnswerStep.result:
+            case AnswerStep.result: {
+                return <ResultView />
+            }
             case AnswerStep.final: {
+                return <FinalView />
             }
         }
     }
@@ -78,6 +90,7 @@ export default function Survey() {
                 position: 'relative',
                 width: '100%',
                 minHeight: '100vh',
+                pb: 4,
                 backgroundColor,
                 background: backgroundImage
                     ? `center / cover no-repeat url(${backgroundImage})`

@@ -19,14 +19,16 @@ export default function SliderView(props: SliderViewProps) {
 
     return (
         <>
-            <Typography variant="h6"> {title} </Typography>
+            <Typography variant="h6" sx={{ mb: 4 }}>
+                {title}
+            </Typography>
 
             <Box sx={{ width: 4 / 5 }}>
                 <Slider
                     min={min}
                     max={max}
-                    value={value ?? min}
-                    valueLabelDisplay="auto"
+                    value={value ?? 0}
+                    valueLabelDisplay="on"
                     onChange={(event: Event, val: number | number[]) => {
                         const value = val as number
                         onChange({ target: { name: 'value', value } } as any)

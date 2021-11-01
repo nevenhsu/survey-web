@@ -110,6 +110,8 @@ export function getDefaultSurvey(data: Partial<Survey>): Survey {
         results: { selectedTags: [], list: {} },
         setting: { showProgress: true },
         final: { mode: FinalMode.info, components: [], data: {} },
+        trackingId: [],
+        enable: false,
     }
     return survey
 }
@@ -301,4 +303,17 @@ export function toISOString(value?: Date) {
         }
     }
     return ''
+}
+
+export function getAnswerURL(surveyId: string) {
+    const url = `${window.location.origin}/survey/${surveyId}`
+
+    function openWindow() {
+        window.open(url, '_blank')
+    }
+
+    return {
+        url,
+        openWindow,
+    }
 }

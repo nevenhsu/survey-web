@@ -449,7 +449,7 @@ const SliderView = (props: {
                 name="title"
                 value={title}
                 onChange={onChange}
-                sx={{ mb: 3 }}
+                sx={{ mb: 4 }}
                 multiline
             />
 
@@ -458,7 +458,7 @@ const SliderView = (props: {
                     defaultValue={_.floor(max ?? 0 / 2) ?? 0}
                     min={min}
                     max={max}
-                    valueLabelDisplay="auto"
+                    valueLabelDisplay="on"
                     sx={{ mb: 2 }}
                 />
 

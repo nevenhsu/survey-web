@@ -2,6 +2,50 @@ import type { Variant } from '@mui/material/styles/createTypography'
 
 export type OnChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => void
 
+export type Survey = {
+    id: string
+    createdAt: number
+    updatedAt: number
+    mode: Mode
+    quizzes: QuizType[]
+    tags: { [id: string]: Tags }
+    results: Results
+    setting: Setting
+    final: Final
+    trackingId: string[]
+    enable: boolean
+}
+
+export type Answer = {
+    id: string
+    surveyId?: string
+    createdAt?: number
+    answers: { [quizId: string]: AnswerValue }
+    resultId?: string
+    final?: FinalInfo
+}
+
+export type AnswerValue = {
+    quizId: string
+    value?: string | number
+    values?: string[]
+    dwellTime?: number // ms
+}
+
+export type Final = {
+    mode: FinalMode
+    components: Component[]
+    data: FinalInfo
+}
+
+export type FinalInfo = {
+    name?: string
+    gender?: string
+    birthday?: string // ISO String
+    mobile?: string
+    email?: string
+}
+
 export enum Mode {
     persona = 'persona',
     product = 'product',
@@ -134,48 +178,6 @@ export type Setting = {
 
 export enum FinalMode {
     info = 'info',
-}
-
-export type Survey = {
-    id: string
-    createdAt: number
-    updatedAt: number
-    mode: Mode
-    quizzes: QuizType[]
-    tags: { [id: string]: Tags }
-    results: Results
-    setting: Setting
-    final: Final
-}
-
-export type Final = {
-    mode: FinalMode
-    components: Component[]
-    data: FinalInfo
-}
-
-export type FinalInfo = {
-    name?: string
-    gender?: string
-    birthday?: string // ISO String
-    mobile?: string
-    email?: string
-}
-
-export type Answer = {
-    id: string
-    surveyId: string
-    createdAt: number
-    answers: { [quizId: string]: AnswerValue }
-    resultId?: string
-    final?: FinalInfo
-}
-
-export type AnswerValue = {
-    quizId: string
-    value?: string | number
-    values?: string[]
-    dwellTime?: number // ms
 }
 
 export type DeviceType = 'mobile' | 'laptop' | 'desktop'

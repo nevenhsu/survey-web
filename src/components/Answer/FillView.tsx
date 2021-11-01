@@ -25,7 +25,7 @@ export default function FillView(props: FillViewProps) {
                 label="自由填空"
                 variant="outlined"
                 name="value"
-                value={value}
+                value={value ?? ''}
                 onChange={onChange}
                 sx={{ width: 4 / 5 }}
                 maxRows={6}

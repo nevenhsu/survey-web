@@ -22,6 +22,7 @@ export function surveyFormatter(survey: Survey): Survey {
         results,
         final,
         setting,
+        ...others
     } = survey
 
     const { list, ...r } = results ?? {}
@@ -37,6 +38,7 @@ export function surveyFormatter(survey: Survey): Survey {
     const { showProgress, ...s } = setting ?? {}
 
     return {
+        ...others,
         id,
         createdAt: Number(createdAt),
         updatedAt: Number(updatedAt),
