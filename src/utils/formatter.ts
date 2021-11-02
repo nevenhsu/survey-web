@@ -9,6 +9,7 @@ import type {
     SliderQuiz,
     Component,
     Final,
+    Answer,
 } from 'common/types'
 
 export function surveyFormatter(survey: Survey): Survey {
@@ -153,5 +154,15 @@ export function finalFormatter(value: Final): Final {
         ...rest,
         mode: FinalMode[mode],
         components,
+    }
+}
+
+export function answerFormatter(value: Answer): Answer {
+    const { createdAt, updatedAt, ...rest } = value
+
+    return {
+        ...rest,
+        createdAt: toNumber(createdAt),
+        updatedAt: toNumber(updatedAt),
     }
 }

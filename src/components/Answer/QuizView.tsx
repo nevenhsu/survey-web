@@ -1,14 +1,16 @@
 import * as React from 'react'
 import _ from 'lodash'
 import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import {
     nextQuiz,
     updateAnswerValue,
     selectAnswerValue,
+    updateStep,
 } from 'store/slices/answer'
 import { toNumber } from 'utils/helper'
-import { QuizMode } from 'common/types'
+import { QuizMode, AnswerStep } from 'common/types'
 import type {
     QuizType,
     SelectionQuiz,
@@ -29,13 +31,17 @@ type QuizViewProps = {
 }
 
 export default function QuizView(props: QuizViewProps) {
-    const { quiz } = props
-    const { id: quizId } = quiz ?? {}
-
     const dispatch = useAppDispatch()
 
+    const { quiz } = props
+    const { id: quizId, required } = quiz ?? {}
+
     const validValue = checkValue(quiz)
+
     const answerValue = useAppSelector(selectAnswerValue(quizId))
+    const lastQuiz = useAppSelector((state) => state.answer.lastQuiz)
+
+    const [time, setTime] = React.useState(Date.now())
 
     const handleUpdateAnswer = (newValue: Partial<AnswerValue>) => {
         if (quizId && newValue) {
@@ -44,7 +50,11 @@ export default function QuizView(props: QuizViewProps) {
     }
 
     const handleNext = () => {
-        if (quiz && validValue) {
+        if (quizId && validValue) {
+            const dwellTime = Date.now() - time
+            const newValue = { dwellTime }
+
+            dispatch(updateAnswerValue({ quizId, newValue }))
             dispatch(nextQuiz())
         }
     }
@@ -188,6 +198,18 @@ export default function QuizView(props: QuizViewProps) {
         }
     }
 
+    React.useEffect(() => {
+        if (quizId) {
+            setTime(Date.now())
+        }
+    }, [quizId])
+
+    React.useEffect(() => {
+        if (lastQuiz) {
+            dispatch(updateStep(AnswerStep.result))
+        }
+    }, [lastQuiz])
+
     return (
         <Stack
             direction="column"
@@ -201,6 +223,9 @@ export default function QuizView(props: QuizViewProps) {
             }}
         >
             <React.Suspense fallback={<div />}>
+                <Typography variant="caption" color="GrayText">
+                    {required ? '必填' : ''}
+                </Typography>
                 {renderQuiz(quiz)}
             </React.Suspense>
         </Stack>

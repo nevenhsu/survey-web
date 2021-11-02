@@ -11,21 +11,21 @@ export default function ResultView() {
     const dispatch = useAppDispatch()
 
     const survey = useAppSelector(selectSurvey)
+
     const { id: surveyId, results } = survey ?? {}
     const { list } = results ?? {}
-    const resultList = _.map(list, (el) => el)
 
     // TODO: use real result data
     const randomResult = React.useMemo(() => {
+        const resultList = _.map(list, (el) => el)
+
         if (resultList.length) {
             const index = _.random(0, resultList.length - 1)
             const value = resultList[index]
 
-            dispatch(updateAnswerData({ resultId: value.id }))
-
             return value
         }
-    }, [resultList.length])
+    }, [list])
 
     const { components = [] } = randomResult ?? {}
 
@@ -33,9 +33,16 @@ export default function ResultView() {
         dispatch(updateStep(AnswerStep.final))
     }
 
+    React.useEffect(() => {
+        if (randomResult) {
+            dispatch(updateAnswerData({ resultId: randomResult.id }))
+        }
+    }, [randomResult])
+
     return (
         <>
-            <ComponentList components={components} />
+            {Boolean(randomResult) && <ComponentList components={components} />}
+
             <Box sx={{ py: 4, textAlign: 'center' }}>
                 <Button
                     variant="contained"

@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import axios from 'axios'
 import { getDefaultSurvey } from 'utils/helper'
-import { surveyFormatter } from 'utils/formatter'
+import { surveyFormatter, answerFormatter } from 'utils/formatter'
 import type { Mode, Survey, Answer } from 'common/types'
 
 type CreateNewResponse = {
@@ -11,6 +11,12 @@ type CreateNewResponse = {
 
 type UploadMediaResponse = {
     files: string[]
+}
+
+type AnswerResponse = {
+    id: string
+    surveyId: string
+    createdAt: number
 }
 
 const surveyApi = {
@@ -55,8 +61,15 @@ const surveyApi = {
     createNewAnswer: async (id: string) => {
         if (id) {
             const url = `${process.env.REACT_APP_URL}/survey/${id}/answer`
-            const { data } = await axios.post<Answer>(url)
+            const { data } = await axios.post<AnswerResponse>(url)
             return data
+        }
+    },
+    putAnswer: async (surveyId: string, answerId: string, answer: Answer) => {
+        if (surveyId && answerId && answer) {
+            const url = `${process.env.REACT_APP_URL}/survey/${surveyId}/answer/${answerId}`
+            const { data } = await axios.put<Answer>(url, answer)
+            return answerFormatter(data)
         }
     },
 }

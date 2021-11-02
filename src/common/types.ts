@@ -18,9 +18,10 @@ export type Survey = {
 
 export type Answer = {
     id: string
+    answers: { [quizId: string]: AnswerValue }
     surveyId?: string
     createdAt?: number
-    answers: { [quizId: string]: AnswerValue }
+    updatedAt?: number
     resultId?: string
     final?: FinalInfo
 }

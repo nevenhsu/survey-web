@@ -33,6 +33,7 @@ interface AnswerState {
     answer: Answer
     survey?: Survey
     quizId?: string
+    lastQuiz: boolean
 }
 
 const initialState: AnswerState = {
@@ -42,6 +43,7 @@ const initialState: AnswerState = {
         answers: {},
         final: {},
     },
+    lastQuiz: false,
 }
 
 export const answerSlice = createSlice({
@@ -103,7 +105,7 @@ export const answerSlice = createSlice({
                 return
             }
 
-            state.step = AnswerStep.result
+            state.lastQuiz = true
         },
         updateStep: (state, action: PayloadAction<AnswerStep>) => {
             state.step = action.payload
@@ -131,9 +133,11 @@ export const answerSlice = createSlice({
         })
 
         builder.addCase(createNewAnswer.fulfilled, (state, action) => {
-            const answer = action.payload
-            if (answer) {
-                answer.answers = {}
+            if (action.payload) {
+                const answer: Answer = {
+                    ...action.payload,
+                    answers: {},
+                }
                 state.answer = answer
             }
         })

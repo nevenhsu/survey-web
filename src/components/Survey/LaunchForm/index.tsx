@@ -175,7 +175,7 @@ export default function LaunchForm() {
                 >
                     <QRCode
                         className="absolute-center"
-                        value="http://facebook.github.io/react/"
+                        value={qrCode ?? url}
                         size={240}
                     />
                 </Box>
