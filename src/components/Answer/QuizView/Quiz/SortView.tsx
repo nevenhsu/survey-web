@@ -11,8 +11,10 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Stack from '@mui/material/Stack'
 import Badge from '@mui/material/Badge'
-import ChoiceView from 'components/Answer/ChoiceView'
-import QuizButton, { QuizButtonProps } from 'components/Answer/QuizButton'
+import ChoiceView from 'components/Answer/QuizView/Quiz/ChoiceView'
+import QuizButton, {
+    QuizButtonProps,
+} from 'components/Answer/QuizView/Quiz/QuizButton'
 import { reorder } from 'utils/helper'
 import type { OnChangeInput, SelectionType, ChoiceType } from 'common/types'
 

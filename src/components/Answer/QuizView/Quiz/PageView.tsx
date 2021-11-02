@@ -1,7 +1,9 @@
 import * as React from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import QuizButton, { QuizButtonProps } from 'components/Answer/QuizButton'
+import QuizButton, {
+    QuizButtonProps,
+} from 'components/Answer/QuizView/Quiz/QuizButton'
 
 type PageViewProps = {
     title: string

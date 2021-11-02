@@ -3,6 +3,8 @@ import _ from 'lodash'
 import { VariantType, useSnackbar } from 'notistack'
 import { useParams } from 'react-router-dom'
 import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import LinearProgress from '@mui/material/LinearProgress'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import {
     getSurvey,
@@ -18,9 +20,11 @@ type Params = {
     id?: string
 }
 
-const QuizView = React.lazy(() => import('components/Answer/QuizView'))
-const ResultView = React.lazy(() => import('components/Answer/ResultView'))
-const FinalView = React.lazy(() => import('components/Answer/FinalView'))
+const QuizView = React.lazy(() => import('components/Answer/QuizView/index'))
+const ResultView = React.lazy(
+    () => import('components/Answer/ResultView/index')
+)
+const FinalView = React.lazy(() => import('components/Answer/FinalView/index'))
 
 export default function Survey() {
     const dispatch = useAppDispatch()
@@ -33,9 +37,15 @@ export default function Survey() {
         id: surveyId,
         quizzes = [],
         enable,
+        setting,
     } = useAppSelector(selectSurvey) ?? {}
+
+    const { showProgress } = setting ?? {}
+
     const { id: answerId } = useAppSelector(selectAnswer) ?? {}
     const quizId = useAppSelector(selectQuizId)
+
+    const [progress, setProgress] = React.useState(0)
 
     const quiz = _.find(quizzes, { id: quizId })
     const { backgroundColor, backgroundImage } = quiz ?? {}
@@ -66,6 +76,16 @@ export default function Survey() {
         }
     }, [id, enable])
 
+    React.useEffect(() => {
+        if (quizId && quizzes.length) {
+            const num = _.findIndex(quizzes, { id: quizId }) + 1
+            const val = _.round((num / quizzes.length) * 100)
+            setProgress(val)
+            return
+        }
+        setProgress(0)
+    }, [quizId, quizzes])
+
     const renderView = () => {
         if (!surveyId) {
             return <div />
@@ -73,7 +93,22 @@ export default function Survey() {
 
         switch (step) {
             case AnswerStep.quiz: {
-                return <QuizView quiz={quiz} />
+                return (
+                    <>
+                        {showProgress && (
+                            <LinearProgress
+                                variant="determinate"
+                                value={progress}
+                                sx={{
+                                    position: 'absolute',
+                                    top: 0,
+                                    width: '100%',
+                                }}
+                            />
+                        )}
+                        <QuizView quiz={quiz} />{' '}
+                    </>
+                )
             }
             case AnswerStep.result: {
                 return <ResultView />
@@ -98,6 +133,19 @@ export default function Survey() {
             }}
         >
             <React.Suspense fallback={<div />}>{renderView()}</React.Suspense>
+            {Boolean(surveyId) && !enable && (
+                <Typography
+                    variant="subtitle1"
+                    sx={{
+                        position: 'absolute',
+                        left: 4,
+                        top: 4,
+                        color: 'primary.main',
+                    }}
+                >
+                    預覽模式
+                </Typography>
+            )}
         </Box>
     )
 }

@@ -17,15 +17,15 @@ import DeviceMode from 'components/common/DeviceMode'
 import EditingResult from 'components/Survey/ResultForm/EditingResult'
 import ResultTool from 'components/Survey/ResultForm/ResultTool'
 import { Contexts } from 'components/common/ComponentView'
-import { getDefaultComponent } from 'utils/helper'
+import { getDefaultComponent, getAnswerURL } from 'utils/helper'
 import { useAppSelector, useAppDispatch } from 'hooks'
-import { selectCurrentSurvey, setResults } from 'store/slices/survey'
+import { selectCurrentSurvey, setResults, setStep } from 'store/slices/survey'
 import { selectDevice } from 'store/slices/userDefault'
 import ThemeProvider from 'theme/ThemeProvider'
 import { getMuiColor } from 'theme/palette'
 import Numeric1BoxIcon from 'mdi-react/Numeric1BoxIcon'
 import Numeric2BoxIcon from 'mdi-react/Numeric2BoxIcon'
-import { ComponentType, Mode } from 'common/types'
+import { ComponentType, Mode, SurveyStep } from 'common/types'
 import type { Result, ResultList, DeviceType } from 'common/types'
 
 type StyledBoxProps = BoxProps & {
@@ -57,6 +57,8 @@ const StyledBox = styled(Box, {
         position: 'relative',
         backgroundColor: theme.palette.common.white,
         '& > div': {
+            display: 'flex',
+            alignItems: 'center',
             position: 'absolute',
             top: 0,
             left: 0,
@@ -86,6 +88,12 @@ export default function ResultForm() {
 
     const tagsOptions = _.map(tags, (el) => ({ ...el, value: el.id }))
     const resultItems = _.map(list, (el) => el)
+
+    const { openWindow } = getAnswerURL(surveyId)
+
+    const nextStep = () => {
+        dispatch(setStep(SurveyStep.final))
+    }
 
     const handleTagsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value: v } = event.target
@@ -176,12 +184,16 @@ export default function ResultForm() {
                     <Typography variant="body1">（說明文字）</Typography>
                 </Box>
                 <Box>
-                    <Button variant="outlined">預覽測驗</Button>
+                    <Button variant="outlined" onClick={openWindow}>
+                        預覽測驗
+                    </Button>
                     <Box
                         component="span"
                         sx={{ display: 'inline-block', width: 8 }}
                     />
-                    <Button variant="contained">編輯測驗結果</Button>
+                    <Button variant="contained" onClick={nextStep}>
+                        編輯測驗結果
+                    </Button>
                 </Box>
             </Stack>
             <Grid container sx={{ minHeight: 'calc(100vh - 218px)' }}>
@@ -324,7 +336,7 @@ export default function ResultForm() {
                                     justifyContent="right"
                                 >
                                     {_.map(el.tags, (labels, k) =>
-                                        _.compact(labels).map((el) => (
+                                        _.compact(_.uniq(labels)).map((el) => (
                                             <StyledChip
                                                 key={`${k}${el}`}
                                                 variant="outlined"

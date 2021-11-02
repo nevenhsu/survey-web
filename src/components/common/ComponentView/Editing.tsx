@@ -298,52 +298,53 @@ export function ComponentList(props: ComponentListProps) {
     } = props
 
     return (
-        <Grid
-            container
-            direction="row"
-            alignItems="center"
-            justifyContent="center"
-            sx={{ width: '100%', height: '100%' }}
-            rowSpacing={2}
-        >
-            {components.map((el) => (
-                <Grid
-                    key={el.id}
-                    onClick={(e) => {
-                        e.stopPropagation()
-                        onSelect(el, idPath)
-                    }}
-                    xs={el.display === 'block' ? 12 : undefined}
-                    sx={{
-                        width: el.width,
-                        height: el.height,
-                        borderRadius: 1,
-                        borderWidth: 1,
-                        borderStyle: 'solid',
-                        borderColor:
-                            el.id === selectedComponent?.id
-                                ? 'primary.light'
-                                : 'transparent',
-                    }}
-                    item
-                >
-                    <ComponentItem
-                        component={el}
-                        idPath={[...idPath, el.id]}
-                        selectedComponent={selectedComponent}
-                        onAdd={onAdd}
-                        onSelect={onSelect}
-                        onChange={onChange}
-                    />
-                </Grid>
-            ))}
+        <Box sx={{ width: '100%' }}>
+            <Grid
+                container
+                direction="row"
+                alignItems="center"
+                justifyContent="center"
+                spacing={2}
+            >
+                {components.map((el) => (
+                    <Grid
+                        key={el.id}
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            onSelect(el, idPath)
+                        }}
+                        xs={el.display === 'block' ? 12 : undefined}
+                        sx={{
+                            width: el.width,
+                            height: el.height,
+                            borderRadius: 1,
+                            borderWidth: 1,
+                            borderStyle: 'solid',
+                            borderColor:
+                                el.id === selectedComponent?.id
+                                    ? 'primary.light'
+                                    : 'transparent',
+                        }}
+                        item
+                    >
+                        <ComponentItem
+                            component={el}
+                            idPath={[...idPath, el.id]}
+                            selectedComponent={selectedComponent}
+                            onAdd={onAdd}
+                            onSelect={onSelect}
+                            onChange={onChange}
+                        />
+                    </Grid>
+                ))}
 
-            <Grid xs={12} item>
-                <Box sx={{ py: 2, textAlign: 'center' }}>
-                    <AddButton idPath={idPath} onAdd={onAdd} />
-                </Box>
+                <Grid xs={12} item>
+                    <Box sx={{ py: 2, textAlign: 'center' }}>
+                        <AddButton idPath={idPath} onAdd={onAdd} />
+                    </Box>
+                </Grid>
             </Grid>
-        </Grid>
+        </Box>
     )
 }
 

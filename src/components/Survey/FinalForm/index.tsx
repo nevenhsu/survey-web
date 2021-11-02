@@ -14,14 +14,16 @@ import FinalTool from 'components/Survey/FinalForm/FinalTool'
 import InfoForm from 'components/Final/InfoForm'
 import DeviceMode from 'components/common/DeviceMode'
 import { useAppSelector, useAppDispatch } from 'hooks'
+import { getAnswerURL } from 'utils/helper'
 import { selectDevice } from 'store/slices/userDefault'
 import {
     selectCurrentSurvey,
     updateFinal,
     updateFinalData,
+    setStep,
 } from 'store/slices/survey'
 import ThemeProvider from 'theme/ThemeProvider'
-import { FinalMode } from 'common/types'
+import { FinalMode, SurveyStep } from 'common/types'
 import type { DeviceType, OnChangeInput } from 'common/types'
 
 type StyledBoxProps = BoxProps & {
@@ -77,6 +79,12 @@ export default function FinalForm() {
 
     const device = useAppSelector(selectDevice)
 
+    const { openWindow } = getAnswerURL(surveyId)
+
+    const nextStep = () => {
+        dispatch(setStep(SurveyStep.launch))
+    }
+
     const updateMode = (mode: FinalMode) => {
         if (surveyId) {
             const newValue = { mode }
@@ -117,12 +125,16 @@ export default function FinalForm() {
                     <Typography variant="body1">（說明文字）</Typography>
                 </Box>
                 <Box>
-                    <Button variant="outlined">預覽測驗</Button>
+                    <Button variant="outlined" onClick={openWindow}>
+                        預覽測驗
+                    </Button>
                     <Box
                         component="span"
                         sx={{ display: 'inline-block', width: 8 }}
                     />
-                    <Button variant="contained">發布測驗</Button>
+                    <Button variant="contained" onClick={nextStep}>
+                        發布測驗
+                    </Button>
                 </Box>
             </Stack>
             <Grid container sx={{ minHeight: 'calc(100vh - 218px)' }}>

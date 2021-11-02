@@ -3,8 +3,10 @@ import _ from 'lodash'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Grid, { GridSize } from '@mui/material/Grid'
-import ChoiceView from 'components/Answer/ChoiceView'
-import QuizButton, { QuizButtonProps } from 'components/Answer/QuizButton'
+import ChoiceView from 'components/Answer/QuizView/Quiz/ChoiceView'
+import QuizButton, {
+    QuizButtonProps,
+} from 'components/Answer/QuizView/Quiz/QuizButton'
 import type { OnChangeInput, SelectionType } from 'common/types'
 
 type SelectionViewProps = {

@@ -18,10 +18,15 @@ import MenuSwapIcon from 'mdi-react/DragHorizontalVariantIcon'
 import AddIcon from 'mdi-react/AddIcon'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import { selectDevice } from 'store/slices/userDefault'
-import { selectCurrentSurvey, setQuizzes, addQuiz } from 'store/slices/survey'
-import { reorder, setId, getDefaultQuiz } from 'utils/helper'
+import {
+    selectCurrentSurvey,
+    setQuizzes,
+    addQuiz,
+    setStep,
+} from 'store/slices/survey'
+import { reorder, setId, getDefaultQuiz, getAnswerURL } from 'utils/helper'
 import ThemeProvider from 'theme/ThemeProvider'
-import { QuizMode, QuizType } from 'common/types'
+import { QuizMode, QuizType, SurveyStep } from 'common/types'
 import type { SelectionQuiz, DeviceType } from 'common/types'
 
 const EditingQuiz = React.lazy(() => import('components/Quiz/EditingQuiz'))
@@ -74,6 +79,8 @@ const StyledBox = styled(Box, {
         position: 'relative',
         backgroundColor: theme.palette.common.white,
         '& > div': {
+            display: 'flex',
+            alignItems: 'center',
             position: 'absolute',
             top: 0,
             left: 0,
@@ -116,6 +123,12 @@ export default function QuizForm() {
         ) && (selectedQuiz as SelectionQuiz)?.maxChoices > 1
 
     const tabValue = disabledTab ? 0 : disabledNext && tab === 2 ? 0 : tab
+
+    const { openWindow } = getAnswerURL(surveyId)
+
+    const nextStep = () => {
+        dispatch(setStep(SurveyStep.result))
+    }
 
     const updateQuizzes = (quizzes: QuizType[]) => {
         dispatch(setQuizzes({ id: surveyId, quizzes }))
@@ -253,12 +266,16 @@ export default function QuizForm() {
                     </Typography>
                 </Box>
                 <Box>
-                    <Button variant="outlined">預覽測驗</Button>
+                    <Button variant="outlined" onClick={openWindow}>
+                        預覽測驗
+                    </Button>
                     <Box
                         component="span"
                         sx={{ display: 'inline-block', width: 8 }}
                     />
-                    <Button variant="contained">編輯個人化測驗結果</Button>
+                    <Button variant="contained" onClick={nextStep}>
+                        編輯個人化測驗結果
+                    </Button>
                 </Box>
             </Stack>
             <Grid container sx={{ minHeight: 'calc(100vh - 218px)' }}>

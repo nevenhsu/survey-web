@@ -14,7 +14,13 @@ import StyledChip from 'components/common/StyledChip'
 import { useAppDispatch, useAppSelector } from 'hooks'
 import { getDefaultResult } from 'utils/helper'
 import { personaTags, productTags, defaultTags } from 'common/defaultTags'
-import { selectCurrentSurvey, setResult, setResults } from 'store/slices/survey'
+import {
+    selectCurrentSurvey,
+    setResult,
+    setResults,
+    setStep,
+} from 'store/slices/survey'
+import { SurveyStep } from 'common/types'
 import type { Tags, OnChangeInput } from 'common/types'
 
 type EditingTagType = {
@@ -57,6 +63,7 @@ const width = { xs: '25%', lg: '20%' }
 
 export default function ProductForm() {
     const dispatch = useAppDispatch()
+
     const { id: surveyId, results, tags } = useAppSelector(selectCurrentSurvey)
     const { list = {} } = results ?? {}
 
@@ -69,6 +76,10 @@ export default function ProductForm() {
     const [menuId, setMenuId] = React.useState('')
 
     const result = list[resultId] ?? {}
+
+    const nextStep = () => {
+        dispatch(setStep(SurveyStep.quiz))
+    }
 
     const handleAdd = () => {
         const newValue = getDefaultResult()
@@ -168,7 +179,9 @@ export default function ProductForm() {
                     </Typography>
                 </Box>
                 <Box>
-                    <Button variant="outlined">編輯測驗內容</Button>
+                    <Button variant="outlined" onClick={nextStep}>
+                        編輯測驗內容
+                    </Button>
                 </Box>
             </Stack>
 

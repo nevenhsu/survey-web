@@ -212,23 +212,25 @@ export default function Editor() {
                 })}
             </Tabs>
 
-            <LoadingButton
-                variant="contained"
-                loadingPosition="end"
-                endIcon={
-                    updated ? (
-                        <CheckboxMarkedCircleIcon />
-                    ) : (
-                        <ArrowUpCircleIcon />
-                    )
-                }
-                loading={uploading}
-                disabled={uploading}
-                onClick={() => handleSave()}
-                sx={{ position: 'absolute', top: 6, right: 4 }}
-            >
-                儲存
-            </LoadingButton>
+            {step !== SurveyStep.pick && (
+                <LoadingButton
+                    variant="contained"
+                    loadingPosition="end"
+                    endIcon={
+                        updated ? (
+                            <CheckboxMarkedCircleIcon />
+                        ) : (
+                            <ArrowUpCircleIcon />
+                        )
+                    }
+                    loading={uploading}
+                    disabled={uploading}
+                    onClick={() => handleSave()}
+                    sx={{ position: 'absolute', top: 6, right: 4 }}
+                >
+                    儲存
+                </LoadingButton>
+            )}
 
             <React.Suspense fallback={<div />}>
                 {renderForm(step)}

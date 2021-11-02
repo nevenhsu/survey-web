@@ -18,12 +18,20 @@ import type {
     AnswerValue,
 } from 'common/types'
 
-const PageView = React.lazy(() => import('components/Answer/PageView'))
-const SortView = React.lazy(() => import('components/Answer/SortView'))
-const FillView = React.lazy(() => import('components/Answer/FillView'))
-const SliderView = React.lazy(() => import('components/Answer/SliderView'))
+const PageView = React.lazy(
+    () => import('components/Answer/QuizView/Quiz/PageView')
+)
+const SortView = React.lazy(
+    () => import('components/Answer/QuizView/Quiz/SortView')
+)
+const FillView = React.lazy(
+    () => import('components/Answer/QuizView/Quiz/FillView')
+)
+const SliderView = React.lazy(
+    () => import('components/Answer/QuizView/Quiz/SliderView')
+)
 const SelectionView = React.lazy(
-    () => import('components/Answer/SelectionView')
+    () => import('components/Answer/QuizView/Quiz/SelectionView')
 )
 
 type QuizViewProps = {

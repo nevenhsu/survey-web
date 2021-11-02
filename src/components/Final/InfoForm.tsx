@@ -81,6 +81,7 @@ export default function InfoForm(props: InfoFormProps) {
                 renderInput={(params) => <TextField fullWidth {...params} />}
                 value={toDate(birthday) ?? null}
                 onChange={handleDateChange}
+                maxDate={new Date()}
             />
 
             <TextField

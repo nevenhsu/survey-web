@@ -50,8 +50,8 @@ export const saveSurvey = createAsyncThunk(
     'survey/saveSurvey',
     async (survey: Survey) => {
         const { id } = survey
-        const updatedAt = Date.now()
-        const data = await surveyApi.putSurvey(id, { ...survey, updatedAt })
+
+        const data = await surveyApi.putSurvey(id, survey)
         return data
     }
 )
@@ -378,7 +378,7 @@ export const surveySlice = createSlice({
                 const { id, updatedAt } = survey
                 state.lastEditingAt = updatedAt
 
-                surveys[id].updatedAt = updatedAt
+                surveys[id] = survey
             }
         })
         builder.addCase(reloadFromCloud.fulfilled, (state, action) => {

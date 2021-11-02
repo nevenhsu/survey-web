@@ -6,6 +6,7 @@ import { ComponentList } from 'components/common/ComponentView/View'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import { selectSurvey, updateStep, updateAnswerData } from 'store/slices/answer'
 import { AnswerStep } from 'common/types'
+import type { Result } from 'common/types'
 
 export default function ResultView() {
     const dispatch = useAppDispatch()
@@ -15,33 +16,33 @@ export default function ResultView() {
     const { id: surveyId, results } = survey ?? {}
     const { list } = results ?? {}
 
-    // TODO: use real result data
-    const randomResult = React.useMemo(() => {
-        const resultList = _.map(list, (el) => el)
+    const [result, setResult] = React.useState<Result>()
 
-        if (resultList.length) {
-            const index = _.random(0, resultList.length - 1)
-            const value = resultList[index]
-
-            return value
-        }
-    }, [list])
-
-    const { components = [] } = randomResult ?? {}
+    const { components = [] } = result ?? {}
 
     const handleNext = () => {
         dispatch(updateStep(AnswerStep.final))
     }
 
     React.useEffect(() => {
-        if (randomResult) {
-            dispatch(updateAnswerData({ resultId: randomResult.id }))
+        // TODO: use real result data
+        const resultList = _.map(list, (el) => el)
+
+        if (resultList.length) {
+            const index = _.random(0, resultList.length - 1)
+            setResult(resultList[index])
         }
-    }, [randomResult])
+    }, [list])
+
+    React.useEffect(() => {
+        if (result) {
+            dispatch(updateAnswerData({ resultId: result.id }))
+        }
+    }, [result])
 
     return (
         <>
-            {Boolean(randomResult) && <ComponentList components={components} />}
+            <ComponentList components={components} />
 
             <Box sx={{ py: 4, textAlign: 'center' }}>
                 <Button

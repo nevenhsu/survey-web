@@ -3,7 +3,9 @@ import _ from 'lodash'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import QuizButton, { QuizButtonProps } from 'components/Answer/QuizButton'
+import QuizButton, {
+    QuizButtonProps,
+} from 'components/Answer/QuizView/Quiz/QuizButton'
 import type { OnChangeInput } from 'common/types'
 
 type FillViewProps = {
