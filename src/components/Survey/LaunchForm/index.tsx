@@ -15,6 +15,7 @@ import TextField from '@mui/material/TextField'
 import Divider from '@mui/material/Divider'
 import { getAnswerURL } from 'utils/helper'
 import { useAppSelector, useAppDispatch } from 'hooks'
+import usePreview from 'hooks/usePreview'
 import {
     selectCurrentSurvey,
     updateSurvey,
@@ -40,7 +41,9 @@ export default function LaunchForm() {
     const survey = useAppSelector(selectCurrentSurvey)
     const { id, trackingId = [], enable } = survey ?? {}
 
-    const { url, openWindow } = getAnswerURL(id)
+    const { uploading: previewUploading, handlePreview } = usePreview(survey)
+
+    const { url } = getAnswerURL(id)
 
     const notify = (message: string, variant: VariantType) => {
         enqueueSnackbar(message, { variant })
@@ -107,14 +110,20 @@ export default function LaunchForm() {
                         spacing={2}
                         sx={{ mb: 12 }}
                     >
-                        <Button variant="outlined" onClick={openWindow}>
+                        <LoadingButton
+                            variant="outlined"
+                            loading={previewUploading}
+                            disabled={previewUploading}
+                            onClick={handlePreview}
+                        >
                             {enable ? '開始測驗' : '預覽測驗'}
-                        </Button>
+                        </LoadingButton>
+
                         <LoadingButton
                             variant="contained"
-                            onClick={handleDeploy}
                             loading={uploading}
                             disabled={uploading}
+                            onClick={handleDeploy}
                         >
                             {enable ? '取消發布' : '發布測驗'}
                         </LoadingButton>

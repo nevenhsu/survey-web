@@ -48,7 +48,7 @@ export function surveyFormatter(survey: Survey): Survey {
         tags,
         results: {
             ...r,
-            list,
+            list: list ?? {},
         },
         final: finalFormatter(final),
         setting: {

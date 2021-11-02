@@ -104,6 +104,8 @@ export default function Editor() {
     const survey = useAppSelector(selectCurrentSurvey)
     const lastEditingAt = useAppSelector(selectLastEditingAt)
 
+    const { id: surveyId } = survey ?? {}
+
     const updated = lastEditingAt === survey.updatedAt
 
     const { mode, step } = useAppSelector((state) => {
@@ -212,7 +214,7 @@ export default function Editor() {
                 })}
             </Tabs>
 
-            {step !== SurveyStep.pick && (
+            {Boolean(surveyId) && step !== SurveyStep.pick && (
                 <LoadingButton
                     variant="contained"
                     loadingPosition="end"

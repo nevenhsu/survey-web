@@ -64,7 +64,8 @@ const width = { xs: '25%', lg: '20%' }
 export default function ProductForm() {
     const dispatch = useAppDispatch()
 
-    const { id: surveyId, results, tags } = useAppSelector(selectCurrentSurvey)
+    const survey = useAppSelector(selectCurrentSurvey)
+    const { id: surveyId, results, tags } = survey ?? {}
     const { list = {} } = results ?? {}
 
     const customTags = getCustomTags(tags)

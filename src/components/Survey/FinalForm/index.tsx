@@ -7,6 +7,7 @@ import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
+import LoadingButton from '@mui/lab/LoadingButton'
 import Box, { BoxProps } from '@mui/material/Box'
 import { Contexts } from 'components/common/ComponentView'
 import EditingFinal from 'components/Survey/FinalForm/EditingFinal'
@@ -14,7 +15,7 @@ import FinalTool from 'components/Survey/FinalForm/FinalTool'
 import InfoForm from 'components/Final/InfoForm'
 import DeviceMode from 'components/common/DeviceMode'
 import { useAppSelector, useAppDispatch } from 'hooks'
-import { getAnswerURL } from 'utils/helper'
+import usePreview from 'hooks/usePreview'
 import { selectDevice } from 'store/slices/userDefault'
 import {
     selectCurrentSurvey,
@@ -77,9 +78,9 @@ export default function FinalForm() {
     const { id: surveyId, final } = survey
     const { mode, data } = final ?? {}
 
-    const device = useAppSelector(selectDevice)
+    const { uploading, handlePreview } = usePreview(survey)
 
-    const { openWindow } = getAnswerURL(surveyId)
+    const device = useAppSelector(selectDevice)
 
     const nextStep = () => {
         dispatch(setStep(SurveyStep.launch))
@@ -125,9 +126,14 @@ export default function FinalForm() {
                     <Typography variant="body1">（說明文字）</Typography>
                 </Box>
                 <Box>
-                    <Button variant="outlined" onClick={openWindow}>
+                    <LoadingButton
+                        variant="outlined"
+                        loading={uploading}
+                        disabled={uploading}
+                        onClick={handlePreview}
+                    >
                         預覽測驗
-                    </Button>
+                    </LoadingButton>
                     <Box
                         component="span"
                         sx={{ display: 'inline-block', width: 8 }}

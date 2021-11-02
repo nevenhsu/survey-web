@@ -8,6 +8,7 @@ import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
+import LoadingButton from '@mui/lab/LoadingButton'
 import Box, { BoxProps } from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
 import LinearProgress from '@mui/material/LinearProgress'
@@ -17,6 +18,7 @@ import ModeSelector from 'components/Survey/QuizForm/ModeSelector'
 import MenuSwapIcon from 'mdi-react/DragHorizontalVariantIcon'
 import AddIcon from 'mdi-react/AddIcon'
 import { useAppSelector, useAppDispatch } from 'hooks'
+import usePreview from 'hooks/usePreview'
 import { selectDevice } from 'store/slices/userDefault'
 import {
     selectCurrentSurvey,
@@ -24,7 +26,7 @@ import {
     addQuiz,
     setStep,
 } from 'store/slices/survey'
-import { reorder, setId, getDefaultQuiz, getAnswerURL } from 'utils/helper'
+import { reorder, setId, getDefaultQuiz } from 'utils/helper'
 import ThemeProvider from 'theme/ThemeProvider'
 import { QuizMode, QuizType, SurveyStep } from 'common/types'
 import type { SelectionQuiz, DeviceType } from 'common/types'
@@ -81,6 +83,7 @@ const StyledBox = styled(Box, {
         '& > div': {
             display: 'flex',
             alignItems: 'center',
+            justifyContent: 'center',
             position: 'absolute',
             top: 0,
             left: 0,
@@ -93,7 +96,10 @@ const StyledBox = styled(Box, {
 
 export default function QuizForm() {
     const dispatch = useAppDispatch()
+
     const survey = useAppSelector(selectCurrentSurvey)
+    const { uploading, handlePreview } = usePreview(survey)
+
     const { id: surveyId, quizzes = [], setting } = survey ?? {}
     const { showProgress } = setting ?? {}
 
@@ -123,8 +129,6 @@ export default function QuizForm() {
         ) && (selectedQuiz as SelectionQuiz)?.maxChoices > 1
 
     const tabValue = disabledTab ? 0 : disabledNext && tab === 2 ? 0 : tab
-
-    const { openWindow } = getAnswerURL(surveyId)
 
     const nextStep = () => {
         dispatch(setStep(SurveyStep.result))
@@ -266,9 +270,15 @@ export default function QuizForm() {
                     </Typography>
                 </Box>
                 <Box>
-                    <Button variant="outlined" onClick={openWindow}>
+                    <LoadingButton
+                        variant="outlined"
+                        loading={uploading}
+                        disabled={uploading}
+                        onClick={handlePreview}
+                    >
                         預覽測驗
-                    </Button>
+                    </LoadingButton>
+
                     <Box
                         component="span"
                         sx={{ display: 'inline-block', width: 8 }}

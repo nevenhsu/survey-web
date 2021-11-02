@@ -8,6 +8,7 @@ import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
+import LoadingButton from '@mui/lab/LoadingButton'
 import Box, { BoxProps } from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
@@ -17,8 +18,9 @@ import DeviceMode from 'components/common/DeviceMode'
 import EditingResult from 'components/Survey/ResultForm/EditingResult'
 import ResultTool from 'components/Survey/ResultForm/ResultTool'
 import { Contexts } from 'components/common/ComponentView'
-import { getDefaultComponent, getAnswerURL } from 'utils/helper'
+import { getDefaultComponent } from 'utils/helper'
 import { useAppSelector, useAppDispatch } from 'hooks'
+import usePreview from 'hooks/usePreview'
 import { selectCurrentSurvey, setResults, setStep } from 'store/slices/survey'
 import { selectDevice } from 'store/slices/userDefault'
 import ThemeProvider from 'theme/ThemeProvider'
@@ -59,6 +61,7 @@ const StyledBox = styled(Box, {
         '& > div': {
             display: 'flex',
             alignItems: 'center',
+            justifyContent: 'center',
             position: 'absolute',
             top: 0,
             left: 0,
@@ -82,14 +85,14 @@ export default function ResultForm() {
     const survey = useAppSelector(selectCurrentSurvey)
     const { id: surveyId, tags, results, mode } = survey ?? {}
 
+    const { uploading, handlePreview } = usePreview(survey)
+
     const { selectedTags = [], list } = results ?? {}
 
-    const selectedResult = list[selectedId] ?? {}
+    const selectedResult = _.get(list, [selectedId])
 
     const tagsOptions = _.map(tags, (el) => ({ ...el, value: el.id }))
     const resultItems = _.map(list, (el) => el)
-
-    const { openWindow } = getAnswerURL(surveyId)
 
     const nextStep = () => {
         dispatch(setStep(SurveyStep.final))
@@ -184,9 +187,14 @@ export default function ResultForm() {
                     <Typography variant="body1">（說明文字）</Typography>
                 </Box>
                 <Box>
-                    <Button variant="outlined" onClick={openWindow}>
+                    <LoadingButton
+                        variant="outlined"
+                        loading={uploading}
+                        disabled={uploading}
+                        onClick={handlePreview}
+                    >
                         預覽測驗
-                    </Button>
+                    </LoadingButton>
                     <Box
                         component="span"
                         sx={{ display: 'inline-block', width: 8 }}
