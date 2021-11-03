@@ -14,9 +14,11 @@ import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
+import { useAppSelector } from 'hooks'
 
 const Survey = React.lazy(() => import('components/Survey'))
 const Answer = React.lazy(() => import('components/Answer'))
+const Analysis = React.lazy(() => import('components/Analysis'))
 
 const Grow = styled('div')({
     flexGrow: 1,
@@ -35,16 +37,17 @@ const StyledTab = styled(Tab)(({ theme }) => ({
 }))
 
 export default function App() {
+    const pathname = useAppSelector((state) => state.router.location.pathname)
     const paths = {
-        survey: { value: 'survey', path: '/survey', label: '編輯' },
-        analysis: { value: 'analysis', path: '/analysis', label: '報告' },
+        survey: { path: '/survey', label: '編輯' },
+        analysis: { path: '/analysis', label: '報告' },
     }
 
     const history = useHistory()
 
     const matchSurvey = useRouteMatch('/survey/:id')
 
-    const [currentPath, setPath] = React.useState(paths.survey.value)
+    const [currentPath, setPath] = React.useState(pathname ?? paths.survey.path)
 
     const handleChangePath = (
         event: React.SyntheticEvent,
@@ -70,11 +73,11 @@ export default function App() {
                             onChange={handleChangePath}
                             centered
                         >
-                            {_.map(paths, ({ label, value }) => (
+                            {_.map(paths, ({ label, path }) => (
                                 <StyledTab
-                                    key={value}
+                                    key={path}
                                     label={label}
-                                    value={value}
+                                    value={path}
                                 />
                             ))}
                         </StyledTabs>
@@ -91,6 +94,10 @@ export default function App() {
 
                     <Route path={paths.survey.path}>
                         <Survey />
+                    </Route>
+
+                    <Route path={paths.analysis.path}>
+                        <Analysis />
                     </Route>
 
                     <Route

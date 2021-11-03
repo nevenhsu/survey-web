@@ -1,0 +1,642 @@
+import * as React from 'react'
+import _ from 'lodash'
+import numeral from 'numeral'
+import { Link, Element } from 'react-scroll'
+import {
+    BarChart,
+    Bar,
+    Label,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    Legend,
+    ResponsiveContainer,
+} from 'recharts'
+import { styled, useTheme } from '@mui/material/styles'
+import Grid from '@mui/material/Grid'
+import Stack from '@mui/material/Stack'
+import Paper from '@mui/material/Paper'
+import Box, { BoxProps } from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import ListSubheader from '@mui/material/ListSubheader'
+import List from '@mui/material/List'
+import ListItemButton from '@mui/material/ListItemButton'
+import Divider from '@mui/material/Divider'
+import data, { books } from 'assets/data/analysis'
+import { BlockName } from 'common/types'
+import type { Overview, ProductData, BarData } from 'common/types'
+
+const conversionRatio = [
+    { label: '答題況狀', value: BlockName.status },
+    { label: '點擊率', value: BlockName.ctr },
+    { label: '推薦商品點擊率', value: BlockName.productCtr },
+]
+
+const flow = [
+    { label: '裝置流量', value: BlockName.deviceTraffic },
+    { label: '渠道流量', value: BlockName.trafficSource },
+    { label: '流量交叉分析', value: BlockName.flowAnalysis },
+]
+
+const quizStatus = [
+    { label: '跳出率', value: BlockName.bounceRate },
+    { label: '停留時間', value: BlockName.dwellTime },
+]
+
+const blocks = [
+    {
+        label: '轉換率',
+        value: conversionRatio,
+    },
+    {
+        label: '流量',
+        value: flow,
+    },
+    {
+        label: '各題表現',
+        value: quizStatus,
+    },
+]
+
+const BlockId = 'AnalysisBlock'
+
+const StyledBox = styled(Box)({
+    padding: 16,
+    marginBottom: 16,
+    backgroundColor: 'white',
+})
+
+export default function BehaviorView() {
+    const theme = useTheme()
+    return (
+        <>
+            <Box sx={{ p: 3, borderBottom: '1px solid' }}>
+                <Typography variant="h6">測驗行為報告</Typography>
+                <Typography variant="body1">
+                    填答者的答題狀況與轉換率，建議參考以下數據決定是否需要優化題目設計
+                </Typography>
+            </Box>
+            <Grid container sx={{ minHeight: 'calc(100vh - 218px)' }}>
+                <Grid
+                    item
+                    sx={{
+                        width: 288,
+                        '& ul:last-child': {
+                            borderBottom: 'none',
+                        },
+                    }}
+                >
+                    {blocks.map((el) => (
+                        <List
+                            key={el.label}
+                            subheader={
+                                <ListSubheader>{el.label}</ListSubheader>
+                            }
+                            sx={{
+                                borderBottom: (theme) =>
+                                    `1px solid ${theme.palette.grey[300]}`,
+                            }}
+                        >
+                            {el.value.map((o) => (
+                                <Link
+                                    key={o.value}
+                                    to={o.value}
+                                    containerId={BlockId}
+                                    duration={250}
+                                    smooth
+                                >
+                                    <ListItemButton>{o.label}</ListItemButton>
+                                </Link>
+                            ))}
+                        </List>
+                    ))}
+                </Grid>
+
+                <Divider orientation="vertical" flexItem />
+
+                <Grid
+                    item
+                    xs
+                    id={BlockId}
+                    sx={{
+                        height: 'calc(100vh - 218px)',
+                        overflow: 'auto',
+                        bgcolor: (theme) => theme.palette.grey[50],
+                    }}
+                >
+                    <Stack
+                        direction="row"
+                        alignItems="center"
+                        justifyContent="start"
+                        spacing={2}
+                        sx={{
+                            width: '100%',
+                            height: 48,
+                            px: 2,
+                            bgcolor: (theme) => theme.palette.grey[800],
+                        }}
+                    >
+                        <Typography
+                            sx={{
+                                color: (theme) => theme.palette.grey[50],
+                            }}
+                        >
+                            檢視不同流量來源
+                        </Typography>
+                    </Stack>
+
+                    <Box sx={{ p: 3 }}>
+                        {/*     Conversion Ratio     */}
+                        <>
+                            <Typography variant="h6" gutterBottom>
+                                轉換率
+                            </Typography>
+                            <Typography sx={{ mb: 2 }}>
+                                說明文字說明文字說明文字說明文字
+                            </Typography>
+
+                            {data.overviews.map((el) => (
+                                <OverviewView key={el.name} data={el} />
+                            ))}
+
+                            <ElementBox name={BlockName.productCtr}>
+                                <Title title="推薦商品點擊率" />
+                                <Box
+                                    sx={{
+                                        p: 3,
+                                        bgcolor: (theme) =>
+                                            theme.palette.grey[50],
+                                    }}
+                                >
+                                    <Stack
+                                        direction="row"
+                                        alignItems="center"
+                                        justifyContent="space-between"
+                                    >
+                                        <Typography>
+                                            總點擊率{' '}
+                                            {numeral(
+                                                data.productCtr.ctr
+                                            ).format('0.0%')}
+                                        </Typography>
+                                        <Typography>
+                                            點擊數/觀看數{' '}
+                                            {numeral(
+                                                data.productCtr.hits
+                                            ).format('0,0')}
+                                            /
+                                            {numeral(
+                                                data.productCtr.views
+                                            ).format('0,0')}
+                                        </Typography>
+                                    </Stack>
+
+                                    <Divider sx={{ my: 3 }} />
+
+                                    <ResponsiveContainer
+                                        height={_.max([
+                                            data.productCtr.data.length * 60,
+                                            240,
+                                        ])}
+                                    >
+                                        <BarChart
+                                            layout="vertical"
+                                            data={data.productCtr.data}
+                                            barGap={-32}
+                                            barSize={32}
+                                        >
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis type="number" />
+                                            <YAxis
+                                                dataKey="name"
+                                                type="category"
+                                            />
+                                            <Tooltip
+                                                content={({
+                                                    active,
+                                                    payload,
+                                                }) => (
+                                                    <ProductTooltip
+                                                        active={active}
+                                                        payload={payload as any}
+                                                    />
+                                                )}
+                                            />
+                                            <Legend />
+                                            <Bar
+                                                dataKey="views"
+                                                fill={
+                                                    theme.palette.primary.main
+                                                }
+                                            />
+                                            <Bar
+                                                dataKey="hits"
+                                                fill={
+                                                    theme.palette.secondary.main
+                                                }
+                                            />
+                                        </BarChart>
+                                    </ResponsiveContainer>
+                                </Box>
+                            </ElementBox>
+                        </>
+
+                        <Divider sx={{ my: 3 }} />
+
+                        {/*     Flow     */}
+                        <>
+                            <Typography variant="h6" gutterBottom>
+                                流量
+                            </Typography>
+                            <Typography sx={{ mb: 2 }}>
+                                說明文字說明文字說明文字說明文字
+                            </Typography>
+
+                            <Stack
+                                direction="row"
+                                alignItems="start"
+                                justifyContent="space-around"
+                                spacing={3}
+                            >
+                                {[
+                                    {
+                                        name: BlockName.deviceTraffic,
+                                        data: data.flow.deviceTraffic,
+                                        title: '裝置流量',
+                                    },
+                                    {
+                                        name: BlockName.trafficSource,
+                                        data: data.flow.trafficSource,
+                                        title: '渠道流量',
+                                    },
+                                ].map((el) => (
+                                    <ElementBox
+                                        key={el.name}
+                                        name={el.name}
+                                        style={{ width: '100%' }}
+                                    >
+                                        <Title title={el.title} />
+                                        <Box
+                                            sx={{
+                                                p: 3,
+                                                bgcolor: (theme) =>
+                                                    theme.palette.grey[50],
+                                            }}
+                                        >
+                                            <ResponsiveContainer
+                                                height={_.max([
+                                                    el.data.length * 60,
+                                                    240,
+                                                ])}
+                                            >
+                                                <BarChart
+                                                    layout="vertical"
+                                                    data={el.data}
+                                                    barGap={-32}
+                                                    barSize={32}
+                                                >
+                                                    <CartesianGrid strokeDasharray="3 3" />
+                                                    <XAxis type="number" />
+                                                    <YAxis
+                                                        dataKey="name"
+                                                        type="category"
+                                                    />
+                                                    <Tooltip />
+                                                    <Bar
+                                                        dataKey="number"
+                                                        fill={
+                                                            theme.palette
+                                                                .primary.main
+                                                        }
+                                                    />
+                                                </BarChart>
+                                            </ResponsiveContainer>
+                                        </Box>
+                                    </ElementBox>
+                                ))}
+                            </Stack>
+
+                            <ElementBox name={BlockName.flowAnalysis}>
+                                <Title title="流量交叉分析" />
+                                <Box
+                                    sx={{
+                                        p: 3,
+                                        bgcolor: (theme) =>
+                                            theme.palette.grey[50],
+                                    }}
+                                >
+                                    <ResponsiveContainer
+                                        height={_.max([
+                                            data.flow.flowAnalysis.length * 60,
+                                            240,
+                                        ])}
+                                    >
+                                        <BarChart
+                                            layout="vertical"
+                                            data={data.flow.flowAnalysis}
+                                            barGap={-32}
+                                            barSize={32}
+                                        >
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis type="number" />
+                                            <YAxis
+                                                dataKey="name"
+                                                type="category"
+                                            />
+                                            <Tooltip />
+                                            <Legend />
+                                            <Bar
+                                                dataKey="mobile"
+                                                stackId="device"
+                                                fill={
+                                                    theme.palette.primary.main
+                                                }
+                                            />
+                                            <Bar
+                                                dataKey="desktop"
+                                                stackId="device"
+                                                fill={
+                                                    theme.palette.secondary.main
+                                                }
+                                            />
+                                        </BarChart>
+                                    </ResponsiveContainer>
+                                </Box>
+                            </ElementBox>
+                        </>
+
+                        <Divider sx={{ my: 3 }} />
+
+                        {/*     Quiz Status     */}
+                        <>
+                            <Typography variant="h6" gutterBottom>
+                                各題表現
+                            </Typography>
+                            <Typography sx={{ mb: 2 }}>
+                                了解測驗設計需要哪些優化
+                            </Typography>
+
+                            {[
+                                {
+                                    name: BlockName.bounceRate,
+                                    data: data.quizStatus.bounceRate,
+                                    title: '跳出率',
+                                    text: '針對跳出率過高的題目，重新設計',
+                                    format: '0.0%',
+                                },
+                                {
+                                    name: BlockName.dwellTime,
+                                    data: data.quizStatus.dwellTime,
+                                    title: '停留時間',
+                                    text: '如果題目的填答時間比預期的長、短很多，重新調整題目設計',
+                                    format: '00:00:00',
+                                },
+                            ].map((el) => (
+                                <ElementBox
+                                    key={el.name}
+                                    name={el.name}
+                                    style={{ width: '100%' }}
+                                >
+                                    <Title title={el.title} text={el.text} />
+                                    <Box
+                                        sx={{
+                                            p: 3,
+                                            bgcolor: (theme) =>
+                                                theme.palette.grey[50],
+                                        }}
+                                    >
+                                        <ResponsiveContainer
+                                            height={_.max([
+                                                el.data.length * 60,
+                                                240,
+                                            ])}
+                                        >
+                                            <BarChart
+                                                layout="vertical"
+                                                data={el.data}
+                                                barGap={-32}
+                                                barSize={32}
+                                            >
+                                                <CartesianGrid strokeDasharray="3 3" />
+                                                <XAxis
+                                                    type="number"
+                                                    tick={({
+                                                        x,
+                                                        y,
+                                                        payload,
+                                                    }) => (
+                                                        <CustomizedTick
+                                                            x={x}
+                                                            y={y}
+                                                            value={
+                                                                payload.value
+                                                            }
+                                                            format={el.format}
+                                                        />
+                                                    )}
+                                                />
+                                                <YAxis
+                                                    dataKey="name"
+                                                    type="category"
+                                                />
+                                                <Tooltip
+                                                    content={({
+                                                        active,
+                                                        payload,
+                                                    }) => (
+                                                        <FormatTooltip
+                                                            active={active}
+                                                            payload={
+                                                                payload as any
+                                                            }
+                                                            format={el.format}
+                                                        />
+                                                    )}
+                                                />
+                                                <Bar
+                                                    dataKey="number"
+                                                    fill={
+                                                        theme.palette.primary
+                                                            .main
+                                                    }
+                                                />
+                                            </BarChart>
+                                        </ResponsiveContainer>
+                                    </Box>
+                                </ElementBox>
+                            ))}
+                        </>
+                    </Box>
+                </Grid>
+            </Grid>
+        </>
+    )
+}
+
+function ElementBox(
+    props: React.PropsWithChildren<BoxProps & { name: BlockName }>
+) {
+    const { name, children, style, ...rest } = props
+    return (
+        <Element name={name} style={style}>
+            <StyledBox {...rest}>{children}</StyledBox>
+        </Element>
+    )
+}
+
+function Title(props: { title?: string; text?: string }) {
+    const { title, text } = props
+    return (
+        <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{ mb: 1 }}
+        >
+            <Box>
+                <Typography variant="subtitle1" gutterBottom>
+                    {title}
+                </Typography>
+                <Typography variant="body2">{text}</Typography>
+            </Box>
+        </Stack>
+    )
+}
+
+function OverviewView(props: { data: Overview }) {
+    const { data } = props
+
+    return (
+        <ElementBox name={data.name}>
+            <Title title={data.label} />
+            <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="center"
+                spacing={3}
+            >
+                <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-around"
+                    sx={{
+                        width: '50%',
+                        p: 3,
+                        bgcolor: (theme) => theme.palette.grey[50],
+                    }}
+                >
+                    {data.left.map((o) => (
+                        <Box
+                            key={o.label}
+                            sx={{
+                                textAlign: 'center',
+                            }}
+                        >
+                            <Typography gutterBottom>{o.label}</Typography>
+                            <Typography variant="h6">
+                                {numeral(o.value).format(o.format)}
+                            </Typography>
+                        </Box>
+                    ))}
+                </Stack>
+
+                <Box sx={{ width: '50%' }}>
+                    {data.right.map((o) => (
+                        <Stack
+                            key={o.label}
+                            direction="row"
+                            alignItems="center"
+                            justifyContent="space-between"
+                            sx={{ mb: 1 }}
+                        >
+                            <Typography>{o.label}</Typography>
+                            <Typography>
+                                {numeral(o.value).format(o.format)}
+                            </Typography>
+                        </Stack>
+                    ))}
+                </Box>
+            </Stack>
+        </ElementBox>
+    )
+}
+
+function ProductTooltip(props: {
+    active?: boolean
+    payload?: { payload: ProductData }[]
+}) {
+    const { active, payload: p } = props
+
+    const productData = _.get(p, [0, 'payload'])
+    const { name, views = 0, hits = 0 } = productData ?? {}
+
+    const ratio = numeral(hits / views).format('0.0%')
+    if (active && name) {
+        return (
+            <Paper elevation={2} sx={{ p: 2 }}>
+                <Typography variant="subtitle1" gutterBottom>
+                    {name}
+                </Typography>
+                <Typography variant="body2" gutterBottom>
+                    觀看數: {numeral(views).format('0,0')}
+                </Typography>
+                <Typography variant="body2" gutterBottom>
+                    點擊數: {numeral(hits).format('0,0')}
+                </Typography>
+                <Typography variant="body2">點擊率: {ratio}</Typography>
+            </Paper>
+        )
+    }
+
+    return null
+}
+
+function CustomizedTick(props: {
+    x: number
+    y: number
+    format: string
+    value: any
+}) {
+    const { x, y, format, value } = props
+
+    return (
+        <g transform={`translate(${x},${y})`}>
+            <text
+                x={0}
+                y={0}
+                dy={16}
+                fill="rgba(0, 0, 0, 0.6)"
+                textAnchor="end"
+            >
+                {numeral(value).format(format)}
+            </text>
+        </g>
+    )
+}
+
+function FormatTooltip(props: {
+    active?: boolean
+    payload?: { payload: BarData }[]
+    format?: string
+}) {
+    const { active, format, payload: p } = props
+
+    const BarData = _.get(p, [0, 'payload'])
+    const { name, number } = BarData ?? {}
+
+    if (active && name) {
+        return (
+            <Paper elevation={2} sx={{ p: 2 }}>
+                <Typography variant="subtitle1" gutterBottom>
+                    {name}
+                </Typography>
+                <Typography variant="body2">
+                    {numeral(number).format(format)}
+                </Typography>
+            </Paper>
+        )
+    }
+
+    return null
+}

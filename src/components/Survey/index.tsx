@@ -88,7 +88,7 @@ const getModeSteps = (survey?: Survey, mode?: Mode): Partial<StepsType> => {
 
 const classes = setClasses('Editor', ['root'])
 
-const Root = styled(Box)<BoxProps>(({ theme }) => ({
+const Root = styled(Box)(({ theme }) => ({
     [`&.${classes.root}`]: {
         position: 'relative',
         width: '100%',
