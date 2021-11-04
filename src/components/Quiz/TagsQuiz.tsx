@@ -178,7 +178,7 @@ export default function TagsQuiz(props: TagsQuizProps) {
     }
 
     return (
-        <Root className={classes.root}>
+        <Root className={classes.root} elevation={6} square>
             <TableContainer>
                 <Table>
                     <TableHead>

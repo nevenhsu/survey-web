@@ -317,3 +317,13 @@ export function getAnswerURL(surveyId: string) {
         openWindow,
     }
 }
+
+export function replaceByData<T>(
+    value: string,
+    separator: RegExp,
+    data: Array<T>
+): Array<string | T> {
+    const val = _.split(value, separator)
+    const list = _.zip(val, data)
+    return _.compact(_.flatten(list))
+}

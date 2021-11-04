@@ -1,17 +1,27 @@
-import { BlockName } from 'common/types'
-import type { Overview, ProductData, BarData } from 'common/types'
+import { BehaviorName } from 'common/types'
+import type {
+    ConversionRatioData,
+    ProductCtrData,
+    ChartData,
+    OptionType,
+    ListData,
+    TooltipData,
+} from 'common/types'
+import { generateLibTree } from '@nivo/generators'
 
-type Data = {
-    overviews: Array<Overview>
+const insertIdentifier = '#insert'
+
+type BehaviorData = {
+    overviews: Array<ConversionRatioData>
     productCtr: {
         ctr: number
         hits: number
         views: number
-        data: Array<ProductData>
+        data: Array<ProductCtrData>
     }
     flow: {
-        deviceTraffic: Array<BarData>
-        trafficSource: Array<BarData>
+        deviceTraffic: Array<ChartData>
+        trafficSource: Array<ChartData>
         flowAnalysis: Array<{
             name: string
             mobile: number
@@ -19,16 +29,35 @@ type Data = {
         }>
     }
     quizStatus: {
-        bounceRate: Array<BarData>
-        dwellTime: Array<BarData>
+        bounceRate: Array<ChartData>
+        dwellTime: Array<ChartData>
     }
 }
 
-const data: Data = {
+type OptionsData = {
+    devices: Array<OptionType>
+    sources: Array<OptionType>
+}
+
+export const optionsData: OptionsData = {
+    devices: [
+        { label: '手機', value: 'mobile' },
+        { label: '筆電', value: 'laptop' },
+        { label: '桌電', value: 'desktop' },
+    ],
+    sources: [
+        { label: 'Facebook', value: 'facebook' },
+        { label: 'Instagram', value: 'instagram' },
+        { label: 'Twitter', value: 'twitter' },
+        { label: 'Line', value: 'line' },
+    ],
+}
+
+export const behaviorData: BehaviorData = {
     overviews: [
         {
             label: '答題狀況',
-            name: BlockName.status,
+            name: BehaviorName.status,
             left: [
                 {
                     label: '轉換率',
@@ -66,7 +95,7 @@ const data: Data = {
         },
         {
             label: '點擊率',
-            name: BlockName.ctr,
+            name: BehaviorName.ctr,
             left: [
                 {
                     label: '分享',
@@ -183,42 +212,89 @@ const data: Data = {
     },
 }
 
-export default data
+export const BehaviorStages: Array<OptionType> = [{ label: '', value: '' }]
 
-export const books = [
+export const treeData = generateLibTree()
+
+const tooltipData: TooltipData = {
+    text: '策略依據文字說明策略依據文字說明策略依據文字說明',
+    payload: [
+        {
+            label: '這個',
+            value: 1000,
+            format: '0,0',
+        },
+        {
+            label: '那個',
+            value: 500,
+            format: '0,0',
+        },
+    ],
+}
+
+export const strategyData: Array<ListData> = [
     {
-        name: 'Book A',
-        views: 4000,
-        hits: 2400,
+        text: `您的顧客同時${insertIdentifier}、${insertIdentifier}`,
+        data: [
+            {
+                text: '價格',
+                tooltip: tooltipData,
+            },
+            {
+                text: '品質',
+                tooltip: tooltipData,
+            },
+        ],
     },
     {
-        name: 'Book B',
-        views: 3000,
-        hits: 1398,
+        text: `您的客群${insertIdentifier}，可以${insertIdentifier}`,
+        data: [
+            {
+                text: '很聽朋友的話',
+                tooltip: tooltipData,
+            },
+            {
+                text: '多加設計行銷機制讓消費者分享他們的商品',
+                tooltip: tooltipData,
+            },
+        ],
     },
     {
-        name: 'Book C',
-        views: 9800,
-        hits: 2000,
+        text: `您的客群${insertIdentifier}，可以${insertIdentifier}`,
+        data: [
+            {
+                text: '很聽朋友的話',
+                tooltip: tooltipData,
+            },
+            {
+                text: '多加設計行銷機制讓消費者分享他們的商品',
+                tooltip: tooltipData,
+            },
+        ],
     },
     {
-        name: 'Book D',
-        hits: 2780,
-        views: 3908,
-    },
-    {
-        name: 'Book E',
-        hits: 1890,
-        views: 4800,
-    },
-    {
-        name: 'Book F',
-        hits: 2390,
-        views: 3800,
-    },
-    {
-        name: 'Book G',
-        hits: 3490,
-        views: 4300,
+        text: `您可以善用${insertIdentifier}、${insertIdentifier}來行銷你的產品，讓他們${insertIdentifier}，${insertIdentifier}，也可以借助一些${insertIdentifier}，讓您的商品更有說服力！`,
+        data: [
+            {
+                text: '朋友',
+                tooltip: tooltipData,
+            },
+            {
+                text: '網紅推薦',
+                tooltip: tooltipData,
+            },
+            {
+                text: '想要覺得自己有這個需求',
+                tooltip: tooltipData,
+            },
+            {
+                text: '因而非買到您的商品不可',
+                tooltip: tooltipData,
+            },
+            {
+                text: '專家的推薦',
+                tooltip: tooltipData,
+            },
+        ],
     },
 ]

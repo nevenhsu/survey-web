@@ -47,13 +47,10 @@ export default function App() {
 
     const matchSurvey = useRouteMatch('/survey/:id')
 
-    const [currentPath, setPath] = React.useState(pathname ?? paths.survey.path)
-
     const handleChangePath = (
         event: React.SyntheticEvent,
         newValue: string
     ) => {
-        setPath(newValue)
         history.push(newValue)
     }
 
@@ -69,7 +66,7 @@ export default function App() {
                         </Typography>
                         <Grow />
                         <StyledTabs
-                            value={currentPath}
+                            value={pathname}
                             onChange={handleChangePath}
                             centered
                         >

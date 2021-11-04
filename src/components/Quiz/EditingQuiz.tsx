@@ -449,9 +449,10 @@ const SliderView = (props: {
                 name="title"
                 value={title}
                 onChange={onChange}
-                sx={{ mb: 4 }}
                 multiline
             />
+
+            <Box sx={{ height: 32 }} />
 
             <Box sx={{ width: 4 / 5 }}>
                 <Slider

@@ -68,7 +68,7 @@ export default function NextQuiz(props: NextQuizProps) {
     }
 
     return (
-        <Root className={classes.root}>
+        <Root className={classes.root} elevation={6} square>
             <TableContainer>
                 <Table>
                     <TableHead>

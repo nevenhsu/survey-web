@@ -1,7 +1,7 @@
 import * as React from 'react'
 import _ from 'lodash'
-import ComponentViewTool from 'components/common/ComponentView/Tool'
-import { Contexts } from 'components/common/ComponentView'
+import ComponentTool from 'components/common/Component/Tool'
+import { Contexts } from 'components/common/Component'
 import { useAppDispatch } from 'hooks'
 import { updateFinalComponents } from 'store/slices/survey'
 import type { OnChangeInput, Component } from 'common/types'
@@ -56,7 +56,7 @@ export default function FinalTool(props: FinalToolProps) {
     }
 
     return (
-        <ComponentViewTool
+        <ComponentTool
             component={component}
             onChange={handleChange}
             onDelete={handleDelete}

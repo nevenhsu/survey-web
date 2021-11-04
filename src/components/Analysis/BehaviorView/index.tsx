@@ -1,11 +1,9 @@
 import * as React from 'react'
 import _ from 'lodash'
 import numeral from 'numeral'
-import { Link, Element } from 'react-scroll'
 import {
     BarChart,
     Bar,
-    Label,
     XAxis,
     YAxis,
     CartesianGrid,
@@ -13,35 +11,40 @@ import {
     Legend,
     ResponsiveContainer,
 } from 'recharts'
-import { styled, useTheme } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
 import Paper from '@mui/material/Paper'
-import Box, { BoxProps } from '@mui/material/Box'
+import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import ListSubheader from '@mui/material/ListSubheader'
-import List from '@mui/material/List'
-import ListItemButton from '@mui/material/ListItemButton'
 import Divider from '@mui/material/Divider'
-import data, { books } from 'assets/data/analysis'
-import { BlockName } from 'common/types'
-import type { Overview, ProductData, BarData } from 'common/types'
+import {
+    SelectorBar,
+    ElementBox,
+    Title,
+    LinkList,
+    FormatTick,
+    FormatTooltip,
+} from 'components/Analysis/Shared'
+import { BehaviorName } from 'common/types'
+import type { ConversionRatioData, ProductCtrData } from 'common/types'
+import { behaviorData, optionsData } from 'assets/data/analysis'
 
 const conversionRatio = [
-    { label: '答題況狀', value: BlockName.status },
-    { label: '點擊率', value: BlockName.ctr },
-    { label: '推薦商品點擊率', value: BlockName.productCtr },
+    { label: '答題況狀', value: BehaviorName.status },
+    { label: '點擊率', value: BehaviorName.ctr },
+    { label: '推薦商品點擊率', value: BehaviorName.productCtr },
 ]
 
 const flow = [
-    { label: '裝置流量', value: BlockName.deviceTraffic },
-    { label: '渠道流量', value: BlockName.trafficSource },
-    { label: '流量交叉分析', value: BlockName.flowAnalysis },
+    { label: '裝置流量', value: BehaviorName.deviceTraffic },
+    { label: '渠道流量', value: BehaviorName.trafficSource },
+    { label: '流量交叉分析', value: BehaviorName.flowAnalysis },
 ]
 
 const quizStatus = [
-    { label: '跳出率', value: BlockName.bounceRate },
-    { label: '停留時間', value: BlockName.dwellTime },
+    { label: '跳出率', value: BehaviorName.bounceRate },
+    { label: '停留時間', value: BehaviorName.dwellTime },
 ]
 
 const blocks = [
@@ -61,14 +64,9 @@ const blocks = [
 
 const BlockId = 'AnalysisBlock'
 
-const StyledBox = styled(Box)({
-    padding: 16,
-    marginBottom: 16,
-    backgroundColor: 'white',
-})
-
 export default function BehaviorView() {
     const theme = useTheme()
+
     return (
         <>
             <Box sx={{ p: 3, borderBottom: '1px solid' }}>
@@ -82,35 +80,9 @@ export default function BehaviorView() {
                     item
                     sx={{
                         width: 288,
-                        '& ul:last-child': {
-                            borderBottom: 'none',
-                        },
                     }}
                 >
-                    {blocks.map((el) => (
-                        <List
-                            key={el.label}
-                            subheader={
-                                <ListSubheader>{el.label}</ListSubheader>
-                            }
-                            sx={{
-                                borderBottom: (theme) =>
-                                    `1px solid ${theme.palette.grey[300]}`,
-                            }}
-                        >
-                            {el.value.map((o) => (
-                                <Link
-                                    key={o.value}
-                                    to={o.value}
-                                    containerId={BlockId}
-                                    duration={250}
-                                    smooth
-                                >
-                                    <ListItemButton>{o.label}</ListItemButton>
-                                </Link>
-                            ))}
-                        </List>
-                    ))}
+                    <LinkList blocks={blocks} blockId={BlockId} />
                 </Grid>
 
                 <Divider orientation="vertical" flexItem />
@@ -125,26 +97,10 @@ export default function BehaviorView() {
                         bgcolor: (theme) => theme.palette.grey[50],
                     }}
                 >
-                    <Stack
-                        direction="row"
-                        alignItems="center"
-                        justifyContent="start"
-                        spacing={2}
-                        sx={{
-                            width: '100%',
-                            height: 48,
-                            px: 2,
-                            bgcolor: (theme) => theme.palette.grey[800],
-                        }}
-                    >
-                        <Typography
-                            sx={{
-                                color: (theme) => theme.palette.grey[50],
-                            }}
-                        >
-                            檢視不同流量來源
-                        </Typography>
-                    </Stack>
+                    <SelectorBar
+                        devices={optionsData.devices}
+                        sources={optionsData.sources}
+                    />
 
                     <Box sx={{ p: 3 }}>
                         {/*     Conversion Ratio     */}
@@ -156,11 +112,11 @@ export default function BehaviorView() {
                                 說明文字說明文字說明文字說明文字
                             </Typography>
 
-                            {data.overviews.map((el) => (
+                            {behaviorData.overviews.map((el) => (
                                 <OverviewView key={el.name} data={el} />
                             ))}
 
-                            <ElementBox name={BlockName.productCtr}>
+                            <ElementBox name={BehaviorName.productCtr}>
                                 <Title title="推薦商品點擊率" />
                                 <Box
                                     sx={{
@@ -177,17 +133,17 @@ export default function BehaviorView() {
                                         <Typography>
                                             總點擊率{' '}
                                             {numeral(
-                                                data.productCtr.ctr
+                                                behaviorData.productCtr.ctr
                                             ).format('0.0%')}
                                         </Typography>
                                         <Typography>
                                             點擊數/觀看數{' '}
                                             {numeral(
-                                                data.productCtr.hits
+                                                behaviorData.productCtr.hits
                                             ).format('0,0')}
                                             /
                                             {numeral(
-                                                data.productCtr.views
+                                                behaviorData.productCtr.views
                                             ).format('0,0')}
                                         </Typography>
                                     </Stack>
@@ -196,13 +152,14 @@ export default function BehaviorView() {
 
                                     <ResponsiveContainer
                                         height={_.max([
-                                            data.productCtr.data.length * 60,
+                                            behaviorData.productCtr.data
+                                                .length * 60,
                                             240,
                                         ])}
                                     >
                                         <BarChart
                                             layout="vertical"
-                                            data={data.productCtr.data}
+                                            data={behaviorData.productCtr.data}
                                             barGap={-32}
                                             barSize={32}
                                         >
@@ -261,13 +218,13 @@ export default function BehaviorView() {
                             >
                                 {[
                                     {
-                                        name: BlockName.deviceTraffic,
-                                        data: data.flow.deviceTraffic,
+                                        name: BehaviorName.deviceTraffic,
+                                        data: behaviorData.flow.deviceTraffic,
                                         title: '裝置流量',
                                     },
                                     {
-                                        name: BlockName.trafficSource,
-                                        data: data.flow.trafficSource,
+                                        name: BehaviorName.trafficSource,
+                                        data: behaviorData.flow.trafficSource,
                                         title: '渠道流量',
                                     },
                                 ].map((el) => (
@@ -317,7 +274,7 @@ export default function BehaviorView() {
                                 ))}
                             </Stack>
 
-                            <ElementBox name={BlockName.flowAnalysis}>
+                            <ElementBox name={BehaviorName.flowAnalysis}>
                                 <Title title="流量交叉分析" />
                                 <Box
                                     sx={{
@@ -328,13 +285,16 @@ export default function BehaviorView() {
                                 >
                                     <ResponsiveContainer
                                         height={_.max([
-                                            data.flow.flowAnalysis.length * 60,
+                                            behaviorData.flow.flowAnalysis
+                                                .length * 60,
                                             240,
                                         ])}
                                     >
                                         <BarChart
                                             layout="vertical"
-                                            data={data.flow.flowAnalysis}
+                                            data={
+                                                behaviorData.flow.flowAnalysis
+                                            }
                                             barGap={-32}
                                             barSize={32}
                                         >
@@ -379,15 +339,15 @@ export default function BehaviorView() {
 
                             {[
                                 {
-                                    name: BlockName.bounceRate,
-                                    data: data.quizStatus.bounceRate,
+                                    name: BehaviorName.bounceRate,
+                                    data: behaviorData.quizStatus.bounceRate,
                                     title: '跳出率',
                                     text: '針對跳出率過高的題目，重新設計',
                                     format: '0.0%',
                                 },
                                 {
-                                    name: BlockName.dwellTime,
-                                    data: data.quizStatus.dwellTime,
+                                    name: BehaviorName.dwellTime,
+                                    data: behaviorData.quizStatus.dwellTime,
                                     title: '停留時間',
                                     text: '如果題目的填答時間比預期的長、短很多，重新調整題目設計',
                                     format: '00:00:00',
@@ -426,7 +386,7 @@ export default function BehaviorView() {
                                                         y,
                                                         payload,
                                                     }) => (
-                                                        <CustomizedTick
+                                                        <FormatTick
                                                             x={x}
                                                             y={y}
                                                             value={
@@ -474,37 +434,7 @@ export default function BehaviorView() {
     )
 }
 
-function ElementBox(
-    props: React.PropsWithChildren<BoxProps & { name: BlockName }>
-) {
-    const { name, children, style, ...rest } = props
-    return (
-        <Element name={name} style={style}>
-            <StyledBox {...rest}>{children}</StyledBox>
-        </Element>
-    )
-}
-
-function Title(props: { title?: string; text?: string }) {
-    const { title, text } = props
-    return (
-        <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            sx={{ mb: 1 }}
-        >
-            <Box>
-                <Typography variant="subtitle1" gutterBottom>
-                    {title}
-                </Typography>
-                <Typography variant="body2">{text}</Typography>
-            </Box>
-        </Stack>
-    )
-}
-
-function OverviewView(props: { data: Overview }) {
+function OverviewView(props: { data: ConversionRatioData }) {
     const { data } = props
 
     return (
@@ -564,7 +494,7 @@ function OverviewView(props: { data: Overview }) {
 
 function ProductTooltip(props: {
     active?: boolean
-    payload?: { payload: ProductData }[]
+    payload?: { payload: ProductCtrData }[]
 }) {
     const { active, payload: p } = props
 
@@ -585,55 +515,6 @@ function ProductTooltip(props: {
                     點擊數: {numeral(hits).format('0,0')}
                 </Typography>
                 <Typography variant="body2">點擊率: {ratio}</Typography>
-            </Paper>
-        )
-    }
-
-    return null
-}
-
-function CustomizedTick(props: {
-    x: number
-    y: number
-    format: string
-    value: any
-}) {
-    const { x, y, format, value } = props
-
-    return (
-        <g transform={`translate(${x},${y})`}>
-            <text
-                x={0}
-                y={0}
-                dy={16}
-                fill="rgba(0, 0, 0, 0.6)"
-                textAnchor="end"
-            >
-                {numeral(value).format(format)}
-            </text>
-        </g>
-    )
-}
-
-function FormatTooltip(props: {
-    active?: boolean
-    payload?: { payload: BarData }[]
-    format?: string
-}) {
-    const { active, format, payload: p } = props
-
-    const BarData = _.get(p, [0, 'payload'])
-    const { name, number } = BarData ?? {}
-
-    if (active && name) {
-        return (
-            <Paper elevation={2} sx={{ p: 2 }}>
-                <Typography variant="subtitle1" gutterBottom>
-                    {name}
-                </Typography>
-                <Typography variant="body2">
-                    {numeral(number).format(format)}
-                </Typography>
             </Paper>
         )
     }
