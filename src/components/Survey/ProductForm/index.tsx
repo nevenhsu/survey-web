@@ -259,7 +259,7 @@ export default function ProductForm() {
                                                 key={`${tag}${index}`}
                                                 id={result.id}
                                                 label={tag || 'Edit'}
-                                                colorKey={tags[tagId].color}
+                                                colorName={tags[tagId].color}
                                                 onClick={(e) => {
                                                     handleChipClick(e)
                                                     setEditingTag({
@@ -283,7 +283,7 @@ export default function ProductForm() {
                                     <StyledChip
                                         id={result.id}
                                         label="Add"
-                                        colorKey="grey"
+                                        colorName="grey"
                                         onClick={(e) => {
                                             handleChipClick(e)
                                             setMenuId(MenuIds.tagId)

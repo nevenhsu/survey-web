@@ -25,7 +25,7 @@ import { lighten } from '@mui/material/styles'
 import type { PaletteMode, PaletteOptions } from '@mui/material'
 import type { Theme } from '@mui/material/styles/createTheme'
 
-type Color = {
+export type Color = {
     50: string
     100: string
     200: string
@@ -50,9 +50,9 @@ export const getDesignTokens = (mode: PaletteMode): PaletteOptions => {
     }
 }
 
-export function getMuiColor(key?: string) {
+export function getMuiColor(name?: string) {
     const colors: {
-        [key: string]: Color
+        [name: string]: Color
     } = {
         amber,
         blue,
@@ -75,10 +75,10 @@ export function getMuiColor(key?: string) {
         yellow,
     }
 
-    if (key && colors[key]) {
+    if (name && colors[name]) {
         return {
-            key,
-            color: colors[key],
+            name,
+            color: colors[name],
         }
     }
 
@@ -87,16 +87,16 @@ export function getMuiColor(key?: string) {
     const k = keys[index]
 
     return {
-        key: k,
+        name: k,
         color: colors[k],
     }
 }
 
 export function getThemeColor(
     theme: Theme,
-    colorKey?: string
+    colorName?: string
 ): string | undefined {
-    const sx = { color: colorKey }
+    const sx = { color: colorName }
     const style = styleFunctionSx({ sx, theme }) as any
     const { color } = style ?? {}
     return color
@@ -104,11 +104,11 @@ export function getThemeColor(
 
 export function getContrastText(
     theme: Theme,
-    colorKey: string,
+    colorName: string,
     fallback: string
 ) {
     try {
-        const sx = { color: colorKey }
+        const sx = { color: colorName }
         const style = styleFunctionSx({ sx, theme }) as any
 
         const { color } = style ?? {}
@@ -117,21 +117,21 @@ export function getContrastText(
         return { color, textColor }
     } catch (err) {
         console.error(err)
-        return { color: colorKey, textColor: fallback }
+        return { color: colorName, textColor: fallback }
     }
 }
 
 export function lightenColor(
     theme: Theme,
-    colorKey: string,
+    colorName: string,
     coefficient: number,
     fallback: string
 ) {
-    if (!colorKey) {
+    if (!colorName) {
         return fallback
     }
     try {
-        const sx = { color: colorKey }
+        const sx = { color: colorName }
         const style = styleFunctionSx({ sx, theme }) as any
         const { color } = style ?? {}
         const lightColor = lighten(color, coefficient)

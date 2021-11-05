@@ -227,7 +227,7 @@ function ComponentItem(
                         <StyledButton
                             variant="contained"
                             sx={{ whiteSpace: 'nowrap' }}
-                            colorKey={buttonColor}
+                            colorName={buttonColor}
                         >
                             {copied ? '已複製' : '複製'}
                         </StyledButton>

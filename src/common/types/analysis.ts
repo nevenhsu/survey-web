@@ -69,7 +69,7 @@ export type OptionType = {
 
 export type TooltipData = {
     text: string
-    payload: Array<NumeralData>
+    payload?: Array<NumeralData>
 }
 
 export type TextWithTip = {
@@ -80,4 +80,14 @@ export type TextWithTip = {
 export type ListData = {
     text: string
     data: Array<TextWithTip>
+}
+
+export type TreeData = {
+    name: string
+    colorName?: string
+    color?: string
+    fill?: string
+    value?: number
+    valueFormat?: string // d3 format
+    children?: Array<Omit<TreeData, 'valueFormat'>>
 }

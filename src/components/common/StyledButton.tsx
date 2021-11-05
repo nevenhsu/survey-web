@@ -4,14 +4,14 @@ import { getContrastText } from 'theme/palette'
 import { lighten } from '@mui/system/colorManipulator'
 
 type StyledButtonProps = ButtonProps & {
-    colorKey?: string
+    colorName?: string
 }
 
 const StyledButton = styled(Button, {
-    shouldForwardProp: (prop) => prop !== 'colorKey',
-})<StyledButtonProps>(({ theme, colorKey, variant }) => {
-    if (colorKey) {
-        const { color, textColor } = getContrastText(theme, colorKey, '#fff')
+    shouldForwardProp: (prop) => prop !== 'colorName',
+})<StyledButtonProps>(({ theme, colorName, variant }) => {
+    if (colorName) {
+        const { color, textColor } = getContrastText(theme, colorName, '#fff')
         const lightColor = tryLighten(color, 0.08)
 
         return {

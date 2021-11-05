@@ -3,13 +3,13 @@ import Chip, { ChipProps } from '@mui/material/Chip'
 import { getMuiColor, getContrastText } from 'theme/palette'
 
 type StyledChipProps = ChipProps & {
-    colorKey: string
+    colorName: string
 }
 
 const StyledChip = styled(Chip, {
-    shouldForwardProp: (prop) => prop !== 'colorKey',
-})<StyledChipProps>(({ theme, colorKey, variant }) => {
-    const { color } = getMuiColor(colorKey)
+    shouldForwardProp: (prop) => prop !== 'colorName',
+})<StyledChipProps>(({ theme, colorName, variant }) => {
+    const { color } = getMuiColor(colorName)
     const backgroundColor = variant === 'outlined' ? color[200] : color[300]
     const { textColor } = getContrastText(theme, backgroundColor, '#fff')
 

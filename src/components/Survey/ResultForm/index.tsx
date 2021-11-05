@@ -350,7 +350,7 @@ export default function ResultForm() {
                                                 variant="outlined"
                                                 size="small"
                                                 label={el}
-                                                colorKey={tags[k].color}
+                                                colorName={tags[k].color}
                                                 sx={{ ml: 0.5 }}
                                             />
                                         ))

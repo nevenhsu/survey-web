@@ -188,7 +188,7 @@ export function getDefaultTags(label: string): Tags {
         id: setId(),
         label,
         values: [],
-        color: getMuiColor().key,
+        color: getMuiColor().name,
     }
 }
 

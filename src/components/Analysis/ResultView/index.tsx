@@ -1,13 +1,12 @@
 import * as React from 'react'
 import _ from 'lodash'
 import numeral from 'numeral'
-import { ResponsiveCirclePacking } from '@nivo/circle-packing'
 import { styled } from '@mui/material/styles'
 import Stack from '@mui/material/Stack'
+import Grid from '@mui/material/Grid'
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
-import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import List from '@mui/material/List'
@@ -19,14 +18,19 @@ import {
     Title,
     LinkList,
 } from 'components/Analysis/Shared'
+import CircleChart from 'components/common/CircleChart'
 import CircleSmallIcon from 'mdi-react/CircleSmallIcon'
 import { replaceByData } from 'utils/helper'
 import { ResultName, BehaviorStage, BehaviorAnalysis } from 'common/types'
 import type { TextWithTip } from 'common/types'
-import { optionsData, treeData, strategyData } from 'assets/data/analysis'
+import {
+    optionsData,
+    strategyData,
+    correlationData,
+    insertReg,
+} from 'assets/data/analysis'
+import { treeData, productTreeData } from 'assets/data/tree'
 import { Button } from '@mui/material'
-
-const insertReg = /#insert/g
 
 const overall = [{ label: '消費者行為', value: ResultName.consumerBehavior }]
 
@@ -63,7 +67,21 @@ const stages = [
     { label: '買後評估', value: BehaviorStage.postPurchase },
 ]
 
+const behaviorReports = [
+    { label: '商品測驗結果', value: BehaviorAnalysis.product },
+    { label: '影響力原則', value: BehaviorAnalysis.principle },
+    { label: '建議分群', value: BehaviorAnalysis.persona },
+]
+
 const BlockId = 'ResultBlock'
+
+const StyledTabs = styled(Tabs)(({ theme }) => ({
+    backgroundColor: theme.palette.grey[100],
+    '& .MuiTabs-indicator': {
+        top: 0,
+        bottom: 'unset',
+    },
+}))
 
 const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
     <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -80,13 +98,19 @@ const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
 
 export default function ResultView() {
     const [stage, setStage] = React.useState(BehaviorStage.knowledge)
-    const [zoomedId, setZoomedId] = React.useState<string | null>(null)
+    const [behavior, setBehavior] = React.useState(BehaviorAnalysis.product)
 
     const strategy = React.useMemo(() => {
         return _.map(strategyData, ({ text, data }) =>
             replaceByData(text, insertReg, data)
         )
     }, [strategyData])
+
+    const correlation = React.useMemo(() => {
+        return _.map(correlationData, ({ text, data }) =>
+            replaceByData(text, insertReg, data)
+        )
+    }, [correlationData])
 
     return (
         <>
@@ -144,19 +168,11 @@ export default function ResultView() {
                                             theme.palette.grey[50],
                                     }}
                                 >
-                                    <Tabs
+                                    <StyledTabs
                                         value={stage}
                                         onChange={(x, newValue) =>
                                             setStage(newValue)
                                         }
-                                        sx={{
-                                            bgcolor: (theme) =>
-                                                theme.palette.grey[100],
-                                            '& .MuiTabs-indicator': {
-                                                top: 0,
-                                                bottom: 'unset',
-                                            },
-                                        }}
                                     >
                                         {_.map(
                                             stages,
@@ -170,29 +186,9 @@ export default function ResultView() {
                                                 />
                                             )
                                         )}
-                                    </Tabs>
-                                    <Box
-                                        sx={{ p: 3, height: 480 }}
-                                        onClick={() => setZoomedId(null)}
-                                    >
-                                        <ResponsiveCirclePacking
-                                            id="name"
-                                            value="loc"
-                                            data={treeData}
-                                            labelsSkipRadius={12}
-                                            zoomedId={zoomedId}
-                                            onClick={(node, event) => {
-                                                event.stopPropagation()
-                                                setZoomedId(
-                                                    zoomedId === node.id
-                                                        ? null
-                                                        : node.id
-                                                )
-                                            }}
-                                            motionConfig="slow"
-                                            enableLabels
-                                            leavesOnly
-                                        />
+                                    </StyledTabs>
+                                    <Box sx={{ p: 3, height: 480 }}>
+                                        <CircleChart data={treeData} />
                                     </Box>
                                 </Box>
                             </ElementBox>
@@ -214,48 +210,7 @@ export default function ResultView() {
                                     title="專屬策略建議"
                                     text="超市調以多種商品推薦模組下的客群與行為分析，為您量身打造專屬策略建議"
                                 />
-
-                                <List>
-                                    {strategy.map((el, index) => (
-                                        <ListItem
-                                            key={index}
-                                            sx={{
-                                                display: 'block',
-                                                position: 'relative',
-                                                pl: 3,
-                                            }}
-                                        >
-                                            <Box
-                                                sx={{
-                                                    position: 'absolute',
-                                                    top: 8,
-                                                    left: 0,
-                                                }}
-                                            >
-                                                <CircleSmallIcon />
-                                            </Box>
-                                            {el.map((o, i) =>
-                                                _.isObject(o) ? (
-                                                    <ButtonWithTip
-                                                        key={`${index}${i}`}
-                                                        data={o}
-                                                    />
-                                                ) : (
-                                                    <Typography
-                                                        key={`${index}${i}`}
-                                                        display="inline-block"
-                                                        sx={{
-                                                            whiteSpace:
-                                                                'nowrap',
-                                                        }}
-                                                    >
-                                                        {o}
-                                                    </Typography>
-                                                )
-                                            )}
-                                        </ListItem>
-                                    ))}
-                                </List>
+                                <TooltipList data={strategy} />
                             </ElementBox>
 
                             <ElementBox name={ResultName.customerAnalysis}>
@@ -263,6 +218,72 @@ export default function ResultView() {
                                     title="客群與行為分析"
                                     text="超市調以多種商品推薦模組下的客群與行為分析，為您量身打造專屬策略建議"
                                 />
+                                <Box
+                                    sx={{
+                                        bgcolor: (theme) =>
+                                            theme.palette.grey[50],
+                                    }}
+                                >
+                                    <StyledTabs
+                                        value={behavior}
+                                        onChange={(x, newValue) =>
+                                            setBehavior(newValue)
+                                        }
+                                    >
+                                        {_.map(
+                                            behaviorReports,
+                                            ({ label, value }, index) => (
+                                                <Tab
+                                                    key={value}
+                                                    label={`${
+                                                        index + 1
+                                                    } ${label}`}
+                                                    value={value}
+                                                />
+                                            )
+                                        )}
+                                    </StyledTabs>
+                                    <Box sx={{ p: 2 }}>
+                                        <Grid container spacing={3}>
+                                            {productTreeData.map((el) => (
+                                                <Grid
+                                                    key={el.label}
+                                                    item
+                                                    xs={4}
+                                                    sx={{ height: 320 }}
+                                                >
+                                                    <Stack
+                                                        direction="row"
+                                                        alignItems="center"
+                                                        justifyContent="space-between"
+                                                        sx={{ mb: 2 }}
+                                                    >
+                                                        <Typography variant="body1">
+                                                            {el.label}
+                                                        </Typography>
+                                                        <Typography
+                                                            variant="body2"
+                                                            sx={{
+                                                                color: (
+                                                                    theme
+                                                                ) =>
+                                                                    theme
+                                                                        .palette
+                                                                        .primary
+                                                                        .main,
+                                                            }}
+                                                        >
+                                                            {el.text}
+                                                        </Typography>
+                                                    </Stack>
+                                                    <CircleChart
+                                                        data={el.data}
+                                                    />
+                                                </Grid>
+                                            ))}
+                                        </Grid>
+                                    </Box>
+                                </Box>
                             </ElementBox>
                         </>
 
@@ -276,6 +297,15 @@ export default function ResultView() {
                             <Typography sx={{ mb: 2 }}>
                                 說明文字說明文字說明文字說明文字
                             </Typography>
+
+                            <ElementBox name={ResultName.correlationAnalysis}>
+                                <Title
+                                    title="專屬策略建議"
+                                    text="超市調以多種商品推薦模組下的客群與行為分析，為您量身打造專屬策略建議"
+                                />
+
+                                <TooltipList data={correlation} />
+                            </ElementBox>
                         </>
                     </Box>
                 </Grid>
@@ -344,5 +374,48 @@ function ButtonWithTip(props: { data: TextWithTip }) {
                 {text}
             </Button>
         </StyledTooltip>
+    )
+}
+
+function TooltipList(props: { data: (string | TextWithTip)[][] }) {
+    const { data } = props
+    return (
+        <List>
+            {data.map((el, index) => (
+                <ListItem
+                    key={index}
+                    sx={{
+                        display: 'block',
+                        position: 'relative',
+                        pl: 3,
+                    }}
+                >
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            top: 8,
+                            left: 0,
+                        }}
+                    >
+                        <CircleSmallIcon />
+                    </Box>
+                    {el.map((o, i) =>
+                        _.isObject(o) ? (
+                            <ButtonWithTip key={`${index}${i}`} data={o} />
+                        ) : (
+                            <Typography
+                                key={`${index}${i}`}
+                                display="inline-block"
+                                sx={{
+                                    whiteSpace: 'nowrap',
+                                }}
+                            >
+                                {o}
+                            </Typography>
+                        )
+                    )}
+                </ListItem>
+            ))}
+        </List>
     )
 }

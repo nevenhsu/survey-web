@@ -7,8 +7,8 @@ import type {
     ListData,
     TooltipData,
 } from 'common/types'
-import { generateLibTree } from '@nivo/generators'
 
+export const insertReg = /#insert/g
 const insertIdentifier = '#insert'
 
 type BehaviorData = {
@@ -214,8 +214,6 @@ export const behaviorData: BehaviorData = {
 
 export const BehaviorStages: Array<OptionType> = [{ label: '', value: '' }]
 
-export const treeData = generateLibTree()
-
 const tooltipData: TooltipData = {
     text: '策略依據文字說明策略依據文字說明策略依據文字說明',
     payload: [
@@ -293,6 +291,48 @@ export const strategyData: Array<ListData> = [
             },
             {
                 text: '專家的推薦',
+                tooltip: tooltipData,
+            },
+        ],
+    },
+]
+
+export const correlationData: Array<ListData> = [
+    {
+        text: `${insertIdentifier}，與${insertIdentifier}有正相關`,
+        data: [
+            {
+                text: '會被網紅說服的人',
+                tooltip: tooltipData,
+            },
+            {
+                text: '會使用站內收藏功能的人',
+                tooltip: tooltipData,
+            },
+        ],
+    },
+    {
+        text: `${insertIdentifier}，與${insertIdentifier}有正相關`,
+        data: [
+            {
+                text: '信任權威的人',
+                tooltip: tooltipData,
+            },
+            {
+                text: '「商業理財、生活風格」類型的書籍',
+                tooltip: tooltipData,
+            },
+        ],
+    },
+    {
+        text: `${insertIdentifier}，與${insertIdentifier}呈現負相關`,
+        data: [
+            {
+                text: '注重承諾的人',
+                tooltip: tooltipData,
+            },
+            {
+                text: '價格',
                 tooltip: tooltipData,
             },
         ],
