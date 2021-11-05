@@ -458,12 +458,12 @@ function OverviewView(props: { data: ConversionRatioData }) {
                 >
                     {data.left.map((o) => (
                         <Box
-                            key={o.label}
+                            key={o.name}
                             sx={{
                                 textAlign: 'center',
                             }}
                         >
-                            <Typography gutterBottom>{o.label}</Typography>
+                            <Typography gutterBottom>{o.name}</Typography>
                             <Typography variant="h6">
                                 {numeral(o.value).format(o.format)}
                             </Typography>
@@ -474,13 +474,13 @@ function OverviewView(props: { data: ConversionRatioData }) {
                 <Box sx={{ width: '50%' }}>
                     {data.right.map((o) => (
                         <Stack
-                            key={o.label}
+                            key={o.name}
                             direction="row"
                             alignItems="center"
                             justifyContent="space-between"
                             sx={{ mb: 1 }}
                         >
-                            <Typography>{o.label}</Typography>
+                            <Typography>{o.name}</Typography>
                             <Typography>
                                 {numeral(o.value).format(o.format)}
                             </Typography>

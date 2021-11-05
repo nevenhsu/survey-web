@@ -1,3 +1,5 @@
+import { QuizMode } from 'common/types'
+
 export enum AnalysisStep {
     behavior = 'behavior',
     result = 'result',
@@ -39,9 +41,9 @@ export enum BehaviorAnalysis {
 }
 
 export type NumeralData = {
-    label: string
-    format: string
+    name: string
     value: number
+    format: string
 }
 
 export type ConversionRatioData = {
@@ -59,7 +61,7 @@ export type ProductCtrData = {
 
 export type ChartData = {
     name: string
-    number: number
+    value: number
 }
 
 export type OptionType = {
@@ -90,4 +92,12 @@ export type TreeData = {
     value?: number
     valueFormat?: string // d3 format
     children?: Array<Omit<TreeData, 'valueFormat'>>
+}
+
+export type QuizData = {
+    id: string
+    mode: QuizMode
+    title: string
+    format?: string
+    data: Array<ChartData>
 }

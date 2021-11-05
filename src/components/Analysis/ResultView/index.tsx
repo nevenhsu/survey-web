@@ -339,14 +339,14 @@ function ButtonWithTip(props: { data: TextWithTip }) {
 
                             {payload.map((el) => (
                                 <Stack
-                                    key={el.label}
+                                    key={el.name}
                                     direction="row"
                                     alignItems="center"
                                     justifyContent="space-between"
                                     sx={{ mb: 1 }}
                                 >
                                     <Typography variant="body2">
-                                        {el.label}
+                                        {el.name}
                                     </Typography>
                                     <Typography variant="body2">
                                         {numeral(el.value).format(el.format)}

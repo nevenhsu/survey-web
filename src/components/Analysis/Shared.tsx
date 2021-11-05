@@ -135,7 +135,7 @@ export function FormatTooltip(props: {
     const { active, format, payload: p } = props
 
     const payload = _.get(p, [0, 'payload'])
-    const { name, number } = payload ?? {}
+    const { name, value } = payload ?? {}
 
     if (active && name) {
         return (
@@ -144,7 +144,7 @@ export function FormatTooltip(props: {
                     {name}
                 </Typography>
                 <Typography variant="body2">
-                    {numeral(number).format(format)}
+                    {numeral(value).format(format)}
                 </Typography>
             </Paper>
         )

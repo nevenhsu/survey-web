@@ -14,6 +14,7 @@ import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
+import ThemeProvider from 'theme/ThemeProvider'
 import { useAppSelector } from 'hooks'
 
 const Survey = React.lazy(() => import('components/Survey'))
@@ -25,8 +26,13 @@ const Grow = styled('div')({
 })
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
+    overflow: 'unset',
+    '& .MuiTabs-scroller': {
+        overflow: 'unset !important',
+    },
     '& .MuiTabs-indicator': {
         backgroundColor: theme.palette.common.white,
+        bottom: -6,
     },
 }))
 
@@ -59,29 +65,31 @@ export default function App() {
     return (
         <>
             {!Boolean(matchSurvey) && (
-                <AppBar position="static">
-                    <Toolbar>
-                        <Typography variant="h6" component="div">
-                            超市調
-                        </Typography>
-                        <Grow />
-                        <StyledTabs
-                            value={pathname}
-                            onChange={handleChangePath}
-                            centered
-                        >
-                            {_.map(paths, ({ label, path }) => (
-                                <StyledTab
-                                    key={path}
-                                    label={label}
-                                    value={path}
-                                />
-                            ))}
-                        </StyledTabs>
-                        <Grow />
-                        <Button color="inherit">Login</Button>
-                    </Toolbar>
-                </AppBar>
+                <ThemeProvider mode="dark">
+                    <AppBar position="static">
+                        <Toolbar>
+                            <Typography variant="h6" component="div">
+                                超市調
+                            </Typography>
+                            <Grow />
+                            <StyledTabs
+                                value={pathname}
+                                onChange={handleChangePath}
+                                centered
+                            >
+                                {_.map(paths, ({ label, path }) => (
+                                    <StyledTab
+                                        key={path}
+                                        label={label}
+                                        value={path}
+                                    />
+                                ))}
+                            </StyledTabs>
+                            <Grow />
+                            <Button color="inherit">Login</Button>
+                        </Toolbar>
+                    </AppBar>
+                </ThemeProvider>
             )}
             <React.Suspense fallback={<div />}>
                 <Switch>

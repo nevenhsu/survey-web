@@ -1,4 +1,4 @@
-import { BehaviorName } from 'common/types'
+import { BehaviorName, QuizMode } from 'common/types'
 import type {
     ConversionRatioData,
     ProductCtrData,
@@ -6,6 +6,7 @@ import type {
     OptionType,
     ListData,
     TooltipData,
+    QuizData,
 } from 'common/types'
 
 export const insertReg = /#insert/g
@@ -60,34 +61,34 @@ export const behaviorData: BehaviorData = {
             name: BehaviorName.status,
             left: [
                 {
-                    label: '轉換率',
+                    name: '轉換率',
                     format: '0.0%',
                     value: 0.833,
                 },
                 {
-                    label: '完成率',
+                    name: '完成率',
                     format: '0.0%',
                     value: 0.72,
                 },
             ],
             right: [
                 {
-                    label: '瀏覽數',
+                    name: '瀏覽數',
                     format: '0,0',
                     value: 3000,
                 },
                 {
-                    label: '開始測驗數',
+                    name: '開始測驗數',
                     format: '0,0',
                     value: 2500,
                 },
                 {
-                    label: '完成測驗數',
+                    name: '完成測驗數',
                     format: '0,0',
                     value: 1800,
                 },
                 {
-                    label: '平均答題時間',
+                    name: '平均答題時間',
                     format: '00:00:00',
                     value: 5780 / 1000,
                 },
@@ -98,34 +99,34 @@ export const behaviorData: BehaviorData = {
             name: BehaviorName.ctr,
             left: [
                 {
-                    label: '分享',
+                    name: '分享',
                     format: '0.0%',
                     value: 0.093,
                 },
                 {
-                    label: '抽獎',
+                    name: '抽獎',
                     format: '0.0%',
                     value: 0.88,
                 },
             ],
             right: [
                 {
-                    label: '瀏覽數',
+                    name: '瀏覽數',
                     format: '0,0',
                     value: 3000,
                 },
                 {
-                    label: '開始測驗數',
+                    name: '開始測驗數',
                     format: '0,0',
                     value: 2500,
                 },
                 {
-                    label: '完成測驗數',
+                    name: '完成測驗數',
                     format: '0,0',
                     value: 1800,
                 },
                 {
-                    label: '平均答題時間',
+                    name: '平均答題時間',
                     format: '00:00:00',
                     value: 3400 / 1000,
                 },
@@ -176,12 +177,12 @@ export const behaviorData: BehaviorData = {
     },
     flow: {
         deviceTraffic: [
-            { name: 'mobile', number: 300 },
-            { name: 'desktop', number: 2700 },
+            { name: 'mobile', value: 300 },
+            { name: 'desktop', value: 2700 },
         ],
         trafficSource: [
-            { name: 'facebook', number: 2000 },
-            { name: 'line', number: 1000 },
+            { name: 'facebook', value: 2000 },
+            { name: 'line', value: 1000 },
         ],
         flowAnalysis: [
             { name: 'facebook', mobile: 200, desktop: 1800 },
@@ -190,24 +191,24 @@ export const behaviorData: BehaviorData = {
     },
     quizStatus: {
         bounceRate: [
-            { name: 'quiz 1', number: 0.042 },
-            { name: 'quiz 2', number: 0.037 },
-            { name: 'quiz 3', number: 0.146 },
-            { name: 'quiz 4', number: 0.233 },
-            { name: 'quiz 5', number: 0.086 },
-            { name: 'quiz 6', number: 0.093 },
-            { name: 'quiz 7', number: 0.012 },
-            { name: 'quiz 8', number: 0.343 },
+            { name: 'quiz 1', value: 0.042 },
+            { name: 'quiz 2', value: 0.037 },
+            { name: 'quiz 3', value: 0.146 },
+            { name: 'quiz 4', value: 0.233 },
+            { name: 'quiz 5', value: 0.086 },
+            { name: 'quiz 6', value: 0.093 },
+            { name: 'quiz 7', value: 0.012 },
+            { name: 'quiz 8', value: 0.343 },
         ],
         dwellTime: [
-            { name: 'quiz 1', number: 4340 / 1000 },
-            { name: 'quiz 2', number: 3942 / 1000 },
-            { name: 'quiz 3', number: 4952 / 1000 },
-            { name: 'quiz 4', number: 4921 / 1000 },
-            { name: 'quiz 5', number: 19394 / 1000 },
-            { name: 'quiz 6', number: 2039 / 1000 },
-            { name: 'quiz 7', number: 3910 / 1000 },
-            { name: 'quiz 8', number: 13910 / 1000 },
+            { name: 'quiz 1', value: 4340 / 1000 },
+            { name: 'quiz 2', value: 3942 / 1000 },
+            { name: 'quiz 3', value: 4952 / 1000 },
+            { name: 'quiz 4', value: 4921 / 1000 },
+            { name: 'quiz 5', value: 19394 / 1000 },
+            { name: 'quiz 6', value: 2039 / 1000 },
+            { name: 'quiz 7', value: 3910 / 1000 },
+            { name: 'quiz 8', value: 13910 / 1000 },
         ],
     },
 }
@@ -218,12 +219,12 @@ const tooltipData: TooltipData = {
     text: '策略依據文字說明策略依據文字說明策略依據文字說明',
     payload: [
         {
-            label: '這個',
+            name: '這個',
             value: 1000,
             format: '0,0',
         },
         {
-            label: '那個',
+            name: '那個',
             value: 500,
             format: '0,0',
         },
@@ -336,5 +337,38 @@ export const correlationData: Array<ListData> = [
                 tooltip: tooltipData,
             },
         ],
+    },
+]
+
+export const quizzesData: Array<QuizData> = [
+    {
+        id: 'ewe2dw',
+        mode: QuizMode.selection,
+        title: '勾選你喜愛的電影類型',
+        format: '0,0',
+        data: [
+            { name: 'Group A', value: 400 },
+            { name: 'Group B', value: 300 },
+            { name: 'Group C', value: 300 },
+            { name: 'Group D', value: 200 },
+        ],
+    },
+    {
+        id: 'ej3w2s',
+        mode: QuizMode.sort,
+        title: '挑選手機的優先考量',
+        data: [],
+    },
+    {
+        id: 'fpv02a',
+        mode: QuizMode.slider,
+        title: '週末平均消費多少？',
+        data: [],
+    },
+    {
+        id: 'f9vm3x',
+        mode: QuizMode.fill,
+        title: '評論哈利波特對年輕世代的影響',
+        data: [],
     },
 ]

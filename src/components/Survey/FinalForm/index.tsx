@@ -162,8 +162,6 @@ export default function FinalForm() {
                                 sx={{
                                     p: 1,
                                     mb: 1,
-                                    border: (theme) =>
-                                        `1px solid ${theme.palette.grey[300]}`,
                                     bgcolor: (theme) =>
                                         mode === el.value
                                             ? theme.palette.grey[100]
