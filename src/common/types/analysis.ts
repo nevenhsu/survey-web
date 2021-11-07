@@ -40,12 +40,6 @@ export enum BehaviorAnalysis {
     persona = 'persona',
 }
 
-export type NumeralData = {
-    name: string
-    value: number
-    format: string
-}
-
 export type ConversionRatioData = {
     label: string
     name: BehaviorName
@@ -57,11 +51,17 @@ export type ProductCtrData = {
     name: string
     views: number
     hits: number
+    ctr: number
 }
 
-export type ChartData = {
+export type NumeralData = {
     name: string
     value: number
+    format?: string
+}
+
+export type ChartData = NumeralData & {
+    [key: string]: string | number
 }
 
 export type OptionType = {
@@ -99,5 +99,5 @@ export type QuizData = {
     mode: QuizMode
     title: string
     format?: string
-    data: Array<ChartData>
+    data: Array<NumeralData>
 }

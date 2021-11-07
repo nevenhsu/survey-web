@@ -3,6 +3,7 @@ import type {
     ConversionRatioData,
     ProductCtrData,
     ChartData,
+    NumeralData,
     OptionType,
     ListData,
     TooltipData,
@@ -21,8 +22,8 @@ type BehaviorData = {
         data: Array<ProductCtrData>
     }
     flow: {
-        deviceTraffic: Array<ChartData>
-        trafficSource: Array<ChartData>
+        deviceTraffic: Array<NumeralData>
+        trafficSource: Array<NumeralData>
         flowAnalysis: Array<{
             name: string
             mobile: number
@@ -30,8 +31,8 @@ type BehaviorData = {
         }>
     }
     quizStatus: {
-        bounceRate: Array<ChartData>
-        dwellTime: Array<ChartData>
+        bounceRate: Array<NumeralData>
+        dwellTime: Array<NumeralData>
     }
 }
 
@@ -142,43 +143,50 @@ export const behaviorData: BehaviorData = {
                 name: 'Book A',
                 views: 4000,
                 hits: 2400,
+                ctr: 2400 / 4000,
             },
             {
                 name: 'Book B',
                 views: 3000,
                 hits: 1398,
+                ctr: 1398 / 3000,
             },
             {
                 name: 'Book C',
                 views: 9800,
                 hits: 2000,
+                ctr: 2000 / 9800,
             },
             {
                 name: 'Book D',
-                hits: 2780,
                 views: 3908,
+                hits: 2780,
+                ctr: 2780 / 3908,
             },
             {
                 name: 'Book E',
-                hits: 1890,
                 views: 4800,
+                hits: 1890,
+                ctr: 1890 / 4800,
             },
             {
                 name: 'Book F',
-                hits: 2390,
                 views: 3800,
+                hits: 2390,
+                ctr: 2390 / 3800,
             },
             {
                 name: 'Book G',
-                hits: 3490,
                 views: 4300,
+                hits: 3490,
+                ctr: 3490 / 4300,
             },
         ],
     },
     flow: {
         deviceTraffic: [
-            { name: 'mobile', value: 300 },
-            { name: 'desktop', value: 2700 },
+            { name: '手機', value: 300 },
+            { name: '電腦', value: 2700 },
         ],
         trafficSource: [
             { name: 'facebook', value: 2000 },

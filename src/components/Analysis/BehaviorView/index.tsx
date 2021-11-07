@@ -2,8 +2,10 @@ import * as React from 'react'
 import _ from 'lodash'
 import numeral from 'numeral'
 import {
+    ComposedChart,
     BarChart,
     Bar,
+    Line,
     XAxis,
     YAxis,
     CartesianGrid,
@@ -23,8 +25,6 @@ import {
     ElementBox,
     Title,
     LinkList,
-    FormatTick,
-    FormatTooltip,
 } from 'components/Analysis/Shared'
 import { BehaviorName } from 'common/types'
 import type { ConversionRatioData, ProductCtrData } from 'common/types'
@@ -157,43 +157,83 @@ export default function BehaviorView() {
                                             240,
                                         ])}
                                     >
-                                        <BarChart
+                                        <ComposedChart
                                             layout="vertical"
                                             data={behaviorData.productCtr.data}
                                             barGap={-32}
                                             barSize={32}
                                         >
                                             <CartesianGrid strokeDasharray="3 3" />
-                                            <XAxis type="number" />
+                                            <XAxis
+                                                xAxisId="integer"
+                                                type="number"
+                                                orientation="bottom"
+                                                tickFormatter={(n) =>
+                                                    numeral(n).format('0,0')
+                                                }
+                                            />
+                                            <XAxis
+                                                xAxisId="percent"
+                                                type="number"
+                                                orientation="top"
+                                                tickFormatter={(n) =>
+                                                    numeral(n).format('0.0%')
+                                                }
+                                            />
                                             <YAxis
                                                 dataKey="name"
                                                 type="category"
                                             />
                                             <Tooltip
-                                                content={({
-                                                    active,
-                                                    payload,
-                                                }) => (
-                                                    <ProductTooltip
-                                                        active={active}
-                                                        payload={payload as any}
-                                                    />
-                                                )}
+                                                formatter={(
+                                                    value: any,
+                                                    name: any,
+                                                    props: any
+                                                ) => {
+                                                    const { dataKey } =
+                                                        props ?? {}
+                                                    const format =
+                                                        dataKey === 'ctr'
+                                                            ? '0.0%'
+                                                            : '0,0'
+
+                                                    return [
+                                                        numeral(value).format(
+                                                            format
+                                                        ),
+                                                        name,
+                                                    ]
+                                                }}
                                             />
                                             <Legend />
+
                                             <Bar
+                                                xAxisId="integer"
                                                 dataKey="views"
+                                                name="觀看數"
                                                 fill={
+                                                    theme.palette.primary.light
+                                                }
+                                            />
+                                            <Bar
+                                                xAxisId="integer"
+                                                dataKey="hits"
+                                                name="點擊數"
+                                                fill={
+                                                    theme.palette.secondary
+                                                        .light
+                                                }
+                                            />
+                                            <Line
+                                                xAxisId="percent"
+                                                type="monotone"
+                                                dataKey="ctr"
+                                                name="觀看率"
+                                                stroke={
                                                     theme.palette.primary.main
                                                 }
                                             />
-                                            <Bar
-                                                dataKey="hits"
-                                                fill={
-                                                    theme.palette.secondary.main
-                                                }
-                                            />
-                                        </BarChart>
+                                        </ComposedChart>
                                     </ResponsiveContainer>
                                 </Box>
                             </ElementBox>
@@ -254,14 +294,33 @@ export default function BehaviorView() {
                                                     barSize={32}
                                                 >
                                                     <CartesianGrid strokeDasharray="3 3" />
-                                                    <XAxis type="number" />
+                                                    <XAxis
+                                                        type="number"
+                                                        tickFormatter={(n) =>
+                                                            numeral(n).format(
+                                                                '0,0'
+                                                            )
+                                                        }
+                                                    />
                                                     <YAxis
                                                         dataKey="name"
                                                         type="category"
                                                     />
-                                                    <Tooltip />
+                                                    <Tooltip
+                                                        formatter={(
+                                                            value: any,
+                                                            name: any,
+                                                            props: any
+                                                        ) => [
+                                                            numeral(
+                                                                value
+                                                            ).format('0,0'),
+                                                            name,
+                                                        ]}
+                                                    />
                                                     <Bar
-                                                        dataKey="number"
+                                                        name="流量"
+                                                        dataKey="value"
                                                         fill={
                                                             theme.palette
                                                                 .primary.main
@@ -299,14 +358,31 @@ export default function BehaviorView() {
                                             barSize={32}
                                         >
                                             <CartesianGrid strokeDasharray="3 3" />
-                                            <XAxis type="number" />
+                                            <XAxis
+                                                type="number"
+                                                tickFormatter={(n) =>
+                                                    numeral(n).format('0,0')
+                                                }
+                                            />
                                             <YAxis
                                                 dataKey="name"
                                                 type="category"
                                             />
-                                            <Tooltip />
+                                            <Tooltip
+                                                formatter={(
+                                                    value: any,
+                                                    name: any,
+                                                    props: any
+                                                ) => [
+                                                    numeral(value).format(
+                                                        '0,0'
+                                                    ),
+                                                    name,
+                                                ]}
+                                            />
                                             <Legend />
                                             <Bar
+                                                name="手機"
                                                 dataKey="mobile"
                                                 stackId="device"
                                                 fill={
@@ -314,6 +390,7 @@ export default function BehaviorView() {
                                                 }
                                             />
                                             <Bar
+                                                name="電腦"
                                                 dataKey="desktop"
                                                 stackId="device"
                                                 fill={
@@ -339,14 +416,16 @@ export default function BehaviorView() {
 
                             {[
                                 {
-                                    name: BehaviorName.bounceRate,
+                                    key: BehaviorName.bounceRate,
+                                    name: '跳出率',
                                     data: behaviorData.quizStatus.bounceRate,
                                     title: '跳出率',
                                     text: '針對跳出率過高的題目，重新設計',
                                     format: '0.0%',
                                 },
                                 {
-                                    name: BehaviorName.dwellTime,
+                                    key: BehaviorName.dwellTime,
+                                    name: '停留時間',
                                     data: behaviorData.quizStatus.dwellTime,
                                     title: '停留時間',
                                     text: '如果題目的填答時間比預期的長、短很多，重新調整題目設計',
@@ -354,8 +433,8 @@ export default function BehaviorView() {
                                 },
                             ].map((el) => (
                                 <ElementBox
-                                    key={el.name}
-                                    name={el.name}
+                                    key={el.key}
+                                    name={el.key}
                                     style={{ width: '100%' }}
                                 >
                                     <Title title={el.title} text={el.text} />
@@ -381,41 +460,31 @@ export default function BehaviorView() {
                                                 <CartesianGrid strokeDasharray="3 3" />
                                                 <XAxis
                                                     type="number"
-                                                    tick={({
-                                                        x,
-                                                        y,
-                                                        payload,
-                                                    }) => (
-                                                        <FormatTick
-                                                            x={x}
-                                                            y={y}
-                                                            value={
-                                                                payload.value
-                                                            }
-                                                            format={el.format}
-                                                        />
-                                                    )}
+                                                    tickFormatter={(n) =>
+                                                        numeral(n).format(
+                                                            el.format
+                                                        )
+                                                    }
                                                 />
                                                 <YAxis
                                                     dataKey="name"
                                                     type="category"
                                                 />
                                                 <Tooltip
-                                                    content={({
-                                                        active,
-                                                        payload,
-                                                    }) => (
-                                                        <FormatTooltip
-                                                            active={active}
-                                                            payload={
-                                                                payload as any
-                                                            }
-                                                            format={el.format}
-                                                        />
-                                                    )}
+                                                    formatter={(
+                                                        value: any,
+                                                        name: any,
+                                                        props: any
+                                                    ) => [
+                                                        numeral(value).format(
+                                                            el.format
+                                                        ),
+                                                        name,
+                                                    ]}
                                                 />
                                                 <Bar
-                                                    dataKey="number"
+                                                    name={el.name}
+                                                    dataKey="value"
                                                     fill={
                                                         theme.palette.primary
                                                             .main
@@ -490,34 +559,4 @@ function OverviewView(props: { data: ConversionRatioData }) {
             </Stack>
         </ElementBox>
     )
-}
-
-function ProductTooltip(props: {
-    active?: boolean
-    payload?: { payload: ProductCtrData }[]
-}) {
-    const { active, payload: p } = props
-
-    const productData = _.get(p, [0, 'payload'])
-    const { name, views = 0, hits = 0 } = productData ?? {}
-
-    const ratio = numeral(hits / views).format('0.0%')
-    if (active && name) {
-        return (
-            <Paper elevation={2} sx={{ p: 2 }}>
-                <Typography variant="subtitle1" gutterBottom>
-                    {name}
-                </Typography>
-                <Typography variant="body2" gutterBottom>
-                    觀看數: {numeral(views).format('0,0')}
-                </Typography>
-                <Typography variant="body2" gutterBottom>
-                    點擊數: {numeral(hits).format('0,0')}
-                </Typography>
-                <Typography variant="body2">點擊率: {ratio}</Typography>
-            </Paper>
-        )
-    }
-
-    return null
 }

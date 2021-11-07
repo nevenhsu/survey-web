@@ -13,7 +13,7 @@ import List from '@mui/material/List'
 import ListSubheader from '@mui/material/ListSubheader'
 import ListItemButton from '@mui/material/ListItemButton'
 import ThemeProvider from 'theme/ThemeProvider'
-import type { ChartData, OnChangeInput, OptionType } from 'common/types'
+import type { OnChangeInput, OptionType } from 'common/types'
 
 type BlockType = {
     label: string
@@ -102,55 +102,6 @@ export function Title(props: { title?: string; text?: string }) {
             </Box>
         </Stack>
     )
-}
-
-export function FormatTick(props: {
-    x: number
-    y: number
-    format: string
-    value: any
-}) {
-    const { x, y, format, value } = props
-
-    return (
-        <g transform={`translate(${x},${y})`}>
-            <text
-                x={0}
-                y={0}
-                dy={16}
-                fill="rgba(0, 0, 0, 0.6)"
-                textAnchor="end"
-            >
-                {numeral(value).format(format)}
-            </text>
-        </g>
-    )
-}
-
-export function FormatTooltip(props: {
-    active?: boolean
-    payload?: { payload: ChartData }[]
-    format?: string
-}) {
-    const { active, format, payload: p } = props
-
-    const payload = _.get(p, [0, 'payload'])
-    const { name, value } = payload ?? {}
-
-    if (active && name) {
-        return (
-            <Paper elevation={2} sx={{ p: 2 }}>
-                <Typography variant="subtitle1" gutterBottom>
-                    {name}
-                </Typography>
-                <Typography variant="body2">
-                    {numeral(value).format(format)}
-                </Typography>
-            </Paper>
-        )
-    }
-
-    return null
 }
 
 export function SelectorBar(props: SelectorBarProps) {

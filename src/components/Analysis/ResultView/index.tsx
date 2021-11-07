@@ -18,7 +18,7 @@ import {
     Title,
     LinkList,
 } from 'components/Analysis/Shared'
-import CircleChart from 'components/common/CircleChart'
+import CircleChart from 'components/common/Charts/CircleChart'
 import CircleSmallIcon from 'mdi-react/CircleSmallIcon'
 import { replaceByData } from 'utils/helper'
 import { ResultName, BehaviorStage, BehaviorAnalysis } from 'common/types'
@@ -349,7 +349,9 @@ function ButtonWithTip(props: { data: TextWithTip }) {
                                         {el.name}
                                     </Typography>
                                     <Typography variant="body2">
-                                        {numeral(el.value).format(el.format)}
+                                        {numeral(el.value).format(
+                                            el.format || '0,0'
+                                        )}
                                     </Typography>
                                 </Stack>
                             ))}
