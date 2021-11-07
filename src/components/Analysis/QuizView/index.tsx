@@ -1,11 +1,29 @@
 import * as React from 'react'
 import _ from 'lodash'
+import numeral from 'numeral'
+import {
+    PieChart,
+    Pie,
+    Cell,
+    BarChart,
+    Bar,
+    AreaChart,
+    Area,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    Legend,
+    ResponsiveContainer,
+} from 'recharts'
+import CircleChart from 'components/common/Charts/CircleChart'
 import { styled } from '@mui/material/styles'
 import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Stack, { StackProps } from '@mui/material/Stack'
 import Divider from '@mui/material/Divider'
+import { colors } from 'theme/palette'
 import { QuizMode } from 'common/types'
 import { quizzesData } from 'assets/data/analysis'
 
@@ -33,6 +51,164 @@ export default function QuizView() {
     const selectedQuiz = React.useMemo(() => {
         return _.find(quizzes, { id: selectedId })
     }, [quizzes, selectedId])
+
+    const renderChart = () => {
+        if (selectedQuiz) {
+            const { mode, data = [] } = selectedQuiz
+
+            switch (mode) {
+                case QuizMode.selection: {
+                    const total = _.sum(data.map((el: any) => el.value))
+
+                    return (
+                        <PieChart>
+                            <Pie
+                                dataKey="value"
+                                data={data}
+                                fill="#8884d8"
+                                label
+                            >
+                                {data.map((el: any, index: number) => (
+                                    <Cell
+                                        key={`cell-${index}`}
+                                        fill={
+                                            colors[index % colors.length][500]
+                                        }
+                                    />
+                                ))}
+                            </Pie>
+
+                            <Tooltip
+                                formatter={(
+                                    value: any,
+                                    name: any,
+                                    props: any
+                                ) => {
+                                    const num = numeral(value).format('0,0')
+                                    const ratio = numeral(value / total).format(
+                                        '0.0%'
+                                    )
+
+                                    return [
+                                        <Box sx={{ minWidth: 120 }}>
+                                            <Stack
+                                                direction="row"
+                                                alignItems="center"
+                                                justifyContent="space-between"
+                                                sx={{
+                                                    color: 'primary.main',
+                                                    my: 1,
+                                                }}
+                                            >
+                                                <Typography
+                                                    variant="body2"
+                                                    color="inherit"
+                                                >
+                                                    數量
+                                                </Typography>
+                                                <Typography
+                                                    variant="body2"
+                                                    color="inherit"
+                                                >
+                                                    {num}
+                                                </Typography>
+                                            </Stack>
+                                            <Stack
+                                                direction="row"
+                                                alignItems="center"
+                                                justifyContent="space-between"
+                                                sx={{ color: 'primary.main' }}
+                                            >
+                                                <Typography
+                                                    variant="body2"
+                                                    color="inherit"
+                                                >
+                                                    佔比
+                                                </Typography>
+                                                <Typography
+                                                    variant="body2"
+                                                    color="inherit"
+                                                >
+                                                    {ratio}
+                                                </Typography>
+                                            </Stack>
+                                        </Box>,
+                                        name,
+                                    ]
+                                }}
+                            />
+                        </PieChart>
+                    )
+                }
+                case QuizMode.sort: {
+                    return (
+                        <BarChart data={data}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="name" />
+                            <YAxis
+                                tickFormatter={(n) => numeral(n).format('0,0')}
+                            />
+                            <Tooltip
+                                formatter={(
+                                    value: any,
+                                    name: any,
+                                    props: any
+                                ) => [numeral(value).format('0,0'), name]}
+                            />
+                            <Legend />
+                            <Bar
+                                name="第一"
+                                dataKey="first"
+                                fill={colors[0][500]}
+                            />
+                            <Bar
+                                name="第二"
+                                dataKey="second"
+                                fill={colors[1][500]}
+                            />
+                            <Bar
+                                name="第三"
+                                dataKey="third"
+                                fill={colors[2][500]}
+                            />
+                        </BarChart>
+                    )
+                }
+                case QuizMode.slider: {
+                    return (
+                        <AreaChart data={data}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="name" />
+                            <YAxis
+                                tickFormatter={(n) => numeral(n).format('0,0')}
+                            />
+                            <Tooltip
+                                formatter={(
+                                    value: any,
+                                    name: any,
+                                    props: any
+                                ) => [numeral(value).format('0,0'), name]}
+                            />
+
+                            <Area
+                                name="數量"
+                                type="monotone"
+                                dataKey="value"
+                                stroke={colors[0][500]}
+                                fill={colors[0][300]}
+                            />
+                        </AreaChart>
+                    )
+                }
+                case QuizMode.fill: {
+                    return <CircleChart data={data} />
+                }
+            }
+
+            return <div />
+        }
+        return <div />
+    }
 
     React.useEffect(() => {
         if (quizzes && quizzes.length) {
@@ -108,8 +284,19 @@ export default function QuizView() {
 
                 <Divider orientation="vertical" flexItem />
 
-                <Grid item xs>
-                    <Box sx={{ height: 'calc(100vh - 218px)', p: 3 }}></Box>
+                <Grid item sx={{ width: 'calc(100% - 290px)' }}>
+                    <Box sx={{ height: 'calc(100vh - 218px)', p: 3 }}>
+                        {Boolean(selectedQuiz) && (
+                            <Typography variant="h6" sx={{ mb: 2 }} noWrap>
+                                {selectedQuiz?.title}
+                            </Typography>
+                        )}
+                        <Box sx={{ height: 'calc(100% - 48px)' }}>
+                            <ResponsiveContainer height="100%">
+                                {renderChart()}
+                            </ResponsiveContainer>
+                        </Box>
+                    </Box>
                 </Grid>
             </Grid>
         </>

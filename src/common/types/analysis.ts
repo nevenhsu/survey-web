@@ -60,10 +60,6 @@ export type NumeralData = {
     format?: string
 }
 
-export type ChartData = NumeralData & {
-    [key: string]: string | number
-}
-
 export type OptionType = {
     label: string
     value: string
@@ -98,6 +94,5 @@ export type QuizData = {
     id: string
     mode: QuizMode
     title: string
-    format?: string
-    data: Array<NumeralData>
+    data: any
 }

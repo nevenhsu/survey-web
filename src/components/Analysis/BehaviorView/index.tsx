@@ -92,6 +92,7 @@ export default function BehaviorView() {
                     xs
                     id={BlockId}
                     sx={{
+                        width: 'calc(100% - 290px)',
                         height: 'calc(100vh - 218px)',
                         overflow: 'auto',
                         bgcolor: (theme) => theme.palette.grey[50],

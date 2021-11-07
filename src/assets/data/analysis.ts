@@ -2,13 +2,13 @@ import { BehaviorName, QuizMode } from 'common/types'
 import type {
     ConversionRatioData,
     ProductCtrData,
-    ChartData,
     NumeralData,
     OptionType,
     ListData,
     TooltipData,
     QuizData,
 } from 'common/types'
+import { treeData } from 'assets/data/tree'
 
 export const insertReg = /#insert/g
 const insertIdentifier = '#insert'
@@ -353,7 +353,6 @@ export const quizzesData: Array<QuizData> = [
         id: 'ewe2dw',
         mode: QuizMode.selection,
         title: '勾選你喜愛的電影類型',
-        format: '0,0',
         data: [
             { name: 'Group A', value: 400 },
             { name: 'Group B', value: 300 },
@@ -364,19 +363,39 @@ export const quizzesData: Array<QuizData> = [
     {
         id: 'ej3w2s',
         mode: QuizMode.sort,
-        title: '挑選手機的優先考量',
-        data: [],
+        title: '挑選書籍的喜好排名',
+        data: [
+            { name: '投資理財', first: 400, second: 230, third: 320 },
+            { name: '藝術設計', first: 3394, second: 281, third: 481 },
+            { name: '人文社科', first: 201, second: 3940, third: 1832 },
+            { name: '心理勵志', first: 3802, second: 8402, third: 1830 },
+            { name: '哲學', first: 3920, second: 1833, third: 1938 },
+            { name: '雜誌', first: 1380, second: 1302, third: 394 },
+            { name: '文學', first: 2840, second: 840, third: 10 },
+        ],
     },
     {
         id: 'fpv02a',
         mode: QuizMode.slider,
         title: '週末平均消費多少？',
-        data: [],
+        data: [
+            { name: '0', value: 35 },
+            { name: '100', value: 492 },
+            { name: '200', value: 3958 },
+            { name: '300', value: 3391 },
+            { name: '400', value: 3905 },
+            { name: '500', value: 9053 },
+            { name: '600', value: 4293 },
+            { name: '700', value: 4914 },
+            { name: '800', value: 2342 },
+            { name: '900', value: 1344 },
+            { name: '1000', value: 942 },
+        ],
     },
     {
         id: 'f9vm3x',
         mode: QuizMode.fill,
         title: '評論哈利波特對年輕世代的影響',
-        data: [],
+        data: treeData,
     },
 ]

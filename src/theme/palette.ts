@@ -42,6 +42,28 @@ export type Color = {
     A700: string
 }
 
+export const colors = [
+    lightBlue,
+    lightGreen,
+    orange,
+    red,
+    blue,
+    green,
+    amber,
+    pink,
+    cyan,
+    lime,
+    deepOrange,
+    purple,
+    indigo,
+    teal,
+    yellow,
+    deepPurple,
+    blueGrey,
+    brown,
+    grey,
+]
+
 export const getDesignTokens = (mode: PaletteMode): PaletteOptions => {
     // const prefersLightMode = mode === 'light'
 
