@@ -1,4 +1,4 @@
-import { QuizMode } from 'common/types'
+import { QuizMode, FinalInfo } from 'common/types'
 
 export enum AnalysisStep {
     behavior = 'behavior',
@@ -95,4 +95,17 @@ export type QuizData = {
     mode: QuizMode
     title: string
     data: any
+}
+
+export type AnswerData = FinalInfo & {
+    id: string
+    userId?: string
+    ip?: string
+    createdAt?: number
+    updatedAt?: number
+    resultId?: string
+    totalTime?: number // ms
+    averageTime?: number // ms
+    // for answers
+    [quizId: string]: any
 }
