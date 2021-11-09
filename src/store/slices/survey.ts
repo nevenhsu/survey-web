@@ -3,9 +3,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import surveyApi from 'services/surveyApi'
 import User from 'utils/user'
 import LocalSurveys from 'utils/surveys'
-import { SurveyStep } from 'common/types'
+import { SurveyStep, Mode } from 'common/types'
 import type {
-    Mode,
     Survey,
     Quiz,
     QuizType,
@@ -29,6 +28,8 @@ interface EditorState {
     lastEditingAt: number
     mode?: Mode
 }
+
+export const modes = [Mode.oneInTwo, Mode.dragger]
 
 export const createNew = createAsyncThunk(
     'survey/createNew',
@@ -70,7 +71,7 @@ export const reloadFromCloud = createAsyncThunk(
 const initialState: EditorState = {
     currentId: '',
     surveys: {},
-    step: SurveyStep.pick,
+    step: SurveyStep.start,
     lastEditingAt: 0,
 }
 
@@ -89,10 +90,7 @@ export const surveySlice = createSlice({
             state.step = step
         },
         setMode: (state, action: PayloadAction<Mode>) => {
-            const user = User.getInstance()
             const mode = action.payload
-            user.setValue({ mode })
-
             state.mode = mode
         },
         setQuizzes: (
@@ -332,13 +330,14 @@ export const surveySlice = createSlice({
             const currentId = localSurveys.getCurrentId() ?? ''
             const survey = localSurveys.getSurveyById(currentId)
 
-            if (!_.isEmpty(survey)) {
-                const { id, updatedAt } = survey
+            if (survey && _.includes(modes, survey.mode)) {
+                const { id, updatedAt, mode } = survey
                 state.currentId = id
                 state.surveys[id] = survey
                 state.lastEditingAt = updatedAt
+                state.mode = mode
             } else {
-                state.step = SurveyStep.pick
+                state.step = SurveyStep.start
             }
         },
     },
@@ -383,10 +382,10 @@ export const surveySlice = createSlice({
         })
         builder.addCase(reloadFromCloud.fulfilled, (state, action) => {
             const survey = action.payload
-            if (survey) {
+            if (survey && _.includes(modes, survey.mode)) {
                 const { surveys } = state
 
-                const { id, updatedAt } = survey
+                const { id, updatedAt, mode } = survey
                 const oldSurvey = surveys[id]
 
                 if (_.isEmpty(oldSurvey) || updatedAt > oldSurvey.updatedAt) {
@@ -396,11 +395,12 @@ export const surveySlice = createSlice({
 
                     state.currentId = id
                     state.lastEditingAt = updatedAt
+                    state.mode = mode
                 } else {
                     state.lastEditingAt = Date.now()
                 }
             } else {
-                state.step = SurveyStep.pick
+                state.step = SurveyStep.start
             }
         })
     },

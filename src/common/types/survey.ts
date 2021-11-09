@@ -53,7 +53,8 @@ export type FinalInfo = {
 }
 
 export enum SurveyStep {
-    pick = 'pick',
+    start = 'start',
+    create = 'create',
     quiz = 'quiz',
     result = 'result',
     final = 'final',
