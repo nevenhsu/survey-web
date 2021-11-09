@@ -140,7 +140,7 @@ export const fakeSurveyData: Survey = {
     id: 'fake-survey-id',
     createdAt: Date.now(),
     updatedAt: Date.now(),
-    mode: Mode.persona,
+    mode: Mode.oneInTwo,
     quizzes: quizzes,
     tags: {
         'fake-tag-1': {

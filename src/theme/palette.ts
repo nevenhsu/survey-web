@@ -64,11 +64,32 @@ export const colors = [
     grey,
 ]
 
+const lightPalette = {
+    primary: {
+        light: '#A5A6F6',
+        main: '#7879F1',
+        dark: '#5D5FEF',
+    },
+    secondary: {
+        light: '#E2FF91',
+        main: '#ABED1D',
+        dark: '#87D900',
+    },
+    error: {
+        light: '#FCDDEC',
+        main: '#F178B6',
+        dark: '#EF5DA8',
+    },
+}
+
 export const getDesignTokens = (mode: PaletteMode): PaletteOptions => {
     // const prefersLightMode = mode === 'light'
 
+    const palette = mode === 'light' ? lightPalette : lightPalette
+
     return {
         mode,
+        ...palette,
     }
 }
 

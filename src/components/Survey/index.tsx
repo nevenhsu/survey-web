@@ -4,7 +4,7 @@ import { VariantType, useSnackbar } from 'notistack'
 import { styled } from '@mui/material/styles'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
-import Box, { BoxProps } from '@mui/material/Box'
+import Box from '@mui/material/Box'
 import LoadingButton from '@mui/lab/LoadingButton'
 import ArrowUpCircleIcon from 'mdi-react/ArrowUpCircleIcon'
 import CheckboxMarkedCircleIcon from 'mdi-react/CheckboxMarkedCircleIcon'
@@ -12,8 +12,8 @@ import { useAppSelector, useAppDispatch } from 'hooks'
 import User from 'utils/user'
 import { setClasses } from 'utils/helper'
 import {
+    modes,
     setStep,
-    setMode,
     reloadFromLocal,
     reloadFromCloud,
     selectCurrentSurvey,
@@ -23,28 +23,17 @@ import {
 import { SurveyStep, Mode } from 'common/types'
 import type { Survey } from 'common/types'
 
-const PickForm = React.lazy(() => import('components/Survey/PickForm'))
+const StartForm = React.lazy(() => import('components/Survey/StartForm'))
+const CreateForm = React.lazy(() => import('components/Survey/CreateForm'))
 const QuizForm = React.lazy(() => import('components/Survey/QuizForm'))
 const ResultForm = React.lazy(() => import('components/Survey/ResultForm'))
 const FinalForm = React.lazy(() => import('components/Survey/FinalForm'))
 const LaunchForm = React.lazy(() => import('components/Survey/LaunchForm'))
-const ProductForm = React.lazy(() => import('components/Survey/ProductForm'))
 
-type StepsType = {
-    [key in keyof typeof SurveyStep]: {
-        value: key
-        label: string
-    }
-}
-
-const steps: StepsType = {
-    [SurveyStep.pick]: {
-        value: SurveyStep.pick,
-        label: '選擇測驗類型',
-    },
-    [SurveyStep.product]: {
-        value: SurveyStep.product,
-        label: '編輯推薦商品',
+const steps = {
+    [SurveyStep.create]: {
+        value: SurveyStep.create,
+        label: '建立測驗',
     },
     [SurveyStep.quiz]: {
         value: SurveyStep.quiz,
@@ -56,34 +45,22 @@ const steps: StepsType = {
     },
     [SurveyStep.final]: {
         value: SurveyStep.final,
-        label: '編輯測驗結果',
+        label: '編輯測驗結尾',
     },
     [SurveyStep.launch]: {
         value: SurveyStep.launch,
         label: '發布',
     },
-}
+} as const
 
-const getModeSteps = (survey?: Survey, mode?: Mode): Partial<StepsType> => {
-    const { pick } = steps
-    const m = survey?.mode || mode
+const getModeSteps = (survey?: Survey, mode?: Mode) => {
+    const { create } = steps
 
     if (!survey || survey.mode !== mode) {
-        return { pick }
+        return { create }
     }
 
-    switch (m) {
-        case Mode.product:
-            return steps
-
-        case Mode.persona: {
-            const { pick, quiz, result, final, launch } = steps
-            return { pick, quiz, result, final, launch }
-        }
-        default: {
-            return { pick }
-        }
-    }
+    return steps
 }
 
 const classes = setClasses('Editor', ['root'])
@@ -105,7 +82,7 @@ export default function Editor() {
     const lastEditingAt = useAppSelector(selectLastEditingAt)
 
     const { id: surveyId } = survey ?? {}
-
+    const noSurvey = !survey || !surveyId
     const updated = lastEditingAt === survey.updatedAt
 
     const { mode, step } = useAppSelector((state) => {
@@ -153,13 +130,10 @@ export default function Editor() {
 
     React.useEffect(() => {
         const user = User.getInstance()
-        const { step, mode } = user.getValue()
+        const { step } = user.getValue()
 
         if (!_.isNil(step)) {
             dispatch(setStep(step))
-        }
-        if (!_.isNil(mode)) {
-            dispatch(setMode(mode))
         }
 
         dispatch(reloadFromLocal())
@@ -169,16 +143,10 @@ export default function Editor() {
         }, 0)
     }, [])
 
-    // React.useEffect(() => {
-    //     if (step !== SurveyStep.pick) {
-    //         handleSave()
-    //     }
-    // }, [step])
-
     const renderForm = (step: SurveyStep) => {
         switch (step) {
-            case SurveyStep.pick:
-                return <PickForm />
+            case SurveyStep.create:
+                return <CreateForm />
             case SurveyStep.quiz:
                 return <QuizForm />
             case SurveyStep.result:
@@ -187,56 +155,64 @@ export default function Editor() {
                 return <FinalForm />
             case SurveyStep.launch:
                 return <LaunchForm />
-            case SurveyStep.product:
-                return <ProductForm />
         }
     }
 
     return (
         <Root className={classes.root}>
-            <Tabs
-                value={step}
-                onChange={handleChangeStep}
-                sx={{
-                    borderBottom: '1px solid',
-                    borderBottomColor: 'common.black',
-                }}
-            >
-                {_.map(modeSteps, (el) => el).map((el, index) => {
-                    const { value, label } = el as any
-                    return (
-                        <Tab
-                            key={value}
-                            label={`${index + 1} ${label}`}
-                            value={value}
-                        />
-                    )
-                })}
-            </Tabs>
+            {step === SurveyStep.start || !_.includes(modes, mode) ? (
+                <StartForm />
+            ) : (
+                <>
+                    {!noSurvey && (
+                        <>
+                            <Tabs
+                                value={step}
+                                onChange={handleChangeStep}
+                                sx={{
+                                    borderBottom: '1px solid',
+                                    borderBottomColor: 'common.black',
+                                }}
+                            >
+                                {_.map(modeSteps, (el) => el).map(
+                                    (el, index) => {
+                                        const { value, label } = el as any
+                                        return (
+                                            <Tab
+                                                key={value}
+                                                label={`${index + 1} ${label}`}
+                                                value={value}
+                                            />
+                                        )
+                                    }
+                                )}
+                            </Tabs>
 
-            {Boolean(surveyId) && step !== SurveyStep.pick && (
-                <LoadingButton
-                    variant="contained"
-                    loadingPosition="end"
-                    endIcon={
-                        updated ? (
-                            <CheckboxMarkedCircleIcon />
-                        ) : (
-                            <ArrowUpCircleIcon />
-                        )
-                    }
-                    loading={uploading}
-                    disabled={uploading}
-                    onClick={() => handleSave()}
-                    sx={{ position: 'absolute', top: 6, right: 4 }}
-                >
-                    儲存
-                </LoadingButton>
+                            <LoadingButton
+                                variant="contained"
+                                loadingPosition="end"
+                                endIcon={
+                                    updated ? (
+                                        <CheckboxMarkedCircleIcon />
+                                    ) : (
+                                        <ArrowUpCircleIcon />
+                                    )
+                                }
+                                loading={uploading}
+                                disabled={uploading}
+                                onClick={() => handleSave()}
+                                sx={{ position: 'absolute', top: 6, right: 4 }}
+                            >
+                                儲存
+                            </LoadingButton>
+                        </>
+                    )}
+
+                    <React.Suspense fallback={<div />}>
+                        {renderForm(step)}
+                    </React.Suspense>
+                </>
             )}
-
-            <React.Suspense fallback={<div />}>
-                {renderForm(step)}
-            </React.Suspense>
         </Root>
     )
 }

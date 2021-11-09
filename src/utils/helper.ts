@@ -92,7 +92,7 @@ export function reorder<T, U extends Iterable<T>>(
 }
 
 export function getDefaultSurvey(data: Partial<Survey>): Survey {
-    const { id = setId(), createdAt = Date.now(), mode = Mode.persona } = data
+    const { id = setId(), createdAt = Date.now(), mode = Mode.oneInTwo } = data
 
     const survey: Survey = {
         id,
@@ -106,7 +106,7 @@ export function getDefaultSurvey(data: Partial<Survey>): Survey {
                 title: '測驗標題',
             },
         ],
-        tags: mode === Mode.product ? _.keyBy(defaultTags, 'id') : {},
+        tags: _.keyBy(defaultTags, 'id'),
         results: { selectedTags: [], list: {} },
         setting: { showProgress: true },
         final: { mode: FinalMode.info, components: [], data: {} },

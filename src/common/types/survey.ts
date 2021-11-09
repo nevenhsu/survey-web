@@ -16,6 +16,11 @@ export type Survey = {
     enable: boolean
 }
 
+export enum Mode {
+    dragger = 'dragger',
+    oneInTwo = 'oneInTwo',
+}
+
 export type Answer = {
     id: string
     answers: { [quizId: string]: AnswerValue }
@@ -47,14 +52,9 @@ export type FinalInfo = {
     email?: string
 }
 
-export enum Mode {
-    persona = 'persona',
-    product = 'product',
-}
-
 export enum SurveyStep {
-    pick = 'pick',
-    product = 'product',
+    start = 'start',
+    create = 'create',
     quiz = 'quiz',
     result = 'result',
     final = 'final',
