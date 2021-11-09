@@ -4,7 +4,7 @@ import { VariantType, useSnackbar } from 'notistack'
 import { styled } from '@mui/material/styles'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
-import Box, { BoxProps } from '@mui/material/Box'
+import Box from '@mui/material/Box'
 import LoadingButton from '@mui/lab/LoadingButton'
 import ArrowUpCircleIcon from 'mdi-react/ArrowUpCircleIcon'
 import CheckboxMarkedCircleIcon from 'mdi-react/CheckboxMarkedCircleIcon'
@@ -28,7 +28,6 @@ const QuizForm = React.lazy(() => import('components/Survey/QuizForm'))
 const ResultForm = React.lazy(() => import('components/Survey/ResultForm'))
 const FinalForm = React.lazy(() => import('components/Survey/FinalForm'))
 const LaunchForm = React.lazy(() => import('components/Survey/LaunchForm'))
-const ProductForm = React.lazy(() => import('components/Survey/ProductForm'))
 
 type StepsType = {
     [key in keyof typeof SurveyStep]: {
@@ -41,10 +40,6 @@ const steps: StepsType = {
     [SurveyStep.pick]: {
         value: SurveyStep.pick,
         label: '選擇測驗類型',
-    },
-    [SurveyStep.product]: {
-        value: SurveyStep.product,
-        label: '編輯推薦商品',
     },
     [SurveyStep.quiz]: {
         value: SurveyStep.quiz,
@@ -72,18 +67,7 @@ const getModeSteps = (survey?: Survey, mode?: Mode): Partial<StepsType> => {
         return { pick }
     }
 
-    switch (m) {
-        case Mode.product:
-            return steps
-
-        case Mode.persona: {
-            const { pick, quiz, result, final, launch } = steps
-            return { pick, quiz, result, final, launch }
-        }
-        default: {
-            return { pick }
-        }
-    }
+    return steps
 }
 
 const classes = setClasses('Editor', ['root'])
@@ -169,12 +153,6 @@ export default function Editor() {
         }, 0)
     }, [])
 
-    // React.useEffect(() => {
-    //     if (step !== SurveyStep.pick) {
-    //         handleSave()
-    //     }
-    // }, [step])
-
     const renderForm = (step: SurveyStep) => {
         switch (step) {
             case SurveyStep.pick:
@@ -187,8 +165,6 @@ export default function Editor() {
                 return <FinalForm />
             case SurveyStep.launch:
                 return <LaunchForm />
-            case SurveyStep.product:
-                return <ProductForm />
         }
     }
 

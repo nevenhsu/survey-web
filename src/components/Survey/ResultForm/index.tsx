@@ -116,60 +116,6 @@ export default function ResultForm() {
     }
 
     React.useEffect(() => {
-        if (mode === Mode.persona) {
-            const [tagId1 = '', tagId2 = ''] = selectedTags
-
-            const { values = [] } = tags[tagId1] ?? {}
-            const { values: values2 = [] } = tags[tagId2] ?? {}
-
-            const labels =
-                values.length && values2.length
-                    ? _.flatten(
-                          values.map((v1) =>
-                              values2.map((v2) => ({
-                                  [tagId1]: [v1],
-                                  [tagId2]: [v2],
-                              }))
-                          )
-                      )
-                    : values.length
-                    ? values.map((el) => ({ [tagId1]: [el] }))
-                    : values2.map((el) => ({ [tagId2]: [el] }))
-
-            const hexed: Result[] = labels.map((el, index) => ({
-                id: utils.base64encode(
-                    _.join(_.flatten(_.values(el)), '.'),
-                    true
-                ),
-                tags: el,
-                components:
-                    index === 0
-                        ? [getDefaultComponent(ComponentType.title)]
-                        : [],
-            }))
-
-            const newList: ResultList = _.keyBy(hexed, 'id')
-
-            const oldKeys = _.keys(list)
-            const newKeys = _.keys(newList)
-
-            const intersections = _.intersection(oldKeys, newKeys)
-
-            if (!newKeys.length || intersections.length !== newKeys.length) {
-                dispatch(
-                    setResults({
-                        surveyId,
-                        newValue: {
-                            list: newList,
-                        },
-                    })
-                )
-                setSelectedId(newKeys[0])
-            }
-        }
-    }, [selectedTags[0], selectedTags[1]])
-
-    React.useEffect(() => {
         const { id = '' } = resultItems[0] ?? {}
         setSelectedId(id)
     }, [])
