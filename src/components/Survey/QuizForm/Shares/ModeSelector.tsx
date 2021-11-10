@@ -35,6 +35,10 @@ const quizModes = {
         value: QuizMode.sort,
         label: '排序',
     },
+    [QuizMode.oneInTwo]: {
+        value: QuizMode.oneInTwo,
+        label: '二選一',
+    },
 } as const
 
 export default function ModeSelector(props: ModeSelectorProps) {

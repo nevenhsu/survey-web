@@ -105,7 +105,6 @@ export function quizFormatter(value: QuizType): QuizType {
             }
             return sortQuiz
         }
-
         case QuizMode.slider: {
             const { max, min, value, ...others } = quiz as SliderQuiz
             const sliderQuiz: SliderQuiz = {
@@ -115,6 +114,12 @@ export function quizFormatter(value: QuizType): QuizType {
                 value: toNumber(value),
             }
             return sliderQuiz
+        }
+        case QuizMode.oneInTwo: {
+            return quiz
+        }
+        case QuizMode.dragger: {
+            return quiz
         }
     }
 }

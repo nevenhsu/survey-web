@@ -14,7 +14,7 @@ import Modal from '@mui/material/Modal'
 import LinearProgress from '@mui/material/LinearProgress'
 import DeviceMode from 'components/common/DeviceMode'
 import QuizTool from 'components/Survey/QuizForm/QuizTool'
-import ModeSelector from 'components/Survey/QuizForm/ModeSelector'
+import ModeSelector from 'components/Survey/QuizForm/Shares/ModeSelector'
 import MenuSwapIcon from 'mdi-react/DragHorizontalVariantIcon'
 import AddIcon from 'mdi-react/AddIcon'
 import { useAppSelector, useAppDispatch } from 'hooks'
@@ -31,9 +31,15 @@ import ThemeProvider from 'theme/ThemeProvider'
 import { QuizMode, QuizType, SurveyStep } from 'common/types'
 import type { SelectionQuiz, DeviceType } from 'common/types'
 
-const EditingQuiz = React.lazy(() => import('components/Quiz/EditingQuiz'))
-const TagsQuiz = React.lazy(() => import('components/Quiz/TagsQuiz'))
-const NextQuiz = React.lazy(() => import('components/Quiz/NextQuiz'))
+const Editor = React.lazy(
+    () => import('components/Survey/QuizForm/View/Editor')
+)
+const TagTable = React.lazy(
+    () => import('components/Survey/QuizForm/View/TagTable')
+)
+const NextTable = React.lazy(
+    () => import('components/Survey/QuizForm/View/NextTable')
+)
 
 type QuizProps = StackProps & {
     isDragging: boolean
@@ -189,7 +195,7 @@ export default function QuizForm() {
                                             />
                                         )}
 
-                                        <EditingQuiz
+                                        <Editor
                                             surveyId={surveyId}
                                             quiz={selectedQuiz}
                                         />
@@ -211,7 +217,7 @@ export default function QuizForm() {
                             backgroundColor: 'grey.300',
                         }}
                     >
-                        <TagsQuiz quiz={selectedQuiz as SelectionQuiz} />
+                        <TagTable quiz={selectedQuiz as SelectionQuiz} />
                     </Box>
                 )
             }
@@ -224,7 +230,7 @@ export default function QuizForm() {
                             backgroundColor: 'grey.300',
                         }}
                     >
-                        <NextQuiz quiz={selectedQuiz as SelectionQuiz} />
+                        <NextTable quiz={selectedQuiz as SelectionQuiz} />
                     </Box>
                 )
             }

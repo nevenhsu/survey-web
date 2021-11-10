@@ -1,7 +1,6 @@
 import _ from 'lodash'
 import { isValid } from 'date-fns'
 import cryptoRandomString from 'crypto-random-string'
-import { defaultTags } from 'common/defaultTags'
 import {
     QuizMode,
     QuizType,
@@ -103,10 +102,10 @@ export function getDefaultSurvey(data: Partial<Survey>): Survey {
             {
                 id: setId(),
                 mode: QuizMode.page,
-                title: '測驗標題',
+                title: '',
             },
         ],
-        tags: _.keyBy(defaultTags, 'id'),
+        tags: {},
         results: { selectedTags: [], list: {} },
         setting: { showProgress: true },
         final: { mode: FinalMode.info, components: [], data: {} },
@@ -120,7 +119,7 @@ export function getDefaultQuiz(id: string, mode: QuizMode): QuizType {
     const defaultQuiz: Quiz = {
         id,
         mode,
-        title: '未命名題目',
+        title: '',
         buttonText: '下一題',
         buttonVariant: 'contained',
     }
@@ -176,7 +175,7 @@ export function getDefaultQuiz(id: string, mode: QuizMode): QuizType {
 export function getDefaultChoice() {
     const choice: ChoiceType = {
         id: setId(),
-        label: '未命名選項',
+        label: '',
         tags: {},
         image: '',
     }
@@ -202,7 +201,7 @@ export function getDefaultComponent(type: ComponentType) {
         case ComponentType.title: {
             const component: Component = {
                 ...defaultComponent,
-                value: '未命名標題',
+                value: '',
                 display: 'block',
                 align: 'center',
                 typoVariant: 'h4',

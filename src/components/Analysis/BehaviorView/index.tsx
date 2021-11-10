@@ -25,7 +25,7 @@ import {
     ElementBox,
     Title,
     LinkList,
-} from 'components/Analysis/Shared'
+} from 'components/Analysis/Shares'
 import { BehaviorName } from 'common/types'
 import type { ConversionRatioData, ProductCtrData } from 'common/types'
 import { behaviorData, optionsData } from 'assets/data/analysis'

@@ -24,30 +24,29 @@ export default function CreateForm() {
     const [loading, setLoading] = React.useState(false)
 
     const handleClick = () => {
-        setLoading(true)
+        if (!loading && mode) {
+            setLoading(true)
+            handleCreate(mode)
+        }
     }
 
     const handleClickBack = () => {
         dispatch(setStep(SurveyStep.start))
     }
 
-    React.useEffect(() => {
-        if (loading && mode) {
-            dispatch(createNew(mode))
-                .unwrap()
-                .then((result) => {
-                    // handle result here
-                    setLoading(false)
-                    dispatch(setStep(SurveyStep.quiz))
-                })
-                .catch((error) => {
-                    console.error(error)
-                    setLoading(false)
-                })
-        } else {
-            setLoading(false)
-        }
-    }, [loading])
+    const handleCreate = (mode: Mode) => {
+        dispatch(createNew(mode))
+            .unwrap()
+            .then((result) => {
+                // handle result here
+                setLoading(false)
+                dispatch(setStep(SurveyStep.quiz))
+            })
+            .catch((error) => {
+                console.error(error)
+                setLoading(false)
+            })
+    }
 
     const renderView = () => {
         switch (mode) {

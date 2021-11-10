@@ -115,6 +115,10 @@ export default function ImageUploader(props: ImageUploaderProps) {
         }
     }
 
+    React.useEffect(() => {
+        setImages([])
+    }, [bgImage])
+
     return (
         <ImageUploading
             value={images}

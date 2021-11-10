@@ -22,7 +22,7 @@ import {
 import type { SelectionQuiz, Tags, ChoiceType } from 'common/types'
 import type { ActionMeta, OnChangeValue, MultiValue } from 'react-select'
 
-interface TagsQuizProps {
+type TagTableProps = {
     quiz?: SelectionQuiz
 }
 
@@ -36,7 +36,7 @@ type TagOption = {
     label: string
 }
 
-const classes = setClasses('TagsQuiz', ['root', 'selectContainer'])
+const classes = setClasses('TagTable', ['root', 'selectContainer'])
 
 const Root = styled(Paper)(({ theme }) => ({
     [`&.${classes.root}`]: {
@@ -47,7 +47,7 @@ const Root = styled(Paper)(({ theme }) => ({
     },
 }))
 
-export default function TagsQuiz(props: TagsQuizProps) {
+export default function TagTable(props: TagTableProps) {
     const dispatch = useAppDispatch()
 
     const { quiz } = props

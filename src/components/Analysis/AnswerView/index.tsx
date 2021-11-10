@@ -5,7 +5,7 @@ import { fromUnixTime, format } from 'date-fns'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import { Title } from 'components/Analysis/Shared'
+import { Title } from 'components/Analysis/Shares'
 import VirtualizedTable, {
     ColumnData,
     RenderCell,

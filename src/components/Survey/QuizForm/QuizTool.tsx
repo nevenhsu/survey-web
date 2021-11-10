@@ -13,7 +13,7 @@ import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Box from '@mui/material/Box'
 import ImageUploader from 'components/common/ImageUploader'
-import ModeSelector from 'components/Survey/QuizForm/ModeSelector'
+import ModeSelector from 'components/Survey/QuizForm/Shares/ModeSelector'
 import { useAppDispatch, useAppSelector } from 'hooks'
 import {
     updateQuiz,

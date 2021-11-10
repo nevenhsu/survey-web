@@ -18,11 +18,11 @@ import { setClasses } from 'utils/helper'
 import { selectCurrentSurvey, updateQuiz } from 'store/slices/survey'
 import type { SelectionQuiz } from 'common/types'
 
-interface NextQuizProps {
+type NextTableProps = {
     quiz?: SelectionQuiz
 }
 
-const classes = setClasses('NextQuiz', ['root', 'selectContainer'])
+const classes = setClasses('NextTable', ['root', 'selectContainer'])
 
 const Root = styled(Paper)(({ theme }) => ({
     [`&.${classes.root}`]: {
@@ -30,7 +30,7 @@ const Root = styled(Paper)(({ theme }) => ({
     },
 }))
 
-export default function NextQuiz(props: NextQuizProps) {
+export default function NextTable(props: NextTableProps) {
     const dispatch = useAppDispatch()
 
     const { quiz } = props

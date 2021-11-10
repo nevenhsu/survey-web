@@ -164,7 +164,7 @@ export default function Editor() {
                 <StartForm />
             ) : (
                 <>
-                    {!noSurvey && (
+                    {!noSurvey && survey.mode === mode && (
                         <>
                             <Tabs
                                 value={step}

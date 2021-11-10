@@ -17,7 +17,7 @@ import {
     ElementBox,
     Title,
     LinkList,
-} from 'components/Analysis/Shared'
+} from 'components/Analysis/Shares'
 import CircleChart from 'components/common/Charts/CircleChart'
 import CircleSmallIcon from 'mdi-react/CircleSmallIcon'
 import { replaceByData } from 'utils/helper'

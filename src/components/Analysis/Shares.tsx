@@ -1,6 +1,5 @@
 import * as React from 'react'
 import _ from 'lodash'
-import numeral from 'numeral'
 import { Link, Element } from 'react-scroll'
 import { styled } from '@mui/material/styles'
 import Stack from '@mui/material/Stack'

@@ -1,7 +1,5 @@
 import type { Variant } from '@mui/material/styles/createTypography'
 
-export type OnChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => void
-
 export type Survey = {
     id: string
     createdAt: number
@@ -73,6 +71,8 @@ export enum QuizMode {
     selection = 'selection',
     sort = 'sort',
     slider = 'slider',
+    oneInTwo = 'oneInTwo',
+    dragger = 'dragger',
 }
 
 export type CustomButton = {
@@ -110,6 +110,21 @@ export type SelectionType = {
 }
 
 export type SelectionQuiz = Quiz & SelectionType
+
+export type ChoiceGroup = {
+    answer: string // choice id
+    choices: [ChoiceType, ChoiceType]
+}
+
+export type OneInTwoType = {
+    choiceGroup: Array<ChoiceGroup>
+    values: boolean[]
+    tagsId: string[]
+    showImage: boolean
+    direction?: 'row' | 'column'
+}
+
+export type OneInTwoQuiz = Quiz & OneInTwoType
 
 export type SliderType = {
     max?: number

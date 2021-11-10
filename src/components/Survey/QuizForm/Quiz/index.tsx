@@ -1,0 +1,5 @@
+export { default as PageView } from 'components/Survey/QuizForm/Quiz/PageView'
+export { default as FillView } from 'components/Survey/QuizForm/Quiz/FillView'
+export { default as SliderView } from 'components/Survey/QuizForm/Quiz/SliderView'
+export { default as SelectionView } from 'components/Survey/QuizForm/Quiz/SelectionView'
+export { default as OneInTwoView } from 'components/Survey/QuizForm/Quiz/OneInTwoView'
