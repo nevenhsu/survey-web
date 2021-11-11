@@ -12,16 +12,16 @@ import Typography from '@mui/material/Typography'
 import Stack from '@mui/material/Stack'
 import Badge from '@mui/material/Badge'
 import ChoiceView from 'components/Answer/QuizView/Quiz/ChoiceView'
-import QuizButton, {
-    QuizButtonProps,
-} from 'components/Answer/QuizView/Quiz/QuizButton'
+import CustomButton, {
+    CustomButtonProps,
+} from 'components/Answer/QuizView/Quiz/CustomButton'
 import { reorder } from 'utils/helper'
 import type { OnChangeInput, SelectionType, ChoiceType } from 'common/types'
 
 type SortViewProps = {
     title: string
     selectionProps: SelectionType
-    quizButtonProps: QuizButtonProps
+    customButtonProps: CustomButtonProps
     onChange: OnChangeInput
 }
 
@@ -38,7 +38,7 @@ type OptionsType = {
 export default function SortView(props: SortViewProps) {
     const matches = useMediaQuery('(min-width:600px)')
 
-    const { title, selectionProps, quizButtonProps, onChange } = props
+    const { title, selectionProps, customButtonProps, onChange } = props
     const { values = [], choices = [], maxChoices, showImage } = selectionProps
 
     const [options, setOptions] = React.useState<OptionsType>({
@@ -294,7 +294,7 @@ export default function SortView(props: SortViewProps) {
 
             <Box sx={{ height: 16 }} />
 
-            <QuizButton {...quizButtonProps} />
+            <CustomButton {...customButtonProps} />
         </>
     )
 }

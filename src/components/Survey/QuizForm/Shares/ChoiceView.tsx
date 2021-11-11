@@ -71,10 +71,10 @@ export default function ChoiceView(props: {
                     <span onClick={(e) => e.stopPropagation()}>
                         <ImageUploader
                             bgImage={image}
-                            onUploaded={(image) => {
+                            onUploaded={(value) => {
                                 onChange({
                                     target: {
-                                        value: image,
+                                        value,
                                         name: 'image',
                                     },
                                 } as any)

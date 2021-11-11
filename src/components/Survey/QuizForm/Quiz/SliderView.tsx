@@ -5,16 +5,19 @@ import Stack from '@mui/material/Stack'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import Slider from '@mui/material/Slider'
-import { StyledTextField, QuizButton } from 'components/Survey/QuizForm/Shares'
-import type { CustomButton, OnChangeInput, SliderType } from 'common/types'
+import {
+    StyledTextField,
+    CustomButton,
+} from 'components/Survey/QuizForm/Shares'
+import type { CustomButtonType, OnChangeInput, SliderType } from 'common/types'
 
 export default function SliderView(props: {
     title: string
     quizProps: Omit<SliderType, 'value'>
-    buttonProps: CustomButton
+    customProps: CustomButtonType
     onChange: OnChangeInput
 }) {
-    const { title, quizProps, buttonProps, onChange } = props
+    const { title, quizProps, customProps, onChange } = props
     const { max, min } = quizProps
 
     return (
@@ -85,7 +88,7 @@ export default function SliderView(props: {
             </Box>
 
             <Box sx={{ height: 16 }} />
-            <QuizButton buttonProps={buttonProps} onChange={onChange} />
+            <CustomButton customProps={customProps} onChange={onChange} />
         </>
     )
 }

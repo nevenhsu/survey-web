@@ -1,20 +1,20 @@
 import * as React from 'react'
 import Button, { ButtonProps } from '@mui/material/Button'
-import type { CustomButton } from 'common/types'
+import type { CustomButtonType } from 'common/types'
 
-export type QuizButtonProps = ButtonProps & {
-    buttonProps: CustomButton
+export type CustomButtonProps = ButtonProps & {
+    customProps: CustomButtonType
 }
 
-export default function QuizButton(props: QuizButtonProps) {
-    const { buttonProps, ...rest } = props
+export default function CustomButton(props: CustomButtonProps) {
+    const { customProps, ...rest } = props
 
     const {
         buttonVariant = 'contained',
         buttonText = '下一題',
         buttonColor = '',
         buttonTextColor = '',
-    } = buttonProps
+    } = customProps
 
     return (
         <Button

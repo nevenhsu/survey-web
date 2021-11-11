@@ -98,7 +98,7 @@ export default function ResultForm() {
         dispatch(setStep(SurveyStep.final))
     }
 
-    const handleTagsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChangeTags = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value: v } = event.target
         const value = _.trim(v)
 
@@ -172,7 +172,7 @@ export default function ResultForm() {
 
                         <TextField
                             value={selectedTags[0] || ' '}
-                            onChange={handleTagsChange}
+                            onChange={handleChangeTags}
                             name="0"
                             variant="outlined"
                             InputProps={{
@@ -214,7 +214,7 @@ export default function ResultForm() {
 
                         <TextField
                             value={selectedTags[1] || ' '}
-                            onChange={handleTagsChange}
+                            onChange={handleChangeTags}
                             name="1"
                             variant="outlined"
                             InputProps={{

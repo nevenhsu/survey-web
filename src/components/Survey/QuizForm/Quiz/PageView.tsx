@@ -1,14 +1,17 @@
 import * as React from 'react'
 import Box from '@mui/material/Box'
-import { StyledTextField, QuizButton } from 'components/Survey/QuizForm/Shares'
-import type { CustomButton, OnChangeInput } from 'common/types'
+import {
+    StyledTextField,
+    CustomButton,
+} from 'components/Survey/QuizForm/Shares'
+import type { CustomButtonType, OnChangeInput } from 'common/types'
 
 export default function PageView(props: {
     title: string
-    buttonProps: CustomButton
+    customProps: CustomButtonType
     onChange: OnChangeInput
 }) {
-    const { title, buttonProps, onChange } = props
+    const { title, customProps, onChange } = props
 
     return (
         <>
@@ -22,7 +25,7 @@ export default function PageView(props: {
 
             <Box sx={{ height: 16 }} />
 
-            <QuizButton buttonProps={buttonProps} onChange={onChange} />
+            <CustomButton customProps={customProps} onChange={onChange} />
         </>
     )
 }

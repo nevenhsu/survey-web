@@ -4,20 +4,20 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Grid, { GridSize } from '@mui/material/Grid'
 import ChoiceView from 'components/Answer/QuizView/Quiz/ChoiceView'
-import QuizButton, {
-    QuizButtonProps,
-} from 'components/Answer/QuizView/Quiz/QuizButton'
+import CustomButton, {
+    CustomButtonProps,
+} from 'components/Answer/QuizView/Quiz/CustomButton'
 import type { OnChangeInput, SelectionType } from 'common/types'
 
 type SelectionViewProps = {
     title: string
     selectionProps: SelectionType
-    quizButtonProps: QuizButtonProps
+    customButtonProps: CustomButtonProps
     onChange: OnChangeInput
 }
 
 export default function SelectionView(props: SelectionViewProps) {
-    const { title, selectionProps, quizButtonProps, onChange } = props
+    const { title, selectionProps, customButtonProps, onChange } = props
     const {
         values = [],
         choices = [],
@@ -86,7 +86,7 @@ export default function SelectionView(props: SelectionViewProps) {
                 </Grid>
             </Box>
             <Box sx={{ height: 16 }} />
-            <QuizButton {...quizButtonProps} />
+            <CustomButton {...customButtonProps} />
         </>
     )
 }

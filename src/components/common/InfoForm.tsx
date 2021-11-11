@@ -21,7 +21,7 @@ export default function InfoForm(props: InfoFormProps) {
 
     const { name, gender, birthday, mobile, email } = data ?? {}
 
-    const handleDateChange = (newValue: Date | null) => {
+    const handleChangeDate = (newValue: Date | null) => {
         if (onChange) {
             onChange({
                 target: {
@@ -80,7 +80,7 @@ export default function InfoForm(props: InfoFormProps) {
                 inputFormat="MM/dd/yyyy"
                 renderInput={(params) => <TextField fullWidth {...params} />}
                 value={toDate(birthday) ?? null}
-                onChange={handleDateChange}
+                onChange={handleChangeDate}
                 maxDate={new Date()}
             />
 

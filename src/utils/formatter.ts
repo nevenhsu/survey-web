@@ -6,6 +6,8 @@ import type {
     QuizType,
     Quiz,
     SelectionQuiz,
+    OneInTwoQuiz,
+    DraggerQuiz,
     SliderQuiz,
     Component,
     Final,
@@ -80,12 +82,16 @@ export function quizFormatter(value: QuizType): QuizType {
                 showImage,
                 maxChoices,
                 choices = [],
+                values = [],
+                tagsId = [],
                 ...others
             } = quiz as SelectionQuiz
             const selectionQuiz: SelectionQuiz = {
                 showImage: toBool(showImage),
                 maxChoices: toNumber(maxChoices) ?? 1,
                 choices,
+                values,
+                tagsId,
                 ...others,
             }
             return selectionQuiz
@@ -95,6 +101,8 @@ export function quizFormatter(value: QuizType): QuizType {
                 showImage,
                 maxChoices,
                 choices = [],
+                values = [],
+                tagsId = [],
                 ...others
             } = quiz as SelectionQuiz
             const sortQuiz: SelectionQuiz = {
@@ -102,6 +110,8 @@ export function quizFormatter(value: QuizType): QuizType {
                 showImage: toBool(showImage),
                 maxChoices: toNumber(maxChoices) ?? 4,
                 choices,
+                values,
+                tagsId,
             }
             return sortQuiz
         }
@@ -116,10 +126,37 @@ export function quizFormatter(value: QuizType): QuizType {
             return sliderQuiz
         }
         case QuizMode.oneInTwo: {
-            return quiz
+            const {
+                showImage,
+                choices = [],
+                values = [],
+                tagsId = [],
+                ...others
+            } = quiz as OneInTwoQuiz
+
+            const oneInTwoQuiz: OneInTwoQuiz = {
+                ...others,
+                showImage: toBool(showImage),
+                choices,
+                values,
+                tagsId,
+            }
+            return oneInTwoQuiz
         }
         case QuizMode.dragger: {
-            return quiz
+            const {
+                showImage,
+                choices = [],
+                values = [],
+                ...others
+            } = quiz as DraggerQuiz
+            const draggerQuiz: DraggerQuiz = {
+                ...others,
+                showImage: toBool(showImage),
+                choices,
+                values,
+            }
+            return draggerQuiz
         }
     }
 }

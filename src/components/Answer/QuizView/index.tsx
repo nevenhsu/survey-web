@@ -81,7 +81,7 @@ export default function QuizView(props: QuizViewProps) {
             buttonVariant,
         } = quiz
 
-        const buttonProps = {
+        const customProps = {
             buttonColor,
             buttonText,
             buttonTextColor,
@@ -95,7 +95,7 @@ export default function QuizView(props: QuizViewProps) {
                 return (
                     <PageView
                         title={title}
-                        quizButtonProps={{ buttonProps, onClick: handleNext }}
+                        customButtonProps={{ customProps, onClick: handleNext }}
                     />
                 )
             }
@@ -119,8 +119,8 @@ export default function QuizView(props: QuizViewProps) {
                             showImage,
                             direction,
                         }}
-                        quizButtonProps={{
-                            buttonProps,
+                        customButtonProps={{
+                            customProps,
                             disabled: !validValue,
                             onClick: handleNext,
                         }}
@@ -152,8 +152,8 @@ export default function QuizView(props: QuizViewProps) {
                             showImage,
                             direction,
                         }}
-                        quizButtonProps={{
-                            buttonProps,
+                        customButtonProps={{
+                            customProps,
                             disabled: !validValue,
                             onClick: handleNext,
                         }}
@@ -170,8 +170,8 @@ export default function QuizView(props: QuizViewProps) {
                     <FillView
                         title={title}
                         value={`${value ?? ''}`}
-                        quizButtonProps={{
-                            buttonProps,
+                        customButtonProps={{
+                            customProps,
                             disabled: !validValue,
                             onClick: handleNext,
                         }}
@@ -190,8 +190,8 @@ export default function QuizView(props: QuizViewProps) {
                     <SliderView
                         title={title}
                         slider={{ value: val, min, max }}
-                        quizButtonProps={{
-                            buttonProps,
+                        customButtonProps={{
+                            customProps,
                             disabled: !validValue,
                             onClick: handleNext,
                         }}

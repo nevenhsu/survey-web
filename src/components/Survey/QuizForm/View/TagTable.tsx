@@ -91,7 +91,7 @@ export default function TagTable(props: TagTableProps) {
         }
     }
 
-    const handleTagsIdChange = (
+    const handleChangeTagsId = (
         newValue: OnChangeValue<TagsOption, false>,
         index: number
     ) => {
@@ -171,7 +171,7 @@ export default function TagTable(props: TagTableProps) {
         }
     }
 
-    const handleTagsChange = (
+    const handleChangeTags = (
         choice: ChoiceType,
         tagId: string,
         values: MultiValue<TagOption>,
@@ -265,7 +265,7 @@ export default function TagTable(props: TagTableProps) {
                                         className={classes.selectContainer}
                                         value={_.find(tagsOptions, { id })}
                                         onChange={(value) =>
-                                            handleTagsIdChange(value, index)
+                                            handleChangeTagsId(value, index)
                                         }
                                         options={tagsOptions}
                                         onCreateOption={(value) =>
@@ -352,7 +352,7 @@ export default function TagTable(props: TagTableProps) {
                                                             values,
                                                             actionMeta
                                                         ) =>
-                                                            handleTagsChange(
+                                                            handleChangeTags(
                                                                 el,
                                                                 id,
                                                                 values,

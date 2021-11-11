@@ -2,38 +2,57 @@ import * as React from 'react'
 import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
-import Button from '@mui/material/Button'
+import Button, { ButtonProps } from '@mui/material/Button'
+import MenuItem from '@mui/material/MenuItem'
 import Popover from '@mui/material/Popover'
-import type { CustomButton, OnChangeInput } from 'common/types'
+import { getStringLength } from 'utils/helper'
+import type { CustomButtonType, OnChangeInput } from 'common/types'
+import type { Variant } from '@mui/material/styles/createTypography'
 
-export type StyledTextFieldProps = TextFieldProps & { value: string }
+export type StyledTextFieldProps = TextFieldProps & {
+    value: string
+    typoVariant?: Variant
+}
 
 export { default as ChoiceView } from 'components/Survey/QuizForm/Shares/ChoiceView'
+export { default as DraggerChoiceView } from 'components/Survey/QuizForm/Shares/DraggerChoiceView'
 export { default as ModeSelector } from 'components/Survey/QuizForm/Shares/ModeSelector'
 
-export const StyledTextField = styled(TextField)<StyledTextFieldProps>(
-    ({ theme, value }) => ({
+export const StyledTextField = styled(TextField, {
+    shouldForwardProp: (prop) => prop !== 'typoVariant',
+})<StyledTextFieldProps>(({ theme, value, typoVariant, placeholder }) => {
+    const str = (value || placeholder) ?? ''
+    const typo = typoVariant || 'h6'
+    return {
         width: '90%',
         '& .MuiInputBase-input': {
-            ...theme.typography.h6,
+            ...theme.typography[typo],
             margin: 'auto',
             maxWidth: '100%',
-            width: value ? `${value?.length * 2}ch` : undefined,
+            width: str ? `${getStringLength(str)}ch` : undefined,
         },
-    })
-)
+    }
+})
 
-export const QuizButton = (props: {
-    buttonProps: CustomButton
+const variants = [
+    { value: 'contained', label: '實心' },
+
+    { value: 'outlined', label: '空心' },
+    { value: 'text', label: '文字' },
+]
+
+export const CustomButton = (props: {
+    customProps: CustomButtonType
+    buttonProps?: ButtonProps
     onChange: OnChangeInput
 }) => {
-    const { buttonProps, onChange } = props
+    const { customProps, buttonProps, onChange } = props
     const {
         buttonVariant = 'contained',
-        buttonText = '下一題',
+        buttonText = '',
         buttonColor = '',
         buttonTextColor = '',
-    } = buttonProps
+    } = customProps
 
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
         null
@@ -50,6 +69,7 @@ export const QuizButton = (props: {
     return (
         <>
             <Button
+                {...buttonProps}
                 variant={buttonVariant}
                 onClick={handleClick}
                 sx={{
@@ -57,7 +77,7 @@ export const QuizButton = (props: {
                     backgroundColor: buttonColor,
                 }}
             >
-                {buttonText || '下一題'}
+                {buttonText}
             </Button>
 
             <Popover
@@ -72,8 +92,8 @@ export const QuizButton = (props: {
                 <Box sx={{ p: 2, maxWidth: 320 }}>
                     <TextField
                         label="按鈕文字"
-                        name="buttonText"
                         variant="standard"
+                        name="buttonText"
                         value={buttonText}
                         onChange={onChange}
                         fullWidth
@@ -82,8 +102,8 @@ export const QuizButton = (props: {
 
                     <TextField
                         label="文字顏色"
-                        name="buttonTextColor"
                         variant="standard"
+                        name="buttonTextColor"
                         value={buttonTextColor}
                         onChange={onChange}
                         placeholder="#fffffff"
@@ -93,13 +113,30 @@ export const QuizButton = (props: {
 
                     <TextField
                         label="按鈕顏色"
-                        name="buttonColor"
                         variant="standard"
+                        name="buttonColor"
                         value={buttonColor}
                         onChange={onChange}
                         placeholder="#1565c0"
                         fullWidth
+                        sx={{ mb: 3 }}
                     />
+
+                    <TextField
+                        label="按鈕樣式"
+                        name="buttonVariant"
+                        variant="standard"
+                        value={buttonVariant}
+                        onChange={onChange}
+                        fullWidth
+                        select
+                    >
+                        {variants.map((el) => (
+                            <MenuItem key={el.value} value={el.value}>
+                                {el.label}
+                            </MenuItem>
+                        ))}
+                    </TextField>
                 </Box>
             </Popover>
         </>

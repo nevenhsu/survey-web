@@ -35,6 +35,10 @@ const quizModes = {
         value: QuizMode.sort,
         label: '排序',
     },
+    [QuizMode.dragger]: {
+        value: QuizMode.dragger,
+        label: '拖曳',
+    },
     [QuizMode.oneInTwo]: {
         value: QuizMode.oneInTwo,
         label: '二選一',

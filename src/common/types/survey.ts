@@ -15,8 +15,8 @@ export type Survey = {
 }
 
 export enum Mode {
-    dragger = 'dragger',
     oneInTwo = 'oneInTwo',
+    dragger = 'dragger',
 }
 
 export type Answer = {
@@ -75,14 +75,14 @@ export enum QuizMode {
     dragger = 'dragger',
 }
 
-export type CustomButton = {
+export type CustomButtonType = {
     buttonText?: string
     buttonTextColor?: string
     buttonColor?: string
     buttonVariant?: 'contained' | 'outlined' | 'text'
 }
 
-export type Quiz = CustomButton & {
+export type Quiz = CustomButtonType & {
     id: string
     mode: QuizMode
     title: string
@@ -92,7 +92,10 @@ export type Quiz = CustomButton & {
     backgroundImage?: string
 }
 
-export type ChoiceType = Omit<CustomButton, 'buttonText' | 'buttonVariant'> & {
+export type ChoiceType = Omit<
+    CustomButtonType,
+    'buttonText' | 'buttonVariant'
+> & {
     id: string
     label: string
     tags: { [tagId: string]: string[] }
@@ -113,13 +116,35 @@ export type SelectionQuiz = Quiz & SelectionType
 
 export type OneInTwoType = {
     choices: ChoiceType[]
-    values: boolean[]
+    values: string[] // choice id
     tagsId: string[]
     showImage: boolean
     direction?: 'row' | 'column'
 }
 
 export type OneInTwoQuiz = Quiz & OneInTwoType
+
+export type DraggerButton = CustomButtonType & {
+    id: string
+    image?: string
+}
+
+export type DraggerChoiceType = {
+    id: string
+    label: string
+    answer: string // DraggerButton id
+    image?: string
+}
+
+export type DraggerType = {
+    choices: DraggerChoiceType[]
+    values: string[] // right choice id
+    left: DraggerButton
+    right: DraggerButton
+    showImage: boolean
+}
+
+export type DraggerQuiz = Quiz & DraggerType
 
 export type SliderType = {
     max?: number
@@ -133,7 +158,13 @@ export type FillQuiz = Quiz & {
     value: string
 }
 
-export type QuizType = Quiz | SelectionQuiz | SliderQuiz | FillQuiz
+export type QuizType =
+    | Quiz
+    | SelectionQuiz
+    | SliderQuiz
+    | FillQuiz
+    | OneInTwoQuiz
+    | DraggerQuiz
 
 export type Tags = {
     id: string

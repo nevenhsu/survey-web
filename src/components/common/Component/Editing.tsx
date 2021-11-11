@@ -67,7 +67,7 @@ const AddButton = (props: {
         setAnchorEl(null)
     }
 
-    const handleMenuItemClick = (
+    const handleClickMenuItem = (
         event: React.MouseEvent<HTMLElement>,
         type: ComponentType
     ) => {
@@ -92,7 +92,7 @@ const AddButton = (props: {
                     <MenuItem
                         key={el.value}
                         onClick={(event) =>
-                            handleMenuItemClick(event, el.value)
+                            handleClickMenuItem(event, el.value)
                         }
                     >
                         {el.label}

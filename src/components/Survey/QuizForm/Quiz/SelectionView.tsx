@@ -5,12 +5,12 @@ import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import {
     StyledTextField,
-    QuizButton,
+    CustomButton,
     ChoiceView,
 } from 'components/Survey/QuizForm/Shares'
 import { getDefaultChoice } from 'utils/helper'
 import type {
-    CustomButton,
+    CustomButtonType,
     SelectionType,
     OnChangeInput,
     OnButtonClink,
@@ -19,10 +19,10 @@ import type {
 export default function SelectionView(props: {
     title: string
     quizProps: Omit<SelectionType, 'values' | 'tagsId'>
-    buttonProps: CustomButton
+    customProps: CustomButtonType
     onChange: OnChangeInput
 }) {
-    const { title, quizProps, buttonProps, onChange } = props
+    const { title, quizProps, customProps, onChange } = props
     const { choices = [], maxChoices, showImage, direction } = quizProps
 
     const responsive: { [key: string]: GridSize } =
@@ -111,7 +111,7 @@ export default function SelectionView(props: {
                 </Grid>
             </Box>
             <Box sx={{ height: 16 }} />
-            <QuizButton buttonProps={buttonProps} onChange={onChange} />
+            <CustomButton customProps={customProps} onChange={onChange} />
         </>
     )
 }

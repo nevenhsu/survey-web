@@ -13,14 +13,20 @@ import type {
     Quiz,
     SelectionQuiz,
     OneInTwoQuiz,
+    DraggerQuiz,
     FillQuiz,
     SliderQuiz,
     ChoiceType,
+    DraggerChoiceType,
     Component,
     Tags,
     Result,
 } from 'common/types'
 import { getMuiColor } from 'theme/palette'
+
+export function getStringLength(str: string) {
+    return str.replace(/[^\x00-\xff]/g, '**').length
+}
 
 export function setId(length = 6) {
     return cryptoRandomString({ length })
@@ -94,6 +100,11 @@ export function reorder<T, U extends Iterable<T>>(
 export function getDefaultSurvey(data: Partial<Survey>): Survey {
     const { id = setId(), createdAt = Date.now(), mode = Mode.oneInTwo } = data
 
+    const quiz = getDefaultQuiz(
+        setId(),
+        mode === Mode.oneInTwo ? QuizMode.oneInTwo : QuizMode.dragger
+    )
+
     const survey: Survey = {
         id,
         createdAt,
@@ -105,6 +116,7 @@ export function getDefaultSurvey(data: Partial<Survey>): Survey {
                 mode: QuizMode.page,
                 title: '',
             },
+            quiz,
         ],
         tags: {},
         results: { selectedTags: [], list: {} },
@@ -161,6 +173,26 @@ export function getDefaultQuiz(id: string, mode: QuizMode): QuizType {
             }
             return quiz
         }
+        case QuizMode.dragger: {
+            const leftId = setId()
+            const quiz: DraggerQuiz = {
+                ...defaultQuiz,
+                left: {
+                    id: leftId,
+                    buttonText: '左選項',
+                    buttonVariant: 'contained',
+                },
+                right: {
+                    id: setId(),
+                    buttonText: '右選項',
+                    buttonVariant: 'contained',
+                },
+                choices: [getDefaultDraggerChoice(leftId)],
+                values: [],
+                showImage: false,
+            }
+            return quiz
+        }
         case QuizMode.slider: {
             const quiz: SliderQuiz = {
                 ...defaultQuiz,
@@ -190,6 +222,16 @@ export function getDefaultChoice() {
         label: '',
         tags: {},
         image: '',
+    }
+    return choice
+}
+
+export function getDefaultDraggerChoice(answer: string) {
+    const choice: DraggerChoiceType = {
+        id: setId(),
+        label: '',
+        image: '',
+        answer,
     }
     return choice
 }

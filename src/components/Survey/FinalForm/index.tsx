@@ -12,7 +12,7 @@ import Box, { BoxProps } from '@mui/material/Box'
 import { Contexts } from 'components/common/Component'
 import EditingFinal from 'components/Survey/FinalForm/EditingFinal'
 import FinalTool from 'components/Survey/FinalForm/FinalTool'
-import InfoForm from 'components/Shares/InfoForm'
+import InfoForm from 'components/common/InfoForm'
 import DeviceMode from 'components/common/DeviceMode'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import usePreview from 'hooks/usePreview'
@@ -93,7 +93,7 @@ export default function FinalForm() {
         }
     }
 
-    const handleDataChange: OnChangeInput = (event) => {
+    const handleChangeData: OnChangeInput = (event) => {
         if (surveyId) {
             const { name, value } = event.target
             const newValue = {
@@ -107,7 +107,7 @@ export default function FinalForm() {
         switch (mode) {
             case FinalMode.info: {
                 return (
-                    <InfoForm data={data ?? {}} onChange={handleDataChange} />
+                    <InfoForm data={data ?? {}} onChange={handleChangeData} />
                 )
             }
         }

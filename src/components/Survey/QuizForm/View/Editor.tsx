@@ -9,6 +9,7 @@ import {
     SelectionView,
     PageView,
     OneInTwoView,
+    DraggerView,
 } from 'components/Survey/QuizForm/Quiz'
 import ImageUploader from 'components/common/ImageUploader'
 import ThemeProvider from 'theme/ThemeProvider'
@@ -19,6 +20,7 @@ import type {
     FillQuiz,
     SliderQuiz,
     OneInTwoQuiz,
+    DraggerQuiz,
 } from 'common/types'
 
 type EditorProps = {
@@ -30,14 +32,20 @@ export default function Editor(props: EditorProps) {
     const { surveyId, quiz } = props
     const dispatch = useAppDispatch()
 
-    const { image, backgroundColor, backgroundImage } = quiz ?? {}
+    const {
+        id: quizId,
+        mode,
+        image,
+        backgroundColor,
+        backgroundImage,
+    } = quiz ?? {}
 
     const handleUpdateQuiz = (newValue: Partial<QuizType>) => {
-        if (surveyId && quiz) {
+        if (surveyId && quizId) {
             dispatch(
                 updateQuiz({
                     surveyId,
-                    quizId: quiz.id,
+                    quizId,
                     newValue,
                 })
             )
@@ -45,7 +53,7 @@ export default function Editor(props: EditorProps) {
     }
 
     const renderQuiz = () => {
-        if (!surveyId || !quiz) {
+        if (!surveyId || !quizId || !quiz) {
             return <div />
         }
 
@@ -58,7 +66,7 @@ export default function Editor(props: EditorProps) {
             buttonVariant,
         } = quiz
 
-        const buttonProps = {
+        const customProps = {
             buttonColor,
             buttonText,
             buttonTextColor,
@@ -70,7 +78,7 @@ export default function Editor(props: EditorProps) {
                 return (
                     <PageView
                         title={title}
-                        buttonProps={buttonProps}
+                        customProps={customProps}
                         onChange={(event) => {
                             handleUpdateQuiz({
                                 [event.target.name]: event.target.value,
@@ -85,7 +93,7 @@ export default function Editor(props: EditorProps) {
                     <FillView
                         title={title}
                         value={value}
-                        buttonProps={buttonProps}
+                        customProps={customProps}
                         onChange={(event) => {
                             handleUpdateQuiz({
                                 [event.target.name]: event.target.value,
@@ -100,7 +108,7 @@ export default function Editor(props: EditorProps) {
                     <SliderView
                         title={title}
                         quizProps={{ min, max }}
-                        buttonProps={buttonProps}
+                        customProps={customProps}
                         onChange={(event) => {
                             handleUpdateQuiz({
                                 [event.target.name]: event.target.value,
@@ -126,7 +134,7 @@ export default function Editor(props: EditorProps) {
                             showImage,
                             direction,
                         }}
-                        buttonProps={buttonProps}
+                        customProps={customProps}
                         onChange={(event) => {
                             handleUpdateQuiz({
                                 [event.target.name]: event.target.value,
@@ -158,6 +166,31 @@ export default function Editor(props: EditorProps) {
                     />
                 )
             }
+            case QuizMode.dragger: {
+                const {
+                    choices = [],
+                    showImage,
+                    left,
+                    right,
+                } = quiz as DraggerQuiz
+
+                return (
+                    <DraggerView
+                        title={title}
+                        quizProps={{
+                            choices,
+                            showImage,
+                            left,
+                            right,
+                        }}
+                        onChange={(event) => {
+                            handleUpdateQuiz({
+                                [event.target.name]: event.target.value,
+                            })
+                        }}
+                    />
+                )
+            }
         }
     }
 
@@ -175,34 +208,42 @@ export default function Editor(props: EditorProps) {
                     backgroundColor,
                 }}
             >
-                <ImageUploader
-                    bgImage={backgroundImage}
-                    sx={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                        mt: `0 !important`,
-                    }}
-                    onUploaded={(backgroundImage) => {
-                        handleUpdateQuiz({
-                            backgroundImage,
-                        })
-                    }}
-                    hideButton
-                />
+                {Boolean(quizId) && mode !== QuizMode.dragger && (
+                    <>
+                        <ImageUploader
+                            bgImage={backgroundImage}
+                            sx={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                width: '100%',
+                                height: '100%',
+                                mt: `0 !important`,
+                            }}
+                            onUploaded={(backgroundImage) => {
+                                handleUpdateQuiz({
+                                    backgroundImage,
+                                })
+                            }}
+                            hideButton
+                        />
 
-                <ImageUploader
-                    bgImage={image}
-                    sx={{ width: 'auto', height: '16vh', mt: `0 !important` }}
-                    onUploaded={(image) => {
-                        handleUpdateQuiz({
-                            image,
-                        })
-                    }}
-                    hideButton={Boolean(image)}
-                />
+                        <ImageUploader
+                            bgImage={image}
+                            sx={{
+                                width: 'auto',
+                                height: '16vh',
+                                mt: `0 !important`,
+                            }}
+                            onUploaded={(image) => {
+                                handleUpdateQuiz({
+                                    image,
+                                })
+                            }}
+                            hideButton={Boolean(image)}
+                        />
+                    </>
+                )}
 
                 {renderQuiz()}
             </Stack>

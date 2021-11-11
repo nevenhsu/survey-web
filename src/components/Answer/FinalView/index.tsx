@@ -4,7 +4,7 @@ import { VariantType, useSnackbar } from 'notistack'
 import Box from '@mui/material/Box'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { ComponentList } from 'components/common/Component/View'
-import InfoForm from 'components/Shares/InfoForm'
+import InfoForm from 'components/common/InfoForm'
 import ArrowUpCircleIcon from 'mdi-react/ArrowUpCircleIcon'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import { selectSurvey, selectAnswer, updateFinal } from 'store/slices/answer'
@@ -25,7 +25,7 @@ export default function FinalView() {
     const [uploading, setUploading] = React.useState(false)
     const [done, setDone] = React.useState(false)
 
-    const handleDataChange: OnChangeInput = (event) => {
+    const handleChangeData: OnChangeInput = (event) => {
         const { name, value } = event.target
         const newValue = {
             [name]: value,
@@ -67,7 +67,7 @@ export default function FinalView() {
             <Box sx={{ width: '100%', maxWidth: 480, mx: 'auto', my: 4 }}>
                 <InfoForm
                     data={answer?.final ?? {}}
-                    onChange={handleDataChange}
+                    onChange={handleChangeData}
                 />
             </Box>
 
