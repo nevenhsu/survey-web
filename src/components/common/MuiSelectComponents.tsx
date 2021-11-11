@@ -10,7 +10,6 @@ import {
     OptionProps,
     StylesConfig,
 } from 'react-select'
-import { styled } from '@mui/material'
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import Paper from '@mui/material/Paper'
@@ -18,6 +17,7 @@ import MenuList from '@mui/material/MenuList'
 import MenuItem from '@mui/material/MenuItem'
 import CloseIcon from 'mdi-react/CloseIcon'
 import ChevronDownIcon from 'mdi-react/ChevronDownIcon'
+import type { Theme } from '@mui/material/styles'
 
 export const ClearIndicator = <
     Option,
@@ -130,7 +130,7 @@ const Option = <
     )
 }
 
-export const styles: StylesConfig = {
+export const setStyles: (theme: Theme) => StylesConfig = (theme) => ({
     singleValue: (base) => ({ ...base, color: 'inherit' }),
     menu: (base) => ({ ...base, backgroundColor: 'transparent' }),
     option: (base) => ({
@@ -139,8 +139,26 @@ export const styles: StylesConfig = {
         backgroundColor: 'unset',
         padding: 0,
     }),
-    control: (base) => ({ ...base, ':hover': {} }),
-}
+    control: (base) => {
+        const focused = Boolean(base.boxShadow)
+
+        return {
+            ...base,
+            minHeight: 56,
+            borderRadius: 4,
+            borderWidth: focused ? 2 : 1,
+            borderColor: focused
+                ? theme.palette.primary.main
+                : 'rgba(255, 255, 255, 0.23)',
+            boxShadow: '',
+            ':hover': {
+                borderColor: focused
+                    ? theme.palette.primary.main
+                    : 'rgba(255, 255, 255, 1)',
+            },
+        }
+    },
+})
 
 export default {
     ClearIndicator,

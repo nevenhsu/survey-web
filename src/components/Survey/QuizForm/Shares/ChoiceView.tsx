@@ -4,6 +4,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Popover from '@mui/material/Popover'
 import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
 import ImageUploader from 'components/common/ImageUploader'
 import { lightenColor } from 'theme/palette'
 import type { ChoiceType, OnChangeInput, OnButtonClink } from 'common/types'
@@ -91,7 +92,16 @@ export default function ChoiceView(props: {
                     </span>
                 )}
 
-                {label || '選項'}
+                <Typography
+                    variant="button"
+                    color="inherit"
+                    width="100%"
+                    sx={{
+                        textTransform: 'none',
+                    }}
+                >
+                    {label || '選項'}
+                </Typography>
             </Button>
             <Popover
                 open={open}

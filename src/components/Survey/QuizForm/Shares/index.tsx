@@ -18,7 +18,7 @@ export const StyledTextField = styled(TextField)<StyledTextFieldProps>(
             ...theme.typography.h6,
             margin: 'auto',
             maxWidth: '100%',
-            width: `${value?.length * 2}ch`,
+            width: value ? `${value?.length * 2}ch` : undefined,
         },
     })
 )

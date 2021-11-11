@@ -111,13 +111,8 @@ export type SelectionType = {
 
 export type SelectionQuiz = Quiz & SelectionType
 
-export type ChoiceGroup = {
-    answer: string // choice id
-    choices: [ChoiceType, ChoiceType]
-}
-
 export type OneInTwoType = {
-    choiceGroup: Array<ChoiceGroup>
+    choices: ChoiceType[]
     values: boolean[]
     tagsId: string[]
     showImage: boolean

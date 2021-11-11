@@ -10,7 +10,11 @@ import TablePagination from '@mui/material/TablePagination'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import components, { styles } from 'components/common/MuiSelectComponents'
+import Toolbar from '@mui/material/Toolbar'
+import Tooltip from '@mui/material/Tooltip'
+import IconButton from '@mui/material/IconButton'
+import TextField from '@mui/material/TextField'
+import components, { setStyles } from 'components/common/MuiSelectComponents'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import { getMuiColor, getContrastText } from 'theme/palette'
 import { setClasses, getDefaultTags } from 'utils/helper'
@@ -19,7 +23,13 @@ import {
     updateQuiz,
     updateSurvey,
 } from 'store/slices/survey'
-import type { SelectionQuiz, Tags, ChoiceType } from 'common/types'
+import AddIcon from 'mdi-react/AddIcon'
+import type {
+    SelectionQuiz,
+    Tags,
+    ChoiceType,
+    OnChangeInput,
+} from 'common/types'
 import type { ActionMeta, OnChangeValue, MultiValue } from 'react-select'
 
 type TagTableProps = {
@@ -53,6 +63,9 @@ export default function TagTable(props: TagTableProps) {
     const { quiz } = props
     const { id: quizId, choices = [], tagsId: ids = [] } = quiz ?? {}
 
+    const tagsId = _.isEmpty(ids) ? [''] : Array.from(ids)
+    const disabledAdd = tagsId.length >= 3
+
     const theme = useTheme()
     const [page, setPage] = React.useState(0)
     const [rowsPerPage, setRowsPerPage] = React.useState(5)
@@ -63,8 +76,20 @@ export default function TagTable(props: TagTableProps) {
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - choices.length) : 0
 
-    const tagsId: string[] = Array.from(ids)
-    _.merge(tagsId, new Array(3))
+    const handleAddTag = () => {
+        if (quizId && tagsId.length < 3) {
+            const newTagsId = [...tagsId, '']
+            const newValue = { tagsId: newTagsId }
+
+            dispatch(
+                updateQuiz({
+                    surveyId,
+                    quizId,
+                    newValue,
+                })
+            )
+        }
+    }
 
     const handleTagsIdChange = (
         newValue: OnChangeValue<TagsOption, false>,
@@ -80,6 +105,33 @@ export default function TagTable(props: TagTableProps) {
                     surveyId,
                     quizId,
                     newValue: { tagsId: newTagsId },
+                })
+            )
+        }
+    }
+
+    const handleChangeLabel: OnChangeInput = (event) => {
+        if (quizId) {
+            const { name: choiceId, value: label } = event.target
+
+            const newChoices = _.map(choices, (el) =>
+                el.id === choiceId
+                    ? {
+                          ...el,
+                          label,
+                      }
+                    : el
+            )
+
+            const newValue = {
+                choices: newChoices,
+            }
+
+            dispatch(
+                updateQuiz({
+                    surveyId,
+                    quizId,
+                    newValue,
                 })
             )
         }
@@ -179,17 +231,37 @@ export default function TagTable(props: TagTableProps) {
 
     return (
         <Root className={classes.root} elevation={6} square>
+            <Toolbar sx={{ minHeight: '48px !important' }}>
+                <div style={{ flex: 1 }} />
+                <Tooltip title={disabledAdd ? '類別已達上限' : '增加類別'}>
+                    <span>
+                        <IconButton
+                            onClick={handleAddTag}
+                            disabled={disabledAdd}
+                        >
+                            <AddIcon />
+                        </IconButton>
+                    </span>
+                </Tooltip>
+            </Toolbar>
             <TableContainer>
-                <Table>
+                <Table
+                    sx={{
+                        '& .MuiTableCell-root': {
+                            height: 72,
+                        },
+                    }}
+                >
                     <TableHead>
                         <TableRow>
-                            <TableCell>答項</TableCell>
+                            <TableCell>名稱</TableCell>
                             {tagsId.map((id, index) => (
                                 <TableCell key={id || `${index}`}>
                                     <CreatableSelect<TagsOption>
                                         components={components}
-                                        styles={styles as any}
+                                        styles={setStyles(theme) as any}
                                         menuPosition="fixed"
+                                        placeholder="標籤類別"
                                         className={classes.selectContainer}
                                         value={_.find(tagsOptions, { id })}
                                         onChange={(value) =>
@@ -217,8 +289,14 @@ export default function TagTable(props: TagTableProps) {
                             .map((el) => (
                                 <TableRow key={el.id}>
                                     <TableCell component="th" scope="row">
-                                        {el.label}
+                                        <TextField
+                                            name={el.id}
+                                            value={el.label}
+                                            placeholder="請命名答項"
+                                            onChange={handleChangeLabel}
+                                        />
                                     </TableCell>
+
                                     {tagsId.map((id, i) => {
                                         const backgroundColor = getMuiColor(
                                             tags[id]?.color
@@ -238,7 +316,9 @@ export default function TagTable(props: TagTableProps) {
                                                     >
                                                         components={components}
                                                         styles={{
-                                                            ...(styles as any),
+                                                            ...(setStyles(
+                                                                theme
+                                                            ) as any),
                                                             multiValue: (
                                                                 base
                                                             ) => ({
@@ -295,7 +375,7 @@ export default function TagTable(props: TagTableProps) {
                             ))}
                         {emptyRows > 0 && (
                             <TableRow sx={{ height: 71 * emptyRows }}>
-                                <TableCell colSpan={4} />
+                                <TableCell colSpan={1 + tagsId.length} />
                             </TableRow>
                         )}
                     </TableBody>

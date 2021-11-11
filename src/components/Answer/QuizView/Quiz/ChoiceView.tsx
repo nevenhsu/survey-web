@@ -2,6 +2,7 @@ import * as React from 'react'
 import _ from 'lodash'
 import { styled } from '@mui/material/styles'
 import Button, { ButtonProps } from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
 import ImageBox from 'components/common/ImageBox'
 import { lightenColor, getThemeColor, getContrastText } from 'theme/palette'
 import type { ChoiceType } from 'common/types'
@@ -15,6 +16,7 @@ type StyledButtonProps = ButtonProps & {
     showImage: boolean
     buttonTextColor: string
     buttonColor: string
+    component?: React.ElementType
 }
 
 const StyledButton = styled(Button, {
@@ -66,7 +68,6 @@ export default function ChoiceView(props: ChoiceViewProps) {
     return (
         <StyledButton
             id={id}
-            // @ts-ignore
             component="div"
             variant="outlined"
             showImage={showImage}
@@ -84,7 +85,16 @@ export default function ChoiceView(props: ChoiceViewProps) {
                 />
             )}
 
-            {label}
+            <Typography
+                variant="button"
+                color="inherit"
+                width="100%"
+                sx={{
+                    textTransform: 'none',
+                }}
+            >
+                {label}
+            </Typography>
         </StyledButton>
     )
 }

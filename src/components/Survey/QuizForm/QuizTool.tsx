@@ -207,11 +207,14 @@ export default function QuizTool(props: QuizToolProps) {
                         </TableCell>
                     </TableRow>
 
-                    {_.includes([QuizMode.selection, QuizMode.sort], mode) && (
+                    {_.includes(
+                        [QuizMode.selection, QuizMode.sort, QuizMode.oneInTwo],
+                        mode
+                    ) && (
                         <>
                             <Header title="答項設定" />
 
-                            {mode === QuizMode.selection && (
+                            {mode !== QuizMode.sort && (
                                 <>
                                     <TableRow>
                                         <TableCell component="th">
@@ -299,24 +302,28 @@ export default function QuizTool(props: QuizToolProps) {
                                     />
                                 </TableCell>
                             </TableRow>
-                            <TableRow>
-                                <TableCell>最高可選</TableCell>
-                                <TableCell>
-                                    <NumberFormat
-                                        customInput={StyledTextField}
-                                        variant="standard"
-                                        value={maxChoices ?? 1}
-                                        onValueChange={({ value }) => {
-                                            handleUpdateQuiz({
-                                                maxChoices: value
-                                                    ? Number(value)
-                                                    : NaN,
-                                            })
-                                        }}
-                                        fullWidth
-                                    />
-                                </TableCell>
-                            </TableRow>
+                            {mode !== QuizMode.oneInTwo && (
+                                <>
+                                    <TableRow>
+                                        <TableCell>最高可選</TableCell>
+                                        <TableCell>
+                                            <NumberFormat
+                                                customInput={StyledTextField}
+                                                variant="standard"
+                                                value={maxChoices ?? 1}
+                                                onValueChange={({ value }) => {
+                                                    handleUpdateQuiz({
+                                                        maxChoices: value
+                                                            ? Number(value)
+                                                            : NaN,
+                                                    })
+                                                }}
+                                                fullWidth
+                                            />
+                                        </TableCell>
+                                    </TableRow>
+                                </>
+                            )}
                         </>
                     )}
                 </TableBody>

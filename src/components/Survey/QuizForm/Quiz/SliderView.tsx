@@ -10,12 +10,12 @@ import type { CustomButton, OnChangeInput, SliderType } from 'common/types'
 
 export default function SliderView(props: {
     title: string
-    slider: SliderType
+    quizProps: Omit<SliderType, 'value'>
     buttonProps: CustomButton
     onChange: OnChangeInput
 }) {
-    const { title, slider, buttonProps, onChange } = props
-    const { max, min, value } = slider
+    const { title, quizProps, buttonProps, onChange } = props
+    const { max, min } = quizProps
 
     return (
         <>

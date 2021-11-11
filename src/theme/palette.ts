@@ -64,7 +64,7 @@ export const colors = [
     grey,
 ]
 
-const lightPalette = {
+export const lightPalette = {
     primary: {
         light: '#A5A6F6',
         main: '#7879F1',

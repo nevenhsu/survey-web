@@ -69,41 +69,7 @@ export default function Editor(props: EditorProps) {
             case QuizMode.page: {
                 return (
                     <PageView
-                        textFieldProps={{
-                            value: title,
-                        }}
-                        buttonProps={buttonProps}
-                        onChange={(event) => {
-                            handleUpdateQuiz({
-                                [event.target.name]: event.target.value,
-                            })
-                        }}
-                    />
-                )
-            }
-            case QuizMode.sort:
-            case QuizMode.selection: {
-                const {
-                    choices = [],
-                    values = [],
-                    tagsId = [],
-                    maxChoices = 4,
-                    showImage = false,
-                    direction,
-                } = quiz as SelectionQuiz
-                return (
-                    <SelectionView
-                        textFieldProps={{
-                            value: title,
-                        }}
-                        selectionProps={{
-                            choices,
-                            values,
-                            tagsId,
-                            maxChoices,
-                            showImage,
-                            direction,
-                        }}
+                        title={title}
                         buttonProps={buttonProps}
                         onChange={(event) => {
                             handleUpdateQuiz({
@@ -129,11 +95,37 @@ export default function Editor(props: EditorProps) {
                 )
             }
             case QuizMode.slider: {
-                const { value, min, max } = quiz as SliderQuiz
+                const { min, max } = quiz as SliderQuiz
                 return (
                     <SliderView
                         title={title}
-                        slider={{ value, min, max }}
+                        quizProps={{ min, max }}
+                        buttonProps={buttonProps}
+                        onChange={(event) => {
+                            handleUpdateQuiz({
+                                [event.target.name]: event.target.value,
+                            })
+                        }}
+                    />
+                )
+            }
+            case QuizMode.sort:
+            case QuizMode.selection: {
+                const {
+                    choices = [],
+                    maxChoices = 4,
+                    showImage = false,
+                    direction,
+                } = quiz as SelectionQuiz
+                return (
+                    <SelectionView
+                        title={title}
+                        quizProps={{
+                            choices,
+                            maxChoices,
+                            showImage,
+                            direction,
+                        }}
                         buttonProps={buttonProps}
                         onChange={(event) => {
                             handleUpdateQuiz({
@@ -145,27 +137,24 @@ export default function Editor(props: EditorProps) {
             }
             case QuizMode.oneInTwo: {
                 const {
-                    choiceGroup,
-                    values = [],
-                    tagsId = [],
-                    showImage,
+                    choices = [],
                     direction,
+                    showImage,
                 } = quiz as OneInTwoQuiz
 
                 return (
                     <OneInTwoView
-                        textFieldProps={{
-                            value: title,
-                        }}
+                        title={title}
                         quizProps={{
-                            choiceGroup,
-                            showImage,
+                            choices,
                             direction,
-                            values,
-                            tagsId,
+                            showImage,
                         }}
-                        buttonProps={buttonProps}
-                        onChange={() => {}}
+                        onChange={(event) => {
+                            handleUpdateQuiz({
+                                [event.target.name]: event.target.value,
+                            })
+                        }}
                     />
                 )
             }

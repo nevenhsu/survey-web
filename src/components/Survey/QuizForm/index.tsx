@@ -125,14 +125,16 @@ export default function QuizForm() {
         return _.find(quizzes, { id: selectedId })
     }, [selectedId, quizzes])
 
-    const disabledTab = ![QuizMode.selection, QuizMode.sort].includes(
-        selectedQuiz?.mode as any
-    )
+    const disabledTab = ![
+        QuizMode.selection,
+        QuizMode.sort,
+        QuizMode.oneInTwo,
+    ].includes(selectedQuiz?.mode as any)
 
     const disabledNext =
-        [QuizMode.selection, QuizMode.sort].includes(
+        ![QuizMode.selection, QuizMode.sort].includes(
             selectedQuiz?.mode as any
-        ) && (selectedQuiz as SelectionQuiz)?.maxChoices > 1
+        ) || (selectedQuiz as SelectionQuiz)?.maxChoices > 1
 
     const tabValue = disabledTab ? 0 : disabledNext && tab === 2 ? 0 : tab
 

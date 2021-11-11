@@ -9,7 +9,6 @@ import {
     ChoiceView,
 } from 'components/Survey/QuizForm/Shares'
 import { getDefaultChoice } from 'utils/helper'
-import type { StyledTextFieldProps } from 'components/Survey/QuizForm/Shares'
 import type {
     CustomButton,
     SelectionType,
@@ -18,18 +17,18 @@ import type {
 } from 'common/types'
 
 export default function SelectionView(props: {
-    textFieldProps: StyledTextFieldProps
-    selectionProps: SelectionType
+    title: string
+    quizProps: Omit<SelectionType, 'values' | 'tagsId'>
     buttonProps: CustomButton
     onChange: OnChangeInput
 }) {
-    const { textFieldProps, selectionProps, buttonProps, onChange } = props
-    const { choices = [], maxChoices, showImage, direction } = selectionProps
+    const { title, quizProps, buttonProps, onChange } = props
+    const { choices = [], maxChoices, showImage, direction } = quizProps
 
     const responsive: { [key: string]: GridSize } =
         direction === 'row' ? { xs: 6 } : { xs: 12 }
 
-    const handleChoiceChange = (
+    const handleChangeChoice = (
         e: React.ChangeEvent<HTMLInputElement>,
         id: string
     ) => {
@@ -46,7 +45,7 @@ export default function SelectionView(props: {
         onChange(event as any)
     }
 
-    const handleChoiceDelete = (id: string) => {
+    const handleDeleteChoice = (id: string) => {
         const value = choices.filter((el) => el.id !== id)
         const event = {
             target: {
@@ -76,9 +75,9 @@ export default function SelectionView(props: {
                 variant="standard"
                 placeholder="請輸入您的文字"
                 name="title"
+                value={title}
                 onChange={onChange}
                 multiline
-                {...textFieldProps}
             />
             <Typography variant="caption" color="GrayText">
                 最多可選擇{maxChoices}項
@@ -97,9 +96,9 @@ export default function SelectionView(props: {
                             <ChoiceView
                                 value={el}
                                 onChange={(event) =>
-                                    handleChoiceChange(event, el.id)
+                                    handleChangeChoice(event, el.id)
                                 }
-                                onDelete={() => handleChoiceDelete(el.id)}
+                                onDelete={() => handleDeleteChoice(el.id)}
                                 showImage={showImage}
                             />
                         </Grid>

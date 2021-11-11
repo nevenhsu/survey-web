@@ -12,6 +12,7 @@ import type {
     Survey,
     Quiz,
     SelectionQuiz,
+    OneInTwoQuiz,
     FillQuiz,
     SliderQuiz,
     ChoiceType,
@@ -146,6 +147,17 @@ export function getDefaultQuiz(id: string, mode: QuizMode): QuizType {
                 maxChoices: 4,
                 showImage: false,
                 direction: 'column',
+            }
+            return quiz
+        }
+        case QuizMode.oneInTwo: {
+            const quiz: OneInTwoQuiz = {
+                ...defaultQuiz,
+                choices: [getDefaultChoice(), getDefaultChoice()],
+                values: [],
+                tagsId: [],
+                showImage: false,
+                direction: 'row',
             }
             return quiz
         }
