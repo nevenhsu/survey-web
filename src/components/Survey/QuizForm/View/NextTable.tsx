@@ -119,7 +119,7 @@ export default function NextTable(props: NextTableProps) {
                             </TableRow>
                         ))}
                         {emptyRows > 0 && (
-                            <TableRow sx={{ height: 71 * emptyRows }}>
+                            <TableRow sx={{ height: 72 * emptyRows }}>
                                 <TableCell colSpan={4} />
                             </TableRow>
                         )}

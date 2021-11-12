@@ -29,13 +29,16 @@ import {
 import { reorder, setId, getDefaultQuiz } from 'utils/helper'
 import ThemeProvider from 'theme/ThemeProvider'
 import { QuizMode, QuizType, SurveyStep } from 'common/types'
-import type { SelectionQuiz, DeviceType } from 'common/types'
+import type { SelectionQuiz, DraggerQuiz, DeviceType } from 'common/types'
 
 const Editor = React.lazy(
     () => import('components/Survey/QuizForm/View/Editor')
 )
 const TagTable = React.lazy(
     () => import('components/Survey/QuizForm/View/TagTable')
+)
+const AnswerTable = React.lazy(
+    () => import('components/Survey/QuizForm/View/AnswerTable')
 )
 const NextTable = React.lazy(
     () => import('components/Survey/QuizForm/View/NextTable')
@@ -129,6 +132,7 @@ export default function QuizForm() {
         QuizMode.selection,
         QuizMode.sort,
         QuizMode.oneInTwo,
+        QuizMode.dragger,
     ].includes(selectedQuiz?.mode as any)
 
     const disabledNext =
@@ -219,7 +223,11 @@ export default function QuizForm() {
                             backgroundColor: 'grey.300',
                         }}
                     >
-                        <TagTable quiz={selectedQuiz as SelectionQuiz} />
+                        {selectedQuiz?.mode === QuizMode.dragger ? (
+                            <AnswerTable quiz={selectedQuiz as DraggerQuiz} />
+                        ) : (
+                            <TagTable quiz={selectedQuiz as SelectionQuiz} />
+                        )}
                     </Box>
                 )
             }
@@ -424,11 +432,16 @@ export default function QuizForm() {
                                 >
                                     <Tab label="編輯題目" />
                                     <Tab
-                                        label="答項標籤"
+                                        label={
+                                            selectedQuiz?.mode ===
+                                            QuizMode.dragger
+                                                ? '題目邏輯'
+                                                : '答項標籤'
+                                        }
                                         disabled={disabledTab}
                                     />
                                     <Tab
-                                        label="邏輯"
+                                        label="跳題邏輯"
                                         disabled={disabledTab || disabledNext}
                                     />
                                 </StyledTabs>

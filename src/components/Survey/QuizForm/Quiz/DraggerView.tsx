@@ -79,8 +79,6 @@ export default function DraggerView(props: {
             [name]: value,
         }
 
-        console.log(newValue)
-
         onChange({
             target: {
                 name: target,
@@ -145,6 +143,7 @@ export default function DraggerView(props: {
                 justifyContent="space-evenly"
                 alignItems="center"
                 spacing={2}
+                sx={{ width: '100%' }}
             >
                 <CustomButton
                     customProps={leftButton}

@@ -374,7 +374,7 @@ export default function TagTable(props: TagTableProps) {
                                 </TableRow>
                             ))}
                         {emptyRows > 0 && (
-                            <TableRow sx={{ height: 71 * emptyRows }}>
+                            <TableRow sx={{ height: 72 * emptyRows }}>
                                 <TableCell colSpan={1 + tagsId.length} />
                             </TableRow>
                         )}
