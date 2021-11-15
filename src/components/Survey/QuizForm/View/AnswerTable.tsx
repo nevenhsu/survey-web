@@ -11,8 +11,12 @@ import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
+import Toolbar from '@mui/material/Toolbar'
+import Tooltip from '@mui/material/Tooltip'
+import IconButton from '@mui/material/IconButton'
+import AddIcon from 'mdi-react/AddIcon'
 import { useAppSelector, useAppDispatch } from 'hooks'
-import { setClasses } from 'utils/helper'
+import { setClasses, getDefaultDraggerChoice } from 'utils/helper'
 import { selectCurrentSurvey, updateQuiz } from 'store/slices/survey'
 import type { DraggerQuiz, OnChangeInput } from 'common/types'
 
@@ -73,8 +77,30 @@ export default function AnswerTable(props: AnswerTableProps) {
         }
     }
 
+    const handleAddChoice = () => {
+        if (quizId && left) {
+            const newChoice = getDefaultDraggerChoice(left.id)
+            const newValue = { choices: choices.concat(newChoice) }
+            dispatch(
+                updateQuiz({
+                    surveyId,
+                    quizId,
+                    newValue,
+                })
+            )
+        }
+    }
+
     return (
         <Root className={classes.root} elevation={6} square>
+            <Toolbar sx={{ minHeight: '48px !important' }}>
+                <div style={{ flex: 1 }} />
+                <Tooltip title="增加答項">
+                    <IconButton onClick={handleAddChoice}>
+                        <AddIcon />
+                    </IconButton>
+                </Tooltip>
+            </Toolbar>
             <TableContainer>
                 <Table
                     sx={{

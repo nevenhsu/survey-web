@@ -204,6 +204,7 @@ export type Result = {
     id: string
     title?: string
     tags: { [tagId: string]: string[] }
+    range: number[]
     components: Component[]
 }
 

@@ -77,7 +77,7 @@ export const CustomButton = (props: {
                     backgroundColor: buttonColor,
                 }}
             >
-                {buttonText}
+                {buttonText || '下一題'}
             </Button>
 
             <Popover

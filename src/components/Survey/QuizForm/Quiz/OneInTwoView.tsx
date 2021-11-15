@@ -83,6 +83,15 @@ export default function OneInTwoView(props: {
                     '& .slick-next:before': {
                         color: (theme) => theme.palette.primary.main,
                     },
+                    '& .slick-dots li': {
+                        height: 10,
+                        width: 10,
+                        mx: 0.25,
+                    },
+                    '& .slick-dots button': {
+                        height: 10,
+                        width: 10,
+                    },
                 }}
             >
                 <Slick slidesToShow={1} slidesToScroll={1} dots arrows infinite>

@@ -330,15 +330,6 @@ export function getDefaultComponent(type: ComponentType) {
     }
 }
 
-export function getDefaultResult(): Result {
-    return {
-        id: setId(),
-        title: '',
-        tags: {},
-        components: [],
-    }
-}
-
 export function toDate(value: any) {
     const date = new Date(value)
     if (isValid(date)) {

@@ -163,6 +163,7 @@ export const fakeSurveyData: Survey = {
                 id: 'result-id-a',
                 title: '結果A',
                 tags: { 'fake-result-id': ['AAA'] },
+                range: [],
                 components: [
                     {
                         id: 'fake-a',

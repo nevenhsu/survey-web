@@ -19,8 +19,8 @@ export default function DraggerChoiceView(props: DraggerChoiceViewProps) {
     return (
         <Box
             sx={{
-                boxShadow: (theme) => theme.shadows[4],
-                borderRadius: (theme) => `${theme.shape.borderRadius}px`,
+                boxShadow: 4,
+                borderRadius: 1,
                 overflow: 'hidden',
             }}
         >

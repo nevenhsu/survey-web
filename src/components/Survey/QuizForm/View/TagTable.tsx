@@ -17,13 +17,14 @@ import TextField from '@mui/material/TextField'
 import components, { setStyles } from 'components/common/MuiSelectComponents'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import { getMuiColor, getContrastText } from 'theme/palette'
-import { setClasses, getDefaultTags } from 'utils/helper'
+import { setClasses, getDefaultTags, getDefaultChoice } from 'utils/helper'
 import {
     selectCurrentSurvey,
     updateQuiz,
     updateSurvey,
 } from 'store/slices/survey'
 import AddIcon from 'mdi-react/AddIcon'
+import TagPlusIcon from 'mdi-react/TagPlusIcon'
 import type {
     SelectionQuiz,
     Tags,
@@ -61,7 +62,7 @@ export default function TagTable(props: TagTableProps) {
     const dispatch = useAppDispatch()
 
     const { quiz } = props
-    const { id: quizId, choices = [], tagsId: ids = [] } = quiz ?? {}
+    const { id: quizId, choices = [], tagsId: ids = [], mode } = quiz ?? {}
 
     const tagsId = _.isEmpty(ids) ? [''] : Array.from(ids)
     const disabledAdd = tagsId.length >= 3
@@ -75,6 +76,20 @@ export default function TagTable(props: TagTableProps) {
 
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - choices.length) : 0
+
+    const handleAddChoice = () => {
+        if (quizId) {
+            const newChoice = getDefaultChoice()
+            const newValue = { choices: choices.concat(newChoice) }
+            dispatch(
+                updateQuiz({
+                    surveyId,
+                    quizId,
+                    newValue,
+                })
+            )
+        }
+    }
 
     const handleAddTag = () => {
         if (quizId && tagsId.length < 3) {
@@ -233,13 +248,19 @@ export default function TagTable(props: TagTableProps) {
         <Root className={classes.root} elevation={6} square>
             <Toolbar sx={{ minHeight: '48px !important' }}>
                 <div style={{ flex: 1 }} />
+                <Tooltip title="增加答項">
+                    <IconButton onClick={handleAddChoice} sx={{ mr: 1 }}>
+                        <AddIcon />
+                    </IconButton>
+                </Tooltip>
+
                 <Tooltip title={disabledAdd ? '類別已達上限' : '增加類別'}>
                     <span>
                         <IconButton
                             onClick={handleAddTag}
                             disabled={disabledAdd}
                         >
-                            <AddIcon />
+                            <TagPlusIcon />
                         </IconButton>
                     </span>
                 </Tooltip>
