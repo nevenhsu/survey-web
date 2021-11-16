@@ -126,7 +126,6 @@ export type OneInTwoQuiz = Quiz & OneInTwoType
 
 export type DraggerButton = CustomButtonType & {
     id: string
-    image?: string
 }
 
 export type DraggerChoiceType = {

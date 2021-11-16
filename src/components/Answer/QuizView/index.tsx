@@ -14,6 +14,7 @@ import { QuizMode, AnswerStep } from 'common/types'
 import type {
     QuizType,
     SelectionQuiz,
+    DraggerQuiz,
     SliderQuiz,
     AnswerValue,
 } from 'common/types'
@@ -32,6 +33,9 @@ const SliderView = React.lazy(
 )
 const SelectionView = React.lazy(
     () => import('components/Answer/QuizView/Quiz/SelectionView')
+)
+const DraggerView = React.lazy(
+    () => import('components/Answer/QuizView/Quiz/DraggerView')
 )
 
 type QuizViewProps = {
@@ -95,7 +99,35 @@ export default function QuizView(props: QuizViewProps) {
                 return (
                     <PageView
                         title={title}
-                        customButtonProps={{ customProps, onClick: handleNext }}
+                        buttonProps={{ customProps, onClick: handleNext }}
+                    />
+                )
+            }
+            case QuizMode.dragger: {
+                const {
+                    choices = [],
+                    values = [],
+                    left,
+                    right,
+                    showImage,
+                } = quiz as DraggerQuiz
+
+                return (
+                    <DraggerView
+                        title={title}
+                        quizProps={{
+                            choices,
+                            values,
+                            left,
+                            right,
+                            showImage,
+                        }}
+                        onChange={(event) => {
+                            handleUpdateAnswer({
+                                [event.target.name]: event.target.value,
+                            })
+                        }}
+                        onDone={handleNext}
                     />
                 )
             }
@@ -111,7 +143,7 @@ export default function QuizView(props: QuizViewProps) {
                 return (
                     <SelectionView
                         title={title}
-                        selectionProps={{
+                        quizProps={{
                             choices,
                             values,
                             tagsId,
@@ -119,7 +151,7 @@ export default function QuizView(props: QuizViewProps) {
                             showImage,
                             direction,
                         }}
-                        customButtonProps={{
+                        buttonProps={{
                             customProps,
                             disabled: !validValue,
                             onClick: handleNext,
@@ -144,7 +176,7 @@ export default function QuizView(props: QuizViewProps) {
                 return (
                     <SortView
                         title={title}
-                        selectionProps={{
+                        quizProps={{
                             choices,
                             values,
                             tagsId,
@@ -152,7 +184,7 @@ export default function QuizView(props: QuizViewProps) {
                             showImage,
                             direction,
                         }}
-                        customButtonProps={{
+                        buttonProps={{
                             customProps,
                             disabled: !validValue,
                             onClick: handleNext,
@@ -170,7 +202,7 @@ export default function QuizView(props: QuizViewProps) {
                     <FillView
                         title={title}
                         value={`${value ?? ''}`}
-                        customButtonProps={{
+                        buttonProps={{
                             customProps,
                             disabled: !validValue,
                             onClick: handleNext,
@@ -189,8 +221,8 @@ export default function QuizView(props: QuizViewProps) {
                 return (
                     <SliderView
                         title={title}
-                        slider={{ value: val, min, max }}
-                        customButtonProps={{
+                        quizProps={{ value: val, min, max }}
+                        buttonProps={{
                             customProps,
                             disabled: !validValue,
                             onClick: handleNext,

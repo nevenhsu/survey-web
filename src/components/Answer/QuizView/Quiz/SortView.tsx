@@ -20,8 +20,8 @@ import type { OnChangeInput, SelectionType, ChoiceType } from 'common/types'
 
 type SortViewProps = {
     title: string
-    selectionProps: SelectionType
-    customButtonProps: CustomButtonProps
+    quizProps: SelectionType
+    buttonProps: CustomButtonProps
     onChange: OnChangeInput
 }
 
@@ -38,8 +38,8 @@ type OptionsType = {
 export default function SortView(props: SortViewProps) {
     const matches = useMediaQuery('(min-width:600px)')
 
-    const { title, selectionProps, customButtonProps, onChange } = props
-    const { values = [], choices = [], maxChoices, showImage } = selectionProps
+    const { title, quizProps, buttonProps, onChange } = props
+    const { values = [], choices = [], maxChoices, showImage } = quizProps
 
     const [options, setOptions] = React.useState<OptionsType>({
         selected: [],
@@ -294,7 +294,7 @@ export default function SortView(props: SortViewProps) {
 
             <Box sx={{ height: 16 }} />
 
-            <CustomButton {...customButtonProps} />
+            <CustomButton {...buttonProps} />
         </>
     )
 }

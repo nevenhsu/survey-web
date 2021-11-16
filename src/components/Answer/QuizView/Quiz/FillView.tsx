@@ -11,12 +11,12 @@ import type { OnChangeInput } from 'common/types'
 type FillViewProps = {
     title: string
     value: string
-    customButtonProps: CustomButtonProps
+    buttonProps: CustomButtonProps
     onChange: OnChangeInput
 }
 
 export default function FillView(props: FillViewProps) {
-    const { title, value, customButtonProps, onChange } = props
+    const { title, value, buttonProps, onChange } = props
     return (
         <>
             <Typography variant="h6"> {title} </Typography>
@@ -36,7 +36,7 @@ export default function FillView(props: FillViewProps) {
 
             <Box sx={{ height: 16 }} />
 
-            <CustomButton {...customButtonProps} />
+            <CustomButton {...buttonProps} />
         </>
     )
 }

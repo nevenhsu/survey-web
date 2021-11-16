@@ -4,14 +4,15 @@ import type { CustomButtonType } from 'common/types'
 
 export type CustomButtonProps = ButtonProps & {
     customProps: CustomButtonType
+    defaultText?: string
 }
 
 export default function CustomButton(props: CustomButtonProps) {
-    const { customProps, ...rest } = props
+    const { customProps, defaultText = '下一題', ...rest } = props
 
     const {
+        buttonText,
         buttonVariant = 'contained',
-        buttonText = '下一題',
         buttonColor = '',
         buttonTextColor = '',
     } = customProps
@@ -25,7 +26,7 @@ export default function CustomButton(props: CustomButtonProps) {
             }}
             {...rest}
         >
-            {buttonText || '下一題'}
+            {buttonText || defaultText}
         </Button>
     )
 }

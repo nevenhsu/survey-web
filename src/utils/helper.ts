@@ -20,12 +20,24 @@ import type {
     DraggerChoiceType,
     Component,
     Tags,
-    Result,
 } from 'common/types'
 import { getMuiColor } from 'theme/palette'
 
 export function getStringLength(str: string) {
-    return str.replace(/[^\x00-\xff]/g, '**').length
+    const val = str.replace(/[^\x00-\xff]/g, '**')
+    const all = val.length
+    const longEngChar = _.compact(val.match(/w|m/gim)).length
+
+    return _.round(all - longEngChar + longEngChar * 1.6, 1)
+}
+
+export function shuffle<T>(value: Array<T>): Array<T> {
+    const array = [...value]
+    for (let i = array.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1))
+        ;[array[i], array[j]] = [array[j], array[i]]
+    }
+    return array
 }
 
 export function setId(length = 6) {
