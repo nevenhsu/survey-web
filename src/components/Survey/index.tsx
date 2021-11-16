@@ -8,6 +8,7 @@ import Box from '@mui/material/Box'
 import LoadingButton from '@mui/lab/LoadingButton'
 import ArrowUpCircleIcon from 'mdi-react/ArrowUpCircleIcon'
 import CheckboxMarkedCircleIcon from 'mdi-react/CheckboxMarkedCircleIcon'
+import { lightenColor } from 'theme/palette'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import User from 'utils/user'
 import { setClasses } from 'utils/helper'
@@ -187,24 +188,40 @@ export default function Editor() {
                                     }
                                 )}
                             </Tabs>
-
-                            <LoadingButton
-                                variant="contained"
-                                loadingPosition="end"
-                                endIcon={
-                                    updated ? (
-                                        <CheckboxMarkedCircleIcon />
-                                    ) : (
-                                        <ArrowUpCircleIcon />
-                                    )
-                                }
-                                loading={uploading}
-                                disabled={uploading}
-                                onClick={() => handleSave()}
-                                sx={{ position: 'absolute', top: 6, right: 4 }}
-                            >
-                                儲存
-                            </LoadingButton>
+                            <Box sx={{ color: 'white' }}>
+                                <LoadingButton
+                                    variant="contained"
+                                    color="inherit"
+                                    loadingPosition="end"
+                                    endIcon={
+                                        updated ? (
+                                            <CheckboxMarkedCircleIcon />
+                                        ) : (
+                                            <ArrowUpCircleIcon />
+                                        )
+                                    }
+                                    loading={uploading}
+                                    disabled={uploading}
+                                    onClick={() => handleSave()}
+                                    sx={{
+                                        position: 'absolute',
+                                        top: 6,
+                                        right: 4,
+                                        bgcolor: 'grey.900',
+                                        '&:hover': {
+                                            bgcolor: (theme) =>
+                                                lightenColor(
+                                                    theme,
+                                                    'grey.900',
+                                                    0.08,
+                                                    'grey.800'
+                                                ),
+                                        },
+                                    }}
+                                >
+                                    儲存
+                                </LoadingButton>
+                            </Box>
                         </>
                     )}
 

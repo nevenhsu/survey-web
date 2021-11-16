@@ -13,8 +13,9 @@ import { toNumber } from 'utils/helper'
 import { QuizMode, AnswerStep } from 'common/types'
 import type {
     QuizType,
-    SelectionQuiz,
     DraggerQuiz,
+    OneInTwoQuiz,
+    SelectionQuiz,
     SliderQuiz,
     AnswerValue,
 } from 'common/types'
@@ -36,6 +37,9 @@ const SelectionView = React.lazy(
 )
 const DraggerView = React.lazy(
     () => import('components/Answer/QuizView/Quiz/DraggerView')
+)
+const OneInTwoView = React.lazy(
+    () => import('components/Answer/QuizView/Quiz/OneInTwoView')
 )
 
 type QuizViewProps = {
@@ -106,7 +110,6 @@ export default function QuizView(props: QuizViewProps) {
             case QuizMode.dragger: {
                 const {
                     choices = [],
-                    values = [],
                     left,
                     right,
                     showImage,
@@ -131,10 +134,34 @@ export default function QuizView(props: QuizViewProps) {
                     />
                 )
             }
+            case QuizMode.oneInTwo: {
+                const {
+                    choices = [],
+                    showImage = false,
+                    direction = 'row',
+                } = quiz as OneInTwoQuiz
+
+                return (
+                    <OneInTwoView
+                        title={title}
+                        quizProps={{
+                            choices,
+                            values,
+                            showImage,
+                            direction,
+                        }}
+                        onChange={(event) => {
+                            handleUpdateAnswer({
+                                [event.target.name]: event.target.value,
+                            })
+                        }}
+                        onDone={handleNext}
+                    />
+                )
+            }
             case QuizMode.selection: {
                 const {
                     choices = [],
-                    tagsId = [],
                     maxChoices = 1,
                     showImage = false,
                     direction = 'column',
@@ -146,7 +173,6 @@ export default function QuizView(props: QuizViewProps) {
                         quizProps={{
                             choices,
                             values,
-                            tagsId,
                             maxChoices,
                             showImage,
                             direction,
@@ -167,10 +193,8 @@ export default function QuizView(props: QuizViewProps) {
             case QuizMode.sort: {
                 const {
                     choices = [],
-                    tagsId = [],
                     maxChoices = 4,
                     showImage = false,
-                    direction,
                 } = quiz as SelectionQuiz
 
                 return (
@@ -179,10 +203,8 @@ export default function QuizView(props: QuizViewProps) {
                         quizProps={{
                             choices,
                             values,
-                            tagsId,
                             maxChoices,
                             showImage,
-                            direction,
                         }}
                         buttonProps={{
                             customProps,

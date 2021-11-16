@@ -9,6 +9,7 @@ import {
     DraggerChoiceView,
     CustomButton,
 } from 'components/Survey/QuizForm/Shares'
+import AddIcon from 'mdi-react/AddIcon'
 import { getDefaultDraggerChoice } from 'utils/helper'
 import type {
     OnChangeInput,
@@ -141,7 +142,11 @@ export default function DraggerView(props: {
 
             <Box sx={{ height: 16 }} />
 
-            <Button variant="outlined" onClick={handleAddChoice}>
+            <Button
+                variant="outlined"
+                startIcon={<AddIcon />}
+                onClick={handleAddChoice}
+            >
                 新增選項
             </Button>
 
@@ -158,11 +163,13 @@ export default function DraggerView(props: {
                     customProps={leftButton}
                     buttonProps={{ size: 'large' }}
                     onChange={(event) => handleChangeButton(event, 'left')}
+                    defaultText="左選項"
                 />
                 <CustomButton
                     customProps={rightButton}
                     buttonProps={{ size: 'large' }}
                     onChange={(event) => handleChangeButton(event, 'right')}
+                    defaultText="右選項"
                 />
             </Stack>
         </>

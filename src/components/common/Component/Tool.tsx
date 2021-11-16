@@ -155,7 +155,7 @@ export default function ComponentTool(props: ComponentToolProps) {
                                     name="value"
                                     value={value ?? ''}
                                     variant="standard"
-                                    placeholder={id ? '請輸入文字...' : ''}
+                                    placeholder="請輸入文字..."
                                     onChange={onChange}
                                     fullWidth
                                 />
@@ -184,7 +184,7 @@ export default function ComponentTool(props: ComponentToolProps) {
                                 <TableCell>
                                     <StyledTextField
                                         name="underline"
-                                        value={underline ?? ''}
+                                        value={underline || 'always'}
                                         variant="standard"
                                         onChange={onChange}
                                         select
@@ -209,7 +209,7 @@ export default function ComponentTool(props: ComponentToolProps) {
                         <TableCell>
                             <StyledTextField
                                 name="display"
-                                value={display ?? ''}
+                                value={display || 'block'}
                                 variant="standard"
                                 onChange={onChange}
                                 select
@@ -229,7 +229,7 @@ export default function ComponentTool(props: ComponentToolProps) {
                         <TableCell>
                             <StyledTextField
                                 name="align"
-                                value={align ?? ''}
+                                value={align || 'center'}
                                 variant="standard"
                                 onChange={onChange}
                                 select
@@ -251,6 +251,7 @@ export default function ComponentTool(props: ComponentToolProps) {
                                 name="width"
                                 value={width ?? ''}
                                 variant="standard"
+                                placeholder="100%"
                                 onChange={onChange}
                                 fullWidth
                             />
@@ -264,6 +265,7 @@ export default function ComponentTool(props: ComponentToolProps) {
                                 name="height"
                                 value={height ?? ''}
                                 variant="standard"
+                                placeholder="auto"
                                 onChange={onChange}
                                 fullWidth
                             />
@@ -280,7 +282,7 @@ export default function ComponentTool(props: ComponentToolProps) {
                                 <TableCell>
                                     <StyledTextField
                                         name="typoVariant"
-                                        value={typoVariant ?? ''}
+                                        value={typoVariant || 'body1'}
                                         variant="standard"
                                         onChange={onChange}
                                         InputProps={{
@@ -315,7 +317,7 @@ export default function ComponentTool(props: ComponentToolProps) {
                                 <TableCell>
                                     <StyledTextField
                                         name="fontWeight"
-                                        value={fontWeight ?? ''}
+                                        value={fontWeight || 'regular'}
                                         variant="standard"
                                         onChange={onChange}
                                         select
@@ -352,6 +354,7 @@ export default function ComponentTool(props: ComponentToolProps) {
                                     name="color"
                                     value={color ?? ''}
                                     variant="standard"
+                                    placeholder="#000000"
                                     onChange={onChange}
                                     fullWidth
                                 />
@@ -366,6 +369,7 @@ export default function ComponentTool(props: ComponentToolProps) {
                                 name="bgcolor"
                                 value={bgcolor ?? ''}
                                 variant="standard"
+                                placeholder="#ffffff"
                                 onChange={onChange}
                                 fullWidth
                             />
@@ -380,6 +384,7 @@ export default function ComponentTool(props: ComponentToolProps) {
                                     name="buttonColor"
                                     value={buttonColor ?? ''}
                                     variant="standard"
+                                    placeholder="#7879F1"
                                     onChange={onChange}
                                     fullWidth
                                 />

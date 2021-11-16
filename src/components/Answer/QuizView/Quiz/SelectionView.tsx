@@ -11,7 +11,7 @@ import type { OnChangeInput, SelectionType } from 'common/types'
 
 type SelectionViewProps = {
     title: string
-    quizProps: SelectionType
+    quizProps: Omit<SelectionType, 'tagsId'>
     buttonProps: CustomButtonProps
     onChange: OnChangeInput
 }
@@ -54,7 +54,7 @@ export default function SelectionView(props: SelectionViewProps) {
 
     return (
         <>
-            <Typography variant="h6"> {title} </Typography>
+            <Typography variant="h6">{title}</Typography>
             <Typography variant="caption" color="GrayText">
                 最多可選擇{maxChoices}項
             </Typography>

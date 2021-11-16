@@ -19,7 +19,7 @@ export default function FillView(props: FillViewProps) {
     const { title, value, buttonProps, onChange } = props
     return (
         <>
-            <Typography variant="h6"> {title} </Typography>
+            <Typography variant="h6">{title}</Typography>
 
             <Box sx={{ height: 16 }} />
 

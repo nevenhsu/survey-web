@@ -20,7 +20,7 @@ import type { OnChangeInput, SelectionType, ChoiceType } from 'common/types'
 
 type SortViewProps = {
     title: string
-    quizProps: SelectionType
+    quizProps: Omit<SelectionType, 'tagsId' | 'direction'>
     buttonProps: CustomButtonProps
     onChange: OnChangeInput
 }
@@ -283,7 +283,7 @@ export default function SortView(props: SortViewProps) {
 
     return (
         <>
-            <Typography variant="h6"> {title} </Typography>
+            <Typography variant="h6">{title}</Typography>
             <Typography variant="caption" color="GrayText">
                 最多可排序{maxChoices}項
             </Typography>

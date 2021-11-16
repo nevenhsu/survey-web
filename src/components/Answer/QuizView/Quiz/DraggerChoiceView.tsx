@@ -16,6 +16,8 @@ const DraggerChoiceView = React.forwardRef<unknown, DraggerChoiceViewProps>(
         const { choice } = props
         const { label, image } = choice ?? {}
 
+        const hasImage = Boolean(image)
+
         return (
             <Box
                 sx={{
@@ -33,7 +35,7 @@ const DraggerChoiceView = React.forwardRef<unknown, DraggerChoiceViewProps>(
                         spacing={2}
                         sx={{ height: '100%', overflow: 'hidden' }}
                     >
-                        {Boolean(image) && (
+                        {hasImage && (
                             <ImageBox
                                 imageUrl={image}
                                 sx={{
@@ -44,7 +46,7 @@ const DraggerChoiceView = React.forwardRef<unknown, DraggerChoiceViewProps>(
                         )}
 
                         <Typography
-                            variant="body1"
+                            variant={hasImage ? 'body1' : 'h5'}
                             width="100%"
                             sx={{
                                 textTransform: 'none',

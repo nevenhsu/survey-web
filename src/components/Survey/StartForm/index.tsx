@@ -19,7 +19,17 @@ export default function StartForm() {
     }
 
     return (
-        <>
+        <Box
+            sx={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100vw',
+                height: '100vh',
+                zIndex: 'tooltip',
+                bgcolor: 'white',
+            }}
+        >
             <Box sx={{ textAlign: 'center', py: 6 }}>
                 <Typography variant="h4" fontWeight="bold" gutterBottom>
                     Yo! 創建測驗的人生面臨十字路口了嗎？
@@ -33,7 +43,7 @@ export default function StartForm() {
                 alignItems="center"
                 justifyContent="center"
                 sx={{
-                    height: 'calc(100vh - 224px)',
+                    height: 'calc(100vh - 172px)',
                     bgcolor: (theme) => theme.palette.grey[50],
                 }}
             >
@@ -102,6 +112,6 @@ export default function StartForm() {
                     </Button>
                 </Box>
             </Stack>
-        </>
+        </Box>
     )
 }

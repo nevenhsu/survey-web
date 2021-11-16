@@ -25,7 +25,6 @@ const MotionDraggerChoiceView = motion(DraggerChoiceView)
 
 export default function DraggerView(props: DraggerViewProps) {
     const { title, quizProps, onChange, onDone } = props
-    // FIXME: use answer values
     const {
         values = [],
         choices: rawChoices = [],
@@ -71,7 +70,7 @@ export default function DraggerView(props: DraggerViewProps) {
 
     return (
         <>
-            <Typography variant="h6"> {title} </Typography>
+            <Typography variant="h6">{title}</Typography>
             <Box sx={{ height: 16 }} />
 
             <Box sx={{ width: '60vh', textAlign: 'center' }}>

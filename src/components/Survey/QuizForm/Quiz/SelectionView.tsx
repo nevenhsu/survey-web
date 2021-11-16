@@ -8,6 +8,7 @@ import {
     CustomButton,
     ChoiceView,
 } from 'components/Survey/QuizForm/Shares'
+import AddIcon from 'mdi-react/AddIcon'
 import { getDefaultChoice } from 'utils/helper'
 import type {
     CustomButtonType,
@@ -104,7 +105,11 @@ export default function SelectionView(props: {
                         </Grid>
                     ))}
                     <Grid item {...responsive}>
-                        <Button variant="outlined" onClick={handleAddChoice}>
+                        <Button
+                            variant="outlined"
+                            startIcon={<AddIcon />}
+                            onClick={handleAddChoice}
+                        >
                             新增選項
                         </Button>
                     </Grid>

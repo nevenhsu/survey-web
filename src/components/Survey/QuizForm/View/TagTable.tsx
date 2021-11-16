@@ -283,6 +283,12 @@ export default function TagTable(props: TagTableProps) {
                                         styles={setStyles(theme) as any}
                                         menuPosition="fixed"
                                         placeholder="標籤類別"
+                                        noOptionsMessage={() =>
+                                            '請輸入類別名稱'
+                                        }
+                                        formatCreateLabel={(inputValue) =>
+                                            `新增 "${inputValue}"`
+                                        }
                                         className={classes.selectContainer}
                                         value={_.find(tagsOptions, { id })}
                                         onChange={(value) =>
@@ -362,6 +368,14 @@ export default function TagTable(props: TagTableProps) {
                                                                 },
                                                             }),
                                                         }}
+                                                        noOptionsMessage={() =>
+                                                            '請輸入標籤名稱'
+                                                        }
+                                                        formatCreateLabel={(
+                                                            inputValue
+                                                        ) =>
+                                                            `新增 "${inputValue}"`
+                                                        }
                                                         menuPosition="fixed"
                                                         className={
                                                             classes.selectContainer

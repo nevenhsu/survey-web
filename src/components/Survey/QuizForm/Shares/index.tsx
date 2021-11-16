@@ -6,6 +6,7 @@ import Button, { ButtonProps } from '@mui/material/Button'
 import MenuItem from '@mui/material/MenuItem'
 import Popover from '@mui/material/Popover'
 import { getStringLength } from 'utils/helper'
+import { lightenColor } from 'theme/palette'
 import type { CustomButtonType, OnChangeInput } from 'common/types'
 import type { Variant } from '@mui/material/styles/createTypography'
 
@@ -45,8 +46,9 @@ export const CustomButton = (props: {
     customProps: CustomButtonType
     buttonProps?: ButtonProps
     onChange: OnChangeInput
+    defaultText?: string
 }) => {
-    const { customProps, buttonProps, onChange } = props
+    const { customProps, buttonProps, onChange, defaultText = '下一題' } = props
     const {
         buttonVariant = 'contained',
         buttonText = '',
@@ -75,9 +77,13 @@ export const CustomButton = (props: {
                 sx={{
                     color: buttonTextColor,
                     backgroundColor: buttonColor,
+                    '&:hover': {
+                        backgroundColor: (theme) =>
+                            lightenColor(theme, buttonColor, 0.08, ''),
+                    },
                 }}
             >
-                {buttonText || '下一題'}
+                {buttonText || defaultText}
             </Button>
 
             <Popover
@@ -86,7 +92,7 @@ export const CustomButton = (props: {
                 onClose={handleClose}
                 anchorOrigin={{
                     vertical: 'bottom',
-                    horizontal: 'left',
+                    horizontal: 'right',
                 }}
             >
                 <Box sx={{ p: 2, maxWidth: 320 }}>

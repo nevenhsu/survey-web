@@ -14,7 +14,7 @@ export default function PageView(props: PageViewProps) {
     const { title, buttonProps } = props
     return (
         <>
-            <Typography variant="h6"> {title} </Typography>
+            <Typography variant="h6">{title}</Typography>
 
             <Box sx={{ height: 16 }} />
 

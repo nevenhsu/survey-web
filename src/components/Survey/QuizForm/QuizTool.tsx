@@ -184,6 +184,7 @@ export default function QuizTool(props: QuizToolProps) {
                         <TableCell>
                             <StyledTextField
                                 name="backgroundColor"
+                                placeholder="#ffffff"
                                 value={backgroundColor ?? ''}
                                 variant="standard"
                                 onChange={handleChange}
@@ -200,7 +201,7 @@ export default function QuizTool(props: QuizToolProps) {
                                         backgroundImage,
                                     })
                                 }}
-                                sx={{ display: 'grid' }}
+                                sx={{ width: 'fit-content', left: 8 }}
                                 hideImage
                                 hideDeleteButton
                             />

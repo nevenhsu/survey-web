@@ -544,7 +544,8 @@ export default function ResultForm() {
                 </Box>
                 <Box>
                     <LoadingButton
-                        variant="outlined"
+                        variant="contained"
+                        color="inherit"
                         loading={uploading}
                         disabled={uploading}
                         onClick={handlePreview}
@@ -555,7 +556,11 @@ export default function ResultForm() {
                         component="span"
                         sx={{ display: 'inline-block', width: 8 }}
                     />
-                    <Button variant="contained" onClick={nextStep}>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={nextStep}
+                    >
                         編輯測驗結果
                     </Button>
                 </Box>
