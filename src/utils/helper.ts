@@ -147,6 +147,8 @@ export function getDefaultQuiz(id: string, mode: QuizMode): QuizType {
         title: '',
         buttonText: '下一題',
         buttonVariant: 'contained',
+        imageWidth: 'auto',
+        imageHeight: 'auto',
     }
 
     switch (mode) {
@@ -271,7 +273,7 @@ export function getDefaultComponent(type: ComponentType) {
                 display: 'block',
                 align: 'center',
                 typoVariant: 'h4',
-                color: 'text.primary',
+                color: '#212121',
                 width: '100%',
             }
             return component
@@ -283,7 +285,7 @@ export function getDefaultComponent(type: ComponentType) {
                 display: 'block',
                 align: 'center',
                 typoVariant: 'body1',
-                color: 'text.secondary',
+                color: '#666666',
                 width: '100%',
             }
             return component
@@ -308,7 +310,7 @@ export function getDefaultComponent(type: ComponentType) {
                 display: 'inline-block',
                 align: 'center',
                 typoVariant: 'button',
-                color: 'primary.main',
+                color: '#7879F1',
                 width: '100%',
             }
             return component
@@ -320,8 +322,8 @@ export function getDefaultComponent(type: ComponentType) {
                 display: 'block',
                 align: 'center',
                 typoVariant: 'h6',
-                color: 'primary.main',
-                buttonColor: 'primary.main',
+                color: '#7879F1',
+                buttonColor: '#7879F1',
                 width: '100%',
             }
             return component

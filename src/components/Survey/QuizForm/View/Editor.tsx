@@ -3,6 +3,8 @@ import _ from 'lodash'
 import { useAppDispatch } from 'hooks'
 import { updateQuiz } from 'store/slices/survey'
 import Stack from '@mui/material/Stack'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 import {
     FillView,
     SliderView,
@@ -35,10 +37,15 @@ export default function Editor(props: EditorProps) {
     const {
         id: quizId,
         mode,
+        required,
         image,
+        imageWidth,
+        imageHeight,
         backgroundColor,
         backgroundImage,
     } = quiz ?? {}
+
+    const hasQuiz = Boolean(quizId)
 
     const handleUpdateQuiz = (newValue: Partial<QuizType>) => {
         if (surveyId && quizId) {
@@ -196,57 +203,82 @@ export default function Editor(props: EditorProps) {
 
     return (
         <ThemeProvider mode="light">
-            <Stack
-                direction="column"
-                alignItems="center"
-                justifyContent="center"
-                spacing={2}
+            {hasQuiz && (
+                <ImageUploader
+                    bgImage={backgroundImage}
+                    sx={{
+                        position: 'sticky',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                    }}
+                    onUploaded={(backgroundImage) => {
+                        handleUpdateQuiz({
+                            backgroundImage,
+                        })
+                    }}
+                    hideButton
+                />
+            )}
+
+            <Box
                 sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
                     width: '100%',
-                    minHeight: '100%',
-                    p: 1,
-                    backgroundColor,
+                    height: '100%',
                 }}
             >
-                {Boolean(quizId) && mode !== QuizMode.dragger && (
-                    <>
-                        <ImageUploader
-                            bgImage={backgroundImage}
-                            sx={{
-                                position: 'absolute',
-                                top: 0,
-                                left: 0,
-                                width: '100%',
-                                height: '100%',
-                                mt: `0 !important`,
-                            }}
-                            onUploaded={(backgroundImage) => {
-                                handleUpdateQuiz({
-                                    backgroundImage,
-                                })
-                            }}
-                            hideButton
-                        />
+                <Stack
+                    direction="column"
+                    alignItems="center"
+                    justifyContent="center"
+                    spacing={2}
+                    sx={{
+                        width: '100%',
+                        minHeight: '100%',
+                        p: 1,
+                        backgroundColor,
+                    }}
+                >
+                    <Box sx={{ height: 16 }} />
 
-                        <ImageUploader
-                            bgImage={image}
-                            sx={{
-                                width: 'auto',
-                                height: '16vh',
-                                mt: `0 !important`,
-                            }}
-                            onUploaded={(image) => {
-                                handleUpdateQuiz({
-                                    image,
-                                })
-                            }}
-                            hideButton={Boolean(image)}
-                        />
-                    </>
-                )}
+                    {required && (
+                        <>
+                            <Typography variant="caption" color="GrayText">
+                                必填
+                            </Typography>
+                            <Box sx={{ height: 16 }} />
+                        </>
+                    )}
 
-                {renderQuiz()}
-            </Stack>
+                    {hasQuiz && mode !== QuizMode.dragger && (
+                        <>
+                            <ImageUploader
+                                bgImage={image}
+                                sx={{
+                                    width: imageWidth || 'auto',
+                                    height: imageHeight || 'auto',
+                                    mt: `0 !important`,
+                                }}
+                                onUploaded={(image) => {
+                                    handleUpdateQuiz({
+                                        image,
+                                    })
+                                }}
+                                hideButton={Boolean(image)}
+                            />
+                            <Box sx={{ height: 16 }} />
+                        </>
+                    )}
+
+                    {renderQuiz()}
+
+                    <Box sx={{ height: 16 }} />
+                </Stack>
+            </Box>
         </ThemeProvider>
     )
 }

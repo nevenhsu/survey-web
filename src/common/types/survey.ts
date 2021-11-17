@@ -87,9 +87,11 @@ export type Quiz = CustomButtonType & {
     mode: QuizMode
     title: string
     required?: boolean
-    image?: string
     backgroundColor?: string
     backgroundImage?: string
+    image?: string
+    imageWidth?: number | string
+    imageHeight?: number | string
 }
 
 export type ChoiceType = Omit<

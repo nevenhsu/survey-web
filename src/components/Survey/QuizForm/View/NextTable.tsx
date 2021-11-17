@@ -9,7 +9,6 @@ import TablePagination from '@mui/material/TablePagination'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
@@ -81,7 +80,15 @@ export default function NextTable(props: NextTableProps) {
                         {currentChoices.map((choice) => (
                             <TableRow key={choice.id}>
                                 <TableCell component="th" scope="row">
-                                    {choice.label}
+                                    <Typography
+                                        sx={{
+                                            color: Boolean(choice.label)
+                                                ? 'common.white'
+                                                : 'grey.500',
+                                        }}
+                                    >
+                                        {choice.label || '未命名答項'}
+                                    </Typography>
                                 </TableCell>
                                 <TableCell>
                                     <TextField

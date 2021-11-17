@@ -1,7 +1,9 @@
 import * as React from 'react'
 import _ from 'lodash'
 import Stack from '@mui/material/Stack'
+import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
+import ImageBox from 'components/common/ImageBox'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import {
     nextQuiz,
@@ -50,7 +52,14 @@ export default function QuizView(props: QuizViewProps) {
     const dispatch = useAppDispatch()
 
     const { quiz } = props
-    const { id: quizId, required } = quiz ?? {}
+    const {
+        id: quizId,
+        required,
+        image,
+        imageHeight,
+        imageWidth,
+        backgroundImage,
+    } = quiz ?? {}
 
     const validValue = checkValue(quiz)
 
@@ -282,14 +291,48 @@ export default function QuizView(props: QuizViewProps) {
                 width: '100%',
                 minHeight: '100vh',
                 p: 1,
+                background: backgroundImage
+                    ? `center/cover no-repeat url(${backgroundImage})`
+                    : '',
             }}
         >
+            <Box sx={{ height: 16 }} />
+
+            {required && (
+                <>
+                    <Typography variant="caption" color="GrayText">
+                        必填
+                    </Typography>
+
+                    <Box sx={{ height: 16 }} />
+                </>
+            )}
+
+            {Boolean(image) && (
+                <>
+                    <Box
+                        sx={{
+                            width: imageWidth || 'auto',
+                            height: imageHeight || 'auto',
+                            mt: `0 !important`,
+                        }}
+                    >
+                        <ImageBox
+                            imageUrl={image}
+                            sx={{
+                                width: '100%',
+                                height: '100%',
+                            }}
+                        />
+                    </Box>
+                </>
+            )}
+
             <React.Suspense fallback={<div />}>
-                <Typography variant="caption" color="GrayText">
-                    {required ? '必填' : ''}
-                </Typography>
                 {renderQuiz(quiz)}
             </React.Suspense>
+
+            <Box sx={{ height: 16 }} />
         </Stack>
     )
 }

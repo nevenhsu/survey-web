@@ -106,7 +106,7 @@ export default function Survey() {
                                 }}
                             />
                         )}
-                        <QuizView quiz={quiz} />{' '}
+                        <QuizView quiz={quiz} />
                     </>
                 )
             }
