@@ -10,13 +10,16 @@ import Tooltip from '@mui/material/Tooltip'
 import Box, { BoxProps } from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import LoadingButton, { LoadingButtonProps } from '@mui/lab/LoadingButton'
+import ImageBox from 'components/common/ImageBox'
 import AddIcon from 'mdi-react/AddIcon'
 import CloseIcon from 'mdi-react/CloseIcon'
 import surveyApi from 'services/surveyApi'
+import { ObjectFit } from 'common/types'
 
 type ImageUploaderProps = BoxProps & {
     bgImage?: string
     dataUrl?: string
+    objectFit?: ObjectFit
     hideButton?: boolean
     hideDeleteButton?: boolean
     hideImage?: boolean
@@ -27,23 +30,22 @@ type ImageUploaderProps = BoxProps & {
 type StyledBoxProps = BoxProps & {
     isDragging?: boolean
     bgImage?: string
+    objectFit?: ObjectFit
 }
 
 const StyledBox = styled(Box, {
-    shouldForwardProp: (prop) => !_.includes(['bgImage', 'isDragging'], prop),
-})<StyledBoxProps>(({ isDragging, bgImage }) => ({
+    shouldForwardProp: (prop) =>
+        !_.includes(['bgImage', 'isDragging', 'objectFit'], prop),
+})<StyledBoxProps>(({ isDragging, bgImage, objectFit }) => ({
     position: 'relative',
     opacity: isDragging ? 0.9 : 1,
-    background: bgImage ? `center / cover no-repeat url(${bgImage})` : '',
+    background: bgImage
+        ? `center / {${objectFit || 'cover'}} no-repeat url(${bgImage})`
+        : '',
     width: '100%',
     height: 'auto',
-    minWidth: 88,
-    '& img': {
-        display: 'inherit',
-        width: 'inherit',
-        height: 'inherit',
-        objectFit: 'cover',
-    },
+    minWidth: 48,
+    minHeight: 48,
 }))
 
 export default function ImageUploader(props: ImageUploaderProps) {
@@ -55,6 +57,7 @@ export default function ImageUploader(props: ImageUploaderProps) {
         hideImage,
         loadingButtonProps,
         dataUrl = 'dataUrl',
+        objectFit = 'cover',
         ...rest
     } = props
 
@@ -150,7 +153,14 @@ export default function ImageUploader(props: ImageUploaderProps) {
                         {...dragProps}
                     >
                         {!hideImage && Boolean(imgSrc) && (
-                            <img src={imgSrc} alt="" />
+                            <ImageBox
+                                imageUrl={imgSrc}
+                                objectFit={objectFit}
+                                sx={{
+                                    width: '100%',
+                                    height: '100%',
+                                }}
+                            />
                         )}
 
                         {!hideButton && (

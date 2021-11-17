@@ -93,7 +93,7 @@ export default function ChoiceView(props: ChoiceViewProps) {
                     textTransform: 'none',
                 }}
             >
-                {label}
+                {label || '選項'}
             </Typography>
         </StyledButton>
     )

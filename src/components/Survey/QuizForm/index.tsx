@@ -1,18 +1,19 @@
 import * as React from 'react'
 import _ from 'lodash'
+import { useDimensionsRef } from 'rooks'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { styled } from '@mui/material/styles'
-import Grid from '@mui/material/Grid'
 import Stack, { StackProps } from '@mui/material/Stack'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import LoadingButton from '@mui/lab/LoadingButton'
-import Box, { BoxProps } from '@mui/material/Box'
+import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
 import LinearProgress from '@mui/material/LinearProgress'
-import DeviceMode from 'components/common/DeviceMode'
+import DeviceMode, { getRatio, getWidth } from 'components/common/DeviceMode'
+import AspectRatioBox from 'components/common/AspectRatioBox'
 import QuizTool from 'components/Survey/QuizForm/QuizTool'
 import ModeSelector from 'components/Survey/QuizForm/Shares/ModeSelector'
 import MenuSwapIcon from 'mdi-react/DragHorizontalVariantIcon'
@@ -49,10 +50,6 @@ type QuizProps = StackProps & {
     isEditing: boolean
 }
 
-type StyledBoxProps = BoxProps & {
-    device: DeviceType
-}
-
 const QuizItem = styled(Stack, {
     shouldForwardProp: (prop) => !_.includes(['isDragging', 'isEditing'], prop),
 })<QuizProps>(({ isDragging, isEditing, theme }) => ({
@@ -80,32 +77,10 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
     },
 }))
 
-const StyledBox = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'device',
-})<StyledBoxProps>(({ theme, device }) => {
-    const style = getDeviceStyle(device)
-
-    return {
-        ...style,
-        position: 'relative',
-        backgroundColor: theme.palette.common.white,
-        '& > div': {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            overflowY: 'auto',
-        },
-    }
-})
-
 export default function QuizForm() {
     const dispatch = useAppDispatch()
 
+    const [ref, dimensions] = useDimensionsRef()
     const survey = useAppSelector(selectCurrentSurvey)
     const { uploading, handlePreview } = usePreview(survey)
 
@@ -178,35 +153,37 @@ export default function QuizForm() {
                             sx={{
                                 position: 'relative',
                                 width: '100%',
-                                my: 3,
+                                py: 3,
                             }}
                         >
                             <Box
                                 sx={{
-                                    width: getDeviceWidth(device),
+                                    position: 'relative',
                                     mx: 'auto',
+                                    width: getWidth(device, dimensions),
                                 }}
                             >
-                                <StyledBox device={device}>
-                                    <div>
-                                        {showProgress && (
-                                            <LinearProgress
-                                                variant="determinate"
-                                                value={progress}
-                                                sx={{
-                                                    position: 'absolute',
-                                                    top: 0,
-                                                    width: '100%',
-                                                }}
-                                            />
-                                        )}
+                                <AspectRatioBox
+                                    ratio={getRatio(device)}
+                                    sx={{ bgcolor: 'white' }}
+                                >
+                                    <Editor
+                                        surveyId={surveyId}
+                                        quiz={selectedQuiz}
+                                    />
+                                </AspectRatioBox>
 
-                                        <Editor
-                                            surveyId={surveyId}
-                                            quiz={selectedQuiz}
-                                        />
-                                    </div>
-                                </StyledBox>
+                                {showProgress && (
+                                    <LinearProgress
+                                        variant="determinate"
+                                        value={progress}
+                                        sx={{
+                                            position: 'absolute',
+                                            top: 0,
+                                            width: '100%',
+                                        }}
+                                    />
+                                )}
                             </Box>
                         </Box>
 
@@ -216,32 +193,20 @@ export default function QuizForm() {
             }
             case 1: {
                 return (
-                    <Box
-                        sx={{
-                            width: '100%',
-                            height: '100%',
-                            backgroundColor: 'grey.300',
-                        }}
-                    >
+                    <>
                         {selectedQuiz?.mode === QuizMode.dragger ? (
                             <AnswerTable quiz={selectedQuiz as DraggerQuiz} />
                         ) : (
                             <TagTable quiz={selectedQuiz as SelectionQuiz} />
                         )}
-                    </Box>
+                    </>
                 )
             }
             case 2: {
                 return (
-                    <Box
-                        sx={{
-                            width: '100%',
-                            height: '100%',
-                            backgroundColor: 'grey.300',
-                        }}
-                    >
+                    <>
                         <NextTable quiz={selectedQuiz as SelectionQuiz} />
-                    </Box>
+                    </>
                 )
             }
         }
@@ -309,11 +274,14 @@ export default function QuizForm() {
                     </Button>
                 </Box>
             </Stack>
-            <Grid container sx={{ minHeight: 'calc(100vh - 218px)' }}>
-                <Grid
-                    item
+
+            <Stack direction="row">
+                <Box
                     sx={{
-                        width: 288,
+                        flex: '0 0 288px',
+                        height: '100vh',
+                        overflowY: 'auto',
+                        bgcolor: 'common.white',
                     }}
                 >
                     <DragDropContext onDragEnd={onDragEnd}>
@@ -323,7 +291,6 @@ export default function QuizForm() {
                                     {...provided.droppableProps}
                                     ref={provided.innerRef}
                                     sx={{
-                                        backgroundColor: 'common.white',
                                         p: 2,
                                     }}
                                 >
@@ -415,80 +382,70 @@ export default function QuizForm() {
                             增加題目
                         </Button>
                     </Box>
-                </Grid>
+                </Box>
                 <ThemeProvider mode="dark">
-                    <Grid item xs>
+                    <Box
+                        sx={{
+                            position: 'relative',
+                            width: '100%',
+                            height: '100vh',
+                            bgcolor: (theme) => theme.palette.grey[700],
+                        }}
+                    >
                         <Box
+                            sx={{
+                                bgcolor: (theme) => theme.palette.grey[800],
+                            }}
+                        >
+                            <StyledTabs
+                                value={tabValue}
+                                onChange={(_, v) => setTab(v)}
+                            >
+                                <Tab label="編輯題目" />
+                                <Tab
+                                    label={
+                                        selectedQuiz?.mode === QuizMode.dragger
+                                            ? '題目邏輯'
+                                            : '答項標籤'
+                                    }
+                                    disabled={disabledTab}
+                                />
+                                <Tab
+                                    label="跳題邏輯"
+                                    disabled={disabledTab || disabledNext}
+                                />
+                            </StyledTabs>
+                        </Box>
+
+                        <Box
+                            ref={ref as any}
                             sx={{
                                 position: 'relative',
                                 width: '100%',
-                                height: '100%',
-                                bgcolor: (theme) => theme.palette.grey[700],
+                                height: 'calc(100vh - 48px)',
                             }}
                         >
-                            <Box
-                                sx={{
-                                    bgcolor: (theme) => theme.palette.grey[800],
-                                }}
-                            >
-                                <StyledTabs
-                                    value={tabValue}
-                                    onChange={(_, v) => setTab(v)}
-                                >
-                                    <Tab label="編輯題目" />
-                                    <Tab
-                                        label={
-                                            selectedQuiz?.mode ===
-                                            QuizMode.dragger
-                                                ? '題目邏輯'
-                                                : '答項標籤'
-                                        }
-                                        disabled={disabledTab}
-                                    />
-                                    <Tab
-                                        label="跳題邏輯"
-                                        disabled={disabledTab || disabledNext}
-                                    />
-                                </StyledTabs>
-                            </Box>
-
-                            <Box
-                                sx={{
-                                    position: 'relative',
-                                    width: '100%',
-                                }}
-                            >
-                                <React.Suspense fallback={<div />}>
-                                    {renderView()}
-                                </React.Suspense>
-                            </Box>
+                            <React.Suspense fallback={<div />}>
+                                {renderView()}
+                            </React.Suspense>
                         </Box>
-                    </Grid>
+                    </Box>
 
                     {tab === 0 && (
-                        <Grid
-                            item
+                        <Box
                             sx={{
-                                width: 288,
+                                position: 'relative',
+                                flex: '0 0 288px',
+                                height: '100vh',
+                                overflowY: 'auto',
+                                bgcolor: (theme) => theme.palette.grey[800],
                             }}
                         >
-                            <Box
-                                sx={{
-                                    position: 'relative',
-                                    width: '100%',
-                                    height: '100%',
-                                    bgcolor: (theme) => theme.palette.grey[800],
-                                }}
-                            >
-                                <QuizTool
-                                    surveyId={surveyId}
-                                    quiz={selectedQuiz}
-                                />
-                            </Box>
-                        </Grid>
+                            <QuizTool surveyId={surveyId} quiz={selectedQuiz} />
+                        </Box>
                     )}
                 </ThemeProvider>
-            </Grid>
+            </Stack>
 
             <Modal open={open} onClose={handleClose}>
                 <Box
@@ -525,44 +482,4 @@ export default function QuizForm() {
             </Modal>
         </>
     )
-}
-
-function getDeviceStyle(device: DeviceType) {
-    switch (device) {
-        case 'mobile': {
-            return {
-                width: '100%',
-                paddingTop: '177%',
-                height: 0,
-            }
-        }
-        case 'laptop': {
-            return {
-                width: '100%',
-                paddingTop: '75%',
-                height: 0,
-            }
-        }
-        case 'desktop': {
-            return {
-                width: '100%',
-                paddingTop: '56.25%',
-                height: 0,
-            }
-        }
-    }
-}
-
-function getDeviceWidth(device: DeviceType) {
-    switch (device) {
-        case 'mobile': {
-            return 375
-        }
-        case 'laptop': {
-            return 'calc(100vw - 656px)'
-        }
-        case 'desktop': {
-            return 'calc(100vw - 656px)'
-        }
-    }
 }

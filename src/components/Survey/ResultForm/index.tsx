@@ -2,8 +2,8 @@ import * as React from 'react'
 import _ from 'lodash'
 import utils from 'utility'
 import NumberFormat from 'react-number-format'
+import { useDimensionsRef } from 'rooks'
 import { styled } from '@mui/material/styles'
-import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
@@ -16,7 +16,8 @@ import MenuItem from '@mui/material/MenuItem'
 import Slider from '@mui/material/Slider'
 import InputAdornment from '@mui/material/InputAdornment'
 import StyledChip from 'components/common/StyledChip'
-import DeviceMode from 'components/common/DeviceMode'
+import DeviceMode, { getRatio, getWidth } from 'components/common/DeviceMode'
+import AspectRatioBox from 'components/common/AspectRatioBox'
 import EditingResult from 'components/Survey/ResultForm/EditingResult'
 import ResultTool from 'components/Survey/ResultForm/ResultTool'
 import { Contexts } from 'components/common/Component'
@@ -70,7 +71,7 @@ const StyledBox = styled(Box, {
         backgroundColor: theme.palette.common.white,
         '& > div': {
             display: 'flex',
-            alignItems: 'center',
+            alignItems: 'start',
             justifyContent: 'center',
             position: 'absolute',
             top: 0,
@@ -86,6 +87,7 @@ export default function ResultForm() {
     const dispatch = useAppDispatch()
     const device = useAppSelector(selectDevice)
     const survey = useAppSelector(selectCurrentSurvey)
+    const [ref, dimensions] = useDimensionsRef()
 
     const instance = Contexts.getInstance('result')
     const { Provider, Context } = instance.getValue()
@@ -565,16 +567,17 @@ export default function ResultForm() {
                     </Button>
                 </Box>
             </Stack>
-            <Grid container sx={{ minHeight: 'calc(100vh - 218px)' }}>
-                <Grid
-                    item
+            <Stack direction="row">
+                <Box
                     sx={{
-                        width: 288,
+                        flex: '0 0 288px',
+                        height: '100vh',
+                        overflowY: 'auto',
+                        bgcolor: 'common.white',
                     }}
                 >
                     <Box
                         sx={{
-                            backgroundColor: 'common.white',
                             p: 2,
                         }}
                     >
@@ -582,76 +585,77 @@ export default function ResultForm() {
                             ? renderTagsResults()
                             : renderDraggerResults()}
                     </Box>
-                </Grid>
+                </Box>
                 <ThemeProvider mode="dark">
-                    <Grid item xs>
+                    <Box
+                        sx={{
+                            position: 'relative',
+                            width: '100%',
+                            height: '100vh',
+                            bgcolor: (theme) => theme.palette.grey[700],
+                        }}
+                    >
                         <Box
+                            sx={{
+                                bgcolor: (theme) => theme.palette.grey[800],
+                            }}
+                        >
+                            <StyledTabs value={0}>
+                                <Tab label="編輯結果" />
+                            </StyledTabs>
+                        </Box>
+
+                        <Box
+                            ref={ref as any}
                             sx={{
                                 position: 'relative',
                                 width: '100%',
-                                height: '100%',
-                                bgcolor: (theme) => theme.palette.grey[700],
+                                height: 'calc(100vh - 48px)',
                             }}
                         >
                             <Box
                                 sx={{
-                                    bgcolor: (theme) => theme.palette.grey[800],
-                                }}
-                            >
-                                <StyledTabs value={0}>
-                                    <Tab label="編輯結果" />
-                                </StyledTabs>
-                            </Box>
-
-                            <Box
-                                sx={{
                                     position: 'relative',
                                     width: '100%',
-                                    my: 3,
+                                    py: 3,
                                 }}
                             >
                                 <Box
                                     sx={{
-                                        width: getDeviceWidth(device),
+                                        position: 'relative',
                                         mx: 'auto',
+                                        width: getWidth(device, dimensions),
                                     }}
                                 >
-                                    <StyledBox device={device}>
-                                        <div>
-                                            <EditingResult
-                                                surveyId={surveyId}
-                                                result={selectedResult}
-                                            />
-                                        </div>
-                                    </StyledBox>
+                                    <AspectRatioBox
+                                        ratio={getRatio(device)}
+                                        sx={{ bgcolor: 'white' }}
+                                    >
+                                        <EditingResult
+                                            surveyId={surveyId}
+                                            result={selectedResult}
+                                        />
+                                    </AspectRatioBox>
                                 </Box>
                             </Box>
 
                             <DeviceMode sx={{ mb: 2 }} />
                         </Box>
-                    </Grid>
-                    <Grid
-                        item
+                    </Box>
+
+                    <Box
                         sx={{
-                            width: 288,
+                            position: 'relative',
+                            flex: '0 0 288px',
+                            height: '100vh',
+                            overflowY: 'auto',
+                            bgcolor: (theme) => theme.palette.grey[800],
                         }}
                     >
-                        <Box
-                            sx={{
-                                position: 'relative',
-                                width: '100%',
-                                height: '100%',
-                                bgcolor: (theme) => theme.palette.grey[800],
-                            }}
-                        >
-                            <ResultTool
-                                surveyId={surveyId}
-                                resultId={selectedId}
-                            />
-                        </Box>
-                    </Grid>
+                        <ResultTool surveyId={surveyId} resultId={selectedId} />
+                    </Box>
                 </ThemeProvider>
-            </Grid>
+            </Stack>
         </Provider>
     )
 }

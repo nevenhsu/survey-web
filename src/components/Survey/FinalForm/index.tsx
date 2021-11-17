@@ -1,7 +1,7 @@
 import * as React from 'react'
 import _ from 'lodash'
+import { useDimensionsRef } from 'rooks'
 import { styled } from '@mui/material/styles'
-import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
@@ -13,7 +13,8 @@ import { Contexts } from 'components/common/Component'
 import EditingFinal from 'components/Survey/FinalForm/EditingFinal'
 import FinalTool from 'components/Survey/FinalForm/FinalTool'
 import InfoForm from 'components/common/InfoForm'
-import DeviceMode from 'components/common/DeviceMode'
+import DeviceMode, { getRatio, getWidth } from 'components/common/DeviceMode'
+import AspectRatioBox from 'components/common/AspectRatioBox'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import usePreview from 'hooks/usePreview'
 import { selectDevice } from 'store/slices/userDefault'
@@ -26,10 +27,6 @@ import {
 import ThemeProvider from 'theme/ThemeProvider'
 import { FinalMode, SurveyStep } from 'common/types'
 import type { DeviceType, OnChangeInput } from 'common/types'
-
-type StyledBoxProps = BoxProps & {
-    device: DeviceType
-}
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
     '& .MuiTab-root': {
@@ -46,30 +43,11 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
     },
 }))
 
-const StyledBox = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'device',
-})<StyledBoxProps>(({ theme, device }) => {
-    const style = getDeviceStyle(device)
-
-    return {
-        ...style,
-        position: 'relative',
-        backgroundColor: theme.palette.common.white,
-        '& > div': {
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            overflowY: 'auto',
-        },
-    }
-})
-
 const modeOptions = [{ value: FinalMode.info, label: '搜集基本資料' }]
 
 export default function FinalForm() {
     const dispatch = useAppDispatch()
+    const [ref, dimensions] = useDimensionsRef()
 
     const instance = Contexts.getInstance('final')
     const { Provider, Context } = instance.getValue()
@@ -148,16 +126,17 @@ export default function FinalForm() {
                     </Button>
                 </Box>
             </Stack>
-            <Grid container sx={{ minHeight: 'calc(100vh - 218px)' }}>
-                <Grid
-                    item
+            <Stack direction="row">
+                <Box
                     sx={{
-                        width: 288,
+                        flex: '0 0 288px',
+                        height: '100vh',
+                        overflowY: 'auto',
+                        bgcolor: 'common.white',
                     }}
                 >
                     <Box
                         sx={{
-                            backgroundColor: 'common.white',
                             p: 2,
                         }}
                     >
@@ -180,112 +159,78 @@ export default function FinalForm() {
                             </Box>
                         ))}
                     </Box>
-                </Grid>
-                <ThemeProvider mode="dark">
-                    <Grid item xs>
-                        <Box
-                            sx={{
-                                position: 'relative',
-                                width: '100%',
-                                height: '100%',
-                                bgcolor: (theme) => theme.palette.grey[700],
-                            }}
-                        >
-                            <Box
-                                sx={{
-                                    bgcolor: (theme) => theme.palette.grey[800],
-                                }}
-                            >
-                                <StyledTabs value={0}>
-                                    <Tab label="編輯內容" />
-                                </StyledTabs>
-                            </Box>
+                </Box>
 
-                            <ThemeProvider mode="light">
-                                <Box
-                                    sx={{
-                                        position: 'relative',
-                                        width: '100%',
-                                        my: 3,
-                                    }}
-                                >
-                                    <Box
-                                        sx={{
-                                            width: getDeviceWidth(device),
-                                            mx: 'auto',
-                                        }}
-                                    >
-                                        <StyledBox device={device}>
-                                            <div>
-                                                <EditingFinal />
-                                                {renderMode(mode)}
-                                            </div>
-                                        </StyledBox>
-                                    </Box>
-                                </Box>
-                            </ThemeProvider>
-                            <DeviceMode sx={{ mb: 2 }} />
-                        </Box>
-                    </Grid>
-                    <Grid
-                        item
+                <ThemeProvider mode="dark">
+                    <Box
                         sx={{
-                            width: 288,
+                            position: 'relative',
+                            width: '100%',
+                            height: '100vh',
+                            bgcolor: (theme) => theme.palette.grey[700],
                         }}
                     >
                         <Box
                             sx={{
-                                position: 'relative',
-                                width: '100%',
-                                height: '100%',
                                 bgcolor: (theme) => theme.palette.grey[800],
                             }}
                         >
-                            <FinalTool surveyId={surveyId} />
+                            <StyledTabs value={0}>
+                                <Tab label="編輯內容" />
+                            </StyledTabs>
                         </Box>
-                    </Grid>
+
+                        <Box
+                            ref={ref as any}
+                            sx={{
+                                position: 'relative',
+                                width: '100%',
+                                height: 'calc(100vh - 48px)',
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    position: 'relative',
+                                    width: '100%',
+                                    py: 3,
+                                }}
+                            >
+                                <Box
+                                    sx={{
+                                        position: 'relative',
+                                        mx: 'auto',
+                                        width: getWidth(device, dimensions),
+                                    }}
+                                >
+                                    <ThemeProvider mode="light">
+                                        <AspectRatioBox
+                                            ratio={getRatio(device)}
+                                            sx={{ bgcolor: 'white' }}
+                                        >
+                                            <EditingFinal />
+                                            {renderMode(mode)}
+                                        </AspectRatioBox>
+                                    </ThemeProvider>
+                                </Box>
+                            </Box>
+
+                            <DeviceMode sx={{ mb: 2 }} />
+                        </Box>
+                    </Box>
+
+                    <Box
+                        sx={{
+                            position: 'relative',
+                            flex: '0 0 288px',
+                            height: '100vh',
+                            overflowY: 'auto',
+                            bgcolor: (theme) => theme.palette.grey[800],
+                        }}
+                    >
+                        <FinalTool surveyId={surveyId} />
+                    </Box>
                 </ThemeProvider>
-            </Grid>
+            </Stack>
         </Provider>
     )
-}
-
-function getDeviceStyle(device: DeviceType) {
-    switch (device) {
-        case 'mobile': {
-            return {
-                width: '100%',
-                paddingTop: '177%',
-                height: 0,
-            }
-        }
-        case 'laptop': {
-            return {
-                width: '100%',
-                paddingTop: '75%',
-                height: 0,
-            }
-        }
-        case 'desktop': {
-            return {
-                width: '100%',
-                paddingTop: '56.25%',
-                height: 0,
-            }
-        }
-    }
-}
-
-function getDeviceWidth(device: DeviceType) {
-    switch (device) {
-        case 'mobile': {
-            return 375
-        }
-        case 'laptop': {
-            return 'calc(100vw - 656px)'
-        }
-        case 'desktop': {
-            return 'calc(100vw - 656px)'
-        }
-    }
 }

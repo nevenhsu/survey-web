@@ -2,14 +2,13 @@ import * as React from 'react'
 import _ from 'lodash'
 import { styled } from '@mui/material'
 import Box, { BoxProps } from '@mui/material/Box'
+import { ObjectFit } from 'common/types'
 
 type ImageBoxProps = BoxProps & {
     imageUrl?: string
     objectFit?: ObjectFit
     noBg?: boolean
 }
-
-type ObjectFit = 'fill' | 'contain' | 'cover' | 'none'
 
 const StyledBox = styled(Box, {
     shouldForwardProp: (prop) =>
@@ -24,8 +23,8 @@ const StyledBox = styled(Box, {
     height: 'auto',
     '& img': {
         display: 'inherit',
-        width: 'inherit',
-        height: 'inherit',
+        width: '100%',
+        height: 'auto',
         objectFit,
     },
 }))

@@ -53,7 +53,7 @@ const DraggerChoiceView = React.forwardRef<unknown, DraggerChoiceViewProps>(
                                 pb: 2,
                             }}
                         >
-                            {label}
+                            {label || '選項'}
                         </Typography>
                     </Stack>
                 </AspectRatioBox>

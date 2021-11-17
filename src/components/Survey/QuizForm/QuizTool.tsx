@@ -72,13 +72,23 @@ export default function QuizTool(props: QuizToolProps) {
     const survey = useAppSelector(selectCurrentSurvey)
     const { setting } = survey
 
-    const { id: quizId, mode, backgroundColor } = quiz ?? {}
+    const {
+        id: quizId,
+        mode,
+        backgroundColor,
+        imageWidth,
+        imageHeight,
+    } = quiz ?? {}
     const { direction, showImage, maxChoices } = (quiz as SelectionQuiz) ?? {}
 
     const handleChange: OnChangeInput = (event) => {
         const { name, value } = event.target
+
+        let val: any = value === '' ? undefined : value
+        val = Number(val) || val
+
         const newValue = {
-            [name]: value,
+            [name]: val,
         }
         handleUpdateQuiz(newValue)
     }
@@ -179,6 +189,37 @@ export default function QuizTool(props: QuizToolProps) {
                             />
                         </TableCell>
                     </TableRow>
+                    {mode !== QuizMode.dragger && (
+                        <>
+                            <TableRow>
+                                <TableCell>封面寬度</TableCell>
+                                <TableCell>
+                                    <StyledTextField
+                                        name="imageWidth"
+                                        placeholder="auto"
+                                        value={imageWidth ?? ''}
+                                        variant="standard"
+                                        onChange={handleChange}
+                                        fullWidth
+                                    />
+                                </TableCell>
+                            </TableRow>
+
+                            <TableRow>
+                                <TableCell>封面高度</TableCell>
+                                <TableCell>
+                                    <StyledTextField
+                                        name="imageHeight"
+                                        placeholder="auto"
+                                        value={imageHeight ?? ''}
+                                        variant="standard"
+                                        onChange={handleChange}
+                                        fullWidth
+                                    />
+                                </TableCell>
+                            </TableRow>
+                        </>
+                    )}
                     <TableRow>
                         <TableCell>背景顏色</TableCell>
                         <TableCell>
