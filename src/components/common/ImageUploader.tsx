@@ -45,7 +45,7 @@ const StyledBox = styled(Box, {
     width: '100%',
     height: 'auto',
     minWidth: 48,
-    minHeight: 48,
+    minHeight: 32,
 }))
 
 export default function ImageUploader(props: ImageUploaderProps) {

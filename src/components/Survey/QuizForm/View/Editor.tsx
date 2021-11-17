@@ -203,29 +203,28 @@ export default function Editor(props: EditorProps) {
 
     return (
         <ThemeProvider mode="light">
-            {hasQuiz && (
-                <ImageUploader
-                    bgImage={backgroundImage}
-                    sx={{
-                        position: 'sticky',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                    }}
-                    onUploaded={(backgroundImage) => {
-                        handleUpdateQuiz({
-                            backgroundImage,
-                        })
-                    }}
-                    hideButton
-                />
-            )}
+            <ImageUploader
+                bgImage={backgroundImage}
+                sx={{
+                    position: 'sticky',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor,
+                }}
+                onUploaded={(backgroundImage) => {
+                    handleUpdateQuiz({
+                        backgroundImage,
+                    })
+                }}
+                hideButton
+            />
 
             <Box
                 sx={{
                     position: 'absolute',
-                    top: 0,
+                    top: 32,
                     left: 0,
                     width: '100%',
                     height: '100%',
@@ -240,7 +239,6 @@ export default function Editor(props: EditorProps) {
                         width: '100%',
                         minHeight: '100%',
                         p: 1,
-                        backgroundColor,
                     }}
                 >
                     <Box sx={{ height: 16 }} />
@@ -250,7 +248,7 @@ export default function Editor(props: EditorProps) {
                             <Typography variant="caption" color="GrayText">
                                 必填
                             </Typography>
-                            <Box sx={{ height: 16 }} />
+                            <Box />
                         </>
                     )}
 

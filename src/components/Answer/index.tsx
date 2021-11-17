@@ -11,7 +11,6 @@ import {
     createNewAnswer,
     selectStep,
     selectSurvey,
-    selectAnswer,
     selectQuizId,
 } from 'store/slices/answer'
 import { AnswerStep } from 'common/types'
@@ -42,13 +41,11 @@ export default function Survey() {
 
     const { showProgress } = setting ?? {}
 
-    const { id: answerId } = useAppSelector(selectAnswer) ?? {}
     const quizId = useAppSelector(selectQuizId)
 
     const [progress, setProgress] = React.useState(0)
 
     const quiz = _.find(quizzes, { id: quizId })
-    const { backgroundColor, backgroundImage } = quiz ?? {}
 
     const notify = (message: string, variant: VariantType) => {
         enqueueSnackbar(message, { variant })
@@ -100,9 +97,10 @@ export default function Survey() {
                                 variant="determinate"
                                 value={progress}
                                 sx={{
-                                    position: 'absolute',
+                                    position: 'fixed',
                                     top: 0,
                                     width: '100%',
+                                    zIndex: 'tooltip',
                                 }}
                             />
                         )}
@@ -125,11 +123,6 @@ export default function Survey() {
                 position: 'relative',
                 width: '100%',
                 minHeight: '100vh',
-                pb: 4,
-                backgroundColor,
-                background: backgroundImage
-                    ? `center / cover no-repeat url(${backgroundImage})`
-                    : '',
             }}
         >
             <React.Suspense fallback={<div />}>{renderView()}</React.Suspense>

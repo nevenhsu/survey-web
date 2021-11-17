@@ -108,8 +108,8 @@ export default function ChoiceView(props: {
                 anchorEl={anchorEl}
                 onClose={handleClose}
                 anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
+                    vertical: 'top',
+                    horizontal: 'right',
                 }}
             >
                 <Box sx={{ p: 2, maxWidth: 320 }}>

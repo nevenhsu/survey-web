@@ -242,7 +242,7 @@ export default function QuizTool(props: QuizToolProps) {
                                         backgroundImage,
                                     })
                                 }}
-                                sx={{ width: 'fit-content', left: 8 }}
+                                sx={{ width: 104 }}
                                 hideImage
                                 hideDeleteButton
                             />
