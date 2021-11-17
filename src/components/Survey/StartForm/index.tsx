@@ -44,7 +44,7 @@ export default function StartForm() {
                         p: 6,
                     }}
                 >
-                    <Box sx={{ height: 180, mb: 4 }}>
+                    <Box sx={{ height: 250, mb: 4 }}>
                         <OneInTwoModeImage
                             style={{ width: 'auto', height: '100%' }}
                         />
@@ -76,7 +76,7 @@ export default function StartForm() {
                         p: 6,
                     }}
                 >
-                    <Box sx={{ height: 180, mb: 4 }}>
+                    <Box sx={{ height: 250, mb: 4 }}>
                         <DraggerModeImage
                             style={{ width: 'auto%', height: '100%' }}
                         />

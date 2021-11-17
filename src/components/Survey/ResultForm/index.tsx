@@ -27,8 +27,8 @@ import ThemeProvider from 'theme/ThemeProvider'
 import { getMuiColor } from 'theme/palette'
 import Numeric1BoxIcon from 'mdi-react/Numeric1BoxIcon'
 import Numeric2BoxIcon from 'mdi-react/Numeric2BoxIcon'
-import { ComponentType, Mode, SurveyStep } from 'common/types'
-import type { Result, ResultList, DeviceType } from 'common/types'
+import { ComponentType, Mode, SurveyStep, QuizMode } from 'common/types'
+import type { Result, ResultList, DeviceType, OneInTwoQuiz } from 'common/types'
 
 type StyledBoxProps = BoxProps & {
     device: DeviceType
@@ -83,7 +83,9 @@ export default function ResultForm() {
     const device = useAppSelector(selectDevice)
 
     const survey = useAppSelector(selectCurrentSurvey)
-    const { id: surveyId, tags, results, mode } = survey ?? {}
+    const { id: surveyId, tags, results, mode, quizzes = [] } = survey ?? {}
+
+    const isOneInTwoMode = mode === Mode.oneInTwo
 
     const { uploading, handlePreview } = usePreview(survey)
 
@@ -115,9 +117,30 @@ export default function ResultForm() {
         )
     }
 
+    // Initiate selectedTags by OneInTwo quiz
+    React.useEffect(() => {
+        if (isOneInTwoMode && _.isEmpty(_.compact(selectedTags))) {
+            const oneInTwoQuiz = _.find(quizzes, { mode: QuizMode.oneInTwo })
+            if (oneInTwoQuiz) {
+                const { tagsId = [] } = oneInTwoQuiz as OneInTwoQuiz
+                const val = _.compact(tagsId.slice(0, 2))
+                if (!_.isEmpty(tagsId)) {
+                    dispatch(
+                        setResults({
+                            surveyId,
+                            newValue: {
+                                selectedTags: val as any,
+                            },
+                        })
+                    )
+                }
+            }
+        }
+    }, [mode, selectedTags])
+
     // Auto reset results by changing tags
     React.useEffect(() => {
-        if (mode === Mode.oneInTwo) {
+        if (isOneInTwoMode) {
             const [tagId1 = '', tagId2 = ''] = selectedTags
 
             const { values = [] } = tags[tagId1] ?? {}
@@ -170,7 +193,7 @@ export default function ResultForm() {
                 setSelectedId(newKeys[0])
             }
         }
-    }, [selectedTags[0], selectedTags[1]])
+    }, [mode, selectedTags[0], selectedTags[1]])
 
     React.useEffect(() => {
         const { id = '' } = resultItems[0] ?? {}
