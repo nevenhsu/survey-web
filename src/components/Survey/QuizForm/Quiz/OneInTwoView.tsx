@@ -5,6 +5,7 @@ import Stack from '@mui/material/Stack'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { StyledTextField, ChoiceView } from 'components/Survey/QuizForm/Shares'
+import AddIcon from 'mdi-react/AddIcon'
 import { getDefaultChoice } from 'utils/helper'
 import type { OneInTwoType, OnChangeInput, OnButtonClink } from 'common/types'
 
@@ -83,6 +84,15 @@ export default function OneInTwoView(props: {
                     '& .slick-next:before': {
                         color: (theme) => theme.palette.primary.main,
                     },
+                    '& .slick-dots li': {
+                        height: 10,
+                        width: 10,
+                        mx: 0.25,
+                    },
+                    '& .slick-dots button': {
+                        height: 10,
+                        width: 10,
+                    },
                 }}
             >
                 <Slick slidesToShow={1} slidesToScroll={1} dots arrows infinite>
@@ -116,7 +126,11 @@ export default function OneInTwoView(props: {
                 </Slick>
             </Box>
             <Box sx={{ height: 16 }} />
-            <Button variant="outlined" onClick={handleAddChoice}>
+            <Button
+                variant="outlined"
+                startIcon={<AddIcon />}
+                onClick={handleAddChoice}
+            >
                 新增選項
             </Button>
         </>

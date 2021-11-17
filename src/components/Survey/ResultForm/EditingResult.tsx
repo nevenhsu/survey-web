@@ -9,7 +9,7 @@ import { getDefaultComponent, setId } from 'utils/helper'
 import { useAppDispatch } from 'hooks'
 import { updateComponent, setResult } from 'store/slices/survey'
 import { ComponentType } from 'common/types'
-import type { Result } from 'common/types'
+import type { Component, Result } from 'common/types'
 
 type EditingQuizProps = {
     surveyId?: string
@@ -80,13 +80,11 @@ export default function EditingResult(props: EditingQuizProps) {
         }
     }, [selectedId, components])
 
+    // copy components from local storage
     React.useEffect(() => {
         const user = User.getInstance()
         if (components.length) {
-            const componentsFormat = components.map((el) => ({
-                ...el,
-                value: '',
-            }))
+            const componentsFormat = cleanValue(components)
             user.setValue({ components: componentsFormat })
         } else {
             const { components: componentsFormat = [] } = user.getValue()
@@ -96,21 +94,14 @@ export default function EditingResult(props: EditingQuizProps) {
                 _.isArray(componentsFormat) &&
                 componentsFormat.length
             ) {
-                // TODO: preserve card components
+                const newComponents = setNewIds(componentsFormat)
+
                 dispatch(
                     setResult({
                         surveyId,
                         resultId,
                         newValue: {
-                            components: componentsFormat.map((el) => ({
-                                ...el,
-                                id: setId(),
-                                components: _.map(el.components, (el) => ({
-                                    ...el,
-                                    id: setId(),
-                                    components: [],
-                                })),
-                            })),
+                            components: newComponents,
                         },
                     })
                 )
@@ -155,4 +146,38 @@ export default function EditingResult(props: EditingQuizProps) {
             </Box>
         </ThemeProvider>
     )
+}
+
+function cleanValue(components: Component[]) {
+    return components.map((el) => {
+        const { components } = el
+        const newVal: { [key: string]: any } = {}
+        _.forEach(el, (val, key) => {
+            if (_.includes(['value', 'link'], key)) {
+                newVal[key] = ''
+            } else if (
+                key === 'components' &&
+                components &&
+                components.length > 0
+            ) {
+                newVal.components = cleanValue(components)
+            } else {
+                newVal[key] = val
+            }
+        })
+        newVal.id = setId()
+        return newVal as Component
+    })
+}
+
+function setNewIds(components: Component[]) {
+    return components.map((el) => {
+        const { components } = el
+        const newVal = { ...el }
+        if (components && components.length > 0) {
+            newVal.components = setNewIds(components)
+        }
+        newVal.id = setId()
+        return newVal as Component
+    })
 }

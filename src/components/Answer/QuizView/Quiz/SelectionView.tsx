@@ -11,20 +11,20 @@ import type { OnChangeInput, SelectionType } from 'common/types'
 
 type SelectionViewProps = {
     title: string
-    selectionProps: SelectionType
-    customButtonProps: CustomButtonProps
+    quizProps: Omit<SelectionType, 'tagsId'>
+    buttonProps: CustomButtonProps
     onChange: OnChangeInput
 }
 
 export default function SelectionView(props: SelectionViewProps) {
-    const { title, selectionProps, customButtonProps, onChange } = props
+    const { title, quizProps, buttonProps, onChange } = props
     const {
         values = [],
         choices = [],
         maxChoices,
         showImage,
         direction,
-    } = selectionProps
+    } = quizProps
 
     const responsive: { [key: string]: GridSize } =
         direction === 'row' ? { xs: 6 } : { xs: 12 }
@@ -54,7 +54,7 @@ export default function SelectionView(props: SelectionViewProps) {
 
     return (
         <>
-            <Typography variant="h6"> {title} </Typography>
+            <Typography variant="h6">{title}</Typography>
             <Typography variant="caption" color="GrayText">
                 最多可選擇{maxChoices}項
             </Typography>
@@ -86,7 +86,7 @@ export default function SelectionView(props: SelectionViewProps) {
                 </Grid>
             </Box>
             <Box sx={{ height: 16 }} />
-            <CustomButton {...customButtonProps} />
+            <CustomButton {...buttonProps} />
         </>
     )
 }

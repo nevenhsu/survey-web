@@ -3,8 +3,9 @@ import _ from 'lodash'
 import { VariantType, useSnackbar } from 'notistack'
 import Box from '@mui/material/Box'
 import LoadingButton from '@mui/lab/LoadingButton'
-import { ComponentList } from 'components/common/Component/View'
+import Typography from '@mui/material/Typography'
 import InfoForm from 'components/common/InfoForm'
+import { ComponentList } from 'components/common/Component/View'
 import ArrowUpCircleIcon from 'mdi-react/ArrowUpCircleIcon'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import { selectSurvey, selectAnswer, updateFinal } from 'store/slices/answer'
@@ -79,9 +80,20 @@ export default function FinalView() {
                     loading={uploading}
                     disabled={uploading}
                     onClick={() => handleSubmit()}
+                    sx={{ mb: 2 }}
                 >
                     {done ? '完成' : '提交'}
                 </LoadingButton>
+
+                {!enable && (
+                    <Typography
+                        variant="caption"
+                        display="block"
+                        sx={{ color: 'grey.500' }}
+                    >
+                        預覽模式不支援提交
+                    </Typography>
+                )}
             </Box>
         </>
     )

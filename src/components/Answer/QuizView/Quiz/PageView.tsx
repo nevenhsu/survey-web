@@ -7,18 +7,18 @@ import CustomButton, {
 
 type PageViewProps = {
     title: string
-    customButtonProps: CustomButtonProps
+    buttonProps: CustomButtonProps
 }
 
 export default function PageView(props: PageViewProps) {
-    const { title, customButtonProps } = props
+    const { title, buttonProps } = props
     return (
         <>
-            <Typography variant="h6"> {title} </Typography>
+            <Typography variant="h6">{title}</Typography>
 
             <Box sx={{ height: 16 }} />
 
-            <CustomButton {...customButtonProps} />
+            <CustomButton {...buttonProps} />
         </>
     )
 }

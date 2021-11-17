@@ -127,7 +127,8 @@ export default function FinalForm() {
                 </Box>
                 <Box>
                     <LoadingButton
-                        variant="outlined"
+                        variant="contained"
+                        color="inherit"
                         loading={uploading}
                         disabled={uploading}
                         onClick={handlePreview}
@@ -138,7 +139,11 @@ export default function FinalForm() {
                         component="span"
                         sx={{ display: 'inline-block', width: 8 }}
                     />
-                    <Button variant="contained" onClick={nextStep}>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={nextStep}
+                    >
                         發布測驗
                     </Button>
                 </Box>
@@ -162,6 +167,8 @@ export default function FinalForm() {
                                 sx={{
                                     p: 1,
                                     mb: 1,
+                                    border: (theme) =>
+                                        `1px solid ${theme.palette.grey[300]}`,
                                     bgcolor: (theme) =>
                                         mode === el.value
                                             ? theme.palette.grey[100]

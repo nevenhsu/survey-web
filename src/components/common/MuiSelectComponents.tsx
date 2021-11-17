@@ -158,6 +158,10 @@ export const setStyles: (theme: Theme) => StylesConfig = (theme) => ({
             },
         }
     },
+    input: (base) => ({
+        ...base,
+        color: theme.palette.text.primary,
+    }),
 })
 
 export default {

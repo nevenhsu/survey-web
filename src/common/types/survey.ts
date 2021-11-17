@@ -126,7 +126,6 @@ export type OneInTwoQuiz = Quiz & OneInTwoType
 
 export type DraggerButton = CustomButtonType & {
     id: string
-    image?: string
 }
 
 export type DraggerChoiceType = {
@@ -204,6 +203,7 @@ export type Result = {
     id: string
     title?: string
     tags: { [tagId: string]: string[] }
+    range: number[]
     components: Component[]
 }
 

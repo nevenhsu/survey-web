@@ -16,11 +16,12 @@ type DraggerChoiceViewProps = {
 
 export default function DraggerChoiceView(props: DraggerChoiceViewProps) {
     const { label, showImage, image, onChange } = props
+    const hasImage = Boolean(image)
     return (
         <Box
             sx={{
-                boxShadow: (theme) => theme.shadows[4],
-                borderRadius: (theme) => `${theme.shape.borderRadius}px`,
+                boxShadow: 4,
+                borderRadius: 1,
                 overflow: 'hidden',
             }}
         >
@@ -53,14 +54,14 @@ export default function DraggerChoiceView(props: DraggerChoiceViewProps) {
                             loadingButtonProps={{
                                 variant: 'text',
                             }}
-                            hideButton={Boolean(image)}
+                            hideButton={hasImage}
                         />
                     </Box>
 
                     <StyledTextField
                         variant="standard"
                         placeholder="請輸入名稱"
-                        typoVariant="body1"
+                        typoVariant={hasImage ? 'body1' : 'h5'}
                         name="label"
                         value={label ?? ''}
                         onChange={onChange}
