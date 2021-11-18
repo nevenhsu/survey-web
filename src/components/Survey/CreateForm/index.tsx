@@ -94,10 +94,15 @@ export default function CreateForm() {
                             zIndex: 0,
                         }}
                     />
-
-                    <Typography variant="h4" fontWeight="bold">
-                        洞察品牌受眾類型
-                    </Typography>
+                    {mode === Mode.oneInTwo ? (
+                        <Typography variant="h4" fontWeight="bold">
+                            二選一
+                        </Typography>
+                        ) : (
+                        <Typography variant="h4" fontWeight="bold">
+                           左右拖曳
+                        </Typography>
+                    )}
                     <Typography variant="body1">
                         運用範本的題庫來建立客群標籤，並針對不同類型的填答者推送客製化問卷結果！
                     </Typography>
