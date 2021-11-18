@@ -4,6 +4,7 @@ import surveyApi from 'services/surveyApi'
 import User from 'utils/user'
 import LocalSurveys from 'utils/surveys'
 import { SurveyStep, Mode } from 'common/types'
+import { surveyFormatter } from 'utils/formatter'
 import type {
     Survey,
     Quiz,
@@ -328,9 +329,10 @@ export const surveySlice = createSlice({
         reloadFromLocal: (state, action: PayloadAction<void>) => {
             const localSurveys = LocalSurveys.getInstance()
             const currentId = localSurveys.getCurrentId() ?? ''
-            const survey = localSurveys.getSurveyById(currentId)
+            const surveyData = localSurveys.getSurveyById(currentId)
 
-            if (survey && _.includes(modes, survey.mode)) {
+            if (surveyData && _.includes(modes, surveyData.mode)) {
+                const survey = surveyFormatter(surveyData)
                 const { id, updatedAt, mode } = survey
                 state.currentId = id
                 state.surveys[id] = survey
