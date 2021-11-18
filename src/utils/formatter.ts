@@ -12,6 +12,7 @@ import type {
     Component,
     Final,
     Answer,
+    ChoiceType,
 } from 'common/types'
 
 export function surveyFormatter(survey: Survey): Survey {
@@ -31,9 +32,10 @@ export function surveyFormatter(survey: Survey): Survey {
     const { list, ...r } = results ?? {}
 
     _.forEach(list, (value, id) => {
-        const { components, ...v } = value
+        const { components, tags = {}, ...v } = value
         list[id] = {
             ...v,
+            tags,
             components: _.map(components, (comp) => componentFormatter(comp)),
         }
     })
@@ -98,7 +100,7 @@ export function quizFormatter(value: QuizType): QuizType {
             const selectionQuiz: SelectionQuiz = {
                 showImage: toBool(showImage),
                 maxChoices: toNumber(maxChoices) ?? 1,
-                choices,
+                choices: _.map(choices, (el) => choiceFormatter(el)),
                 values,
                 tagsId,
                 ...others,
@@ -118,7 +120,7 @@ export function quizFormatter(value: QuizType): QuizType {
                 ...others,
                 showImage: toBool(showImage),
                 maxChoices: toNumber(maxChoices) ?? 4,
-                choices,
+                choices: _.map(choices, (el) => choiceFormatter(el)),
                 values,
                 tagsId,
             }
@@ -146,7 +148,7 @@ export function quizFormatter(value: QuizType): QuizType {
             const oneInTwoQuiz: OneInTwoQuiz = {
                 ...others,
                 showImage: toBool(showImage),
-                choices,
+                choices: _.map(choices, (el) => choiceFormatter(el)),
                 values,
                 tagsId,
             }
@@ -167,6 +169,23 @@ export function quizFormatter(value: QuizType): QuizType {
             }
             return draggerQuiz
         }
+    }
+}
+
+export function choiceFormatter(value: ChoiceType): ChoiceType {
+    const { label = '', tags: tagsRaw, ...rest } = value ?? {}
+
+    const tags: { [tagId: string]: string[] } = {}
+    _.forEach(tagsRaw, (val, key) => {
+        if (key) {
+            tags[key] = _.filter(val, (el) => !_.isNil(el) && el !== '')
+        }
+    })
+
+    return {
+        ...rest,
+        label,
+        tags,
     }
 }
 
