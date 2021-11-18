@@ -190,7 +190,7 @@ export default function SortView(props: SortViewProps) {
                 onClick={(event) => {
                     toggleSelected(choice.id, isSelected)
                 }}
-                variant={isSelected ? 'contained' : 'outlined'}
+                selected={isSelected}
             />
         </Badge>
     )

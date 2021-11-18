@@ -11,10 +11,9 @@ const StyledChip = styled(Chip, {
 })<StyledChipProps>(({ theme, colorName, variant }) => {
     const { color } = getMuiColor(colorName)
     const backgroundColor = variant === 'outlined' ? color[200] : color[300]
-    const { textColor } = getContrastText(theme, backgroundColor, '#fff')
 
     return {
-        color: textColor,
+        color: getContrastText(theme, backgroundColor, '#ffffff').color,
         backgroundColor,
         borderColor: variant === 'outlined' ? color[500] : '',
         '&.MuiChip-clickable:hover': {

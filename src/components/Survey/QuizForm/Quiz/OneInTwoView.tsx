@@ -47,6 +47,27 @@ export default function OneInTwoView(props: {
         onChange(event as any)
     }
 
+    const handleCopyStyle = (id: string) => {
+        const choice = _.find(choices, { id })
+        if (choice) {
+            const { buttonColor, backgroundColor } = choice
+            const value = _.map(choices, (el) => ({
+                ...el,
+                buttonColor,
+                backgroundColor,
+            }))
+
+            const event = {
+                target: {
+                    name: 'choices',
+                    value,
+                },
+            }
+
+            onChange(event as any)
+        }
+    }
+
     const handleDeleteChoice = (id: string) => {
         const value = choices.filter((el) => el.id !== id)
         const event = {
@@ -114,6 +135,7 @@ export default function OneInTwoView(props: {
                                         onChange={(event) =>
                                             handleChangeChoice(event, el.id)
                                         }
+                                        onCopy={() => handleCopyStyle(el.id)}
                                         onDelete={() =>
                                             handleDeleteChoice(el.id)
                                         }
@@ -130,6 +152,7 @@ export default function OneInTwoView(props: {
                 variant="outlined"
                 startIcon={<AddIcon />}
                 onClick={handleAddChoice}
+                sx={{ bgcolor: 'white' }}
             >
                 新增選項
             </Button>

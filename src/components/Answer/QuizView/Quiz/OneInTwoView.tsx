@@ -64,7 +64,6 @@ export default function OneInTwoView(props: OneInTwoViewProps) {
                             onClick={(event) => {
                                 handleClick(el.id)
                             }}
-                            variant="outlined"
                         />
                     ))}
                 </Stack>

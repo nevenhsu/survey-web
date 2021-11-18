@@ -6,7 +6,7 @@ import Button, { ButtonProps } from '@mui/material/Button'
 import MenuItem from '@mui/material/MenuItem'
 import Popover from '@mui/material/Popover'
 import { getStringLength } from 'utils/helper'
-import { lightenColor } from 'theme/palette'
+import { emphasizeColor } from 'theme/palette'
 import type { CustomButtonType, OnChangeInput } from 'common/types'
 import type { Variant } from '@mui/material/styles/createTypography'
 
@@ -79,7 +79,7 @@ export const CustomButton = (props: {
                     backgroundColor: buttonColor,
                     '&:hover': {
                         backgroundColor: (theme) =>
-                            lightenColor(theme, buttonColor, 0.08, ''),
+                            emphasizeColor(theme, buttonColor, 0.08, ''),
                     },
                 }}
             >
@@ -91,7 +91,7 @@ export const CustomButton = (props: {
                 anchorEl={anchorEl}
                 onClose={handleClose}
                 anchorOrigin={{
-                    vertical: 'bottom',
+                    vertical: 'top',
                     horizontal: 'right',
                 }}
             >

@@ -93,7 +93,6 @@ export default function CreateForm() {
                             width: '100%',
                             zIndex: 0,
                         }}
-                        noBg
                     />
 
                     <Typography variant="h4" fontWeight="bold">

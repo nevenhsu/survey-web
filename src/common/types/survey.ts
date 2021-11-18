@@ -94,15 +94,14 @@ export type Quiz = CustomButtonType & {
     imageHeight?: number | string
 }
 
-export type ChoiceType = Omit<
-    CustomButtonType,
-    'buttonText' | 'buttonVariant'
-> & {
+export type ChoiceType = {
     id: string
     label: string
     tags: { [tagId: string]: string[] }
     image?: string
     next?: string
+    buttonColor?: string
+    backgroundColor?: string
 }
 
 export type SelectionType = {

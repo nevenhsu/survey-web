@@ -61,7 +61,12 @@ export function surveyFormatter(survey: Survey): Survey {
 }
 
 export function quizFormatter(value: QuizType): QuizType {
-    const { mode: modeRaw, required: requiredRaw } = value
+    const {
+        mode: modeRaw,
+        required: requiredRaw,
+        imageWidth,
+        imageHeight,
+    } = value
 
     const mode = QuizMode[modeRaw]
     const required = toBool(requiredRaw)
@@ -70,6 +75,10 @@ export function quizFormatter(value: QuizType): QuizType {
         ...value,
         mode,
         required,
+        imageWidth: imageWidth ? toNumber(imageWidth) || imageWidth : undefined,
+        imageHeight: imageHeight
+            ? toNumber(imageHeight) || imageHeight
+            : undefined,
     }
 
     switch (mode) {

@@ -7,24 +7,18 @@ import { ObjectFit } from 'common/types'
 type ImageBoxProps = BoxProps & {
     imageUrl?: string
     objectFit?: ObjectFit
-    noBg?: boolean
 }
 
 const StyledBox = styled(Box, {
-    shouldForwardProp: (prop) =>
-        !_.includes(['imageUrl', 'objectFit', 'noBg'], prop),
-})<ImageBoxProps>(({ imageUrl, objectFit, noBg }) => ({
+    shouldForwardProp: (prop) => !_.includes(['objectFit'], prop),
+})<ImageBoxProps>(({ objectFit }) => ({
     position: 'relative',
-    background:
-        Boolean(imageUrl) && !noBg
-            ? `center / ${objectFit} no-repeat url(${imageUrl})`
-            : '',
     width: '100%',
     height: 'auto',
     '& img': {
         display: 'inherit',
         width: '100%',
-        height: 'auto',
+        height: '100%',
         objectFit,
     },
 }))
@@ -33,7 +27,7 @@ export default function ImageBox(props: ImageBoxProps) {
     const { imageUrl, objectFit = 'cover', ...rest } = props
 
     return (
-        <StyledBox imageUrl={imageUrl} objectFit={objectFit} {...rest}>
+        <StyledBox objectFit={objectFit} {...rest}>
             {Boolean(imageUrl) && <img src={imageUrl} alt="" />}
         </StyledBox>
     )

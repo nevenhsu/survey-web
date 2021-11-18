@@ -59,14 +59,15 @@ export default function QuizView(props: QuizViewProps) {
         imageHeight,
         imageWidth,
         backgroundImage,
+        backgroundColor,
     } = quiz ?? {}
-
-    const validValue = checkValue(quiz)
 
     const answerValue = useAppSelector(selectAnswerValue(quizId))
     const lastQuiz = useAppSelector((state) => state.answer.lastQuiz)
 
     const [time, setTime] = React.useState(Date.now())
+
+    const validValue = checkValue({ ...quiz, ...answerValue } as any)
 
     const handleUpdateAnswer = (newValue: Partial<AnswerValue>) => {
         if (quizId && newValue) {
@@ -282,58 +283,62 @@ export default function QuizView(props: QuizViewProps) {
     }, [lastQuiz])
 
     return (
-        <Stack
-            direction="column"
-            alignItems="center"
-            justifyContent="center"
-            spacing={2}
-            sx={{
-                width: '100%',
-                minHeight: '100vh',
-                p: 1,
-                background: backgroundImage
-                    ? `center/cover no-repeat url(${backgroundImage})`
-                    : '',
-            }}
-        >
-            <Box sx={{ height: 16 }} />
+        <>
+            <Box
+                sx={{
+                    position: 'fixed',
+                    width: '100vw',
+                    height: '100vh',
+                    top: 0,
+                    left: 0,
+                    background: backgroundImage
+                        ? `center/cover no-repeat url(${backgroundImage})`
+                        : '',
+                    backgroundColor,
+                }}
+            />
+            <Stack
+                direction="column"
+                alignItems="center"
+                justifyContent="center"
+                spacing={2}
+                sx={{
+                    position: 'relative',
+                    width: '100%',
+                    minHeight: '100vh',
+                    p: 1,
+                    zIndex: 1,
+                }}
+            >
+                <Box sx={{ height: 16 }} />
 
-            {required && (
-                <>
-                    <Typography variant="caption" color="GrayText">
-                        必填
-                    </Typography>
+                {required && (
+                    <>
+                        <Typography variant="caption" color="GrayText">
+                            必填
+                        </Typography>
+                        <Box />
+                    </>
+                )}
 
-                    <Box sx={{ height: 16 }} />
-                </>
-            )}
-
-            {Boolean(image) && (
-                <>
-                    <Box
+                {Boolean(image) && (
+                    <ImageBox
+                        imageUrl={image}
                         sx={{
                             width: imageWidth || 'auto',
                             height: imageHeight || 'auto',
                             mt: `0 !important`,
                         }}
-                    >
-                        <ImageBox
-                            imageUrl={image}
-                            sx={{
-                                width: '100%',
-                                height: '100%',
-                            }}
-                        />
-                    </Box>
-                </>
-            )}
+                    />
+                )}
 
-            <React.Suspense fallback={<div />}>
-                {renderQuiz(quiz)}
-            </React.Suspense>
+                <React.Suspense fallback={<div />}>
+                    {renderQuiz(quiz)}
+                </React.Suspense>
 
-            <Box sx={{ height: 16 }} />
-        </Stack>
+                <Box sx={{ height: 16 }} />
+            </Stack>
+        </>
     )
 }
 
