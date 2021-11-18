@@ -236,6 +236,8 @@ export function getDefaultChoice() {
         label: '',
         tags: {},
         image: '',
+        buttonColor: '#7879F1',
+        backgroundColor: '#ffffff',
     }
     return choice
 }

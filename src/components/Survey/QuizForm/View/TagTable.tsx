@@ -329,7 +329,7 @@ export default function TagTable(props: TagTableProps) {
                                             tags[id]?.color
                                         ).color[500]
 
-                                        const { textColor } = getContrastText(
+                                        const { color } = getContrastText(
                                             theme,
                                             backgroundColor,
                                             '#333'
@@ -351,7 +351,7 @@ export default function TagTable(props: TagTableProps) {
                                                             ) => ({
                                                                 ...base,
                                                                 borderRadius: 99,
-                                                                color: textColor,
+                                                                color,
                                                                 backgroundColor,
                                                             }),
                                                             multiValueRemove: (
@@ -360,7 +360,7 @@ export default function TagTable(props: TagTableProps) {
                                                                 ...base,
                                                                 borderRadius: 99,
                                                                 opacity: 0.6,
-                                                                color: textColor,
+                                                                color: color,
                                                                 ':hover': {
                                                                     opacity: 1,
                                                                     backgroundColor:

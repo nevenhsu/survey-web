@@ -75,9 +75,10 @@ export default function QuizTool(props: QuizToolProps) {
     const {
         id: quizId,
         mode,
-        backgroundColor,
         imageWidth,
         imageHeight,
+        backgroundImage,
+        backgroundColor,
     } = quiz ?? {}
     const { direction, showImage, maxChoices } = (quiz as SelectionQuiz) ?? {}
 
@@ -233,7 +234,7 @@ export default function QuizTool(props: QuizToolProps) {
                             />
                         </TableCell>
                     </TableRow>
-                    <TableRow>
+                    <TableRow sx={{ position: 'relative' }}>
                         <TableCell>背景圖片</TableCell>
                         <TableCell>
                             <ImageUploader
@@ -246,6 +247,19 @@ export default function QuizTool(props: QuizToolProps) {
                                 hideImage
                                 hideDeleteButton
                             />
+                            <Button
+                                className="absolute-vertical"
+                                color="error"
+                                sx={{ right: 8 }}
+                                disabled={!backgroundImage}
+                                onClick={() => {
+                                    handleUpdateQuiz({
+                                        backgroundImage: undefined,
+                                    })
+                                }}
+                            >
+                                清除
+                            </Button>
                         </TableCell>
                     </TableRow>
 

@@ -75,11 +75,7 @@ export default function SelectionView(props: SelectionViewProps) {
                                 onClick={(event) => {
                                     toggleSelected(el.id)
                                 }}
-                                variant={
-                                    _.includes(values, el.id)
-                                        ? 'contained'
-                                        : 'outlined'
-                                }
+                                selected={_.includes(values, el.id)}
                             />
                         </Grid>
                     ))}

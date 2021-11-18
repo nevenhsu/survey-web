@@ -21,7 +21,7 @@ import {
     yellow,
 } from '@mui/material/colors'
 import styleFunctionSx from '@mui/system/styleFunctionSx'
-import { lighten } from '@mui/material/styles'
+import { lighten, emphasize } from '@mui/material/styles'
 import type { PaletteMode, PaletteOptions } from '@mui/material'
 import type { Theme } from '@mui/material/styles/createTheme'
 
@@ -137,48 +137,69 @@ export function getMuiColor(name?: string) {
 
 export function getThemeColor(
     theme: Theme,
-    colorName?: string
+    color?: string
 ): string | undefined {
-    const sx = { color: colorName }
+    const sx = { color }
     const style = styleFunctionSx({ sx, theme }) as any
-    const { color } = style ?? {}
-    return color
+    const { color: val } = style ?? {}
+    return val
 }
 
 export function getContrastText(
     theme: Theme,
-    colorName: string,
+    bgcolor: string,
     fallback: string
 ) {
     try {
-        const sx = { color: colorName }
+        const sx = { bgcolor }
         const style = styleFunctionSx({ sx, theme }) as any
 
-        const { color } = style ?? {}
-        const textColor = theme.palette.getContrastText(color)
+        const { backgroundColor } = style ?? {}
+        const color = theme.palette.getContrastText(backgroundColor)
 
-        return { color, textColor }
+        return { bgcolor, color }
     } catch (err) {
         console.error(err)
-        return { color: colorName, textColor: fallback }
+        return { bgcolor, color: fallback }
     }
 }
 
 export function lightenColor(
     theme: Theme,
-    colorName: string,
+    color: string,
     coefficient: number,
     fallback: string
 ) {
-    if (!colorName) {
+    if (!color) {
         return fallback
     }
     try {
-        const sx = { color: colorName }
+        const sx = { color }
         const style = styleFunctionSx({ sx, theme }) as any
-        const { color } = style ?? {}
-        const lightColor = lighten(color, coefficient)
+        const { color: val } = style ?? {}
+        const lightColor = lighten(val, coefficient)
         return lightColor
+    } catch (err) {
+        console.error(err)
+        return fallback
+    }
+}
+
+export function emphasizeColor(
+    theme: Theme,
+    color: string,
+    coefficient: number,
+    fallback: string
+) {
+    if (!color) {
+        return fallback
+    }
+    try {
+        const sx = { color }
+        const style = styleFunctionSx({ sx, theme }) as any
+        const { color: val } = style ?? {}
+        const emphasizeColor = emphasize(val, coefficient)
+        return emphasizeColor
     } catch (err) {
         console.error(err)
         return fallback

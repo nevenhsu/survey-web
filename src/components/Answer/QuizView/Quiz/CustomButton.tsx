@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Button, { ButtonProps } from '@mui/material/Button'
-import { lightenColor } from 'theme/palette'
+import { emphasizeColor } from 'theme/palette'
 import type { CustomButtonType } from 'common/types'
 
 export type CustomButtonProps = ButtonProps & {
@@ -26,7 +26,7 @@ export default function CustomButton(props: CustomButtonProps) {
                 backgroundColor: buttonColor,
                 '&:hover': {
                     backgroundColor: (theme) =>
-                        lightenColor(theme, buttonColor, 0.08, ''),
+                        emphasizeColor(theme, buttonColor, 0.08, ''),
                 },
             }}
             {...rest}

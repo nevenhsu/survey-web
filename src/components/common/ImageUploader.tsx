@@ -154,6 +154,7 @@ export default function ImageUploader(props: ImageUploaderProps) {
                     >
                         {!hideImage && Boolean(imgSrc) && (
                             <ImageBox
+                                className="IUImageBox"
                                 imageUrl={imgSrc}
                                 objectFit={objectFit}
                                 sx={{
@@ -165,7 +166,7 @@ export default function ImageUploader(props: ImageUploaderProps) {
 
                         {!hideButton && (
                             <LoadingButton
-                                className="absolute-center"
+                                className="absolute-center IUAddButton"
                                 variant="outlined"
                                 size="small"
                                 loadingPosition="start"
@@ -186,6 +187,7 @@ export default function ImageUploader(props: ImageUploaderProps) {
                         {!hideDeleteButton && !uploading && Boolean(imgSrc) && (
                             <Tooltip title="刪除圖片">
                                 <IconButton
+                                    className="IUDeleteButton"
                                     size="small"
                                     color="error"
                                     component="div"

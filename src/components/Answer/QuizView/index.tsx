@@ -303,9 +303,11 @@ export default function QuizView(props: QuizViewProps) {
                 justifyContent="center"
                 spacing={2}
                 sx={{
+                    position: 'relative',
                     width: '100%',
                     minHeight: '100vh',
                     p: 1,
+                    zIndex: 1,
                 }}
             >
                 <Box sx={{ height: 16 }} />

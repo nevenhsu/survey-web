@@ -1,7 +1,6 @@
 import { styled } from '@mui/material/styles'
 import Button, { ButtonProps } from '@mui/material/Button'
-import { getContrastText } from 'theme/palette'
-import { lighten } from '@mui/system/colorManipulator'
+import { getContrastText, emphasizeColor } from 'theme/palette'
 
 type StyledButtonProps = ButtonProps & {
     colorName?: string
@@ -11,28 +10,20 @@ const StyledButton = styled(Button, {
     shouldForwardProp: (prop) => prop !== 'colorName',
 })<StyledButtonProps>(({ theme, colorName, variant }) => {
     if (colorName) {
-        const { color, textColor } = getContrastText(theme, colorName, '#fff')
-        const lightColor = tryLighten(color, 0.08)
+        const { bgcolor, color } = getContrastText(theme, colorName, '#ffffff')
+        const hoverColor = emphasizeColor(theme, bgcolor, 0.08, bgcolor)
 
         return {
-            color: textColor,
-            backgroundColor: variant === 'outlined' ? undefined : color,
-            borderColor: variant === 'outlined' ? color : undefined,
+            color,
+            backgroundColor: variant === 'outlined' ? undefined : bgcolor,
+            borderColor: variant === 'outlined' ? bgcolor : undefined,
             '&:hover': {
                 backgroundColor:
-                    variant === 'outlined' ? undefined : lightColor,
-                borderColor: variant === 'outlined' ? lightColor : undefined,
+                    variant === 'outlined' ? undefined : hoverColor,
+                borderColor: variant === 'outlined' ? hoverColor : undefined,
             },
         }
     }
 })
 
 export default StyledButton
-
-function tryLighten(color: string, coefficient: number) {
-    try {
-        return lighten(color, coefficient)
-    } catch {
-        return color
-    }
-}

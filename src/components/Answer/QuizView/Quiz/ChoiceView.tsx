@@ -1,68 +1,96 @@
 import * as React from 'react'
 import _ from 'lodash'
-import { styled } from '@mui/material/styles'
+import { styled, useTheme } from '@mui/material/styles'
 import Button, { ButtonProps } from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import ImageBox from 'components/common/ImageBox'
-import { lightenColor, getThemeColor, getContrastText } from 'theme/palette'
+import { getContrastText, emphasizeColor } from 'theme/palette'
 import type { ChoiceType } from 'common/types'
 
 type ChoiceViewProps = ButtonProps & {
     choice: ChoiceType
     showImage?: boolean
+    selected?: boolean
 }
 
 type StyledButtonProps = ButtonProps & {
     showImage: boolean
-    buttonTextColor: string
     buttonColor: string
+    backgroundColor: string
+    selected?: boolean
     component?: React.ElementType
 }
 
 const StyledButton = styled(Button, {
     shouldForwardProp: (prop) =>
-        !_.includes(['showImage', 'buttonTextColor', 'buttonColor'], prop),
+        !_.includes(
+            ['showImage', 'buttonColor', 'backgroundColor', 'selected'],
+            prop
+        ),
 })<StyledButtonProps>(
-    ({ theme, variant, buttonTextColor, buttonColor, showImage }) => {
-        const textColor =
-            getThemeColor(theme, buttonTextColor) || theme.palette.primary.main
-        const btnColor =
-            getThemeColor(theme, buttonColor) || theme.palette.primary.main
-        const lightColor = lightenColor(theme, btnColor, 0.92, '')
-        const lightColor2 = lightenColor(theme, btnColor, 0.08, '')
+    ({ theme, buttonColor, backgroundColor, showImage, selected }) => {
+        const { color } = getContrastText(
+            theme,
+            backgroundColor,
+            theme.palette.text.primary
+        )
 
-        const contrastText = getContrastText(theme, btnColor, 'white').textColor
+        const emphasizedColor2 = emphasizeColor(
+            theme,
+            buttonColor,
+            0.08,
+            backgroundColor
+        )
 
-        const selected = variant === 'contained'
+        const activeColor = getContrastText(
+            theme,
+            buttonColor,
+            theme.palette.common.white
+        ).color
+
+        const emphasizedColor = emphasizeColor(
+            theme,
+            backgroundColor,
+            0.08,
+            backgroundColor
+        )
+
+        const hoverTextColor = getContrastText(
+            theme,
+            emphasizedColor,
+            theme.palette.text.primary
+        ).color
 
         return {
             width: '100%',
-            color: selected ? contrastText : textColor,
-            backgroundColor: selected ? btnColor : undefined,
-            border: `1px solid ${btnColor}`,
+            color: selected ? activeColor : color,
+            borderColor: buttonColor,
+            backgroundColor: selected ? buttonColor : backgroundColor,
             flexDirection: 'column',
             padding: showImage ? '0 0 5px' : '5px 15px',
             overflow: 'hidden',
             '&:hover': {
-                border: `1px solid ${btnColor}`,
-                backgroundColor: selected ? lightColor2 : lightColor,
+                color: selected ? activeColor : hoverTextColor,
+                borderColor: buttonColor,
+                backgroundColor: selected ? emphasizedColor2 : emphasizedColor,
             },
             '& .MuiTouchRipple-root': {
-                color: btnColor,
+                color: buttonColor || backgroundColor,
             },
         }
     }
 )
 
 export default function ChoiceView(props: ChoiceViewProps) {
+    const theme = useTheme()
     const { choice, showImage = false, ...rest } = props
 
     const {
         id,
         label = '',
         image = '',
-        buttonColor = '',
-        buttonTextColor = '',
+        buttonColor = theme.palette.primary.main,
+        backgroundColor = theme.palette.common.white,
     } = choice
 
     return (
@@ -72,7 +100,7 @@ export default function ChoiceView(props: ChoiceViewProps) {
             variant="outlined"
             showImage={showImage}
             buttonColor={buttonColor}
-            buttonTextColor={buttonTextColor}
+            backgroundColor={backgroundColor}
             {...rest}
         >
             {showImage && (

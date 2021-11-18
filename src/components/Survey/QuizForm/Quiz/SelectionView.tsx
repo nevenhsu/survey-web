@@ -1,4 +1,5 @@
 import * as React from 'react'
+import _ from 'lodash'
 import Box from '@mui/material/Box'
 import Grid, { GridSize } from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
@@ -44,6 +45,27 @@ export default function SelectionView(props: {
         }
 
         onChange(event as any)
+    }
+
+    const handleCopyStyle = (id: string) => {
+        const choice = _.find(choices, { id })
+        if (choice) {
+            const { buttonColor, backgroundColor } = choice
+            const value = _.map(choices, (el) => ({
+                ...el,
+                buttonColor,
+                backgroundColor,
+            }))
+
+            const event = {
+                target: {
+                    name: 'choices',
+                    value,
+                },
+            }
+
+            onChange(event as any)
+        }
     }
 
     const handleDeleteChoice = (id: string) => {
@@ -99,6 +121,7 @@ export default function SelectionView(props: {
                                 onChange={(event) =>
                                     handleChangeChoice(event, el.id)
                                 }
+                                onCopy={() => handleCopyStyle(el.id)}
                                 onDelete={() => handleDeleteChoice(el.id)}
                                 showImage={showImage}
                             />
@@ -109,6 +132,7 @@ export default function SelectionView(props: {
                             variant="outlined"
                             startIcon={<AddIcon />}
                             onClick={handleAddChoice}
+                            sx={{ bgcolor: 'white' }}
                         >
                             新增選項
                         </Button>
