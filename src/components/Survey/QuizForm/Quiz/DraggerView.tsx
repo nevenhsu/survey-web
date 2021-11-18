@@ -146,7 +146,12 @@ export default function DraggerView(props: {
                 variant="outlined"
                 startIcon={<AddIcon />}
                 onClick={handleAddChoice}
-                sx={{ bgcolor: 'white' }}
+                sx={{
+                    bgcolor: 'white',
+                    '&:hover': {
+                        bgcolor: 'white',
+                    },
+                }}
             >
                 新增選項
             </Button>
