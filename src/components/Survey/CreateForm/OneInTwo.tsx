@@ -13,6 +13,7 @@ import Numeric1CircleOutlineIcon from 'mdi-react/Numeric1CircleOutlineIcon'
 import Numeric2CircleOutlineIcon from 'mdi-react/Numeric2CircleOutlineIcon'
 import Numeric3CircleOutlineIcon from 'mdi-react/Numeric3CircleOutlineIcon'
 import Numeric4CircleOutlineIcon from 'mdi-react/Numeric4CircleOutlineIcon'
+import ArrowRightIcon from 'mdi-react/ArrowRightIcon'
 
 enum BlockName {
     a = 'a',
@@ -172,7 +173,7 @@ export default function OneInTwo() {
 
                 <Grid item xs sx={{ width: `calc(100vw - 288px)` }}>
                     <Element name={BlockName.a}>
-                        <Box sx={{ mb: 4 }}>
+                        <Box sx={{ mb: 5 }}>
                             <Typography variant="subtitle1" gutterBottom>
                                 參與測驗
                             </Typography>
@@ -180,35 +181,100 @@ export default function OneInTwo() {
                                 參與者完成遊戲化測驗，產生個人化結果
                             </Typography>
 
-                            <ImageBox imageUrl="images/one-in-two/survey-2-1.png" />
+                            <Stack
+                                direction="row"
+                                justifyContent="space-evenly"
+                                alignItems="center"
+                                spacing={1}
+                            >
+                                <Box sx={{ textAlign: 'center' }}>
+                                    <ImageBox
+                                        imageUrl="images/one-in-two/survey-2-1-1.png"
+                                        sx={{ mb: 2 }}
+                                    />
+                                    <Typography variant="caption">
+                                        Highlight 圖片說明
+                                    </Typography>
+                                </Box>
+
+                                <Box sx={{ textAlign: 'center' }}>
+                                    <ArrowRightIcon />
+                                    <Box sx={{ height: 24 }} />
+                                </Box>
+
+                                <Box sx={{ textAlign: 'center' }}>
+                                    <ImageBox
+                                        imageUrl="images/one-in-two/survey-2-1-2.png"
+                                        sx={{ mb: 2 }}
+                                    />
+                                    <Typography variant="caption">
+                                        Highlight 圖片說明
+                                    </Typography>
+                                </Box>
+                                <Box sx={{ textAlign: 'center' }}>
+                                    <ArrowRightIcon />
+                                    <Box sx={{ height: 24 }} />
+                                </Box>
+                                <Box sx={{ textAlign: 'center' }}>
+                                    <ImageBox
+                                        imageUrl="images/one-in-two/survey-2-1-3.png"
+                                        sx={{ mb: 2 }}
+                                    />
+                                    <Typography variant="caption">
+                                        Highlight 圖片說明
+                                    </Typography>
+                                </Box>
+                            </Stack>
                         </Box>
                     </Element>
                     <Element name={BlockName.b}>
-                        <Box sx={{ mb: 4 }}>
-                            <Typography variant="subtitle1" gutterBottom>
-                                測驗模組產生個人化結果
-                            </Typography>
-                            <Typography variant="body2" sx={{ mb: 2 }}>
-                                模組能自動產生個人化結果給參與者
-                            </Typography>
+                        <Box sx={{ mb: 5 }}>
+                            <Stack
+                                direction="row"
+                                alignItems="start"
+                                spacing={2}
+                            >
+                                <Box sx={{ flex: '0 0 33%' }}>
+                                    <Typography
+                                        variant="subtitle1"
+                                        gutterBottom
+                                    >
+                                        測驗模組產生個人化結果
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        模組能自動產生個人化結果給參與者
+                                    </Typography>
+                                </Box>
 
-                            <ImageBox imageUrl="images/one-in-two/survey-2-2.png" />
+                                <ImageBox imageUrl="images/one-in-two/survey-2-2.png" />
+                            </Stack>
                         </Box>
                     </Element>
                     <Element name={BlockName.c}>
-                        <Box sx={{ mb: 4 }}>
-                            <Typography variant="subtitle1" gutterBottom>
-                                個人化結果預覽
-                            </Typography>
-                            <Typography variant="body2" sx={{ mb: 2 }}>
-                                模組預先建立了個人化結果範本供調整
-                            </Typography>
+                        <Box sx={{ mb: 5 }}>
+                            <Stack
+                                direction="row"
+                                alignItems="start"
+                                spacing={2}
+                            >
+                                <Box sx={{ flex: '0 0 33%' }}>
+                                    <Typography
+                                        variant="subtitle1"
+                                        gutterBottom
+                                    >
+                                        個人化結果預覽
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        模組預先建立了個人化結果範本供調整
+                                    </Typography>
+                                </Box>
 
-                            <ImageBox imageUrl="images/one-in-two/survey-2-3.png" />
+                                <ImageBox imageUrl="images/one-in-two/survey-2-3.png" />
+                            </Stack>
                         </Box>
                     </Element>
                     <Element name={BlockName.d}>
-                        <Box sx={{ mb: 4 }}>
+                        <Box sx={{ mb: 5 }}>
                             <Typography variant="subtitle1" gutterBottom>
                                 查看分析
                             </Typography>

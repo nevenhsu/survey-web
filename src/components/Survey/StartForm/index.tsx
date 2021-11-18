@@ -53,16 +53,20 @@ export default function StartForm() {
                         p: 6,
                     }}
                 >
-                    
-                        <ImageBox imageUrl="images/one-in-two/cover.svg" objectFit="contain" sx={{ height: 300, mb: 4 }} />
-                 
+                    <ImageBox
+                        imageUrl="images/one-in-two/cover.svg"
+                        objectFit="contain"
+                        sx={{ height: 300, mb: 4 }}
+                    />
 
                     <Typography variant="h4" fontWeight="bold" gutterBottom>
                         二選一
                     </Typography>
 
-                    <Box sx={{
-                        px: 10}}
+                    <Box
+                        sx={{
+                            px: 10,
+                        }}
                     >
                         <Typography variant="body1" sx={{ mb: 4 }}>
                             適合用來設計「心理測驗」般產出個人結果的測驗，像是：「從你的衣櫃偷窺你的戀愛性格」、「從你的飲食習慣推判你的健康狀態」
@@ -84,16 +88,20 @@ export default function StartForm() {
                         p: 6,
                     }}
                 >
-                  
-                    <ImageBox imageUrl="images/dragger/cover.svg" objectFit="contain" sx={{ height: 300, mb: 4 }} />
-                 
+                    <ImageBox
+                        imageUrl="images/dragger/cover.svg"
+                        objectFit="contain"
+                        sx={{ height: 300, mb: 4 }}
+                    />
 
                     <Typography variant="h4" fontWeight="bold" gutterBottom>
                         左右拖曳
                     </Typography>
 
-                    <Box sx={{
-                        px: 10}}
+                    <Box
+                        sx={{
+                            px: 10,
+                        }}
                     >
                         <Typography variant="body1" sx={{ mb: 4 }}>
                             適合用來設計「挑戰型」測驗，像是：「測測看假新聞判讀你能拿幾分？」、「這些垃圾，你能丟對多少？」

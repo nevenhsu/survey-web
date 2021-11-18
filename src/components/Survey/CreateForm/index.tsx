@@ -22,6 +22,8 @@ export default function CreateForm() {
 
     const mode = useAppSelector((state) => state.survey.mode ?? '')
 
+    const isOneInTwo = mode === Mode.oneInTwo
+
     const [loading, setLoading] = React.useState(false)
 
     const handleClick = () => {
@@ -71,69 +73,67 @@ export default function CreateForm() {
                     測驗範本推薦
                 </Typography>
                 <Stack
-                    direction="column"
-                    justifyContent="center"
-                    alignItems="flex-start"
-                    spacing={3}
+                    direction="row"
+                    alignItems="center"
                     sx={{
                         position: 'relative',
-                        height: 'calc(100vh - 180px)',
-                        '& *': {
-                            position: 'relative',
-                            zIndex: 1,
-                        },
+                        height: 'calc(100vh - 240px)',
                     }}
+                    spacing={4}
                 >
+                    <Box sx={{ flex: '0 0 50%' }}>
+                        <Stack
+                            direction="column"
+                            justifyContent="center"
+                            alignItems="flex-start"
+                            spacing={3}
+                        >
+                            <Typography variant="h4" fontWeight="bold">
+                                {isOneInTwo ? '二選一' : '左右拖曳'}
+                            </Typography>
+                            <Typography variant="body1">
+                                {isOneInTwo
+                                    ? '運用範本的題庫來建立客群標籤，並針對不同類型的填答者推送客製化問卷結果！'
+                                    : '運用範本的題庫來建立客群標籤，並針對不同類型的填答者推送客製化問卷結果！'}
+                            </Typography>
+
+                            <Stack
+                                direction="row"
+                                justifyContent="flex-start"
+                                alignItems="center"
+                                spacing={2}
+                            >
+                                <Button
+                                    variant="contained"
+                                    color="inherit"
+                                    size="large"
+                                >
+                                    預覽測驗
+                                </Button>
+
+                                <LoadingButton
+                                    loading={loading}
+                                    loadingPosition="start"
+                                    startIcon={<AddIcon />}
+                                    onClick={handleClick}
+                                    disabled={!mode}
+                                    variant="contained"
+                                    color="secondary"
+                                    size="large"
+                                >
+                                    建立測驗
+                                </LoadingButton>
+                            </Stack>
+                        </Stack>
+                    </Box>
                     <ImageBox
-                        className="absolute-center"
-                        imageUrl="images/survey-cover.png"
+                        imageUrl={
+                            isOneInTwo
+                                ? 'images/one-in-two/cover.svg'
+                                : 'images/dragger/cover.svg'
+                        }
                         objectFit="contain"
-                        sx={{
-                            height: '100%',
-                            width: '100%',
-                            zIndex: 0,
-                        }}
                     />
-                    {mode === Mode.oneInTwo ? (
-                        <Typography variant="h4" fontWeight="bold">
-                            二選一
-                        </Typography>
-                        ) : (
-                        <Typography variant="h4" fontWeight="bold">
-                           左右拖曳
-                        </Typography>
-                    )}
-                    <Typography variant="body1">
-                        運用範本的題庫來建立客群標籤，並針對不同類型的填答者推送客製化問卷結果！
-                    </Typography>
-
-                    <Stack
-                        direction="row"
-                        justifyContent="flex-start"
-                        alignItems="center"
-                        spacing={2}
-                    >
-                        <Button
-                            variant="contained"
-                            color="inherit"
-                            size="large"
-                        >
-                            預覽測驗
-                        </Button>
-
-                        <LoadingButton
-                            loading={loading}
-                            loadingPosition="start"
-                            startIcon={<AddIcon />}
-                            onClick={handleClick}
-                            disabled={!mode}
-                            variant="contained"
-                            color="secondary"
-                            size="large"
-                        >
-                            建立測驗
-                        </LoadingButton>
-                    </Stack>
                 </Stack>
                 <React.Suspense fallback={<div />}>
                     {renderView()}
