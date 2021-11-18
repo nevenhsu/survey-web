@@ -213,7 +213,7 @@ export default function BehaviorView() {
                                                 dataKey="views"
                                                 name="觀看數"
                                                 fill={
-                                                    theme.palette.primary.light
+                                                    theme.palette.primary.main
                                                 }
                                             />
                                             <Bar
@@ -221,8 +221,7 @@ export default function BehaviorView() {
                                                 dataKey="hits"
                                                 name="點擊數"
                                                 fill={
-                                                    theme.palette.secondary
-                                                        .light
+                                                    theme.palette.secondary.main
                                                 }
                                             />
                                             <Line
@@ -231,7 +230,7 @@ export default function BehaviorView() {
                                                 dataKey="ctr"
                                                 name="觀看率"
                                                 stroke={
-                                                    theme.palette.primary.main
+                                                    theme.palette.error.main
                                                 }
                                             />
                                         </ComposedChart>

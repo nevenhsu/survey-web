@@ -17,7 +17,7 @@ import {
     ResponsiveContainer,
 } from 'recharts'
 import CircleChart from 'components/common/Charts/CircleChart'
-import { styled } from '@mui/material/styles'
+import { styled, useTheme } from '@mui/material/styles'
 import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
@@ -44,6 +44,7 @@ const QuizItem = styled(Stack, {
 }))
 
 export default function QuizView() {
+    const theme = useTheme()
     const [selectedId, setSelectedId] = React.useState('')
 
     const quizzes = quizzesData
@@ -57,6 +58,121 @@ export default function QuizView() {
             const { mode, data = [] } = selectedQuiz
 
             switch (mode) {
+                case QuizMode.oneInTwo: {
+                    const total = _.sum(data.map((el: any) => el.value))
+
+                    return (
+                        <PieChart>
+                            <Pie
+                                dataKey="value"
+                                data={data}
+                                fill="#8884d8"
+                                label
+                            >
+                                {data.map((el: any, index: number) => (
+                                    <Cell
+                                        key={`cell-${index}`}
+                                        fill={
+                                            colors[index % colors.length][500]
+                                        }
+                                    />
+                                ))}
+                            </Pie>
+
+                            <Tooltip
+                                formatter={(
+                                    value: any,
+                                    name: any,
+                                    props: any
+                                ) => {
+                                    const num = numeral(value).format('0,0')
+                                    const ratio = numeral(value / total).format(
+                                        '0.0%'
+                                    )
+
+                                    return [
+                                        <Box sx={{ minWidth: 120 }}>
+                                            <Stack
+                                                direction="row"
+                                                alignItems="center"
+                                                justifyContent="space-between"
+                                                sx={{
+                                                    color: 'primary.main',
+                                                    my: 1,
+                                                }}
+                                            >
+                                                <Typography
+                                                    variant="body2"
+                                                    color="inherit"
+                                                >
+                                                    數量
+                                                </Typography>
+                                                <Typography
+                                                    variant="body2"
+                                                    color="inherit"
+                                                >
+                                                    {num}
+                                                </Typography>
+                                            </Stack>
+                                            <Stack
+                                                direction="row"
+                                                alignItems="center"
+                                                justifyContent="space-between"
+                                                sx={{ color: 'primary.main' }}
+                                            >
+                                                <Typography
+                                                    variant="body2"
+                                                    color="inherit"
+                                                >
+                                                    佔比
+                                                </Typography>
+                                                <Typography
+                                                    variant="body2"
+                                                    color="inherit"
+                                                >
+                                                    {ratio}
+                                                </Typography>
+                                            </Stack>
+                                        </Box>,
+                                        name,
+                                    ]
+                                }}
+                            />
+                        </PieChart>
+                    )
+                }
+                case QuizMode.dragger: {
+                    return (
+                        <BarChart data={data} barSize={48} layout="vertical">
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <YAxis dataKey="name" type="category" />
+                            <XAxis
+                                type="number"
+                                tickFormatter={(n) => numeral(n).format('0,0')}
+                            />
+                            <Tooltip
+                                formatter={(
+                                    value: any,
+                                    name: any,
+                                    props: any
+                                ) => [numeral(value).format('0,0'), name]}
+                            />
+                            <Legend />
+                            <Bar
+                                name="正確次數"
+                                dataKey="true"
+                                fill={theme.palette.primary.main}
+                                stackId="num"
+                            />
+                            <Bar
+                                name="錯誤次數"
+                                dataKey="false"
+                                fill={theme.palette.secondary.main}
+                                stackId="num"
+                            />
+                        </BarChart>
+                    )
+                }
                 case QuizMode.selection: {
                     const total = _.sum(data.map((el: any) => el.value))
 
@@ -315,5 +431,9 @@ function getModeLabel(mode: QuizMode) {
             return '填空'
         case QuizMode.page:
             return '圖文'
+        case QuizMode.dragger:
+            return '拖曳'
+        case QuizMode.oneInTwo:
+            return '二選一'
     }
 }

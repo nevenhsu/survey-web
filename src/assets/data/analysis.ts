@@ -350,6 +350,32 @@ export const correlationData: Array<ListData> = [
 
 export const quizzesData: Array<QuizData> = [
     {
+        id: 'deu3a1',
+        mode: QuizMode.oneInTwo,
+        title: '勾選你喜愛的特色',
+        data: [
+            { name: 'Style A', value: 480 },
+            { name: 'Style B', value: 300 },
+            { name: 'Style C', value: 320 },
+            { name: 'Style D', value: 200 },
+            { name: 'Style E', value: 150 },
+        ],
+    },
+    {
+        id: 'eifq19',
+        mode: QuizMode.dragger,
+        title: '請選擇適合的目標',
+        data: [
+            { name: 'TargetA', true: 480, false: 120 },
+            { name: 'TargetB', true: 300, false: 300 },
+            { name: 'TargetC', true: 320, false: 280 },
+            { name: 'TargetD', true: 200, false: 400 },
+            { name: 'TargetE', true: 150, false: 450 },
+            { name: 'TargetF', true: 120, false: 480 },
+            { name: 'TargetG', true: 220, false: 380 },
+        ],
+    },
+    {
         id: 'ewe2dw',
         mode: QuizMode.selection,
         title: '勾選你喜愛的電影類型',
