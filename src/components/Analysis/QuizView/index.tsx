@@ -161,13 +161,13 @@ export default function QuizView() {
                             <Bar
                                 name="正確次數"
                                 dataKey="true"
-                                fill={theme.palette.primary.main}
+                                fill={colors[0][500]}
                                 stackId="num"
                             />
                             <Bar
                                 name="錯誤次數"
                                 dataKey="false"
-                                fill={theme.palette.secondary.main}
+                                fill={colors[1][500]}
                                 stackId="num"
                             />
                         </BarChart>
