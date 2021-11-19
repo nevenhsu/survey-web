@@ -9,6 +9,7 @@ import Stack from '@mui/material/Stack'
 
 type CountDownProgressProps = BoxProps & {
     countDown: number
+    onEnd: () => void
 }
 
 const StyledBox = styled(Box)({
@@ -16,17 +17,19 @@ const StyledBox = styled(Box)({
 })
 
 export default function CountDownProgress(props: CountDownProgressProps) {
-    const { countDown, ...rest } = props
+    const { countDown, onEnd, ...rest } = props
 
-    const endTime = React.useMemo(() => new Date(Date.now() + countDown), [])
+    const endTime = React.useMemo(
+        () => new Date(Date.now() + countDown),
+        [countDown]
+    )
 
     const count = useCountdown(endTime, {
         interval: 1000,
+        onEnd,
     })
 
     const progress = _.round(((countDown - count * 1000) / countDown) * 100)
-
-    console.log({ count, endTime })
 
     const txtLength = `${count}`.length + 2
 
@@ -36,7 +39,7 @@ export default function CountDownProgress(props: CountDownProgressProps) {
                 <LinearProgress
                     variant="determinate"
                     value={progress}
-                    sx={{ width: '100%' }}
+                    sx={{ width: '100%', height: 16, borderRadius: 99 }}
                 />
                 <Typography
                     variant="h6"

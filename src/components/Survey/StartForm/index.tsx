@@ -75,7 +75,7 @@ export default function StartForm() {
 
                     <Button
                         variant="contained"
-                        color="secondary"
+                        color="primary"
                         size="large"
                         onClick={() => handleClick(Mode.oneInTwo)}
                     >
@@ -111,7 +111,7 @@ export default function StartForm() {
 
                     <Button
                         variant="contained"
-                        color="secondary"
+                        color="primary"
                         size="large"
                         onClick={() => handleClick(Mode.dragger)}
                     >

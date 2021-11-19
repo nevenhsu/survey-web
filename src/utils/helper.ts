@@ -277,6 +277,7 @@ export function getDefaultDraggerChoice(answer: string) {
         id: setId(),
         label: '',
         image: '',
+        bgcolor: '#ffffff',
         answer,
     }
     return choice

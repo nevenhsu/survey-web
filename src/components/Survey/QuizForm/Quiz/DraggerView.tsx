@@ -4,6 +4,7 @@ import Slick from 'react-slick'
 import Stack from '@mui/material/Stack'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
 import {
     StyledTextField,
     DraggerChoiceView,
@@ -141,6 +142,7 @@ export default function DraggerView(props: {
                             <DraggerChoiceView
                                 label={el.label}
                                 image={el.image}
+                                bgcolor={el.bgcolor}
                                 showImage={showImage}
                                 onChange={(event) =>
                                     handleChangeChoice(event, el.id)
