@@ -1,7 +1,7 @@
 import * as React from 'react'
 import _ from 'lodash'
 import Box from '@mui/material/Box'
-import Grid, { GridSize } from '@mui/material/Grid'
+import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import {
@@ -10,8 +10,11 @@ import {
     ChoiceView,
 } from 'components/Survey/QuizForm/Shares'
 import AddIcon from 'mdi-react/AddIcon'
+import { useAppSelector } from 'hooks'
+import { selectDevice } from 'store/slices/userDefault'
 import { getDefaultChoice } from 'utils/helper'
 import type {
+    DeviceType,
     CustomButtonType,
     SelectionType,
     OnChangeInput,
@@ -25,10 +28,9 @@ export default function SelectionView(props: {
     onChange: OnChangeInput
 }) {
     const { title, quizProps, customProps, onChange } = props
-    const { choices = [], maxChoices, showImage, direction } = quizProps
+    const { choices = [], maxChoices, showImage, responsive, px } = quizProps
 
-    const responsive: { [key: string]: GridSize } =
-        direction === 'row' ? { xs: 6 } : { xs: 12 }
+    const device = useAppSelector(selectDevice)
 
     const handleChangeChoice = (
         e: React.ChangeEvent<HTMLInputElement>,
@@ -106,16 +108,26 @@ export default function SelectionView(props: {
                 最多可選擇{maxChoices}項
             </Typography>
             <Box sx={{ height: 16 }} />
-            <Box sx={{ width: 4 / 5, textAlign: 'center' }}>
+            <Box
+                sx={{
+                    width: '100%',
+                    textAlign: 'center',
+                    px: getDeviceValue(device, px),
+                }}
+            >
                 <Grid
                     container
-                    direction={direction}
+                    direction="row"
                     alignItems="center"
                     justifyContent="center"
                     spacing={2}
                 >
                     {choices.map((el) => (
-                        <Grid key={el.id} item {...responsive}>
+                        <Grid
+                            key={el.id}
+                            item
+                            xs={getDeviceValue(device, responsive)}
+                        >
                             <ChoiceView
                                 value={el}
                                 onChange={(event) =>
@@ -127,25 +139,40 @@ export default function SelectionView(props: {
                             />
                         </Grid>
                     ))}
-                    <Grid item {...responsive}>
-                        <Button
-                            variant="outlined"
-                            startIcon={<AddIcon />}
-                            onClick={handleAddChoice}
-                            sx={{
-                                bgcolor: 'white',
-                                '&:hover': {
-                                    bgcolor: 'white',
-                                },
-                            }}
-                        >
-                            新增選項
-                        </Button>
-                    </Grid>
                 </Grid>
+
+                <Box sx={{ mt: 3 }}>
+                    <Button
+                        variant="outlined"
+                        startIcon={<AddIcon />}
+                        onClick={handleAddChoice}
+                        sx={{
+                            bgcolor: 'white',
+                            '&:hover': {
+                                bgcolor: 'white',
+                            },
+                        }}
+                    >
+                        新增選項
+                    </Button>
+                </Box>
             </Box>
             <Box sx={{ height: 16 }} />
             <CustomButton customProps={customProps} onChange={onChange} />
         </>
     )
+}
+
+function getDeviceValue(
+    device: DeviceType,
+    value: { xs: any; sm: any; lg: any }
+) {
+    switch (device) {
+        case 'mobile':
+            return value.xs
+        case 'laptop':
+            return value.sm
+        case 'desktop':
+            return value.lg
+    }
 }

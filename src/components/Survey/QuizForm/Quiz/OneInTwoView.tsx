@@ -1,13 +1,20 @@
 import * as React from 'react'
 import _ from 'lodash'
 import Slick from 'react-slick'
-import Stack from '@mui/material/Stack'
+import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { StyledTextField, ChoiceView } from 'components/Survey/QuizForm/Shares'
 import AddIcon from 'mdi-react/AddIcon'
+import { useAppSelector } from 'hooks'
+import { selectDevice } from 'store/slices/userDefault'
 import { getDefaultChoice } from 'utils/helper'
-import type { OneInTwoType, OnChangeInput, OnButtonClink } from 'common/types'
+import type {
+    DeviceType,
+    OneInTwoType,
+    OnChangeInput,
+    OnButtonClink,
+} from 'common/types'
 
 export default function OneInTwoView(props: {
     title: string
@@ -15,7 +22,9 @@ export default function OneInTwoView(props: {
     onChange: OnChangeInput
 }) {
     const { title, quizProps, onChange } = props
-    const { choices = [], showImage, direction } = quizProps
+    const { choices = [], showImage, responsive, px } = quizProps
+
+    const device = useAppSelector(selectDevice)
 
     const handleAddChoice: OnButtonClink = () => {
         const newValue = [getDefaultChoice(), getDefaultChoice()]
@@ -120,29 +129,41 @@ export default function OneInTwoView(props: {
                     {_.chunk(choices, 2).map((chunk) => (
                         <Box
                             key={chunk.map((el) => el.id).join('-')}
-                            sx={{ px: 0.5 }}
+                            sx={{
+                                width: '100%',
+                                textAlign: 'center',
+                                px: getDeviceValue(device, px),
+                            }}
                         >
-                            <Stack
-                                direction={direction || 'row'}
-                                justifyContent="center"
+                            <Grid
+                                container
+                                direction="row"
                                 alignItems="center"
+                                justifyContent="center"
                                 spacing={2}
                             >
                                 {chunk.map((el) => (
-                                    <ChoiceView
+                                    <Grid
                                         key={el.id}
-                                        value={el}
-                                        onChange={(event) =>
-                                            handleChangeChoice(event, el.id)
-                                        }
-                                        onCopy={() => handleCopyStyle(el.id)}
-                                        onDelete={() =>
-                                            handleDeleteChoice(el.id)
-                                        }
-                                        showImage={showImage}
-                                    />
+                                        item
+                                        xs={getDeviceValue(device, responsive)}
+                                    >
+                                        <ChoiceView
+                                            value={el}
+                                            onChange={(event) =>
+                                                handleChangeChoice(event, el.id)
+                                            }
+                                            onCopy={() =>
+                                                handleCopyStyle(el.id)
+                                            }
+                                            onDelete={() =>
+                                                handleDeleteChoice(el.id)
+                                            }
+                                            showImage={showImage}
+                                        />
+                                    </Grid>
                                 ))}
-                            </Stack>
+                            </Grid>
                         </Box>
                     ))}
                 </Slick>
@@ -163,4 +184,18 @@ export default function OneInTwoView(props: {
             </Button>
         </>
     )
+}
+
+function getDeviceValue(
+    device: DeviceType,
+    value: { xs: any; sm: any; lg: any }
+) {
+    switch (device) {
+        case 'mobile':
+            return value.xs
+        case 'laptop':
+            return value.sm
+        case 'desktop':
+            return value.lg
+    }
 }

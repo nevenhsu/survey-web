@@ -39,8 +39,6 @@ const surveyApi = {
 
         const value = { ...survey, ...template }
 
-        console.log(value)
-
         return value
     },
     uploadMedia: async (file?: string): Promise<string> => {
