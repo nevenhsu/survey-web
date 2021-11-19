@@ -2,7 +2,9 @@ import * as React from 'react'
 import _ from 'lodash'
 import { styled } from '@mui/material'
 import NumberFormat from 'react-number-format'
+import { GridSize } from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
+import MenuItem from '@mui/material/MenuItem'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -21,15 +23,30 @@ import {
     updateSurvey,
     selectCurrentSurvey,
 } from 'store/slices/survey'
+import { toNumber } from 'utils/helper'
 import { QuizMode } from 'common/types'
 import type { SelectionQuiz, OnChangeInput, QuizType } from 'common/types'
-import CardHorizonImage from 'assets/images/CardHorizonImage'
-import CardVerticalImage from 'assets/images/CardVerticalImage'
 
 type QuizToolProps = {
     surveyId: string
     quiz?: QuizType
 }
+
+const responsiveOptions: { value: GridSize; label: string }[] = [
+    { value: 'auto', label: '自動' },
+    { value: 1, label: '1' },
+    { value: 2, label: '2' },
+    { value: 3, label: '3' },
+    { value: 4, label: '4' },
+    { value: 5, label: '5' },
+    { value: 6, label: '6' },
+    { value: 7, label: '7' },
+    { value: 8, label: '8' },
+    { value: 9, label: '9' },
+    { value: 10, label: '10' },
+    { value: 11, label: '11' },
+    { value: 12, label: '12' },
+]
 
 const StyledTextField = styled(TextField)({
     '& .MuiInput-root:before': {
@@ -80,7 +97,8 @@ export default function QuizTool(props: QuizToolProps) {
         backgroundImage,
         backgroundColor,
     } = quiz ?? {}
-    const { direction, showImage, maxChoices } = (quiz as SelectionQuiz) ?? {}
+    const { responsive, px, showImage, maxChoices } =
+        (quiz as SelectionQuiz) ?? {}
 
     const handleChange: OnChangeInput = (event) => {
         const { name, value } = event.target
@@ -144,6 +162,29 @@ export default function QuizTool(props: QuizToolProps) {
                 })
             )
         }
+    }
+
+    const handleUpdateResponsive = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const { name, value } = event.target
+        const val = value === 'auto' ? value : toNumber(value)
+        const resp = {
+            ...responsive,
+            [name]: val,
+        }
+
+        handleUpdateQuiz({ responsive: resp })
+    }
+
+    const handleUpdatePadding = (data: { value: number; name: string }) => {
+        const { value, name } = data
+        const newPx = {
+            ...px,
+            [name]: value,
+        }
+
+        handleUpdateQuiz({ px: newPx })
     }
 
     return (
@@ -270,82 +311,189 @@ export default function QuizTool(props: QuizToolProps) {
                         <>
                             <Header title="答項設定" />
 
-                            {mode !== QuizMode.sort && (
-                                <>
-                                    <TableRow>
-                                        <TableCell component="th">
-                                            答項排序
-                                        </TableCell>
-                                        <TableCell component="th"></TableCell>
-                                    </TableRow>
-                                    <TableRow
-                                        sx={{
-                                            position: 'relative',
-                                            height: 80,
-                                        }}
+                            <TableRow>
+                                <TableCell component="th">答項寬度</TableCell>
+                                <TableCell component="th"></TableCell>
+                            </TableRow>
+                            <TableRow
+                                sx={{
+                                    position: 'relative',
+                                    height: 64,
+                                }}
+                            >
+                                <TableCell
+                                    className="absolute-center"
+                                    sx={{
+                                        px: 2,
+                                        pt: 1.5,
+                                        width: '100%',
+                                        height: '100% !important',
+                                    }}
+                                >
+                                    <Stack
+                                        direction="row"
+                                        justifyContent="space-around"
+                                        alignItems="center"
+                                        spacing={2}
                                     >
-                                        <TableCell
-                                            className="absolute-center"
-                                            sx={{
-                                                p: 0,
-                                                width: '100%',
-                                                height: '100% !important',
-                                            }}
-                                        >
-                                            <Stack
-                                                direction="row"
-                                                justifyContent="space-around"
-                                                alignItems="center"
+                                        <Box sx={{ width: 1 / 3 }}>
+                                            <StyledTextField
+                                                label="手機"
+                                                name="xs"
+                                                placeholder="auto"
+                                                value={responsive?.xs ?? 'auto'}
+                                                variant="standard"
+                                                onChange={
+                                                    handleUpdateResponsive
+                                                }
+                                                fullWidth
+                                                select
                                             >
-                                                <Button
-                                                    onClick={() =>
-                                                        handleUpdateQuiz({
-                                                            direction: 'row',
-                                                        })
-                                                    }
-                                                    sx={{
-                                                        width: '50%',
-                                                        bgcolor: (theme) =>
-                                                            direction === 'row'
-                                                                ? theme.palette
-                                                                      .grey[900]
-                                                                : '',
-                                                    }}
-                                                >
-                                                    <Stack direction="column">
-                                                        <CardHorizonImage />
-                                                        水平
-                                                    </Stack>
-                                                </Button>
-                                                <Button
-                                                    onClick={() =>
-                                                        handleUpdateQuiz({
-                                                            direction: 'column',
-                                                        })
-                                                    }
-                                                    sx={{
-                                                        width: '50%',
-                                                        bgcolor: (theme) =>
-                                                            direction ===
-                                                            'column'
-                                                                ? theme.palette
-                                                                      .grey[900]
-                                                                : '',
-                                                    }}
-                                                >
-                                                    <Stack direction="column">
-                                                        <CardVerticalImage />
-                                                        垂直
-                                                    </Stack>
-                                                </Button>
-                                            </Stack>
-                                        </TableCell>
-                                        <TableCell
-                                            sx={{ borderBottom: 0 }}
-                                        ></TableCell>
-                                    </TableRow>
-                                </>
-                            )}
+                                                {responsiveOptions.map((el) => (
+                                                    <MenuItem
+                                                        key={el.value}
+                                                        value={el.value}
+                                                    >
+                                                        {el.label}
+                                                    </MenuItem>
+                                                ))}
+                                            </StyledTextField>
+                                        </Box>
+                                        <Box sx={{ width: 1 / 3 }}>
+                                            <StyledTextField
+                                                label="平板"
+                                                name="sm"
+                                                placeholder="auto"
+                                                value={responsive?.sm ?? 'auto'}
+                                                variant="standard"
+                                                onChange={
+                                                    handleUpdateResponsive
+                                                }
+                                                fullWidth
+                                                select
+                                            >
+                                                {responsiveOptions.map((el) => (
+                                                    <MenuItem
+                                                        key={el.value}
+                                                        value={el.value}
+                                                    >
+                                                        {el.label}
+                                                    </MenuItem>
+                                                ))}
+                                            </StyledTextField>
+                                        </Box>
+                                        <Box sx={{ width: 1 / 3 }}>
+                                            <StyledTextField
+                                                label="電腦"
+                                                name="lg"
+                                                placeholder="auto"
+                                                value={responsive?.lg ?? 'auto'}
+                                                variant="standard"
+                                                onChange={
+                                                    handleUpdateResponsive
+                                                }
+                                                fullWidth
+                                                select
+                                            >
+                                                {responsiveOptions.map((el) => (
+                                                    <MenuItem
+                                                        key={el.value}
+                                                        value={el.value}
+                                                    >
+                                                        {el.label}
+                                                    </MenuItem>
+                                                ))}
+                                            </StyledTextField>
+                                        </Box>
+                                    </Stack>
+                                </TableCell>
+                                <TableCell sx={{ borderBottom: 0 }}></TableCell>
+                            </TableRow>
+
+                            <TableRow>
+                                <TableCell component="th">答項留白</TableCell>
+                                <TableCell component="th"></TableCell>
+                            </TableRow>
+                            <TableRow
+                                sx={{
+                                    position: 'relative',
+                                    height: 64,
+                                }}
+                            >
+                                <TableCell
+                                    className="absolute-center"
+                                    sx={{
+                                        px: 2,
+                                        pt: 1.5,
+                                        width: '100%',
+                                        height: '100% !important',
+                                    }}
+                                >
+                                    <Stack
+                                        direction="row"
+                                        justifyContent="space-around"
+                                        alignItems="center"
+                                        spacing={2}
+                                    >
+                                        <Box sx={{ width: 1 / 3 }}>
+                                            <NumberFormat
+                                                label="手機"
+                                                customInput={StyledTextField}
+                                                variant="standard"
+                                                placeholder="1"
+                                                value={px.xs}
+                                                onValueChange={({ value }) => {
+                                                    handleUpdatePadding({
+                                                        value: value
+                                                            ? Number(value)
+                                                            : NaN,
+                                                        name: 'xs',
+                                                    })
+                                                }}
+                                                fullWidth
+                                            />
+                                        </Box>
+                                        <Box sx={{ width: 1 / 3 }}>
+                                            <NumberFormat
+                                                label="平板"
+                                                customInput={StyledTextField}
+                                                variant="standard"
+                                                placeholder="1"
+                                                value={px.sm}
+                                                onValueChange={({ value }) => {
+                                                    handleUpdatePadding({
+                                                        value: value
+                                                            ? Number(value)
+                                                            : NaN,
+                                                        name: 'sm',
+                                                    })
+                                                }}
+                                                fullWidth
+                                            />
+                                        </Box>
+                                        <Box sx={{ width: 1 / 3 }}>
+                                            <NumberFormat
+                                                label="電腦"
+                                                customInput={StyledTextField}
+                                                variant="standard"
+                                                placeholder="1"
+                                                value={px.lg}
+                                                onValueChange={({ value }) => {
+                                                    handleUpdatePadding({
+                                                        value: value
+                                                            ? Number(value)
+                                                            : NaN,
+                                                        name: 'lg',
+                                                    })
+                                                }}
+                                                fullWidth
+                                            />
+                                        </Box>
+                                    </Stack>
+                                </TableCell>
+                                <TableCell sx={{ borderBottom: 0 }}></TableCell>
+                            </TableRow>
+
                             <TableRow>
                                 <TableCell>圖片</TableCell>
                                 <TableCell>

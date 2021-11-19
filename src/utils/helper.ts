@@ -160,7 +160,16 @@ export function getDefaultQuiz(id: string, mode: QuizMode): QuizType {
                 tagsId: [],
                 maxChoices: 1,
                 showImage: false,
-                direction: 'column',
+                responsive: {
+                    xs: 12,
+                    sm: 6,
+                    lg: 3,
+                },
+                px: {
+                    xs: 1,
+                    sm: 1,
+                    lg: 1,
+                },
             }
             return quiz
         }
@@ -172,7 +181,16 @@ export function getDefaultQuiz(id: string, mode: QuizMode): QuizType {
                 tagsId: [],
                 maxChoices: 4,
                 showImage: false,
-                direction: 'column',
+                responsive: {
+                    xs: 8,
+                    sm: 6,
+                    lg: 4,
+                },
+                px: {
+                    xs: 1,
+                    sm: 1,
+                    lg: 1,
+                },
             }
             return quiz
         }
@@ -183,7 +201,16 @@ export function getDefaultQuiz(id: string, mode: QuizMode): QuizType {
                 values: [],
                 tagsId: [],
                 showImage: false,
-                direction: 'row',
+                responsive: {
+                    xs: 6,
+                    sm: 4,
+                    lg: 3,
+                },
+                px: {
+                    xs: 1,
+                    sm: 1,
+                    lg: 1,
+                },
             }
             return quiz
         }

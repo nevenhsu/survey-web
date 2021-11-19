@@ -2,7 +2,7 @@ import * as React from 'react'
 import _ from 'lodash'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import Grid, { GridSize } from '@mui/material/Grid'
+import Grid from '@mui/material/Grid'
 import ChoiceView from 'components/Answer/QuizView/Quiz/ChoiceView'
 import CustomButton, {
     CustomButtonProps,
@@ -23,11 +23,9 @@ export default function SelectionView(props: SelectionViewProps) {
         choices = [],
         maxChoices,
         showImage,
-        direction,
+        responsive,
+        px,
     } = quizProps
-
-    const responsive: { [key: string]: GridSize } =
-        direction === 'row' ? { xs: 6 } : { xs: 12 }
 
     const toggleSelected = (id: string) => {
         if (id) {
@@ -59,10 +57,10 @@ export default function SelectionView(props: SelectionViewProps) {
                 最多可選擇{maxChoices}項
             </Typography>
             <Box sx={{ height: 16 }} />
-            <Box sx={{ width: 4 / 5, textAlign: 'center' }}>
+            <Box sx={{ width: '100%', textAlign: 'center', px }}>
                 <Grid
                     container
-                    direction={direction}
+                    direction="row"
                     alignItems="center"
                     justifyContent="center"
                     spacing={2}

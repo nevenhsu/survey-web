@@ -44,7 +44,7 @@ const StyledBox = styled(Box, {
         : '',
     width: '100%',
     height: 'auto',
-    minWidth: 48,
+    minWidth: 96,
     minHeight: 32,
 }))
 

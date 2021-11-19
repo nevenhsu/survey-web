@@ -2,7 +2,7 @@ import * as React from 'react'
 import _ from 'lodash'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import Stack from '@mui/material/Stack'
+import Grid from '@mui/material/Grid'
 import ChoiceView from 'components/Answer/QuizView/Quiz/ChoiceView'
 import { shuffle } from 'utils/helper'
 import type { OnChangeInput, OneInTwoType, ChoiceType } from 'common/types'
@@ -16,7 +16,7 @@ type OneInTwoViewProps = {
 
 export default function OneInTwoView(props: OneInTwoViewProps) {
     const { title, quizProps, onChange, onDone } = props
-    const { choices = [], values = [], showImage, direction } = quizProps
+    const { choices = [], values = [], showImage, responsive, px } = quizProps
 
     const [current, setCurrent] = React.useState(0)
     const choiceGroups = React.useMemo(() => {
@@ -49,24 +49,27 @@ export default function OneInTwoView(props: OneInTwoViewProps) {
         <>
             <Typography variant="h6">{title}</Typography>
             <Box sx={{ height: 16 }} />
-            <Box sx={{ width: 4 / 5, textAlign: 'center' }}>
-                <Stack
-                    direction={direction || 'row'}
-                    justifyContent="center"
+            <Box sx={{ width: '100%', textAlign: 'center', px }}>
+                <Grid
+                    container
+                    direction="row"
                     alignItems="center"
+                    justifyContent="center"
                     spacing={2}
                 >
                     {_.map(choiceGroup, (el) => (
-                        <ChoiceView
-                            key={el.id}
-                            choice={el}
-                            showImage={showImage}
-                            onClick={(event) => {
-                                handleClick(el.id)
-                            }}
-                        />
+                        <Grid key={el.id} item {...responsive}>
+                            <ChoiceView
+                                key={el.id}
+                                choice={el}
+                                showImage={showImage}
+                                onClick={(event) => {
+                                    handleClick(el.id)
+                                }}
+                            />
+                        </Grid>
                     ))}
-                </Stack>
+                </Grid>
             </Box>
         </>
     )

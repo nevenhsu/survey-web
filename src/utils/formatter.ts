@@ -14,6 +14,8 @@ import type {
     Answer,
     ChoiceType,
     Result,
+    Responsive,
+    Padding,
 } from 'common/types'
 
 export function surveyFormatter(survey: Survey): Survey {
@@ -101,16 +103,21 @@ export function quizFormatter(value: QuizType): QuizType {
                 choices = [],
                 values = [],
                 tagsId = [],
+                responsive,
+                px,
                 ...others
             } = quiz as SelectionQuiz
+
             const selectionQuiz: SelectionQuiz = {
+                ...others,
+                ...layoutFormatter(responsive, px),
                 showImage: toBool(showImage),
                 maxChoices: toNumber(maxChoices) ?? 1,
                 choices: _.map(choices, (el) => choiceFormatter(el)),
                 values,
                 tagsId,
-                ...others,
             }
+
             return selectionQuiz
         }
         case QuizMode.sort: {
@@ -120,10 +127,14 @@ export function quizFormatter(value: QuizType): QuizType {
                 choices = [],
                 values = [],
                 tagsId = [],
+                responsive,
+                px,
                 ...others
             } = quiz as SelectionQuiz
+
             const sortQuiz: SelectionQuiz = {
                 ...others,
+                ...layoutFormatter(responsive, px),
                 showImage: toBool(showImage),
                 maxChoices: toNumber(maxChoices) ?? 4,
                 choices: _.map(choices, (el) => choiceFormatter(el)),
@@ -148,11 +159,14 @@ export function quizFormatter(value: QuizType): QuizType {
                 choices = [],
                 values = [],
                 tagsId = [],
+                responsive,
+                px,
                 ...others
             } = quiz as OneInTwoQuiz
 
             const oneInTwoQuiz: OneInTwoQuiz = {
                 ...others,
+                ...layoutFormatter(responsive, px),
                 showImage: toBool(showImage),
                 choices: _.map(choices, (el) => choiceFormatter(el)),
                 values,
@@ -253,5 +267,24 @@ export function resultFormatter(value: Result) {
         range: _.map(range, (n) => toNumber(n) || 0),
         tags,
         components,
+    }
+}
+
+export function layoutFormatter(resp?: Responsive, pxd?: Padding) {
+    const responsive = {
+        xs: toNumber(resp?.xs) || 12,
+        sm: toNumber(resp?.sm) || 6,
+        lg: toNumber(resp?.lg) || 3,
+    } as Responsive
+
+    const px: Padding = {
+        xs: toNumber(pxd?.xs) ?? 1,
+        sm: toNumber(pxd?.sm) ?? 1,
+        lg: toNumber(pxd?.lg) ?? 1,
+    }
+
+    return {
+        responsive,
+        px,
     }
 }

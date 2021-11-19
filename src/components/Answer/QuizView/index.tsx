@@ -148,7 +148,8 @@ export default function QuizView(props: QuizViewProps) {
                 const {
                     choices = [],
                     showImage = false,
-                    direction = 'row',
+                    responsive,
+                    px,
                 } = quiz as OneInTwoQuiz
 
                 return (
@@ -158,7 +159,8 @@ export default function QuizView(props: QuizViewProps) {
                             choices,
                             values,
                             showImage,
-                            direction,
+                            responsive,
+                            px,
                         }}
                         onChange={(event) => {
                             handleUpdateAnswer({
@@ -174,7 +176,8 @@ export default function QuizView(props: QuizViewProps) {
                     choices = [],
                     maxChoices = 1,
                     showImage = false,
-                    direction = 'column',
+                    responsive,
+                    px,
                 } = quiz as SelectionQuiz
 
                 return (
@@ -185,7 +188,8 @@ export default function QuizView(props: QuizViewProps) {
                             values,
                             maxChoices,
                             showImage,
-                            direction,
+                            responsive,
+                            px,
                         }}
                         buttonProps={{
                             customProps,
@@ -205,6 +209,8 @@ export default function QuizView(props: QuizViewProps) {
                     choices = [],
                     maxChoices = 4,
                     showImage = false,
+                    responsive,
+                    px,
                 } = quiz as SelectionQuiz
 
                 return (
@@ -215,6 +221,8 @@ export default function QuizView(props: QuizViewProps) {
                             values,
                             maxChoices,
                             showImage,
+                            responsive,
+                            px,
                         }}
                         buttonProps={{
                             customProps,

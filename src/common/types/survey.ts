@@ -1,4 +1,5 @@
 import type { Variant } from '@mui/material/styles/createTypography'
+import type { GridSize } from '@mui/material/Grid'
 
 export type Survey = {
     id: string
@@ -110,7 +111,8 @@ export type SelectionType = {
     tagsId: string[]
     maxChoices: number
     showImage: boolean
-    direction?: 'row' | 'column'
+    responsive: Responsive
+    px: Padding
 }
 
 export type SelectionQuiz = Quiz & SelectionType
@@ -120,7 +122,8 @@ export type OneInTwoType = {
     values: string[] // choice id
     tagsId: string[]
     showImage: boolean
-    direction?: 'row' | 'column'
+    responsive: Responsive
+    px: Padding
 }
 
 export type OneInTwoQuiz = Quiz & OneInTwoType
@@ -224,3 +227,15 @@ export enum FinalMode {
 }
 
 export type DeviceType = 'mobile' | 'laptop' | 'desktop'
+
+export type Responsive = {
+    xs: GridSize
+    sm: GridSize
+    lg: GridSize
+}
+
+export type Padding = {
+    xs: number
+    sm: number
+    lg: number
+}

@@ -10,6 +10,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Stack from '@mui/material/Stack'
+import Grid from '@mui/material/Grid'
 import Badge from '@mui/material/Badge'
 import ChoiceView from 'components/Answer/QuizView/Quiz/ChoiceView'
 import CustomButton, {
@@ -39,7 +40,14 @@ export default function SortView(props: SortViewProps) {
     const matches = useMediaQuery('(min-width:600px)')
 
     const { title, quizProps, buttonProps, onChange } = props
-    const { values = [], choices = [], maxChoices, showImage } = quizProps
+    const {
+        values = [],
+        choices = [],
+        maxChoices,
+        showImage,
+        responsive,
+        px,
+    } = quizProps
 
     const [options, setOptions] = React.useState<OptionsType>({
         selected: [],
@@ -196,16 +204,25 @@ export default function SortView(props: SortViewProps) {
     )
 
     const renderMobile = () => (
-        <Box sx={{ width: 4 / 5, textAlign: 'center' }}>
-            <Stack
+        <Box sx={{ width: '100%', textAlign: 'center', px }}>
+            <Grid
+                container
                 direction="column"
                 alignItems="center"
                 justifyContent="center"
                 spacing={2}
             >
-                {selected.map((el, index) => renderChoice(el, index, true))}
-                {unselected.map((el, index) => renderChoice(el, index, false))}
-            </Stack>
+                {selected.map((el, index) => (
+                    <Grid key={el.id} item {...responsive}>
+                        {renderChoice(el, index, true)}
+                    </Grid>
+                ))}
+                {unselected.map((el, index) => (
+                    <Grid key={el.id} item {...responsive}>
+                        {renderChoice(el, index, false)}
+                    </Grid>
+                ))}
+            </Grid>
         </Box>
     )
 

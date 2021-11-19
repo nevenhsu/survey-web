@@ -130,7 +130,8 @@ export default function Editor(props: EditorProps) {
                     choices = [],
                     maxChoices = 4,
                     showImage = false,
-                    direction,
+                    responsive,
+                    px,
                 } = quiz as SelectionQuiz
                 return (
                     <SelectionView
@@ -139,7 +140,8 @@ export default function Editor(props: EditorProps) {
                             choices,
                             maxChoices,
                             showImage,
-                            direction,
+                            responsive,
+                            px,
                         }}
                         customProps={customProps}
                         onChange={(event) => {
@@ -153,8 +155,9 @@ export default function Editor(props: EditorProps) {
             case QuizMode.oneInTwo: {
                 const {
                     choices = [],
-                    direction,
                     showImage,
+                    responsive,
+                    px,
                 } = quiz as OneInTwoQuiz
 
                 return (
@@ -162,8 +165,9 @@ export default function Editor(props: EditorProps) {
                         title={title}
                         quizProps={{
                             choices,
-                            direction,
                             showImage,
+                            responsive,
+                            px,
                         }}
                         onChange={(event) => {
                             handleUpdateQuiz({
