@@ -60,11 +60,11 @@ export const saveSurvey = createAsyncThunk(
 
 export const reloadFromCloud = createAsyncThunk(
     'survey/reloadFromCloud',
-    async () => {
+    async (id?: string) => {
         const localSurveys = LocalSurveys.getInstance()
-        const id = localSurveys.getCurrentId() ?? ''
+        const surveyId = id || localSurveys.getCurrentId() || ''
 
-        const data = await surveyApi.getSurvey(id)
+        const data = await surveyApi.getSurvey(surveyId)
         return data
     }
 )
@@ -326,9 +326,10 @@ export const surveySlice = createSlice({
 
             state.lastEditingAt = Date.now()
         },
-        reloadFromLocal: (state, action: PayloadAction<void>) => {
+        reloadFromLocal: (state, action: PayloadAction<string | undefined>) => {
             const localSurveys = LocalSurveys.getInstance()
-            const currentId = localSurveys.getCurrentId() ?? ''
+            const currentId =
+                action.payload || localSurveys.getCurrentId() || ''
             const surveyData = localSurveys.getSurveyById(currentId)
 
             if (surveyData && _.includes(modes, surveyData.mode)) {
@@ -338,6 +339,8 @@ export const surveySlice = createSlice({
                 state.surveys[id] = survey
                 state.lastEditingAt = updatedAt
                 state.mode = mode
+
+                localSurveys.setCurrentId(id)
             } else {
                 state.step = SurveyStep.start
             }
@@ -351,7 +354,6 @@ export const surveySlice = createSlice({
 
             const localSurveys = LocalSurveys.getInstance()
             localSurveys.setCurrentId(id)
-            localSurveys.setSurveyId(id)
             localSurveys.setSurveyById(id, survey)
 
             surveys[id] = survey
@@ -384,6 +386,7 @@ export const surveySlice = createSlice({
         })
         builder.addCase(reloadFromCloud.fulfilled, (state, action) => {
             const survey = action.payload
+
             if (survey && _.includes(modes, survey.mode)) {
                 const { surveys } = state
 
@@ -391,9 +394,12 @@ export const surveySlice = createSlice({
                 const oldSurvey = surveys[id]
 
                 if (_.isEmpty(oldSurvey) || updatedAt > oldSurvey.updatedAt) {
+                    const localSurveys = LocalSurveys.getInstance()
                     surveys[id] = survey
 
                     updateLocalSurvey(id, survey)
+                    localSurveys.setSurveyId(id)
+                    localSurveys.setCurrentId(id)
 
                     state.currentId = id
                     state.lastEditingAt = updatedAt
