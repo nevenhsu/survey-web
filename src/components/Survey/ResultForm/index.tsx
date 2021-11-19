@@ -112,7 +112,7 @@ export default function ResultForm() {
     )
 
     const { uploading, handlePreview } = usePreview(survey)
-    const selectedResult = _.get(list, [selectedId])
+    const selectedResult: Result | undefined = _.get(list, [selectedId])
 
     const nextStep = () => {
         dispatch(setStep(SurveyStep.final))
@@ -631,7 +631,13 @@ export default function ResultForm() {
                                 >
                                     <AspectRatioBox
                                         ratio={getRatio(device)}
-                                        sx={{ bgcolor: 'white' }}
+                                        sx={{
+                                            bgcolor: 'white',
+                                            '& > div': {
+                                                bgcolor:
+                                                    selectedResult?.bgcolor,
+                                            },
+                                        }}
                                     >
                                         <EditingResult
                                             surveyId={surveyId}

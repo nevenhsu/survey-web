@@ -1,6 +1,7 @@
 import * as React from 'react'
 import _ from 'lodash'
 import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 import User from 'utils/user'
 import ThemeProvider from 'theme/ThemeProvider'
 import { Contexts } from 'components/common/Component'
@@ -32,7 +33,7 @@ export default function EditingResult(props: EditingQuizProps) {
     } = React.useContext(Context)
 
     const { surveyId, result } = props
-    const { id: resultId, components = [] } = result ?? {}
+    const { id: resultId, components = [], bgcolor } = result ?? {}
 
     const selectedComponent = React.useMemo(() => {
         return getComponent(components, [...idPath, selectedId])
@@ -123,26 +124,36 @@ export default function EditingResult(props: EditingQuizProps) {
                         reset()
                     }
                 }}
-                sx={{
-                    backgroundColor: 'common.white',
-                }}
             >
-                <ComponentList
-                    components={components}
-                    idPath={[]}
-                    selectedComponent={selectedComponent}
-                    onAdd={handleAdd}
-                    onSelect={(component, idPath: string[]) => {
-                        if (setSelectedId) {
-                            setSelectedId(component.id)
-                        }
+                {Boolean(resultId) ? (
+                    <ComponentList
+                        components={components}
+                        idPath={[]}
+                        selectedComponent={selectedComponent}
+                        onAdd={handleAdd}
+                        onSelect={(component, idPath: string[]) => {
+                            if (setSelectedId) {
+                                setSelectedId(component.id)
+                            }
 
-                        if (setIdPath) {
-                            setIdPath(idPath)
-                        }
-                    }}
-                    onChange={handleChange}
-                />
+                            if (setIdPath) {
+                                setIdPath(idPath)
+                            }
+                        }}
+                        onChange={handleChange}
+                    />
+                ) : (
+                    <Typography
+                        variant="h6"
+                        sx={{
+                            py: 4,
+                            textAlign: 'center',
+                            color: 'text.secondary',
+                        }}
+                    >
+                        請先選擇一個結果
+                    </Typography>
+                )}
             </Box>
         </ThemeProvider>
     )

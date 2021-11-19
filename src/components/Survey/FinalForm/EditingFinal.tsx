@@ -67,9 +67,6 @@ export default function EditingFinal() {
 
     return (
         <Box
-            sx={{
-                backgroundColor: 'common.white',
-            }}
             onClick={() => {
                 if (reset) {
                     reset()

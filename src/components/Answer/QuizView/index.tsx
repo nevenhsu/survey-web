@@ -122,6 +122,7 @@ export default function QuizView(props: QuizViewProps) {
                     choices = [],
                     left,
                     right,
+                    countDown,
                     showImage,
                 } = quiz as DraggerQuiz
 
@@ -133,6 +134,7 @@ export default function QuizView(props: QuizViewProps) {
                             values,
                             left,
                             right,
+                            countDown,
                             showImage,
                         }}
                         onChange={(event) => {

@@ -442,6 +442,15 @@ export const selectCurrentSurvey = (state: RootState) => {
     return surveys[currentId] || {}
 }
 
+export const selectResult = (id?: string) => (state: RootState) => {
+    if (id) {
+        const { surveys, currentId } = state.survey
+        const { results } = surveys[currentId] ?? {}
+        const { list } = results ?? {}
+        return _.get(list, [id]) as Result
+    }
+}
+
 const updateLocalSurvey = (id: string, value: Survey) => {
     const localSurveys = LocalSurveys.getInstance()
 

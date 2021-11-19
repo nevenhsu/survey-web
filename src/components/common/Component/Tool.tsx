@@ -15,10 +15,16 @@ import ImageUploader from 'components/common/ImageUploader'
 import { ComponentType } from 'common/types'
 import type { Component } from 'common/types'
 
+type Page = {
+    bgcolor?: string
+}
+
 type ComponentToolProps = {
+    page?: Page
     component?: Component
     onChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>
     onDelete: (event: React.MouseEvent<HTMLButtonElement>) => void
+    handleChangePage: React.ChangeEventHandler<HTMLInputElement>
 }
 
 const displayOptions = [
@@ -93,7 +99,7 @@ const Header = (props: { title: string }) => {
 }
 
 export default function ComponentTool(props: ComponentToolProps) {
-    const { component, onChange, onDelete } = props
+    const { page, component, onChange, onDelete, handleChangePage } = props
 
     const {
         id,
@@ -124,6 +130,21 @@ export default function ComponentTool(props: ComponentToolProps) {
         >
             <Table size="small">
                 <TableBody>
+                    <Header title="頁面設定" />
+                    <TableRow>
+                        <TableCell>頁面顏色</TableCell>
+                        <TableCell>
+                            <StyledTextField
+                                name="bgcolor"
+                                value={page?.bgcolor ?? ''}
+                                variant="standard"
+                                placeholder="#ffffff"
+                                onChange={handleChangePage}
+                                fullWidth
+                            />
+                        </TableCell>
+                    </TableRow>
+
                     <Header title="元件設定" />
 
                     {type === ComponentType.image && (

@@ -41,6 +41,7 @@ export type Final = {
     mode: FinalMode
     components: Component[]
     data: FinalInfo
+    bgcolor?: string
 }
 
 export type FinalInfo = {
@@ -145,6 +146,7 @@ export type DraggerType = {
     left: DraggerButton
     right: DraggerButton
     showImage: boolean
+    countDown?: number
 }
 
 export type DraggerQuiz = Quiz & DraggerType
@@ -209,6 +211,7 @@ export type Result = {
     tags: { [tagId: string]: string[] }
     range: number[]
     components: Component[]
+    bgcolor?: string
 }
 
 export type ResultList = { [id: string]: Result }

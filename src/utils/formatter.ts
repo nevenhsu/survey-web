@@ -177,6 +177,7 @@ export function quizFormatter(value: QuizType): QuizType {
         case QuizMode.dragger: {
             const {
                 showImage,
+                countDown,
                 choices = [],
                 values = [],
                 ...others
@@ -184,6 +185,7 @@ export function quizFormatter(value: QuizType): QuizType {
             const draggerQuiz: DraggerQuiz = {
                 ...others,
                 showImage: toBool(showImage),
+                countDown: toNumber(countDown),
                 choices,
                 values,
             }
