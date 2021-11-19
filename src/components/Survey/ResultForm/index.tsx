@@ -791,8 +791,10 @@ function getAllDraggerChoices(quizzes: QuizType[]) {
 
 function getResultRange(results: Result[]) {
     const values = _.flatten(results.map((el) => el.range))
-    return _.filter(
+    const val = _.filter(
         _.uniq(values),
         (el) => _.isNumber(el) && !_.isNaN(el)
     ).sort((a, b) => a - b)
+
+    return val
 }
