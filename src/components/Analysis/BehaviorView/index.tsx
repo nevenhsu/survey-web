@@ -110,7 +110,7 @@ export default function BehaviorView() {
                                 轉換率
                             </Typography>
                             <Typography sx={{ mb: 2 }}>
-                                說明文字說明文字說明文字說明文字
+                                轉換率代表測驗有多大機率成功將參與者轉換進行測驗結束後的操作，例如點擊推薦商品前往商品頁面
                             </Typography>
 
                             {behaviorData.overviews.map((el) => (
@@ -247,7 +247,7 @@ export default function BehaviorView() {
                                 流量
                             </Typography>
                             <Typography sx={{ mb: 2 }}>
-                                說明文字說明文字說明文字說明文字
+                                測驗的整理流量，流量越高代表該裝置或渠道成功帶來更多瀏覽者
                             </Typography>
 
                             <Stack

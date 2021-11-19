@@ -337,7 +337,7 @@ export default function QuizView() {
             <Box sx={{ p: 3, borderBottom: '1px solid' }}>
                 <Typography variant="h6">單題結果</Typography>
                 <Typography variant="body1">
-                    說明文字說明文字說明文字說明文字
+                    在此可以查看測驗中個別題目的填答數據
                 </Typography>
             </Box>
             <Grid container sx={{ minHeight: 'calc(100vh - 218px)' }}>

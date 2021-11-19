@@ -100,7 +100,7 @@ export default function LaunchForm() {
                                 : '恭喜！測驗設定完成！'}
                         </Typography>
                         <Typography variant="body1">
-                            你好棒，建議先完成預覽再正式發佈測驗
+                            建議先最後預覽沒問題了，再正式發佈測驗喔！
                         </Typography>
                     </Box>
 

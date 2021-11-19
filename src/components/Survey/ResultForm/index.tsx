@@ -421,7 +421,7 @@ export default function ResultForm() {
                     1. 建立得分等第
                 </Typography>
                 <Typography variant="subtitle2" sx={{ mb: 2 }}>
-                    一點點說明文字一點點說明文字
+                    在此可以決定如何按照得分多寡切分等第，建立個人化結果
                 </Typography>
 
                 <NumberFormat
@@ -542,7 +542,9 @@ export default function ResultForm() {
             >
                 <Box>
                     <Typography variant="h6">編輯個人化測驗結果</Typography>
-                    <Typography variant="body1">說明文字說明文字</Typography>
+                    <Typography variant="body1">
+                        測驗填答者拖曳題目到正確選項中，會得到分數，分數多寡能用以決定個人化結果的分派
+                    </Typography>
                 </Box>
                 <Box>
                     <LoadingButton

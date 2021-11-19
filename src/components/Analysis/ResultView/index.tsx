@@ -203,7 +203,7 @@ export default function ResultView() {
                                 策略建議與行為分析
                             </Typography>
                             <Typography sx={{ mb: 2 }}>
-                                說明文字說明文字說明文字說明文字
+                                在此可以查看超市調為您客製化的策略建議與相關測驗參與者的行為分析
                             </Typography>
 
                             <ElementBox name={ResultName.strategyAdvice}>
@@ -296,7 +296,7 @@ export default function ResultView() {
                                 靈感來源
                             </Typography>
                             <Typography sx={{ mb: 2 }}>
-                                說明文字說明文字說明文字說明文字
+                                在此超市調運用測驗填答的相關數據，為您客製化提供行銷活動的切入靈感
                             </Typography>
 
                             <ElementBox name={ResultName.correlationAnalysis}>

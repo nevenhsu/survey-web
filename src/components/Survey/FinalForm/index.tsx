@@ -101,7 +101,9 @@ export default function FinalForm() {
             >
                 <Box>
                     <Typography variant="h6">編輯測驗結果</Typography>
-                    <Typography variant="body1">（說明文字）</Typography>
+                    <Typography variant="body1">
+                        在此可以編輯測驗填答者都會看見的共同結果，可用以搜集聯繫方式等相關必要資訊
+                    </Typography>
                 </Box>
                 <Box>
                     <LoadingButton
