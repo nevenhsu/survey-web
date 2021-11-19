@@ -1,5 +1,6 @@
 import * as React from 'react'
 import _ from 'lodash'
+import qs from 'query-string'
 import { VariantType, useSnackbar } from 'notistack'
 import { styled } from '@mui/material/styles'
 import Tabs from '@mui/material/Tabs'
@@ -79,6 +80,7 @@ export default function Editor() {
 
     const [uploading, setUploading] = React.useState(false)
 
+    const location = useAppSelector((state) => state.router.location)
     const survey = useAppSelector(selectCurrentSurvey)
     const lastEditingAt = useAppSelector(selectLastEditingAt)
 
@@ -133,14 +135,16 @@ export default function Editor() {
         const user = User.getInstance()
         const { step } = user.getValue()
 
+        const { id } = qs.parse(location.search) as { id?: string }
+
         if (!_.isNil(step)) {
             dispatch(setStep(step))
         }
 
-        dispatch(reloadFromLocal())
+        dispatch(reloadFromLocal(id))
 
         setTimeout(() => {
-            dispatch(reloadFromCloud())
+            dispatch(reloadFromCloud(id))
         }, 0)
     }, [])
 

@@ -42,6 +42,7 @@ export default class Surveys extends Storage<string> {
 
     public setCurrentId(id: string) {
         this.set(Locals.CURRENT_ID, id)
+        this.setSurveyId(id)
     }
 
     public getSurveyById(id: string) {
