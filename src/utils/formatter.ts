@@ -39,6 +39,14 @@ export function surveyFormatter(survey: Survey): Survey {
 
     const { showProgress, ...s } = setting ?? {}
 
+    _.forEach(tags, (tag, id) => {
+        const { values, ...t } = tag
+        tags[id] = {
+            ...t,
+            values: _.filter(values, (el) => el !== '' && !_.isNil(el)),
+        }
+    })
+
     return {
         ...others,
         id,
