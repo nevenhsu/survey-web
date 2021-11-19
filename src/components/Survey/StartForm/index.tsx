@@ -76,6 +76,7 @@ export default function StartForm() {
                     <Button
                         variant="contained"
                         color="secondary"
+                        size="large"
                         onClick={() => handleClick(Mode.oneInTwo)}
                     >
                         選擇測驗
@@ -111,6 +112,7 @@ export default function StartForm() {
                     <Button
                         variant="contained"
                         color="secondary"
+                        size="large"
                         onClick={() => handleClick(Mode.dragger)}
                     >
                         選擇測驗

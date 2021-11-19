@@ -64,28 +64,53 @@ export const colors = [
     grey,
 ]
 
+const greyPalette = {
+    700: '#444444',
+    800: '#333333',
+}
+
 export const lightPalette = {
     primary: {
-        light: '#A5A6F6',
-        main: '#7879F1',
-        dark: '#5D5FEF',
+        light: '#B3D1FF',
+        main: '#4A72FF',
+        dark: '#34579C',
     },
     secondary: {
-        light: '#E2FF91',
-        main: '#ABED1D',
-        dark: '#87D900',
+        light: '#C1DDFF',
+        main: '#4A72FF',
+        dark: '#0049D8',
     },
     error: {
-        light: '#FCDDEC',
-        main: '#F178B6',
-        dark: '#EF5DA8',
+        light: '#FCDDDD',
+        main: '#F17878',
+        dark: '#D85050',
     },
+    grey: greyPalette,
+}
+
+export const darkPalette = {
+    primary: {
+        light: '#D9EFFF',
+        main: '#94CCFF',
+        dark: '#517EF2',
+    },
+    secondary: {
+        light: '#D9EFFF',
+        main: '#94CCFF',
+        dark: '#517EF2',
+    },
+    error: {
+        light: '#FFD4D4',
+        main: '#FF9292',
+        dark: '#FF7A7A',
+    },
+    grey: greyPalette,
 }
 
 export const getDesignTokens = (mode: PaletteMode): PaletteOptions => {
     // const prefersLightMode = mode === 'light'
 
-    const palette = mode === 'light' ? lightPalette : lightPalette
+    const palette = mode === 'light' ? lightPalette : darkPalette
 
     return {
         mode,

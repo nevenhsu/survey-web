@@ -48,37 +48,39 @@ export default function Dragger() {
                     alignItems="center"
                     spacing={2}
                 >
-                    <Box sx={{ textAlign: 'center' }}>
+                    <Box sx={{ textAlign: 'center', width: '100%' }}>
                         <ImageBox
                             imageUrl="images/dragger/survey-1-1.png"
-                            sx={{ mb: 2 }}
+                            sx={{ mb: 2, borderRadius: 8, overflow: 'hidden' }}
                         />
-                        <Typography variant="caption">
-                            Highlight 圖片說明
+                        <Typography variant="body2">
+                            適合喜歡自我挑戰或自我充實的受眾
+                            <br />
+                            測驗主題可以很知識性，也能純粹好玩
                         </Typography>
                     </Box>
-                    <Box sx={{ textAlign: 'center' }}>
+                    <Box sx={{ textAlign: 'center', width: '100%' }}>
                         <ImageBox
                             imageUrl="images/dragger/survey-1-2.png"
-                            sx={{ mb: 2 }}
+                            sx={{ mb: 2, borderRadius: 8, overflow: 'hidden' }}
                         />
-                        <Typography variant="caption">
-                            Highlight 圖片說明
+                        <Typography variant="body2">
+                            透過隨機出題的固定題型，降低題目設計門檻，節省工作時間
                         </Typography>
                     </Box>
-                    <Box sx={{ textAlign: 'center' }}>
+                    <Box sx={{ textAlign: 'center', width: '100%' }}>
                         <ImageBox
                             imageUrl="images/dragger/survey-1-3.png"
-                            sx={{ mb: 2 }}
+                            sx={{ mb: 2, borderRadius: 8, overflow: 'hidden' }}
                         />
-                        <Typography variant="caption">
-                            Highlight 圖片說明
+                        <Typography variant="body2">
+                            最後有得分讓填答者想跟他人分享比較，或多玩幾次
                         </Typography>
                     </Box>
                 </Stack>
             </Box>
 
-            <Grid container spacing={2}>
+            <Grid container spacing={4}>
                 <Grid
                     item
                     sx={{
@@ -88,8 +90,8 @@ export default function Dragger() {
                         top: 0,
                     }}
                 >
-                    <Typography variant="subtitle1" sx={{ mb: 3 }}>
-                        來看看拖曳在做什麼
+                    <Typography variant="h6" sx={{ mb: 3 }}>
+                        來看看左右拖曳在做什麼
                     </Typography>
                     <Tabs
                         orientation="vertical"
@@ -174,7 +176,7 @@ export default function Dragger() {
                 <Grid item xs sx={{ width: `calc(100vw - 288px)` }}>
                     <Element name={BlockName.a}>
                         <Box sx={{ mb: 5 }}>
-                            <Typography variant="subtitle1" gutterBottom>
+                            <Typography variant="h6" gutterBottom>
                                 參與測驗
                             </Typography>
                             <Typography variant="body2" sx={{ mb: 2 }}>
@@ -187,13 +189,22 @@ export default function Dragger() {
                                 alignItems="center"
                                 spacing={1}
                             >
-                                <Box sx={{ textAlign: 'center' }}>
+                                <Box
+                                    sx={{ textAlign: 'center', width: '100%' }}
+                                >
                                     <ImageBox
                                         imageUrl="images/dragger/survey-2-1-1.png"
-                                        sx={{ mb: 2 }}
+                                        sx={{
+                                            mb: 2,
+                                            borderRadius: 8,
+                                            overflow: 'hidden',
+                                        }}
                                     />
-                                    <Typography variant="caption">
-                                        Highlight 圖片說明
+                                    <Typography
+                                        variant="body2"
+                                        sx={{ height: 48 }}
+                                    >
+                                        透過測驗主題設計與封面圖片營造，提高填答意願與動機
                                     </Typography>
                                 </Box>
 
@@ -202,26 +213,44 @@ export default function Dragger() {
                                     <Box sx={{ height: 24 }} />
                                 </Box>
 
-                                <Box sx={{ textAlign: 'center' }}>
+                                <Box
+                                    sx={{ textAlign: 'center', width: '100%' }}
+                                >
                                     <ImageBox
                                         imageUrl="images/dragger/survey-2-1-2.png"
-                                        sx={{ mb: 2 }}
+                                        sx={{
+                                            mb: 2,
+                                            borderRadius: 8,
+                                            overflow: 'hidden',
+                                        }}
                                     />
-                                    <Typography variant="caption">
-                                        Highlight 圖片說明
+                                    <Typography
+                                        variant="body2"
+                                        sx={{ height: 48 }}
+                                    >
+                                        填答者憑直覺回答測驗的問題
                                     </Typography>
                                 </Box>
                                 <Box sx={{ textAlign: 'center' }}>
                                     <ArrowRightIcon />
                                     <Box sx={{ height: 24 }} />
                                 </Box>
-                                <Box sx={{ textAlign: 'center' }}>
+                                <Box
+                                    sx={{ textAlign: 'center', width: '100%' }}
+                                >
                                     <ImageBox
                                         imageUrl="images/dragger/survey-2-1-3.png"
-                                        sx={{ mb: 2 }}
+                                        sx={{
+                                            mb: 2,
+                                            borderRadius: 8,
+                                            overflow: 'hidden',
+                                        }}
                                     />
-                                    <Typography variant="caption">
-                                        Highlight 圖片說明
+                                    <Typography
+                                        variant="body2"
+                                        sx={{ height: 48 }}
+                                    >
+                                        獲得等級結果，並想知道正確答案，可引導至更完整內容
                                     </Typography>
                                 </Box>
                             </Stack>
@@ -231,22 +260,28 @@ export default function Dragger() {
                         <Box sx={{ mb: 5 }}>
                             <Stack
                                 direction="row"
-                                alignItems="start"
+                                alignItems="center"
                                 spacing={2}
                             >
                                 <Box sx={{ flex: '0 0 33%' }}>
-                                    <Typography
-                                        variant="subtitle1"
-                                        gutterBottom
-                                    >
+                                    <Typography variant="h6" gutterBottom>
                                         測驗模組產生個人化結果
                                     </Typography>
                                     <Typography variant="body2">
-                                        模組能自動產生個人化結果給參與者
+                                        只要根據測驗題型設定題目與一定數量的選項，並在每個選項貼上標籤，平台將自動統計標籤數量，提供填答者個人化結果！
+                                    </Typography>
+                                    <Typography variant="caption">
+                                        ＊也可以新增標籤來搜集愈分析資料
                                     </Typography>
                                 </Box>
 
-                                <ImageBox imageUrl="images/dragger/survey-2-2.png" />
+                                <ImageBox
+                                    imageUrl="images/dragger/survey-2-2.png"
+                                    sx={{
+                                        borderRadius: 8,
+                                        overflow: 'hidden',
+                                    }}
+                                />
                             </Stack>
                         </Box>
                     </Element>
@@ -254,28 +289,31 @@ export default function Dragger() {
                         <Box sx={{ mb: 5 }}>
                             <Stack
                                 direction="row"
-                                alignItems="start"
+                                alignItems="center"
                                 spacing={2}
                             >
                                 <Box sx={{ flex: '0 0 33%' }}>
-                                    <Typography
-                                        variant="subtitle1"
-                                        gutterBottom
-                                    >
+                                    <Typography variant="h6" gutterBottom>
                                         個人化結果預覽
                                     </Typography>
                                     <Typography variant="body2">
-                                        模組預先建立了個人化結果範本供調整
+                                        個人化的結果是測驗中很重要的環節，若填答者認為測驗結果有收穫，或有趣，將大幅提高分享意願
                                     </Typography>
                                 </Box>
 
-                                <ImageBox imageUrl="images/dragger/survey-2-3.png" />
+                                <ImageBox
+                                    imageUrl="images/dragger/survey-2-3.png"
+                                    sx={{
+                                        borderRadius: 8,
+                                        overflow: 'hidden',
+                                    }}
+                                />
                             </Stack>
                         </Box>
                     </Element>
                     <Element name={BlockName.d}>
                         <Box sx={{ mb: 5 }}>
-                            <Typography variant="subtitle1" gutterBottom>
+                            <Typography variant="h6" gutterBottom>
                                 查看分析
                             </Typography>
                             <Typography variant="body2" sx={{ mb: 2 }}>
@@ -289,31 +327,43 @@ export default function Dragger() {
                             alignItems="center"
                             spacing={2}
                         >
-                            <Box sx={{ textAlign: 'center' }}>
+                            <Box sx={{ textAlign: 'center', width: '100%' }}>
                                 <ImageBox
                                     imageUrl="images/dragger/survey-3-1.png"
-                                    sx={{ mb: 2 }}
+                                    sx={{
+                                        mb: 2,
+                                        borderRadius: 8,
+                                        overflow: 'hidden',
+                                    }}
                                 />
-                                <Typography variant="caption">
-                                    Highlight 圖片說明
+                                <Typography variant="body2" sx={{ height: 48 }}>
+                                    流量來源管理與分析，可用於分流管理分析，來調整投放測驗資源配置
                                 </Typography>
                             </Box>
-                            <Box sx={{ textAlign: 'center' }}>
+                            <Box sx={{ textAlign: 'center', width: '100%' }}>
                                 <ImageBox
                                     imageUrl="images/dragger/survey-3-2.png"
-                                    sx={{ mb: 2 }}
+                                    sx={{
+                                        mb: 2,
+                                        borderRadius: 8,
+                                        overflow: 'hidden',
+                                    }}
                                 />
-                                <Typography variant="caption">
-                                    Highlight 圖片說明
+                                <Typography variant="body2" sx={{ height: 48 }}>
+                                    可以分析答題分佈，瞭解受眾認知或偏好
                                 </Typography>
                             </Box>
-                            <Box sx={{ textAlign: 'center' }}>
+                            <Box sx={{ textAlign: 'center', width: '100%' }}>
                                 <ImageBox
                                     imageUrl="images/dragger/survey-3-3.png"
-                                    sx={{ mb: 2 }}
+                                    sx={{
+                                        mb: 2,
+                                        borderRadius: 8,
+                                        overflow: 'hidden',
+                                    }}
                                 />
-                                <Typography variant="caption">
-                                    Highlight 圖片說明
+                                <Typography variant="body2" sx={{ height: 48 }}>
+                                    找出錯誤最多或偏好最高的項目做後續推廣
                                 </Typography>
                             </Box>
                         </Stack>

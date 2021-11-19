@@ -61,9 +61,13 @@ export default function CreateForm() {
     }
 
     return (
-        <Box sx={{ p: 4, pt: 2, bgcolor: 'grey.100' }}>
-            <Box sx={{ mb: 2 }}>
-                <Button startIcon={<ArrowLeftIcon />} onClick={handleClickBack}>
+        <Box sx={{ p: 4, pt: 1, bgcolor: 'grey.100' }}>
+            <Box sx={{ mb: 1 }}>
+                <Button
+                    startIcon={<ArrowLeftIcon />}
+                    onClick={handleClickBack}
+                    size="small"
+                >
                     重新選擇
                 </Button>
             </Box>
@@ -78,6 +82,7 @@ export default function CreateForm() {
                     sx={{
                         position: 'relative',
                         height: 'calc(100vh - 240px)',
+                        p: 3,
                     }}
                     spacing={4}
                 >
@@ -93,18 +98,18 @@ export default function CreateForm() {
                             </Typography>
                             <Typography variant="body1">
                                 {isOneInTwo
-                                    ? '運用範本的題庫來建立客群標籤，並針對不同類型的填答者推送客製化問卷結果！'
-                                    : '運用範本的題庫來建立客群標籤，並針對不同類型的填答者推送客製化問卷結果！'}
+                                    ? '這樣的遊戲化機制保持填答的快節奏，也因為答題模式不變，能降低理解門檻與跳出率'
+                                    : '透過趣味的左右拖曳互動方式，提高回答的體驗'}
                             </Typography>
 
                             <Stack
                                 direction="row"
                                 justifyContent="flex-start"
                                 alignItems="center"
-                                spacing={2}
+                                spacing={1}
                             >
                                 <Button
-                                    variant="contained"
+                                    variant="outlined"
                                     color="inherit"
                                     size="large"
                                 >
@@ -126,14 +131,16 @@ export default function CreateForm() {
                             </Stack>
                         </Stack>
                     </Box>
-                    <ImageBox
-                        imageUrl={
-                            isOneInTwo
-                                ? 'images/one-in-two/cover.svg'
-                                : 'images/dragger/cover.svg'
-                        }
-                        objectFit="contain"
-                    />
+                    <Box sx={{ p: 3 }}>
+                        <ImageBox
+                            imageUrl={
+                                isOneInTwo
+                                    ? 'images/one-in-two/cover.svg'
+                                    : 'images/dragger/cover.svg'
+                            }
+                            objectFit="contain"
+                        />
+                    </Box>
                 </Stack>
                 <React.Suspense fallback={<div />}>
                     {renderView()}
