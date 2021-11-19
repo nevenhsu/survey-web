@@ -11,6 +11,7 @@ import {
 } from 'components/Survey/QuizForm/Shares'
 import AddIcon from 'mdi-react/AddIcon'
 import { getDefaultDraggerChoice } from 'utils/helper'
+import { colors } from 'theme/palette'
 import type {
     OnChangeInput,
     OnButtonClink,
@@ -27,14 +28,14 @@ export default function DraggerView(props: {
     const { choices = [], showImage, left, right } = quizProps
 
     const leftButton: CustomButtonType = {
-        buttonColor: left.buttonColor,
+        buttonColor: left.buttonColor || colors[0][500],
         buttonText: left.buttonText,
         buttonTextColor: left.buttonTextColor,
         buttonVariant: left.buttonVariant,
     }
 
     const rightButton: CustomButtonType = {
-        buttonColor: right.buttonColor,
+        buttonColor: right.buttonColor || colors[1][500],
         buttonText: right.buttonText,
         buttonTextColor: right.buttonTextColor,
         buttonVariant: right.buttonVariant,

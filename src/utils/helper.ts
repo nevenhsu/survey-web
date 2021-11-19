@@ -21,7 +21,7 @@ import type {
     Component,
     Tags,
 } from 'common/types'
-import { getMuiColor } from 'theme/palette'
+import { getMuiColor, colors } from 'theme/palette'
 
 export function getStringLength(str: string) {
     const val = str.replace(/[^\x00-\xff]/g, '**')
@@ -195,11 +195,13 @@ export function getDefaultQuiz(id: string, mode: QuizMode): QuizType {
                     id: leftId,
                     buttonText: '左選項',
                     buttonVariant: 'contained',
+                    buttonColor: colors[0][500],
                 },
                 right: {
                     id: setId(),
                     buttonText: '右選項',
                     buttonVariant: 'contained',
+                    buttonColor: colors[1][500],
                 },
                 choices: [getDefaultDraggerChoice(leftId)],
                 values: [],

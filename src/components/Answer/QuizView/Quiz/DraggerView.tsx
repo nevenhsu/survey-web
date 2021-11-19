@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography'
 import DraggerChoiceView from 'components/Answer/QuizView/Quiz/DraggerChoiceView'
 import CustomButton from 'components/Answer/QuizView/Quiz/CustomButton'
 import { shuffle } from 'utils/helper'
+import { colors } from 'theme/palette'
 import type { OnChangeInput, DraggerType } from 'common/types'
 
 type DraggerViewProps = {
@@ -39,10 +40,21 @@ export default function DraggerView(props: DraggerViewProps) {
     }, [rawChoices])
     const choice = choices[current]
 
+    const leftColor = left.buttonColor || colors[0][500]
+    const rightColor = right.buttonColor || colors[1][500]
+
     // for framer
     const controls = useAnimation()
     const x = useMotionValue(0)
-    const opacity = useTransform(x, [-200, -150, 0, 150, 200], [0, 1, 1, 1, 0])
+    const border = useTransform(
+        x,
+        [-200, 0, 200],
+        [
+            `4px solid ${leftColor}`,
+            `4px solid #ffffff`,
+            `4px solid ${rightColor}`,
+        ]
+    )
     const rotate = useTransform(x, [-200, 200], [-30, 30])
 
     const handleAnswer = (answerId: string) => {
@@ -77,7 +89,7 @@ export default function DraggerView(props: DraggerViewProps) {
                 <MotionDraggerChoiceView
                     animate={controls}
                     choice={choice}
-                    style={{ x, opacity, rotate, originX: 0.5 }}
+                    style={{ x, rotate, border, originX: 0.5 }}
                     drag="x"
                     dragConstraints={{ left: -1000, right: 1000 }}
                     onDragEnd={(event, info) => {
@@ -110,13 +122,13 @@ export default function DraggerView(props: DraggerViewProps) {
                 sx={{ width: '60vh' }}
             >
                 <CustomButton
-                    customProps={left}
+                    customProps={{ ...left, buttonColor: leftColor }}
                     size="large"
                     defaultText="左選項"
                     onClick={(event) => handleAnswer(left.id)}
                 />
                 <CustomButton
-                    customProps={right}
+                    customProps={{ ...right, buttonColor: rightColor }}
                     size="large"
                     defaultText="右選項"
                     onClick={(event) => handleAnswer(right.id)}

@@ -2,7 +2,8 @@ import _ from 'lodash'
 import axios from 'axios'
 import { getDefaultSurvey } from 'utils/helper'
 import { surveyFormatter, answerFormatter } from 'utils/formatter'
-import type { Mode, Survey, Answer } from 'common/types'
+import { Mode } from 'common/types'
+import type { Survey, Answer } from 'common/types'
 
 type CreateNewResponse = {
     id: string
@@ -23,9 +24,24 @@ const surveyApi = {
     createNew: async (mode: Mode): Promise<Survey> => {
         const url = `${process.env.REACT_APP_URL}/survey`
         const { data } = await axios.post<CreateNewResponse>(url)
+
         const survey = getDefaultSurvey({ ...data, mode })
 
-        return survey
+        const isOneInTwo = mode === Mode.oneInTwo
+        const templateId = isOneInTwo ? '-one-in-two-mode' : '-dragger-mode'
+        const templateData = await surveyApi.getSurvey(templateId)
+        const template = _.omit(templateData, [
+            'id',
+            'createdAt',
+            'updatedAt',
+            'enable',
+        ])
+
+        const value = { ...survey, ...template }
+
+        console.log(value)
+
+        return value
     },
     uploadMedia: async (file?: string): Promise<string> => {
         if (file) {

@@ -13,6 +13,7 @@ import type {
     Final,
     Answer,
     ChoiceType,
+    Result,
 } from 'common/types'
 
 export function surveyFormatter(survey: Survey): Survey {
@@ -26,18 +27,14 @@ export function surveyFormatter(survey: Survey): Survey {
         results,
         final,
         setting,
+        enable,
         ...others
     } = survey
 
     const { list, ...r } = results ?? {}
 
     _.forEach(list, (value, id) => {
-        const { components, tags = {}, ...v } = value
-        list[id] = {
-            ...v,
-            tags,
-            components: _.map(components, (comp) => componentFormatter(comp)),
-        }
+        list[id] = resultFormatter(value)
     })
 
     const { showProgress, ...s } = setting ?? {}
@@ -59,6 +56,7 @@ export function surveyFormatter(survey: Survey): Survey {
             ...s,
             showProgress: toBool(showProgress),
         },
+        enable: toBool(enable),
     }
 }
 
@@ -234,5 +232,18 @@ export function answerFormatter(value: Answer): Answer {
         ...rest,
         createdAt: toNumber(createdAt),
         updatedAt: toNumber(updatedAt),
+    }
+}
+
+export function resultFormatter(value: Result) {
+    const { tags = {}, components: compRaw, range = [], ...rest } = value
+
+    const components = _.map(compRaw, (el) => componentFormatter(el))
+
+    return {
+        ...rest,
+        range: _.map(range, (n) => toNumber(n) || 0),
+        tags,
+        components,
     }
 }

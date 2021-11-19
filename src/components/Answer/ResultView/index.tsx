@@ -1,7 +1,9 @@
 import * as React from 'react'
 import _ from 'lodash'
+import numeral from 'numeral'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
 import { ComponentList } from 'components/common/Component/View'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import {
@@ -40,6 +42,8 @@ export default function ResultView() {
     const isOneInTwoMode = mode === Mode.oneInTwo
 
     const [result, setResult] = React.useState<Result>()
+    const [draggerResult, setDraggerResult] =
+        React.useState<{ score: number; total: number }>()
 
     const { components = [] } = result ?? {}
 
@@ -67,15 +71,6 @@ export default function ResultView() {
                     tagResults2
                 )
 
-                console.log({
-                    selectedTags,
-                    answers,
-                    tagValues,
-                    tagResults1,
-                    tagResults2,
-                    finalResults,
-                })
-
                 if (finalResults && finalResults.length) {
                     const index = _.random(0, finalResults.length - 1)
                     setResult(finalResults[index])
@@ -89,7 +84,7 @@ export default function ResultView() {
             return
         } else {
             // dragger
-            const score = calcScore(quizzes, answers)
+            const { score, total } = calcScore(quizzes, answers)
             const result = _.find(resultList, (el) => {
                 const { range = [] } = el
                 const [min, max] = range
@@ -99,6 +94,11 @@ export default function ResultView() {
                 }
 
                 return min === 0 && score < max
+            })
+
+            setDraggerResult({
+                score,
+                total,
             })
 
             if (result) {
@@ -115,8 +115,25 @@ export default function ResultView() {
     }, [result])
 
     return (
-        <>
+        <Box sx={{ py: 3 }}>
             <ComponentList components={components} />
+
+            {!isOneInTwoMode && draggerResult && (
+                <Box sx={{ textAlign: 'center', py: 3 }}>
+                    <Typography variant="h5" gutterBottom>
+                        總得分{draggerResult.score}
+                    </Typography>
+                    <Typography variant="body1">
+                        正確比率
+                        {numeral(
+                            _.round(
+                                draggerResult.score / draggerResult.total,
+                                4
+                            )
+                        ).format('0.0%')}
+                    </Typography>
+                </Box>
+            )}
 
             <Box sx={{ py: 4, textAlign: 'center' }}>
                 <Button
@@ -127,7 +144,7 @@ export default function ResultView() {
                     下一步
                 </Button>
             </Box>
-        </>
+        </Box>
     )
 }
 
@@ -139,12 +156,19 @@ function calcScore(
         quizzes,
         (el) => el.mode === QuizMode.dragger
     ) as DraggerQuiz[]
+
+    const choices = _.map(draggers, (quiz) => {
+        const { choices } = quiz
+        return choices.length
+    })
+
     const scores = _.map(draggers, (quiz) => {
         const { id: quizId } = quiz
         const { values = [] } = answers[quizId] ?? {}
         return values.length
     })
-    return _.sum(scores)
+
+    return { score: _.sum(scores), total: _.sum(choices) }
 }
 
 function calcTagResult(
