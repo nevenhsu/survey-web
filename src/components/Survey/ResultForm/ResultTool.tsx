@@ -3,7 +3,7 @@ import _ from 'lodash'
 import ComponentTool from 'components/common/Component/Tool'
 import { Contexts } from 'components/common/Component'
 import { useAppDispatch, useAppSelector } from 'hooks'
-import { updateComponent } from 'store/slices/survey'
+import { updateComponent, selectResult, setResult } from 'store/slices/survey'
 import type { OnChangeInput, Component } from 'common/types'
 
 type ResultToolProps = {
@@ -15,6 +15,9 @@ export default function ResultTool(props: ResultToolProps) {
     const dispatch = useAppDispatch()
 
     const { surveyId, resultId } = props
+
+    const result = useAppSelector(selectResult(resultId))
+    const { bgcolor } = result ?? {}
 
     const instance = Contexts.getInstance('result')
     const { Context } = instance.getValue()
@@ -44,6 +47,20 @@ export default function ResultTool(props: ResultToolProps) {
         }
     }
 
+    const handleChangePage: OnChangeInput = (event) => {
+        const { name, value } = event.target
+        if (surveyId && resultId) {
+            const newValue = { [name]: value }
+            dispatch(
+                setResult({
+                    surveyId,
+                    resultId,
+                    newValue,
+                })
+            )
+        }
+    }
+
     const handleDelete = () => {
         if (surveyId && resultId && idPath && component) {
             dispatch(
@@ -60,9 +77,11 @@ export default function ResultTool(props: ResultToolProps) {
 
     return (
         <ComponentTool
+            page={{ bgcolor }}
             component={component}
             onChange={handleChange}
             onDelete={handleDelete}
+            handleChangePage={handleChangePage}
         />
     )
 }

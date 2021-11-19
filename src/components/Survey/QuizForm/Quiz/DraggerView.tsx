@@ -69,6 +69,16 @@ export default function DraggerView(props: {
         } as any)
     }
 
+    const handleDelete = (choiceId: string) => {
+        const newChoice = _.filter(choices, (el) => el.id !== choiceId)
+        onChange({
+            target: {
+                name: 'choices',
+                value: newChoice,
+            },
+        } as any)
+    }
+
     const handleChangeButton = (
         event: React.ChangeEvent<HTMLInputElement>,
         target: 'right' | 'left'
@@ -127,7 +137,7 @@ export default function DraggerView(props: {
             >
                 <Slick slidesToShow={1} slidesToScroll={1} dots arrows infinite>
                     {choices.map((el) => (
-                        <Box key={el.id} sx={{ p: 1 }}>
+                        <Box key={el.id} sx={{ p: 1, textAlign: 'center' }}>
                             <DraggerChoiceView
                                 label={el.label}
                                 image={el.image}
@@ -136,6 +146,12 @@ export default function DraggerView(props: {
                                     handleChangeChoice(event, el.id)
                                 }
                             />
+                            <Button
+                                color="error"
+                                onClick={() => handleDelete(el.id)}
+                            >
+                                刪除選項
+                            </Button>
                         </Box>
                     ))}
                 </Slick>

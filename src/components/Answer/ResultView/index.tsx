@@ -45,7 +45,7 @@ export default function ResultView() {
     const [draggerResult, setDraggerResult] =
         React.useState<{ score: number; total: number }>()
 
-    const { components = [] } = result ?? {}
+    const { components = [], bgcolor } = result ?? {}
 
     const handleNext = () => {
         dispatch(updateStep(AnswerStep.final))
@@ -115,7 +115,7 @@ export default function ResultView() {
     }, [result])
 
     return (
-        <Box sx={{ py: 3 }}>
+        <Box sx={{ py: 3, bgcolor }}>
             <ComponentList components={components} />
 
             {!isOneInTwoMode && draggerResult && (

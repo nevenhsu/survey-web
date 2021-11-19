@@ -233,6 +233,7 @@ export function getDefaultQuiz(id: string, mode: QuizMode): QuizType {
                 choices: [getDefaultDraggerChoice(leftId)],
                 values: [],
                 showImage: false,
+                countDown: 30 * 1000,
             }
             return quiz
         }

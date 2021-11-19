@@ -54,7 +54,7 @@ export default function FinalForm() {
 
     const survey = useAppSelector(selectCurrentSurvey)
     const { id: surveyId, final } = survey
-    const { mode, data } = final ?? {}
+    const { mode, data, bgcolor } = final ?? {}
 
     const { uploading, handlePreview } = usePreview(survey)
 
@@ -205,7 +205,10 @@ export default function FinalForm() {
                                     <ThemeProvider mode="light">
                                         <AspectRatioBox
                                             ratio={getRatio(device)}
-                                            sx={{ bgcolor: 'white' }}
+                                            sx={{
+                                                bgcolor: 'white',
+                                                '& > div': { bgcolor },
+                                            }}
                                         >
                                             <EditingFinal />
                                             {renderMode(mode)}
@@ -227,7 +230,7 @@ export default function FinalForm() {
                             bgcolor: (theme) => theme.palette.grey[800],
                         }}
                     >
-                        <FinalTool surveyId={surveyId} />
+                        <FinalTool />
                     </Box>
                 </ThemeProvider>
             </Stack>

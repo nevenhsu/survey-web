@@ -11,6 +11,7 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import DraggerChoiceView from 'components/Answer/QuizView/Quiz/DraggerChoiceView'
 import CustomButton from 'components/Answer/QuizView/Quiz/CustomButton'
+import CountDownProgress from 'components/common/CountDownProgress'
 import { shuffle } from 'utils/helper'
 import { colors } from 'theme/palette'
 import type { OnChangeInput, DraggerType } from 'common/types'
@@ -31,6 +32,7 @@ export default function DraggerView(props: DraggerViewProps) {
         choices: rawChoices = [],
         left,
         right,
+        countDown,
         showImage,
     } = quizProps
 
@@ -82,6 +84,13 @@ export default function DraggerView(props: DraggerViewProps) {
 
     return (
         <>
+            {Boolean(countDown) && (
+                <CountDownProgress
+                    countDown={Number(countDown)}
+                    sx={{ position: 'fixed', top: 8, width: '100%', px: 2 }}
+                />
+            )}
+
             <Typography variant="h6">{title}</Typography>
             <Box sx={{ height: 16 }} />
 

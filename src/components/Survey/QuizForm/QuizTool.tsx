@@ -25,7 +25,12 @@ import {
 } from 'store/slices/survey'
 import { toNumber } from 'utils/helper'
 import { QuizMode } from 'common/types'
-import type { SelectionQuiz, OnChangeInput, QuizType } from 'common/types'
+import type {
+    SelectionQuiz,
+    OnChangeInput,
+    QuizType,
+    DraggerQuiz,
+} from 'common/types'
 
 type QuizToolProps = {
     surveyId: string
@@ -99,6 +104,8 @@ export default function QuizTool(props: QuizToolProps) {
     } = quiz ?? {}
     const { responsive, px, showImage, maxChoices } =
         (quiz as SelectionQuiz) ?? {}
+
+    const { countDown } = (quiz as DraggerQuiz) ?? {}
 
     const handleChange: OnChangeInput = (event) => {
         const { name, value } = event.target
@@ -231,6 +238,27 @@ export default function QuizTool(props: QuizToolProps) {
                             />
                         </TableCell>
                     </TableRow>
+                    {mode === QuizMode.dragger && (
+                        <TableRow>
+                            <TableCell>倒數毫秒</TableCell>
+                            <TableCell>
+                                <NumberFormat
+                                    customInput={StyledTextField}
+                                    variant="standard"
+                                    value={countDown}
+                                    onValueChange={({ value }) => {
+                                        handleUpdateQuiz({
+                                            countDown: value
+                                                ? Number(value)
+                                                : NaN,
+                                        })
+                                    }}
+                                    placeholder="30000"
+                                    fullWidth
+                                />
+                            </TableCell>
+                        </TableRow>
+                    )}
                     {mode !== QuizMode.dragger && (
                         <>
                             <TableRow>

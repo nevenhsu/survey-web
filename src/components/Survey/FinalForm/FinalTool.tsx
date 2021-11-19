@@ -2,18 +2,20 @@ import * as React from 'react'
 import _ from 'lodash'
 import ComponentTool from 'components/common/Component/Tool'
 import { Contexts } from 'components/common/Component'
-import { useAppDispatch } from 'hooks'
-import { updateFinalComponents } from 'store/slices/survey'
+import { useAppSelector, useAppDispatch } from 'hooks'
+import {
+    selectCurrentSurvey,
+    updateFinalComponents,
+    updateFinal,
+} from 'store/slices/survey'
 import type { OnChangeInput, Component } from 'common/types'
 
-type FinalToolProps = {
-    surveyId?: string
-}
-
-export default function FinalTool(props: FinalToolProps) {
+export default function FinalTool() {
     const dispatch = useAppDispatch()
 
-    const { surveyId } = props
+    const survey = useAppSelector(selectCurrentSurvey)
+    const { id: surveyId, final } = survey ?? {}
+    const { bgcolor } = final ?? {}
 
     const instance = Contexts.getInstance('final')
     const { Context } = instance.getValue()
@@ -42,6 +44,19 @@ export default function FinalTool(props: FinalToolProps) {
         }
     }
 
+    const handleChangePage: OnChangeInput = (event) => {
+        const { name, value } = event.target
+        if (surveyId) {
+            const newValue = { [name]: value }
+            dispatch(
+                updateFinal({
+                    surveyId,
+                    newValue,
+                })
+            )
+        }
+    }
+
     const handleDelete = () => {
         if (surveyId && idPath && component) {
             dispatch(
@@ -57,9 +72,11 @@ export default function FinalTool(props: FinalToolProps) {
 
     return (
         <ComponentTool
+            page={{ bgcolor }}
             component={component}
             onChange={handleChange}
             onDelete={handleDelete}
+            handleChangePage={handleChangePage}
         />
     )
 }
