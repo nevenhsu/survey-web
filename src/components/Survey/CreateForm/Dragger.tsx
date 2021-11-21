@@ -34,12 +34,19 @@ export default function Dragger() {
 
     return (
         <Box sx={{ p: 3, pb: 6 }}>
-            <Box sx={{ mb: 8 }}>
-                <Typography variant="h5" gutterBottom>
+            <Box
+                sx={{
+                    mb: 8,
+                    pb: 8,
+                    borderBottom: 1,
+                    borderColor: (theme) => theme.palette.grey[400],
+                }}
+            >
+                <Typography variant="h5" fontWeight="700" gutterBottom>
                     模組特色
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 3 }}>
-                    範本特色說明
+                    本模組具三大特色，能協助你輕鬆設計遊戲化測驗
                 </Typography>
 
                 <Stack
@@ -48,7 +55,12 @@ export default function Dragger() {
                     alignItems="center"
                     spacing={2}
                 >
-                    <Box sx={{ textAlign: 'center', width: '100%' }}>
+                    <Box
+                        sx={{
+                            textAlign: 'center',
+                            maxWidth: 350,
+                        }}
+                    >
                         <ImageBox
                             imageUrl="images/dragger/survey-1-1.png"
                             sx={{ mb: 2, borderRadius: 8, overflow: 'hidden' }}
@@ -59,7 +71,7 @@ export default function Dragger() {
                             測驗主題可以很知識性，也能純粹好玩
                         </Typography>
                     </Box>
-                    <Box sx={{ textAlign: 'center', width: '100%' }}>
+                    <Box sx={{ textAlign: 'center', maxWidth: 350 }}>
                         <ImageBox
                             imageUrl="images/dragger/survey-1-2.png"
                             sx={{ mb: 2, borderRadius: 8, overflow: 'hidden' }}
@@ -68,7 +80,7 @@ export default function Dragger() {
                             透過隨機出題的固定題型，降低題目設計門檻，節省工作時間
                         </Typography>
                     </Box>
-                    <Box sx={{ textAlign: 'center', width: '100%' }}>
+                    <Box sx={{ textAlign: 'center', maxWidth: 350 }}>
                         <ImageBox
                             imageUrl="images/dragger/survey-1-3.png"
                             sx={{ mb: 2, borderRadius: 8, overflow: 'hidden' }}
@@ -80,18 +92,18 @@ export default function Dragger() {
                 </Stack>
             </Box>
 
-            <Grid container spacing={4}>
+            <Grid container spacing={8}>
                 <Grid
                     item
                     sx={{
-                        width: 288,
+                        width: 320,
                         position: 'sticky',
                         height: 'fit-content',
                         top: 0,
                     }}
                 >
-                    <Typography variant="h6" sx={{ mb: 3 }}>
-                        來看看左右拖曳在做什麼
+                    <Typography variant="h5" fontWeight="700" sx={{ mb: 3 }}>
+                        模組如何運作
                     </Typography>
                     <Tabs
                         orientation="vertical"
@@ -176,7 +188,11 @@ export default function Dragger() {
                 <Grid item xs sx={{ width: `calc(100vw - 288px)` }}>
                     <Element name={BlockName.a}>
                         <Box sx={{ mb: 5 }}>
-                            <Typography variant="h6" gutterBottom>
+                            <Typography
+                                variant="h6"
+                                fontWeight="700"
+                                gutterBottom
+                            >
                                 參與測驗
                             </Typography>
                             <Typography variant="body2" sx={{ mb: 2 }}>
@@ -264,7 +280,11 @@ export default function Dragger() {
                                 spacing={2}
                             >
                                 <Box sx={{ flex: '0 0 33%' }}>
-                                    <Typography variant="h6" gutterBottom>
+                                    <Typography
+                                        variant="h6"
+                                        fontWeight="700"
+                                        gutterBottom
+                                    >
                                         測驗模組產生個人化結果
                                     </Typography>
                                     <Typography variant="body2">
@@ -293,7 +313,11 @@ export default function Dragger() {
                                 spacing={2}
                             >
                                 <Box sx={{ flex: '0 0 33%' }}>
-                                    <Typography variant="h6" gutterBottom>
+                                    <Typography
+                                        variant="h6"
+                                        fontWeight="700"
+                                        gutterBottom
+                                    >
                                         個人化結果預覽
                                     </Typography>
                                     <Typography variant="body2">
@@ -313,7 +337,11 @@ export default function Dragger() {
                     </Element>
                     <Element name={BlockName.d}>
                         <Box sx={{ mb: 5 }}>
-                            <Typography variant="h6" gutterBottom>
+                            <Typography
+                                variant="h6"
+                                fontWeight="700"
+                                gutterBottom
+                            >
                                 查看分析
                             </Typography>
                             <Typography variant="body2" sx={{ mb: 2 }}>
