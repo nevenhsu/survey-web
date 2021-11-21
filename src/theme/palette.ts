@@ -76,9 +76,9 @@ export const lightPalette = {
         dark: '#34579C',
     },
     secondary: {
-        light: '#C1DDFF',
-        main: '#4A72FF',
-        dark: '#0049D8',
+        light: '#E2FF91',
+        main: '#ABED1D',
+        dark: '#87D900',
     },
     error: {
         light: '#FCDDDD',
@@ -95,9 +95,9 @@ export const darkPalette = {
         dark: '#517EF2',
     },
     secondary: {
-        light: '#D9EFFF',
-        main: '#94CCFF',
-        dark: '#517EF2',
+        light: '#E2FF91',
+        main: '#ABED1D',
+        dark: '#87D900',
     },
     error: {
         light: '#FFD4D4',

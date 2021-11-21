@@ -14,7 +14,7 @@ type DraggerChoiceViewProps = {
 const DraggerChoiceView = React.forwardRef<unknown, DraggerChoiceViewProps>(
     (props, ref) => {
         const { choice } = props
-        const { label, image } = choice ?? {}
+        const { label, image, bgcolor = '#ffffff' } = choice ?? {}
 
         const hasImage = Boolean(image)
 
@@ -27,13 +27,17 @@ const DraggerChoiceView = React.forwardRef<unknown, DraggerChoiceViewProps>(
                 }}
                 ref={ref}
             >
-                <AspectRatioBox>
+                <AspectRatioBox sx={{ bgcolor }}>
                     <Stack
                         direction="column"
                         justifyContent="center"
                         alignItems="center"
                         spacing={2}
-                        sx={{ height: '100%', overflow: 'hidden' }}
+                        sx={{
+                            height: '100%',
+                            overflow: 'hidden',
+                            pointerEvents: 'none',
+                        }}
                     >
                         {hasImage && (
                             <ImageBox

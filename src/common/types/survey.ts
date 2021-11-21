@@ -139,6 +139,7 @@ export type DraggerChoiceType = {
     label: string
     answer: string // DraggerButton id
     image?: string
+    bgcolor?: string
 }
 
 export type DraggerType = {

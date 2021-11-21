@@ -11,11 +11,12 @@ type DraggerChoiceViewProps = {
     label: string
     showImage: boolean
     image?: string
+    bgcolor?: string
     onChange: OnChangeInput
 }
 
 export default function DraggerChoiceView(props: DraggerChoiceViewProps) {
-    const { label, showImage, image, onChange } = props
+    const { label, showImage, image, bgcolor = '#ffffff', onChange } = props
     const hasImage = Boolean(image)
     return (
         <Box
@@ -25,7 +26,7 @@ export default function DraggerChoiceView(props: DraggerChoiceViewProps) {
                 overflow: 'hidden',
             }}
         >
-            <AspectRatioBox>
+            <AspectRatioBox sx={{ bgcolor }}>
                 <Stack
                     direction="column"
                     justifyContent="center"

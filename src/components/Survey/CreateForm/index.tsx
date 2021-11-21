@@ -8,6 +8,7 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import ImageBox from 'components/common/ImageBox'
 import { createNew, setStep } from 'store/slices/survey'
 import { useAppDispatch, useAppSelector } from 'hooks'
+import { getAnswerURL } from 'utils/helper'
 import { Mode, SurveyStep } from 'common/types'
 import AddIcon from 'mdi-react/AddIcon'
 import ArrowLeftIcon from 'mdi-react/ArrowLeftIcon'
@@ -25,6 +26,10 @@ export default function CreateForm() {
     const isOneInTwo = mode === Mode.oneInTwo
 
     const [loading, setLoading] = React.useState(false)
+
+    const { openWindow } = getAnswerURL(
+        isOneInTwo ? '-one-in-two-mode' : '-dragger-mode'
+    )
 
     const handleClick = () => {
         if (!loading && mode) {
@@ -112,6 +117,9 @@ export default function CreateForm() {
                                     variant="outlined"
                                     color="inherit"
                                     size="large"
+                                    onClick={() => {
+                                        openWindow()
+                                    }}
                                 >
                                     預覽測驗
                                 </Button>
@@ -123,7 +131,7 @@ export default function CreateForm() {
                                     onClick={handleClick}
                                     disabled={!mode}
                                     variant="contained"
-                                    color="secondary"
+                                    color="primary"
                                     size="large"
                                 >
                                     建立測驗

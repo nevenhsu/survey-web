@@ -267,7 +267,7 @@ export default function QuizForm() {
                     />
                     <Button
                         variant="contained"
-                        color="secondary"
+                        color="primary"
                         onClick={nextStep}
                     >
                         編輯個人化測驗結果

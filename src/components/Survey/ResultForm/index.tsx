@@ -562,7 +562,7 @@ export default function ResultForm() {
                     />
                     <Button
                         variant="contained"
-                        color="secondary"
+                        color="primary"
                         onClick={nextStep}
                     >
                         編輯測驗結果

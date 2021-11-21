@@ -21,7 +21,7 @@ export default function FinalView() {
 
     const survey = useAppSelector(selectSurvey)
     const { id: surveyId, final, enable } = survey ?? {}
-    const { components = [], data } = final ?? {}
+    const { components = [], data, bgcolor } = final ?? {}
 
     const [uploading, setUploading] = React.useState(false)
     const [done, setDone] = React.useState(false)
@@ -63,7 +63,7 @@ export default function FinalView() {
     }
 
     return (
-        <>
+        <Box sx={{ bgcolor, minHeight: '100vh' }}>
             <ComponentList components={components} />
             <Box sx={{ width: '100%', maxWidth: 480, mx: 'auto', my: 4 }}>
                 <InfoForm
@@ -95,6 +95,6 @@ export default function FinalView() {
                     </Typography>
                 )}
             </Box>
-        </>
+        </Box>
     )
 }

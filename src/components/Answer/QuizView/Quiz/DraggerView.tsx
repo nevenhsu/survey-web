@@ -62,7 +62,6 @@ export default function DraggerView(props: DraggerViewProps) {
     const handleAnswer = (answerId: string) => {
         const { id: choiceId, answer } = choice ?? {}
         if (choiceId && answer === answerId) {
-            console.log(values)
             onChange({
                 target: {
                     name: 'values',
@@ -72,6 +71,10 @@ export default function DraggerView(props: DraggerViewProps) {
         }
         setCurrent((state) => (state += 1))
         controls.start({ x: 0 })
+    }
+
+    const handleEnd = () => {
+        onDone()
     }
 
     React.useEffect(() => {
@@ -87,6 +90,11 @@ export default function DraggerView(props: DraggerViewProps) {
             {Boolean(countDown) && (
                 <CountDownProgress
                     countDown={Number(countDown)}
+                    onEnd={() => {
+                        if (countDown && countDown > 0) {
+                            handleEnd()
+                        }
+                    }}
                     sx={{ position: 'fixed', top: 8, width: '100%', px: 2 }}
                 />
             )}

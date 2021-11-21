@@ -121,7 +121,7 @@ export default function FinalForm() {
                     />
                     <Button
                         variant="contained"
-                        color="secondary"
+                        color="primary"
                         onClick={nextStep}
                     >
                         發布測驗

@@ -115,7 +115,7 @@ export default function ResultView() {
     }, [result])
 
     return (
-        <Box sx={{ py: 3, bgcolor }}>
+        <Box sx={{ py: 3, bgcolor, minHeight: '100vh' }}>
             <ComponentList components={components} />
 
             {!isOneInTwoMode && draggerResult && (
