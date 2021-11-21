@@ -71,14 +71,14 @@ const greyPalette = {
 
 export const lightPalette = {
     primary: {
-        light: '#B3D1FF',
-        main: '#4A72FF',
-        dark: '#34579C',
+        light: '#C1E5FF',
+        main: '#3892FC',
+        dark: '#0062BD',
     },
     secondary: {
-        light: '#E2FF91',
-        main: '#ABED1D',
-        dark: '#87D900',
+        light: '#D8CEF4',
+        main: '#9E71E8',
+        dark: '#4F0D83',
     },
     error: {
         light: '#FCDDDD',
@@ -90,14 +90,14 @@ export const lightPalette = {
 
 export const darkPalette = {
     primary: {
-        light: '#D9EFFF',
-        main: '#94CCFF',
-        dark: '#517EF2',
+        light: '#C1E9FF',
+        main: '#5DB1FF',
+        dark: '#0D81D6',
     },
     secondary: {
-        light: '#E2FF91',
-        main: '#ABED1D',
-        dark: '#87D900',
+        light: '#E4CFFF',
+        main: '#BC79FF',
+        dark: '#6A14C0',
     },
     error: {
         light: '#FFD4D4',
