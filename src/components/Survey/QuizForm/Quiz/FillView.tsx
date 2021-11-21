@@ -24,10 +24,8 @@ export default function FillView(props: {
             <StyledTextField
                 variant="standard"
                 placeholder="請輸入測驗問題"
-                value={_.get(title, 'text', '')}
-                onChange={(e) =>
-                    handleChange('title', { ...title, text: e.target.value })
-                }
+                textProps={title}
+                onCustomize={(value) => handleChange('title', value)}
                 multiline
             />
 

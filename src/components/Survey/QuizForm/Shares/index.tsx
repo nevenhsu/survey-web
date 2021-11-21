@@ -2,17 +2,27 @@ import * as React from 'react'
 import _ from 'lodash'
 import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
+import InputAdornment from '@mui/material/InputAdornment'
+import IconButton from '@mui/material/IconButton'
 import Popover from '@mui/material/Popover'
 import CustomButton, { CustomButtonProps } from 'components/common/CustomButton'
+import PencilIcon from 'mdi-react/PencilIcon'
 import { variantOptions, sizeOptions } from 'components/common/options'
 import { getStringLength, toNumOrStr, toNumber } from 'utils/helper'
-import type { OnChangeInput, CustomButtonType } from 'common/types'
+import { typoOptions, fontWeightOptions } from 'components/common/options'
+import type { OnChangeInput, CustomButtonType, TextType } from 'common/types'
 import type { Variant } from '@mui/material/styles/createTypography'
 
 export type StyledTextFieldProps = TextFieldProps & {
-    value: string
+    typoVariant?: Variant
+    textProps: TextType
+    onCustomize: (value: TextType) => void
+}
+
+type StyledFieldProps = TextFieldProps & {
     typoVariant?: Variant
 }
 
@@ -20,10 +30,10 @@ export { default as ChoiceView } from 'components/Survey/QuizForm/Shares/ChoiceV
 export { default as DraggerChoiceView } from 'components/Survey/QuizForm/Shares/DraggerChoiceView'
 export { default as ModeSelector } from 'components/Survey/QuizForm/Shares/ModeSelector'
 
-export const StyledTextField = styled(TextField, {
-    shouldForwardProp: (prop) => prop !== 'typoVariant',
-})<StyledTextFieldProps>(({ theme, value, typoVariant, placeholder }) => {
-    const str = (value || placeholder) ?? ''
+const StyledField = styled(TextField, {
+    shouldForwardProp: (prop) => !_.includes(['typoVariant'], prop),
+})<StyledFieldProps>(({ theme, value, typoVariant, placeholder }) => {
+    const str = `${value || placeholder || ''}`
     const typo = typoVariant || 'h6'
     return {
         width: '90%',
@@ -32,9 +42,162 @@ export const StyledTextField = styled(TextField, {
             margin: 'auto',
             maxWidth: '100%',
             width: str ? `${getStringLength(str)}ch` : undefined,
+            textTransform: 'none',
         },
     }
 })
+
+export function StyledTextField(props: StyledTextFieldProps) {
+    const { onCustomize, textProps, ...rest } = props
+
+    const { text, color, bgcolor, variant, fontWeight, padding } =
+        textProps ?? {}
+
+    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
+        null
+    )
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget)
+    }
+    const handleClose = () => {
+        setAnchorEl(null)
+    }
+
+    const open = Boolean(anchorEl)
+
+    const handleChange: OnChangeInput = (event) => {
+        const { name, value: val } = event.target
+        let value: any = val
+
+        if (name === 'padding') {
+            value = toNumOrStr(val)
+        }
+
+        const newValue: TextType = {
+            ...textProps,
+            [name]: value,
+        }
+
+        onCustomize(newValue)
+    }
+
+    return (
+        <>
+            <StyledField
+                {...rest}
+                name="text"
+                value={text ?? ''}
+                InputProps={{
+                    endAdornment: (
+                        <InputAdornment position="end">
+                            <IconButton onClick={handleClick}>
+                                <PencilIcon />
+                            </IconButton>
+                        </InputAdornment>
+                    ),
+                    sx: (theme) => ({
+                        '& .MuiInput-input': {
+                            ...theme.typography[variant || 'body1'],
+                            color,
+                            fontWeight,
+                            bgcolor,
+                            padding,
+                        },
+                    }),
+                }}
+                onChange={handleChange}
+            />
+
+            <Popover
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+            >
+                <Box sx={{ p: 2, maxWidth: 320 }}>
+                    <TextField
+                        label="字體大小"
+                        name="variant"
+                        value={variant || 'body1'}
+                        variant="standard"
+                        onChange={handleChange}
+                        InputProps={{
+                            sx: (theme) => ({
+                                '& .MuiTypography-root': {
+                                    ...theme.typography.body1,
+                                },
+                            }),
+                        }}
+                        select
+                        fullWidth
+                        sx={{ mb: 3 }}
+                    >
+                        {typoOptions.map((el) => (
+                            <MenuItem key={el.value} value={el.value}>
+                                <Typography variant={el.value} noWrap>
+                                    {el.label}
+                                </Typography>
+                            </MenuItem>
+                        ))}
+                    </TextField>
+
+                    <TextField
+                        label="字重"
+                        name="fontWeight"
+                        value={fontWeight || 'bold'}
+                        variant="standard"
+                        onChange={handleChange}
+                        select
+                        fullWidth
+                        sx={{ mb: 3 }}
+                    >
+                        {fontWeightOptions.map((el) => (
+                            <MenuItem key={el.value} value={el.value}>
+                                {el.label}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+
+                    <TextField
+                        label="文字顏色"
+                        variant="standard"
+                        name="color"
+                        value={color}
+                        onChange={handleChange}
+                        placeholder="#212121"
+                        fullWidth
+                        sx={{ mb: 3 }}
+                    />
+
+                    <TextField
+                        label="背景顏色"
+                        variant="standard"
+                        name="bgcolor"
+                        value={bgcolor}
+                        onChange={handleChange}
+                        placeholder="#ffffff"
+                        fullWidth
+                        sx={{ mb: 3 }}
+                    />
+
+                    <TextField
+                        label="留白"
+                        variant="standard"
+                        name="padding"
+                        value={padding}
+                        onChange={handleChange}
+                        placeholder="8px 4px"
+                        fullWidth
+                        sx={{ mb: 3 }}
+                    />
+                </Box>
+            </Popover>
+        </>
+    )
+}
 
 export type StyledCustomButtonProps = CustomButtonProps & {
     onCustomize: (value: CustomButtonType) => void

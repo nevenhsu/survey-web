@@ -14,7 +14,15 @@ type DraggerChoiceViewProps = {
 const DraggerChoiceView = React.forwardRef<unknown, DraggerChoiceViewProps>(
     (props, ref) => {
         const { choice } = props
-        const { label, image, bgcolor = '#ffffff' } = choice ?? {}
+        const {
+            label,
+            image,
+            color,
+            variant,
+            fontWeight,
+            padding,
+            bgcolor = '#ffffff',
+        } = choice ?? {}
 
         const hasImage = Boolean(image)
 
@@ -50,11 +58,14 @@ const DraggerChoiceView = React.forwardRef<unknown, DraggerChoiceViewProps>(
                         )}
 
                         <Typography
-                            variant={hasImage ? 'body1' : 'h5'}
                             width="100%"
+                            variant={variant}
                             sx={{
-                                textTransform: 'none',
+                                color,
                                 pb: 2,
+                                fontWeight,
+                                padding,
+                                textTransform: 'none',
                             }}
                         >
                             {label || '選項'}

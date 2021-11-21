@@ -296,6 +296,7 @@ export function getDefaultDraggerChoice(answer: string) {
         label: '',
         image: '',
         bgcolor: '#ffffff',
+        variant: 'h6',
         answer,
     }
     return choice

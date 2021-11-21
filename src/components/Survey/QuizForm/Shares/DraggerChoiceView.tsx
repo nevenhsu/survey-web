@@ -5,19 +5,35 @@ import Box from '@mui/material/Box'
 import AspectRatioBox from 'components/common/AspectRatioBox'
 import ImageUploader from 'components/common/ImageUploader'
 import { StyledTextField } from 'components/Survey/QuizForm/Shares'
-import type { OnChangeInput } from 'common/types'
+import type { DraggerChoiceType } from 'common/types'
 
 type DraggerChoiceViewProps = {
-    label: string
+    choice: DraggerChoiceType
     showImage: boolean
-    image?: string
-    bgcolor?: string
-    onChange: OnChangeInput
+    onChange: (value: DraggerChoiceType) => void
 }
 
 export default function DraggerChoiceView(props: DraggerChoiceViewProps) {
-    const { label, showImage, image, bgcolor = '#ffffff', onChange } = props
+    const { choice: rawChoice, onChange } = props
+
+    const choice = {
+        ...rawChoice,
+        text: rawChoice.label,
+    }
+    const { image, bgcolor } = choice ?? {}
+
     const hasImage = Boolean(image)
+
+    const handleChange = (name: string, value: any) => {
+        // use label, remove text,
+        const { text, ...rest } = rawChoice
+        const val = {
+            ...rest,
+            [name]: value,
+        }
+        onChange(val)
+    }
+
     return (
         <Box
             sx={{
@@ -41,12 +57,7 @@ export default function DraggerChoiceView(props: DraggerChoiceViewProps) {
                         <ImageUploader
                             bgImage={image}
                             onUploaded={(value) => {
-                                onChange({
-                                    target: {
-                                        value,
-                                        name: 'image',
-                                    },
-                                } as any)
+                                handleChange('image', value)
                             }}
                             sx={{
                                 width: '100%',
@@ -62,10 +73,17 @@ export default function DraggerChoiceView(props: DraggerChoiceViewProps) {
                     <StyledTextField
                         variant="standard"
                         placeholder="請輸入名稱"
-                        typoVariant={hasImage ? 'body1' : 'h5'}
-                        name="label"
-                        value={label ?? ''}
-                        onChange={onChange}
+                        textProps={choice}
+                        onCustomize={(value) => {
+                            const { text: t1, label, ...r } = rawChoice
+                            const { text: t2, ...v } = value
+                            const newValue: DraggerChoiceType = {
+                                ...r,
+                                ...v,
+                                label: `${t2 || label || ''}`,
+                            }
+                            onChange(newValue)
+                        }}
                         sx={{ pb: 2 }}
                         multiline
                     />

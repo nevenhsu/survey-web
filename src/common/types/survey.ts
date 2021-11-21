@@ -132,12 +132,13 @@ export type ChoiceType = ChoiceStyle & {
     next?: string
 }
 
-export type DraggerChoiceType = ChoiceStyle & {
-    id: string
-    label: string
-    answer: string // DraggerButton id
-    image?: string
-}
+export type DraggerChoiceType = ChoiceStyle &
+    TextType & {
+        id: string
+        label: string
+        answer: string // DraggerButton id
+        image?: string
+    }
 
 export type SelectionType = {
     choices: ChoiceType[]

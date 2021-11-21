@@ -11,7 +11,12 @@ import {
 } from 'components/Survey/QuizForm/Shares'
 import AddIcon from 'mdi-react/AddIcon'
 import { getDefaultDraggerChoice } from 'utils/helper'
-import type { OnChangeInput, OnButtonClink, DraggerQuiz } from 'common/types'
+import type {
+    OnChangeInput,
+    OnButtonClink,
+    DraggerQuiz,
+    DraggerChoiceType,
+} from 'common/types'
 
 export default function DraggerView(props: {
     quizProps: Omit<DraggerQuiz, 'values'>
@@ -29,14 +34,9 @@ export default function DraggerView(props: {
         handleChange('choices', value)
     }
 
-    const handleChangeChoice = (
-        event: React.ChangeEvent<HTMLInputElement>,
-        choiceId: string
-    ) => {
-        const { name, value } = event.target
-
+    const handleChangeChoice = (value: DraggerChoiceType, choiceId: string) => {
         const newChoice = _.map(choices, (el) =>
-            el.id === choiceId ? { ...el, [name]: value } : el
+            el.id === choiceId ? { ...el, ...value } : el
         )
 
         handleChange('choices', newChoice)
@@ -48,15 +48,30 @@ export default function DraggerView(props: {
         handleChange('choices', newChoice)
     }
 
+    const handleCopyStyle = (id: string) => {
+        const choice = _.find(choices, { id })
+        if (choice) {
+            const { color, bgcolor, variant, fontWeight, padding } = choice
+            const value = _.map(choices, (el) => ({
+                ...el,
+                color,
+                bgcolor,
+                variant,
+                fontWeight,
+                padding,
+            }))
+
+            handleChange('choices', value)
+        }
+    }
+
     return (
         <>
             <StyledTextField
                 variant="standard"
                 placeholder="請輸入您的文字"
-                value={_.get(title, 'text', '')}
-                onChange={(e) =>
-                    handleChange('title', { ...title, text: e.target.value })
-                }
+                textProps={title}
+                onCustomize={(value) => handleChange('title', value)}
                 multiline
             />
 
@@ -88,22 +103,32 @@ export default function DraggerView(props: {
             >
                 <Slick slidesToShow={1} slidesToScroll={1} dots arrows infinite>
                     {choices.map((el) => (
-                        <Box key={el.id} sx={{ p: 1, textAlign: 'center' }}>
+                        <Box key={el.id} sx={{ p: 1 }}>
                             <DraggerChoiceView
-                                label={el.label}
-                                image={el.image}
-                                bgcolor={el.bgcolor}
+                                choice={el}
                                 showImage={showImage}
-                                onChange={(event) =>
-                                    handleChangeChoice(event, el.id)
+                                onChange={(choice) =>
+                                    handleChangeChoice(choice, el.id)
                                 }
                             />
-                            <Button
-                                color="error"
-                                onClick={() => handleDelete(el.id)}
+                            <Stack
+                                direction="row"
+                                alignItems="center"
+                                justifyContent="space-evenly"
                             >
-                                刪除選項
-                            </Button>
+                                <Button
+                                    color="primary"
+                                    onClick={() => handleCopyStyle(el.id)}
+                                >
+                                    套用所有
+                                </Button>
+                                <Button
+                                    color="error"
+                                    onClick={() => handleDelete(el.id)}
+                                >
+                                    刪除選項
+                                </Button>
+                            </Stack>
                         </Box>
                     ))}
                 </Slick>
