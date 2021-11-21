@@ -1,31 +1,41 @@
 import * as React from 'react'
+import _ from 'lodash'
 import Box from '@mui/material/Box'
 import {
     StyledTextField,
-    CustomButton,
+    StyledCustomButton,
 } from 'components/Survey/QuizForm/Shares'
-import type { CustomButtonType, OnChangeInput } from 'common/types'
+import type { OnChangeInput, Quiz } from 'common/types'
 
 export default function PageView(props: {
-    title: string
-    customProps: CustomButtonType
+    quizProps: Quiz
     onChange: OnChangeInput
 }) {
-    const { title, customProps, onChange } = props
+    const { quizProps, onChange } = props
+    const { title, button } = quizProps
+
+    const handleChange = (name: string, value: any) => {
+        onChange({ target: { name, value } } as any)
+    }
 
     return (
         <>
             <StyledTextField
                 variant="standard"
                 placeholder="請輸入您的文字"
-                name="title"
-                value={title}
-                onChange={onChange}
+                value={_.get(title, 'text', '')}
+                onChange={(e) =>
+                    handleChange('title', { ...title, text: e.target.value })
+                }
+                multiline
             />
 
             <Box sx={{ height: 16 }} />
 
-            <CustomButton customProps={customProps} onChange={onChange} />
+            <StyledCustomButton
+                customProps={button}
+                onCustomize={(value) => handleChange('button', value)}
+            />
         </>
     )
 }

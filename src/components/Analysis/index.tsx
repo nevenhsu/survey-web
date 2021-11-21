@@ -20,10 +20,6 @@ const steps = [
         label: '測驗行為',
     },
     {
-        value: AnalysisStep.result,
-        label: '測驗結果洞察',
-    },
-    {
         value: AnalysisStep.quiz,
         label: '單題結果',
     },

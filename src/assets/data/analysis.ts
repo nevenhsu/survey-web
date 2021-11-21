@@ -350,18 +350,6 @@ export const correlationData: Array<ListData> = [
 
 export const quizzesData: Array<QuizData> = [
     {
-        id: 'deu3a1',
-        mode: QuizMode.oneInTwo,
-        title: '勾選你喜愛的特色',
-        data: [
-            { name: 'Style A', value: 480 },
-            { name: 'Style B', value: 300 },
-            { name: 'Style C', value: 320 },
-            { name: 'Style D', value: 200 },
-            { name: 'Style E', value: 150 },
-        ],
-    },
-    {
         id: 'eifq19',
         mode: QuizMode.dragger,
         title: '請選擇適合的目標',

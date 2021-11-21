@@ -4,21 +4,20 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
 import ChoiceView from 'components/Answer/QuizView/Quiz/ChoiceView'
-import CustomButton, {
-    CustomButtonProps,
-} from 'components/Answer/QuizView/Quiz/CustomButton'
-import type { OnChangeInput, SelectionType } from 'common/types'
+import CustomButton, { CustomButtonProps } from 'components/common/CustomButton'
+import type { OnChangeInput, SelectionQuiz } from 'common/types'
 
 type SelectionViewProps = {
-    title: string
-    quizProps: Omit<SelectionType, 'tagsId'>
+    quizProps: SelectionQuiz
     buttonProps: CustomButtonProps
     onChange: OnChangeInput
 }
 
 export default function SelectionView(props: SelectionViewProps) {
-    const { title, quizProps, buttonProps, onChange } = props
+    const { quizProps, buttonProps, onChange } = props
     const {
+        title,
+        button,
         values = [],
         choices = [],
         maxChoices,
@@ -52,7 +51,7 @@ export default function SelectionView(props: SelectionViewProps) {
 
     return (
         <>
-            <Typography variant="h6">{title}</Typography>
+            <Typography variant="h6">{title.text}</Typography>
             <Typography variant="caption" color="GrayText">
                 最多可選擇{maxChoices}項
             </Typography>
@@ -80,7 +79,7 @@ export default function SelectionView(props: SelectionViewProps) {
                 </Grid>
             </Box>
             <Box sx={{ height: 16 }} />
-            <CustomButton {...buttonProps} />
+            <CustomButton {...buttonProps} customProps={button} />
         </>
     )
 }

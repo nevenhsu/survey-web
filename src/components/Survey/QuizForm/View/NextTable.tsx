@@ -33,7 +33,8 @@ export default function NextTable(props: NextTableProps) {
     const dispatch = useAppDispatch()
 
     const { quiz } = props
-    const { id: quizId, choices = [] } = quiz ?? {}
+    const { id: quizId, title, choices = [] } = quiz ?? {}
+    const { text = '' } = title ?? {}
 
     const [page, setPage] = React.useState(0)
     const [rowsPerPage, setRowsPerPage] = React.useState(5)
@@ -69,7 +70,15 @@ export default function NextTable(props: NextTableProps) {
     return (
         <Root className={classes.root} elevation={6} square>
             <TableContainer>
-                <Table>
+                <Table
+                    size="small"
+                    sx={{
+                        bgcolor: (theme) => theme.palette.grey[700],
+                        '& .MuiTableCell-root': {
+                            height: 64,
+                        },
+                    }}
+                >
                     <TableHead>
                         <TableRow>
                             <TableCell>答項</TableCell>
@@ -112,11 +121,8 @@ export default function NextTable(props: NextTableProps) {
                                                     value={quiz.id}
                                                 >
                                                     跳到第{i + 1}題:{' '}
-                                                    {quiz.title.substring(
-                                                        0,
-                                                        18
-                                                    )}
-                                                    {quiz.title.length > 18
+                                                    {text.substring(0, 18)}
+                                                    {text.length > 18
                                                         ? '...'
                                                         : ''}
                                                 </MenuItem>

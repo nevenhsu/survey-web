@@ -10,15 +10,15 @@ import Stack from '@mui/material/Stack'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import DraggerChoiceView from 'components/Answer/QuizView/Quiz/DraggerChoiceView'
-import CustomButton from 'components/Answer/QuizView/Quiz/CustomButton'
+import CustomButton from 'components/common/CustomButton'
+import ImageBox from 'components/common/ImageBox'
 import CountDownProgress from 'components/common/CountDownProgress'
 import { shuffle } from 'utils/helper'
 import { colors } from 'theme/palette'
-import type { OnChangeInput, DraggerType } from 'common/types'
+import type { OnChangeInput, DraggerQuiz } from 'common/types'
 
 type DraggerViewProps = {
-    title: string
-    quizProps: DraggerType
+    quizProps: DraggerQuiz
     onChange: OnChangeInput
     onDone: () => void
 }
@@ -26,8 +26,9 @@ type DraggerViewProps = {
 const MotionDraggerChoiceView = motion(DraggerChoiceView)
 
 export default function DraggerView(props: DraggerViewProps) {
-    const { title, quizProps, onChange, onDone } = props
+    const { quizProps, onChange, onDone } = props
     const {
+        title,
         values = [],
         choices: rawChoices = [],
         left,
@@ -99,10 +100,36 @@ export default function DraggerView(props: DraggerViewProps) {
                 />
             )}
 
-            <Typography variant="h6">{title}</Typography>
+            <Typography variant="h6">{title.text}</Typography>
             <Box sx={{ height: 16 }} />
 
-            <Box sx={{ width: '60vh', textAlign: 'center' }}>
+            <Box
+                sx={{
+                    width: '60vh',
+                    textAlign: 'center',
+                }}
+            >
+                {Boolean(left.image) && (
+                    <ImageBox
+                        className="absolute-center"
+                        sx={{ left: -24, maxWidth: '20vw' }}
+                        imageUrl={left.image}
+                    />
+                )}
+
+                {Boolean(right.image) && (
+                    <ImageBox
+                        className="absolute-center"
+                        sx={{
+                            right: -24,
+                            left: 'unset',
+                            transform: 'translate(50%, -50%)',
+                            maxWidth: '20vw',
+                        }}
+                        imageUrl={right.image}
+                    />
+                )}
+
                 <MotionDraggerChoiceView
                     animate={controls}
                     choice={choice}

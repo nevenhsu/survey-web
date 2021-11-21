@@ -2,7 +2,7 @@ import * as React from 'react'
 import _ from 'lodash'
 import ImageBox from 'components/common/ImageBox'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
-import { styled } from '@mui/material/styles'
+import { styled, useTheme } from '@mui/material/styles'
 import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
 import Link from '@mui/material/Link'
@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
 import Box from '@mui/material/Box'
 import StyledButton from 'components/common/StyledButton'
+import CustomButton from 'components/common/CustomButton'
 import { ComponentType } from 'common/types'
 import type { Component } from 'common/types'
 import type { Variant } from '@mui/material/styles/createTypography'
@@ -36,6 +37,7 @@ const StyledTextField = styled(TextField, {
 
 function ComponentItem(props: { component: Component }) {
     const { component } = props
+    const theme = useTheme()
 
     const {
         id,
@@ -100,6 +102,29 @@ function ComponentItem(props: { component: Component }) {
                         {val}
                     </Typography>
                 </Link>
+            )
+        }
+        case ComponentType.button: {
+            return (
+                <CustomButton
+                    defaultText="按鈕"
+                    variant="contained"
+                    sx={{
+                        whiteSpace: 'nowrap',
+                        fontWeight,
+                        display,
+                        width,
+                        height,
+                    }}
+                    customProps={{
+                        text: value,
+                        buttonColor,
+                        textColor: color,
+                        fontSize: typoVariant
+                            ? theme.typography[typoVariant].fontSize
+                            : undefined,
+                    }}
+                />
             )
         }
         case ComponentType.clipboard: {

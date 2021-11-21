@@ -1,5 +1,7 @@
 import _ from 'lodash'
-import { toBool, toNumber } from 'utils/helper'
+import { toBool, toNumber, toNumOrStr } from 'utils/helper'
+import type { GridSize } from '@mui/material/Grid'
+import { colors } from 'theme/palette'
 import { Mode, QuizMode, ComponentType, FinalMode } from 'common/types'
 import type {
     Survey,
@@ -15,7 +17,9 @@ import type {
     ChoiceType,
     Result,
     Responsive,
-    Padding,
+    CustomButtonType,
+    TextType,
+    CoverType,
 } from 'common/types'
 
 export function surveyFormatter(survey: Survey): Survey {
@@ -39,7 +43,7 @@ export function surveyFormatter(survey: Survey): Survey {
         list[id] = resultFormatter(value)
     })
 
-    const { showProgress, ...s } = setting ?? {}
+    const { showProgress, maxWidth, ...s } = setting ?? {}
 
     _.forEach(tags, (tag, id) => {
         const { values, ...t } = tag
@@ -65,6 +69,7 @@ export function surveyFormatter(survey: Survey): Survey {
         setting: {
             ...s,
             showProgress: toBool(showProgress),
+            maxWidth: toNumber(maxWidth) || 800,
         },
         enable: toBool(enable),
     }
@@ -73,22 +78,49 @@ export function surveyFormatter(survey: Survey): Survey {
 export function quizFormatter(value: QuizType): QuizType {
     const {
         mode: modeRaw,
+        title: titleRaw = {},
+        button: btnRaw = {},
+        cover: coverRaw = {},
         required: requiredRaw,
-        imageWidth,
-        imageHeight,
     } = value
 
     const mode = QuizMode[modeRaw]
     const required = toBool(requiredRaw)
 
+    const title: TextType = _.isString(titleRaw)
+        ? {
+              text: titleRaw,
+              variant: 'h6',
+          }
+        : {
+              ...titleRaw,
+              padding: toNumOrStr(titleRaw.padding),
+          }
+
+    const button: CustomButtonType = {
+        ...btnRaw,
+        padding: toNumOrStr(btnRaw.padding),
+        fontSize: toNumOrStr(btnRaw.fontSize),
+        borderRadius: toNumber(btnRaw.borderRadius),
+    }
+
+    const cover: CoverType = {
+        ...coverRaw,
+        width: {
+            xs: toNumOrStr(_.get(coverRaw, 'width.xs', 'auto')),
+            sm: toNumOrStr(_.get(coverRaw, 'width.sm', 'auto')),
+            lg: toNumOrStr(_.get(coverRaw, 'width.lg', 'auto')),
+        },
+        height: toNumOrStr(coverRaw.height),
+    }
+
     const quiz = {
         ...value,
         mode,
+        title,
+        button,
+        cover,
         required,
-        imageWidth: imageWidth ? toNumber(imageWidth) || imageWidth : undefined,
-        imageHeight: imageHeight
-            ? toNumber(imageHeight) || imageHeight
-            : undefined,
     }
 
     switch (mode) {
@@ -180,10 +212,28 @@ export function quizFormatter(value: QuizType): QuizType {
                 countDown,
                 choices = [],
                 values = [],
+                left,
+                right,
                 ...others
             } = quiz as DraggerQuiz
             const draggerQuiz: DraggerQuiz = {
                 ...others,
+                left: {
+                    textColor: '#ffffff',
+                    buttonColor: colors[0][500],
+                    ...left,
+                    padding: toNumOrStr(left.padding),
+                    fontSize: toNumOrStr(left.fontSize),
+                    borderRadius: toNumber(left.borderRadius),
+                },
+                right: {
+                    textColor: '#ffffff',
+                    buttonColor: colors[1][500],
+                    ...right,
+                    padding: toNumOrStr(right.padding),
+                    fontSize: toNumOrStr(right.fontSize),
+                    borderRadius: toNumber(right.borderRadius),
+                },
                 showImage: toBool(showImage),
                 countDown: toNumber(countDown),
                 choices,
@@ -195,7 +245,14 @@ export function quizFormatter(value: QuizType): QuizType {
 }
 
 export function choiceFormatter(value: ChoiceType): ChoiceType {
-    const { label = '', tags: tagsRaw, ...rest } = value ?? {}
+    const {
+        label = '',
+        tags: tagsRaw,
+        fontSize,
+        padding,
+        borderRadius,
+        ...rest
+    } = value ?? {}
 
     const tags: { [tagId: string]: string[] } = {}
     _.forEach(tagsRaw, (val, key) => {
@@ -208,6 +265,9 @@ export function choiceFormatter(value: ChoiceType): ChoiceType {
         ...rest,
         label,
         tags,
+        fontSize: toNumOrStr(fontSize),
+        borderRadius: toNumber(borderRadius),
+        padding: toNumOrStr(padding),
     }
 }
 
@@ -272,21 +332,34 @@ export function resultFormatter(value: Result) {
     }
 }
 
-export function layoutFormatter(resp?: Responsive, pxd?: Padding) {
-    const responsive = {
-        xs: toNumber(resp?.xs) || 12,
-        sm: toNumber(resp?.sm) || 6,
-        lg: toNumber(resp?.lg) || 3,
-    } as Responsive
+function layoutFormatter(_responsive?: Responsive<GridSize>, _px?: Responsive) {
+    const responsive = responsiveFormatter<GridSize>(_responsive, {
+        xs: 12,
+        sm: 6,
+        lg: 3,
+    })
 
-    const px: Padding = {
-        xs: toNumber(pxd?.xs) ?? 1,
-        sm: toNumber(pxd?.sm) ?? 1,
-        lg: toNumber(pxd?.lg) ?? 1,
-    }
+    const px: Responsive = responsiveFormatter(_px, {
+        xs: 1,
+        sm: 1,
+        lg: 1,
+    })
 
     return {
         responsive,
         px,
     }
+}
+
+function responsiveFormatter<T>(
+    resp?: Responsive<T>,
+    fallback?: Responsive<T>
+) {
+    const responsive = {
+        xs: toNumber(resp?.xs) || fallback?.xs,
+        sm: toNumber(resp?.sm) || fallback?.sm,
+        lg: toNumber(resp?.lg) || fallback?.lg,
+    } as Responsive<T>
+
+    return responsive
 }

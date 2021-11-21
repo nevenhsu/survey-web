@@ -15,6 +15,9 @@ import {
 } from 'components/Survey/QuizForm/Quiz'
 import ImageUploader from 'components/common/ImageUploader'
 import ThemeProvider from 'theme/ThemeProvider'
+import { useAppSelector } from 'hooks'
+import { getDeviceValue } from 'utils/helper'
+import { selectDevice } from 'store/slices/userDefault'
 import { QuizMode } from 'common/types'
 import type {
     QuizType,
@@ -34,16 +37,18 @@ export default function Editor(props: EditorProps) {
     const { surveyId, quiz } = props
     const dispatch = useAppDispatch()
 
+    const device = useAppSelector(selectDevice)
+
     const {
         id: quizId,
         mode,
         required,
-        image,
-        imageWidth,
-        imageHeight,
+        cover,
         backgroundColor,
         backgroundImage,
     } = quiz ?? {}
+
+    const { image } = cover ?? {}
 
     const hasQuiz = Boolean(quizId)
 
@@ -64,28 +69,13 @@ export default function Editor(props: EditorProps) {
             return <div />
         }
 
-        const {
-            mode,
-            title,
-            buttonColor,
-            buttonText,
-            buttonTextColor,
-            buttonVariant,
-        } = quiz
-
-        const customProps = {
-            buttonColor,
-            buttonText,
-            buttonTextColor,
-            buttonVariant,
-        }
+        const { mode, title } = quiz
 
         switch (mode) {
             case QuizMode.page: {
                 return (
                     <PageView
-                        title={title}
-                        customProps={customProps}
+                        quizProps={quiz}
                         onChange={(event) => {
                             handleUpdateQuiz({
                                 [event.target.name]: event.target.value,
@@ -95,12 +85,9 @@ export default function Editor(props: EditorProps) {
                 )
             }
             case QuizMode.fill: {
-                const { value = '' } = quiz as FillQuiz
                 return (
                     <FillView
-                        title={title}
-                        value={value}
-                        customProps={customProps}
+                        quizProps={quiz as FillQuiz}
                         onChange={(event) => {
                             handleUpdateQuiz({
                                 [event.target.name]: event.target.value,
@@ -110,12 +97,9 @@ export default function Editor(props: EditorProps) {
                 )
             }
             case QuizMode.slider: {
-                const { min, max } = quiz as SliderQuiz
                 return (
                     <SliderView
-                        title={title}
-                        quizProps={{ min, max }}
-                        customProps={customProps}
+                        quizProps={quiz as SliderQuiz}
                         onChange={(event) => {
                             handleUpdateQuiz({
                                 [event.target.name]: event.target.value,
@@ -126,24 +110,9 @@ export default function Editor(props: EditorProps) {
             }
             case QuizMode.sort:
             case QuizMode.selection: {
-                const {
-                    choices = [],
-                    maxChoices = 4,
-                    showImage = false,
-                    responsive,
-                    px,
-                } = quiz as SelectionQuiz
                 return (
                     <SelectionView
-                        title={title}
-                        quizProps={{
-                            choices,
-                            maxChoices,
-                            showImage,
-                            responsive,
-                            px,
-                        }}
-                        customProps={customProps}
+                        quizProps={quiz as SelectionQuiz}
                         onChange={(event) => {
                             handleUpdateQuiz({
                                 [event.target.name]: event.target.value,
@@ -153,22 +122,9 @@ export default function Editor(props: EditorProps) {
                 )
             }
             case QuizMode.oneInTwo: {
-                const {
-                    choices = [],
-                    showImage,
-                    responsive,
-                    px,
-                } = quiz as OneInTwoQuiz
-
                 return (
                     <OneInTwoView
-                        title={title}
-                        quizProps={{
-                            choices,
-                            showImage,
-                            responsive,
-                            px,
-                        }}
+                        quizProps={quiz as OneInTwoQuiz}
                         onChange={(event) => {
                             handleUpdateQuiz({
                                 [event.target.name]: event.target.value,
@@ -178,22 +134,9 @@ export default function Editor(props: EditorProps) {
                 )
             }
             case QuizMode.dragger: {
-                const {
-                    choices = [],
-                    showImage,
-                    left,
-                    right,
-                } = quiz as DraggerQuiz
-
                 return (
                     <DraggerView
-                        title={title}
-                        quizProps={{
-                            choices,
-                            showImage,
-                            left,
-                            right,
-                        }}
+                        quizProps={quiz as DraggerQuiz}
                         onChange={(event) => {
                             handleUpdateQuiz({
                                 [event.target.name]: event.target.value,
@@ -262,13 +205,16 @@ export default function Editor(props: EditorProps) {
                             <ImageUploader
                                 bgImage={image}
                                 sx={{
-                                    width: imageWidth || 'auto',
-                                    height: imageHeight || 'auto',
+                                    width: getDeviceValue(
+                                        device,
+                                        cover?.width
+                                    ) as any,
+                                    height: cover?.height,
                                     mt: `0 !important`,
                                 }}
                                 onUploaded={(image) => {
                                     handleUpdateQuiz({
-                                        image,
+                                        cover: { ...cover, image },
                                     })
                                 }}
                                 hideButton={Boolean(image)}

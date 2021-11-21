@@ -3,23 +3,21 @@ import _ from 'lodash'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import CustomButton, {
-    CustomButtonProps,
-} from 'components/Answer/QuizView/Quiz/CustomButton'
-import type { OnChangeInput } from 'common/types'
+import CustomButton, { CustomButtonProps } from 'components/common/CustomButton'
+import type { OnChangeInput, FillQuiz } from 'common/types'
 
 type FillViewProps = {
-    title: string
-    value: string
+    quizProps: FillQuiz
     buttonProps: CustomButtonProps
     onChange: OnChangeInput
 }
 
 export default function FillView(props: FillViewProps) {
-    const { title, value, buttonProps, onChange } = props
+    const { quizProps, buttonProps, onChange } = props
+    const { title, value, button } = quizProps ?? {}
     return (
         <>
-            <Typography variant="h6">{title}</Typography>
+            <Typography variant="h6">{title.text}</Typography>
 
             <Box sx={{ height: 16 }} />
 
@@ -36,7 +34,7 @@ export default function FillView(props: FillViewProps) {
 
             <Box sx={{ height: 16 }} />
 
-            <CustomButton {...buttonProps} />
+            <CustomButton {...buttonProps} customProps={button} />
         </>
     )
 }

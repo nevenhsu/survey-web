@@ -33,8 +33,6 @@ import type {
     OnChangeInput,
 } from 'common/types'
 import type { ActionMeta, OnChangeValue, MultiValue } from 'react-select'
-import { autocompleteClasses } from '@mui/material'
-import { flexbox } from '@mui/system'
 
 type TagTableProps = {
     quiz?: SelectionQuiz

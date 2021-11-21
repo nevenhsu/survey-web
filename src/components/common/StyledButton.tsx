@@ -18,6 +18,7 @@ const StyledButton = styled(Button, {
             backgroundColor: variant === 'outlined' ? undefined : bgcolor,
             borderColor: variant === 'outlined' ? bgcolor : undefined,
             '&:hover': {
+                color,
                 backgroundColor:
                     variant === 'outlined' ? undefined : hoverColor,
                 borderColor: variant === 'outlined' ? hoverColor : undefined,

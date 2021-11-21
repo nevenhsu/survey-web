@@ -12,6 +12,7 @@ import Button from '@mui/material/Button'
 import MenuItem from '@mui/material/MenuItem'
 import TextField from '@mui/material/TextField'
 import ImageUploader from 'components/common/ImageUploader'
+import { typoOptions, fontWeightOptions } from 'components/common/options'
 import { ComponentType } from 'common/types'
 import type { Component } from 'common/types'
 
@@ -37,26 +38,6 @@ const alignOptions = [
     { value: 'center', label: '置中' },
     { value: 'right', label: '置右' },
     { value: 'justify', label: '齊行' },
-]
-
-const typoOptions = [
-    { value: 'h2', label: 'Heading 1' },
-    { value: 'h4', label: 'Heading 2' },
-    { value: 'h6', label: 'Heading 3' },
-    { value: 'subtitle1', label: 'Subtitle 1' },
-    { value: 'subtitle2', label: 'Subtitle 2' },
-    { value: 'body1', label: 'Body 1' },
-    { value: 'body2', label: 'Body 2' },
-    { value: 'button', label: 'Button' },
-    { value: 'caption', label: 'Caption' },
-    { value: 'overline', label: 'Overline' },
-] as const
-
-const fontWeightOptions = [
-    { value: 'light', label: 'Light' },
-    { value: 'regular', label: 'Regular' },
-    { value: 'medium', label: 'Medium' },
-    { value: 'bold', label: 'Bold' },
 ]
 
 const underlineOptions = [
@@ -383,6 +364,25 @@ export default function ComponentTool(props: ComponentToolProps) {
                         </TableRow>
                     )}
 
+                    {_.includes(
+                        [ComponentType.clipboard, ComponentType.button],
+                        type
+                    ) && (
+                        <TableRow>
+                            <TableCell>按鈕顏色</TableCell>
+                            <TableCell>
+                                <StyledTextField
+                                    name="buttonColor"
+                                    value={buttonColor ?? ''}
+                                    variant="standard"
+                                    placeholder="#3892FC"
+                                    onChange={onChange}
+                                    fullWidth
+                                />
+                            </TableCell>
+                        </TableRow>
+                    )}
+
                     <TableRow>
                         <TableCell>背景顏色</TableCell>
                         <TableCell>
@@ -396,22 +396,6 @@ export default function ComponentTool(props: ComponentToolProps) {
                             />
                         </TableCell>
                     </TableRow>
-
-                    {type === ComponentType.clipboard && (
-                        <TableRow>
-                            <TableCell>按鈕顏色</TableCell>
-                            <TableCell>
-                                <StyledTextField
-                                    name="buttonColor"
-                                    value={buttonColor ?? ''}
-                                    variant="standard"
-                                    placeholder="#7879F1"
-                                    onChange={onChange}
-                                    fullWidth
-                                />
-                            </TableCell>
-                        </TableRow>
-                    )}
                 </TableBody>
             </Table>
 

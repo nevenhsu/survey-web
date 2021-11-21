@@ -1,22 +1,30 @@
 import * as React from 'react'
 import _ from 'lodash'
 import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
+import LinearProgress from '@mui/material/LinearProgress'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
 import ChoiceView from 'components/Answer/QuizView/Quiz/ChoiceView'
 import { shuffle } from 'utils/helper'
-import type { OnChangeInput, OneInTwoType, ChoiceType } from 'common/types'
+import type { OnChangeInput, OneInTwoQuiz, ChoiceType } from 'common/types'
 
 type OneInTwoViewProps = {
-    title: string
-    quizProps: Omit<OneInTwoType, 'tagsId'>
+    quizProps: OneInTwoQuiz
     onChange: OnChangeInput
     onDone: () => void
 }
 
 export default function OneInTwoView(props: OneInTwoViewProps) {
-    const { title, quizProps, onChange, onDone } = props
-    const { choices = [], values = [], showImage, responsive, px } = quizProps
+    const { quizProps, onChange, onDone } = props
+    const {
+        title,
+        choices = [],
+        values = [],
+        showImage,
+        responsive,
+        px,
+    } = quizProps
 
     const [current, setCurrent] = React.useState(0)
     const choiceGroups = React.useMemo(() => {
@@ -24,6 +32,9 @@ export default function OneInTwoView(props: OneInTwoViewProps) {
     }, [choices])
 
     const choiceGroup = choiceGroups[current]
+
+    const progress = _.round(((current + 1) / choiceGroups.length) * 100)
+    const progressText = `${current + 1} / ${choiceGroups.length}`
 
     const handleClick = (id: string) => {
         if (id) {
@@ -47,7 +58,24 @@ export default function OneInTwoView(props: OneInTwoViewProps) {
 
     return (
         <>
-            <Typography variant="h6">{title}</Typography>
+            <Box sx={{ position: 'fixed', top: 8, width: '100%', px: 2 }}>
+                <Stack direction="row" alignItems="center" spacing={2}>
+                    <LinearProgress
+                        variant="determinate"
+                        value={progress}
+                        sx={{ width: '100%', height: 16, borderRadius: 99 }}
+                    />
+                    <Typography
+                        variant="h6"
+                        color="primary.main"
+                        sx={{ minWidth: `${progressText.length}ch` }}
+                    >
+                        {progressText}
+                    </Typography>
+                </Stack>
+            </Box>
+
+            <Typography variant="h6">{title.text}</Typography>
             <Box sx={{ height: 16 }} />
             <Box sx={{ width: '100%', textAlign: 'center', px }}>
                 <Grid

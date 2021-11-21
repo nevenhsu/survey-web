@@ -19,6 +19,7 @@ import type {
     OneInTwoQuiz,
     SelectionQuiz,
     SliderQuiz,
+    FillQuiz,
     AnswerValue,
 } from 'common/types'
 
@@ -55,12 +56,12 @@ export default function QuizView(props: QuizViewProps) {
     const {
         id: quizId,
         required,
-        image,
-        imageHeight,
-        imageWidth,
+        cover,
         backgroundImage,
         backgroundColor,
     } = quiz ?? {}
+
+    const { image } = cover ?? {}
 
     const answerValue = useAppSelector(selectAnswerValue(quizId))
     const lastQuiz = useAppSelector((state) => state.answer.lastQuiz)
@@ -90,53 +91,23 @@ export default function QuizView(props: QuizViewProps) {
             return <div />
         }
 
-        const {
-            mode,
-            title,
-            buttonColor,
-            buttonText,
-            buttonTextColor,
-            buttonVariant,
-        } = quiz
-
-        const customProps = {
-            buttonColor,
-            buttonText,
-            buttonTextColor,
-            buttonVariant,
-        }
-
-        const { value, values = [] } = answerValue ?? {}
+        const { mode } = quiz
 
         switch (mode) {
             case QuizMode.page: {
                 return (
                     <PageView
-                        title={title}
-                        buttonProps={{ customProps, onClick: handleNext }}
+                        quizProps={quiz}
+                        buttonProps={{
+                            onClick: handleNext,
+                        }}
                     />
                 )
             }
             case QuizMode.dragger: {
-                const {
-                    choices = [],
-                    left,
-                    right,
-                    countDown,
-                    showImage,
-                } = quiz as DraggerQuiz
-
                 return (
                     <DraggerView
-                        title={title}
-                        quizProps={{
-                            choices,
-                            values,
-                            left,
-                            right,
-                            countDown,
-                            showImage,
-                        }}
+                        quizProps={{ ...quiz, ...answerValue } as DraggerQuiz}
                         onChange={(event) => {
                             handleUpdateAnswer({
                                 [event.target.name]: event.target.value,
@@ -147,23 +118,9 @@ export default function QuizView(props: QuizViewProps) {
                 )
             }
             case QuizMode.oneInTwo: {
-                const {
-                    choices = [],
-                    showImage = false,
-                    responsive,
-                    px,
-                } = quiz as OneInTwoQuiz
-
                 return (
                     <OneInTwoView
-                        title={title}
-                        quizProps={{
-                            choices,
-                            values,
-                            showImage,
-                            responsive,
-                            px,
-                        }}
+                        quizProps={{ ...quiz, ...answerValue } as OneInTwoQuiz}
                         onChange={(event) => {
                             handleUpdateAnswer({
                                 [event.target.name]: event.target.value,
@@ -174,27 +131,10 @@ export default function QuizView(props: QuizViewProps) {
                 )
             }
             case QuizMode.selection: {
-                const {
-                    choices = [],
-                    maxChoices = 1,
-                    showImage = false,
-                    responsive,
-                    px,
-                } = quiz as SelectionQuiz
-
                 return (
                     <SelectionView
-                        title={title}
-                        quizProps={{
-                            choices,
-                            values,
-                            maxChoices,
-                            showImage,
-                            responsive,
-                            px,
-                        }}
+                        quizProps={{ ...quiz, ...answerValue } as SelectionQuiz}
                         buttonProps={{
-                            customProps,
                             disabled: !validValue,
                             onClick: handleNext,
                         }}
@@ -207,27 +147,10 @@ export default function QuizView(props: QuizViewProps) {
                 )
             }
             case QuizMode.sort: {
-                const {
-                    choices = [],
-                    maxChoices = 4,
-                    showImage = false,
-                    responsive,
-                    px,
-                } = quiz as SelectionQuiz
-
                 return (
                     <SortView
-                        title={title}
-                        quizProps={{
-                            choices,
-                            values,
-                            maxChoices,
-                            showImage,
-                            responsive,
-                            px,
-                        }}
+                        quizProps={{ ...quiz, ...answerValue } as SelectionQuiz}
                         buttonProps={{
-                            customProps,
                             disabled: !validValue,
                             onClick: handleNext,
                         }}
@@ -242,10 +165,8 @@ export default function QuizView(props: QuizViewProps) {
             case QuizMode.fill: {
                 return (
                     <FillView
-                        title={title}
-                        value={`${value ?? ''}`}
+                        quizProps={{ ...quiz, ...answerValue } as FillQuiz}
                         buttonProps={{
-                            customProps,
                             disabled: !validValue,
                             onClick: handleNext,
                         }}
@@ -258,14 +179,16 @@ export default function QuizView(props: QuizViewProps) {
                 )
             }
             case QuizMode.slider: {
-                const { min, max } = quiz as SliderQuiz
-                const val = toNumber(value) ?? min
+                const { min } = (quiz ?? {}) as SliderQuiz
                 return (
                     <SliderView
-                        title={title}
-                        quizProps={{ value: val, min, max }}
+                        quizProps={
+                            {
+                                ...quiz,
+                                value: toNumber(answerValue?.value) ?? min,
+                            } as SliderQuiz
+                        }
                         buttonProps={{
-                            customProps,
                             disabled: !validValue,
                             onClick: handleNext,
                         }}
@@ -335,8 +258,8 @@ export default function QuizView(props: QuizViewProps) {
                     <ImageBox
                         imageUrl={image}
                         sx={{
-                            width: imageWidth || 'auto',
-                            height: imageHeight || 'auto',
+                            width: cover?.width ?? 'auto',
+                            height: cover?.height ?? 'auto',
                             mt: `0 !important`,
                         }}
                     />

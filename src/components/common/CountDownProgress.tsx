@@ -2,10 +2,10 @@ import * as React from 'react'
 import _ from 'lodash'
 import { useCountdown } from 'rooks'
 import { styled } from '@mui/material/styles'
+import Stack from '@mui/material/Stack'
 import LinearProgress from '@mui/material/LinearProgress'
 import Typography from '@mui/material/Typography'
 import Box, { BoxProps } from '@mui/material/Box'
-import Stack from '@mui/material/Stack'
 
 type CountDownProgressProps = BoxProps & {
     countDown: number

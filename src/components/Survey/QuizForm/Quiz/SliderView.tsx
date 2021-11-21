@@ -7,27 +7,30 @@ import TextField from '@mui/material/TextField'
 import Slider from '@mui/material/Slider'
 import {
     StyledTextField,
-    CustomButton,
+    StyledCustomButton,
 } from 'components/Survey/QuizForm/Shares'
-import type { CustomButtonType, OnChangeInput, SliderType } from 'common/types'
+import type { OnChangeInput, SliderQuiz } from 'common/types'
 
 export default function SliderView(props: {
-    title: string
-    quizProps: Omit<SliderType, 'value'>
-    customProps: CustomButtonType
+    quizProps: Omit<SliderQuiz, 'value'>
     onChange: OnChangeInput
 }) {
-    const { title, quizProps, customProps, onChange } = props
-    const { max, min } = quizProps
+    const { quizProps, onChange } = props
+    const { max, min, button, title } = quizProps
+
+    const handleChange = (name: string, value: any) => {
+        onChange({ target: { name, value } } as any)
+    }
 
     return (
         <>
             <StyledTextField
                 variant="standard"
                 placeholder="請輸入您的文字"
-                name="title"
-                value={title}
-                onChange={onChange}
+                value={_.get(title, 'text', '')}
+                onChange={(e) =>
+                    handleChange('title', { ...title, text: e.target.value })
+                }
                 multiline
             />
 
@@ -88,7 +91,10 @@ export default function SliderView(props: {
             </Box>
 
             <Box sx={{ height: 16 }} />
-            <CustomButton customProps={customProps} onChange={onChange} />
+            <StyledCustomButton
+                customProps={button}
+                onCustomize={(value) => handleChange('button', value)}
+            />
         </>
     )
 }

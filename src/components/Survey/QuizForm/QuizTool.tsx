@@ -4,6 +4,7 @@ import { styled } from '@mui/material'
 import NumberFormat from 'react-number-format'
 import { GridSize } from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
+import InputAdornment from '@mui/material/InputAdornment'
 import MenuItem from '@mui/material/MenuItem'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -23,13 +24,14 @@ import {
     updateSurvey,
     selectCurrentSurvey,
 } from 'store/slices/survey'
-import { toNumber } from 'utils/helper'
+import { toNumber, toNumOrStr } from 'utils/helper'
 import { QuizMode } from 'common/types'
 import type {
     SelectionQuiz,
     OnChangeInput,
     QuizType,
     DraggerQuiz,
+    Setting,
 } from 'common/types'
 
 type QuizToolProps = {
@@ -97,21 +99,20 @@ export default function QuizTool(props: QuizToolProps) {
     const {
         id: quizId,
         mode,
-        imageWidth,
-        imageHeight,
+        cover,
         backgroundImage,
         backgroundColor,
     } = quiz ?? {}
+
     const { responsive, px, showImage, maxChoices } =
         (quiz as SelectionQuiz) ?? {}
 
-    const { countDown } = (quiz as DraggerQuiz) ?? {}
+    const { countDown, left, right } = (quiz as DraggerQuiz) ?? {}
 
     const handleChange: OnChangeInput = (event) => {
         const { name, value } = event.target
 
-        let val: any = value === '' ? undefined : value
-        val = Number(val) || val
+        const val = toNumOrStr(value)
 
         const newValue = {
             [name]: val,
@@ -150,18 +151,15 @@ export default function QuizTool(props: QuizToolProps) {
         }
     }
 
-    const handleSwitchSetting = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        const { name, checked } = event.target
-        const newValue = {
-            setting: {
-                ...setting,
-                [name]: checked,
-            },
-        }
-
+    const handleChangeSetting = (name: string, value: any) => {
         if (surveyId) {
+            const newValue = {
+                setting: {
+                    ...setting,
+                    [name]: value,
+                },
+            }
+
             dispatch(
                 updateSurvey({
                     id: surveyId,
@@ -169,6 +167,13 @@ export default function QuizTool(props: QuizToolProps) {
                 })
             )
         }
+    }
+
+    const handleSwitchSetting = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const { name, checked } = event.target
+        handleChangeSetting(name, checked)
     }
 
     const handleUpdateResponsive = (
@@ -238,71 +243,276 @@ export default function QuizTool(props: QuizToolProps) {
                             />
                         </TableCell>
                     </TableRow>
+
+                    <TableRow>
+                        <TableCell>最大寬度</TableCell>
+                        <TableCell>
+                            <NumberFormat
+                                customInput={StyledTextField}
+                                variant="standard"
+                                value={setting?.maxWidth ?? ''}
+                                onValueChange={({ value }) => {
+                                    handleChangeSetting(
+                                        'maxWidth',
+                                        toNumOrStr(value)
+                                    )
+                                }}
+                                placeholder="800"
+                                fullWidth
+                            />
+                        </TableCell>
+                    </TableRow>
+
                     {mode === QuizMode.dragger && (
-                        <TableRow>
-                            <TableCell>倒數毫秒</TableCell>
-                            <TableCell>
-                                <NumberFormat
-                                    customInput={StyledTextField}
-                                    variant="standard"
-                                    value={countDown}
-                                    onValueChange={({ value }) => {
-                                        handleUpdateQuiz({
-                                            countDown: value
-                                                ? Number(value)
-                                                : NaN,
-                                        })
-                                    }}
-                                    placeholder="30000"
-                                    fullWidth
-                                />
-                            </TableCell>
-                        </TableRow>
+                        <>
+                            <TableRow>
+                                <TableCell>倒數計時</TableCell>
+                                <TableCell>
+                                    <NumberFormat
+                                        customInput={StyledTextField}
+                                        variant="standard"
+                                        value={countDown}
+                                        onValueChange={({ value }) => {
+                                            handleUpdateQuiz({
+                                                countDown: value
+                                                    ? Number(value)
+                                                    : NaN,
+                                            })
+                                        }}
+                                        placeholder="30000"
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment
+                                                    position="end"
+                                                    sx={{
+                                                        position: 'absolute',
+                                                        right: 8,
+                                                        '& p': {
+                                                            fontSize: 14,
+                                                        },
+                                                    }}
+                                                >
+                                                    毫秒
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                        fullWidth
+                                    />
+                                </TableCell>
+                            </TableRow>
+
+                            <TableRow sx={{ position: 'relative' }}>
+                                <TableCell>左項圖片</TableCell>
+                                <TableCell>
+                                    <ImageUploader
+                                        onUploaded={(image) => {
+                                            handleUpdateQuiz({
+                                                left: {
+                                                    ...left,
+                                                    image,
+                                                },
+                                            })
+                                        }}
+                                        sx={{ width: 104 }}
+                                        hideImage
+                                        hideDeleteButton
+                                    />
+                                    <Button
+                                        className="absolute-vertical"
+                                        color="error"
+                                        sx={{ right: 8 }}
+                                        disabled={!_.get(left, 'image')}
+                                        onClick={() => {
+                                            handleUpdateQuiz({
+                                                left: {
+                                                    ...left,
+                                                    image: '',
+                                                },
+                                            })
+                                        }}
+                                    >
+                                        清除
+                                    </Button>
+                                </TableCell>
+                            </TableRow>
+
+                            <TableRow sx={{ position: 'relative' }}>
+                                <TableCell>右項圖片</TableCell>
+                                <TableCell>
+                                    <ImageUploader
+                                        onUploaded={(image) => {
+                                            handleUpdateQuiz({
+                                                right: {
+                                                    ...right,
+                                                    image,
+                                                },
+                                            })
+                                        }}
+                                        sx={{ width: 104 }}
+                                        hideImage
+                                        hideDeleteButton
+                                    />
+                                    <Button
+                                        className="absolute-vertical"
+                                        color="error"
+                                        sx={{ right: 8 }}
+                                        disabled={!_.get(right, 'image')}
+                                        onClick={() => {
+                                            handleUpdateQuiz({
+                                                right: {
+                                                    ...right,
+                                                    image: '',
+                                                },
+                                            })
+                                        }}
+                                    >
+                                        清除
+                                    </Button>
+                                </TableCell>
+                            </TableRow>
+                        </>
                     )}
                     {mode !== QuizMode.dragger && (
                         <>
                             <TableRow>
-                                <TableCell>封面寬度</TableCell>
-                                <TableCell>
-                                    <StyledTextField
-                                        name="imageWidth"
-                                        placeholder="auto"
-                                        value={imageWidth ?? ''}
-                                        variant="standard"
-                                        onChange={handleChange}
-                                        fullWidth
-                                    />
+                                <TableCell component="th">封面寬度</TableCell>
+                                <TableCell component="th"></TableCell>
+                            </TableRow>
+
+                            <TableRow
+                                sx={{
+                                    position: 'relative',
+                                    height: 64,
+                                }}
+                            >
+                                <TableCell
+                                    className="absolute-center"
+                                    sx={{
+                                        px: 2,
+                                        pt: 1.5,
+                                        width: '100%',
+                                        height: '100% !important',
+                                    }}
+                                >
+                                    <Stack
+                                        direction="row"
+                                        justifyContent="space-around"
+                                        alignItems="center"
+                                        spacing={2}
+                                    >
+                                        <Box sx={{ width: 1 / 3 }}>
+                                            <StyledTextField
+                                                label="手機"
+                                                placeholder="auto"
+                                                value={cover?.width?.xs ?? ''}
+                                                variant="standard"
+                                                onChange={(event) =>
+                                                    handleChange({
+                                                        target: {
+                                                            name: 'cover',
+                                                            value: {
+                                                                ...cover,
+                                                                width: {
+                                                                    ...cover?.width,
+                                                                    xs: toNumOrStr(
+                                                                        event
+                                                                            .target
+                                                                            .value
+                                                                    ),
+                                                                },
+                                                            },
+                                                        },
+                                                    } as any)
+                                                }
+                                                fullWidth
+                                            />
+                                        </Box>
+                                        <Box sx={{ width: 1 / 3 }}>
+                                            <StyledTextField
+                                                label="平板"
+                                                placeholder="auto"
+                                                value={cover?.width?.sm ?? ''}
+                                                variant="standard"
+                                                onChange={(event) =>
+                                                    handleChange({
+                                                        target: {
+                                                            name: 'cover',
+                                                            value: {
+                                                                ...cover,
+                                                                width: {
+                                                                    ...cover?.width,
+                                                                    sm: toNumOrStr(
+                                                                        event
+                                                                            .target
+                                                                            .value
+                                                                    ),
+                                                                },
+                                                            },
+                                                        },
+                                                    } as any)
+                                                }
+                                                fullWidth
+                                            />
+                                        </Box>
+                                        <Box sx={{ width: 1 / 3 }}>
+                                            <StyledTextField
+                                                label="電腦"
+                                                placeholder="auto"
+                                                value={cover?.width?.lg ?? ''}
+                                                variant="standard"
+                                                onChange={(event) =>
+                                                    handleChange({
+                                                        target: {
+                                                            name: 'cover',
+                                                            value: {
+                                                                ...cover,
+                                                                width: {
+                                                                    ...cover?.width,
+                                                                    lg: toNumOrStr(
+                                                                        event
+                                                                            .target
+                                                                            .value
+                                                                    ),
+                                                                },
+                                                            },
+                                                        },
+                                                    } as any)
+                                                }
+                                                fullWidth
+                                            />
+                                        </Box>
+                                    </Stack>
                                 </TableCell>
+                                <TableCell sx={{ borderBottom: 0 }}></TableCell>
                             </TableRow>
 
                             <TableRow>
                                 <TableCell>封面高度</TableCell>
                                 <TableCell>
                                     <StyledTextField
-                                        name="imageHeight"
                                         placeholder="auto"
-                                        value={imageHeight ?? ''}
+                                        value={cover?.height ?? ''}
                                         variant="standard"
-                                        onChange={handleChange}
+                                        onChange={(event) =>
+                                            handleChange({
+                                                target: {
+                                                    name: 'cover',
+                                                    value: {
+                                                        ...cover,
+                                                        height: toNumOrStr(
+                                                            event.target.value
+                                                        ),
+                                                    },
+                                                },
+                                            } as any)
+                                        }
                                         fullWidth
                                     />
                                 </TableCell>
                             </TableRow>
                         </>
                     )}
-                    <TableRow>
-                        <TableCell>背景顏色</TableCell>
-                        <TableCell>
-                            <StyledTextField
-                                name="backgroundColor"
-                                placeholder="#ffffff"
-                                value={backgroundColor ?? ''}
-                                variant="standard"
-                                onChange={handleChange}
-                                fullWidth
-                            />
-                        </TableCell>
-                    </TableRow>
+
                     <TableRow sx={{ position: 'relative' }}>
                         <TableCell>背景圖片</TableCell>
                         <TableCell>
@@ -329,6 +539,20 @@ export default function QuizTool(props: QuizToolProps) {
                             >
                                 清除
                             </Button>
+                        </TableCell>
+                    </TableRow>
+
+                    <TableRow>
+                        <TableCell>背景顏色</TableCell>
+                        <TableCell>
+                            <StyledTextField
+                                name="backgroundColor"
+                                placeholder="#ffffff"
+                                value={backgroundColor ?? ''}
+                                variant="standard"
+                                onChange={handleChange}
+                                fullWidth
+                            />
                         </TableCell>
                     </TableRow>
 
@@ -442,6 +666,7 @@ export default function QuizTool(props: QuizToolProps) {
                                 <TableCell component="th">答項留白</TableCell>
                                 <TableCell component="th"></TableCell>
                             </TableRow>
+
                             <TableRow
                                 sx={{
                                     position: 'relative',

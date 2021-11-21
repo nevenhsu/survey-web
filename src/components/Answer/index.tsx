@@ -39,7 +39,7 @@ export default function Survey() {
         setting,
     } = useAppSelector(selectSurvey) ?? {}
 
-    const { showProgress } = setting ?? {}
+    const { showProgress, maxWidth } = setting ?? {}
 
     const quizId = useAppSelector(selectQuizId)
 
@@ -99,7 +99,8 @@ export default function Survey() {
                                 sx={{
                                     position: 'fixed',
                                     top: 0,
-                                    width: '100%',
+                                    left: 0,
+                                    width: '100vw',
                                     zIndex: 'tooltip',
                                 }}
                             />
@@ -125,7 +126,12 @@ export default function Survey() {
                 minHeight: '100vh',
             }}
         >
-            <React.Suspense fallback={<div />}>{renderView()}</React.Suspense>
+            <Box sx={{ maxWidth, mx: 'auto' }}>
+                <React.Suspense fallback={<div />}>
+                    {renderView()}
+                </React.Suspense>
+            </Box>
+
             {Boolean(surveyId) && !enable && (
                 <Typography
                     variant="subtitle1"

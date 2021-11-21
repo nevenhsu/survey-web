@@ -3,7 +3,7 @@ import _ from 'lodash'
 import Box from '@mui/material/Box'
 import { Contexts } from 'components/common/Component'
 import { ComponentList, getComponent } from 'components/common/Component'
-import { getDefaultComponent } from 'utils/helper'
+import { getDefaultComponent, toNumOrStr } from 'utils/helper'
 import { useAppDispatch, useAppSelector } from 'hooks'
 import { updateFinalComponents, selectCurrentSurvey } from 'store/slices/survey'
 import { ComponentType } from 'common/types'
@@ -42,8 +42,7 @@ export default function EditingFinal() {
         const { name, value } = event.target
 
         if (surveyId && selectedComponent) {
-            let val: any = value === '' ? undefined : value
-            val = Number(val) || val
+            const val = toNumOrStr(value)
 
             const newValue = {
                 ...selectedComponent,

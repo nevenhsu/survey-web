@@ -3,6 +3,7 @@ import _ from 'lodash'
 import ComponentTool from 'components/common/Component/Tool'
 import { Contexts } from 'components/common/Component'
 import { useAppDispatch, useAppSelector } from 'hooks'
+import { toNumOrStr } from 'utils/helper'
 import { updateComponent, selectResult, setResult } from 'store/slices/survey'
 import type { OnChangeInput, Component } from 'common/types'
 
@@ -26,9 +27,7 @@ export default function ResultTool(props: ResultToolProps) {
 
     const handleChange: OnChangeInput = (event) => {
         const { name, value } = event.target
-
-        let val: any = value === '' ? undefined : value
-        val = Number(val) || val
+        const val = toNumOrStr(value)
 
         const newValue = {
             ...component,

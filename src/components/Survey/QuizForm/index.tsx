@@ -30,7 +30,7 @@ import {
 import { reorder, setId, getDefaultQuiz } from 'utils/helper'
 import ThemeProvider from 'theme/ThemeProvider'
 import { QuizMode, QuizType, SurveyStep } from 'common/types'
-import type { SelectionQuiz, DraggerQuiz, DeviceType } from 'common/types'
+import type { SelectionQuiz, DraggerQuiz } from 'common/types'
 
 const Editor = React.lazy(
     () => import('components/Survey/QuizForm/View/Editor')
@@ -348,7 +348,10 @@ export default function QuizForm() {
                                                                 }}
                                                                 noWrap
                                                             >
-                                                                {el.title ||
+                                                                {_.get(
+                                                                    el,
+                                                                    'title.text'
+                                                                ) ||
                                                                     '未命名題目'}
                                                             </Typography>
                                                         </Box>

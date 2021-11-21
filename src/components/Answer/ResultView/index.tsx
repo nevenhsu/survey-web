@@ -115,7 +115,18 @@ export default function ResultView() {
     }, [result])
 
     return (
-        <Box sx={{ py: 3, bgcolor, minHeight: '100vh' }}>
+        <Box sx={{ py: 3, minHeight: '100vh' }}>
+            <Box
+                sx={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100vw',
+                    height: '100vh',
+                    bgcolor,
+                }}
+            />
+
             <ComponentList components={components} />
 
             {!isOneInTwoMode && draggerResult && (
@@ -141,7 +152,7 @@ export default function ResultView() {
                     color="primary"
                     onClick={handleNext}
                 >
-                    下一步
+                    填寫資料
                 </Button>
             </Box>
         </Box>

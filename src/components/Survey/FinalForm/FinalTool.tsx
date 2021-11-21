@@ -3,6 +3,7 @@ import _ from 'lodash'
 import ComponentTool from 'components/common/Component/Tool'
 import { Contexts } from 'components/common/Component'
 import { useAppSelector, useAppDispatch } from 'hooks'
+import { toNumOrStr } from 'utils/helper'
 import {
     selectCurrentSurvey,
     updateFinalComponents,
@@ -24,9 +25,7 @@ export default function FinalTool() {
 
     const handleChange: OnChangeInput = (event) => {
         const { name, value } = event.target
-
-        let val: any = value === '' ? undefined : value
-        val = Number(val) || val
+        const val = toNumOrStr(value)
 
         const newValue = {
             ...component,

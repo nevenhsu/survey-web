@@ -4,53 +4,29 @@ import Slick from 'react-slick'
 import Stack from '@mui/material/Stack'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
 import {
     StyledTextField,
     DraggerChoiceView,
-    CustomButton,
+    StyledCustomButton,
 } from 'components/Survey/QuizForm/Shares'
 import AddIcon from 'mdi-react/AddIcon'
 import { getDefaultDraggerChoice } from 'utils/helper'
-import { colors } from 'theme/palette'
-import type {
-    OnChangeInput,
-    OnButtonClink,
-    DraggerType,
-    CustomButtonType,
-} from 'common/types'
+import type { OnChangeInput, OnButtonClink, DraggerQuiz } from 'common/types'
 
 export default function DraggerView(props: {
-    title: string
-    quizProps: Omit<DraggerType, 'values'>
+    quizProps: Omit<DraggerQuiz, 'values'>
     onChange: OnChangeInput
 }) {
-    const { title, quizProps, onChange } = props
-    const { choices = [], showImage, left, right } = quizProps
+    const { quizProps, onChange } = props
+    const { title, choices = [], showImage, left, right } = quizProps
 
-    const leftButton: CustomButtonType = {
-        buttonColor: left.buttonColor || colors[0][500],
-        buttonText: left.buttonText,
-        buttonTextColor: left.buttonTextColor,
-        buttonVariant: left.buttonVariant,
-    }
-
-    const rightButton: CustomButtonType = {
-        buttonColor: right.buttonColor || colors[1][500],
-        buttonText: right.buttonText,
-        buttonTextColor: right.buttonTextColor,
-        buttonVariant: right.buttonVariant,
+    const handleChange = (name: string, value: any) => {
+        onChange({ target: { name, value } } as any)
     }
 
     const handleAddChoice: OnButtonClink = () => {
-        const event = {
-            target: {
-                name: 'choices',
-                value: [...choices, getDefaultDraggerChoice(left.id)],
-            },
-        }
-
-        onChange(event as any)
+        const value = [...choices, getDefaultDraggerChoice(left.id)]
+        handleChange('choices', value)
     }
 
     const handleChangeChoice = (
@@ -62,42 +38,14 @@ export default function DraggerView(props: {
         const newChoice = _.map(choices, (el) =>
             el.id === choiceId ? { ...el, [name]: value } : el
         )
-        onChange({
-            target: {
-                name: 'choices',
-                value: newChoice,
-            },
-        } as any)
+
+        handleChange('choices', newChoice)
     }
 
     const handleDelete = (choiceId: string) => {
         const newChoice = _.filter(choices, (el) => el.id !== choiceId)
-        onChange({
-            target: {
-                name: 'choices',
-                value: newChoice,
-            },
-        } as any)
-    }
 
-    const handleChangeButton = (
-        event: React.ChangeEvent<HTMLInputElement>,
-        target: 'right' | 'left'
-    ) => {
-        const { name, value } = event.target
-        const { [target]: val } = quizProps
-
-        const newValue = {
-            ...val,
-            [name]: value,
-        }
-
-        onChange({
-            target: {
-                name: target,
-                value: newValue,
-            },
-        } as any)
+        handleChange('choices', newChoice)
     }
 
     return (
@@ -105,9 +53,11 @@ export default function DraggerView(props: {
             <StyledTextField
                 variant="standard"
                 placeholder="請輸入您的文字"
-                name="title"
-                value={title}
-                onChange={onChange}
+                value={_.get(title, 'text', '')}
+                onChange={(e) =>
+                    handleChange('title', { ...title, text: e.target.value })
+                }
+                multiline
             />
 
             <Box sx={{ height: 16 }} />
@@ -184,16 +134,14 @@ export default function DraggerView(props: {
                 spacing={2}
                 sx={{ width: '100%' }}
             >
-                <CustomButton
-                    customProps={leftButton}
-                    buttonProps={{ size: 'large' }}
-                    onChange={(event) => handleChangeButton(event, 'left')}
+                <StyledCustomButton
+                    customProps={left}
+                    onCustomize={(value) => handleChange('left', value)}
                     defaultText="左選項"
                 />
-                <CustomButton
-                    customProps={rightButton}
-                    buttonProps={{ size: 'large' }}
-                    onChange={(event) => handleChangeButton(event, 'right')}
+                <StyledCustomButton
+                    customProps={right}
+                    onCustomize={(value) => handleChange('right', value)}
                     defaultText="右選項"
                 />
             </Stack>

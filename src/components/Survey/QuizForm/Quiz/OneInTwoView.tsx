@@ -8,35 +8,26 @@ import { StyledTextField, ChoiceView } from 'components/Survey/QuizForm/Shares'
 import AddIcon from 'mdi-react/AddIcon'
 import { useAppSelector } from 'hooks'
 import { selectDevice } from 'store/slices/userDefault'
-import { getDefaultChoice } from 'utils/helper'
-import type {
-    DeviceType,
-    OneInTwoType,
-    OnChangeInput,
-    OnButtonClink,
-} from 'common/types'
+import { getDefaultChoice, getDeviceValue } from 'utils/helper'
+import type { OneInTwoQuiz, OnChangeInput, OnButtonClink } from 'common/types'
 
 export default function OneInTwoView(props: {
-    title: string
-    quizProps: Omit<OneInTwoType, 'values' | 'tagsId'>
+    quizProps: Omit<OneInTwoQuiz, 'values' | 'tagsId'>
     onChange: OnChangeInput
 }) {
-    const { title, quizProps, onChange } = props
-    const { choices = [], showImage, responsive, px } = quizProps
+    const { quizProps, onChange } = props
+    const { title, choices = [], showImage, responsive, px } = quizProps
 
     const device = useAppSelector(selectDevice)
 
+    const handleChange = (name: string, value: any) => {
+        onChange({ target: { name, value } } as any)
+    }
+
     const handleAddChoice: OnButtonClink = () => {
         const newValue = [getDefaultChoice(), getDefaultChoice()]
-
-        const event = {
-            target: {
-                name: 'choices',
-                value: [...choices, ...newValue],
-            },
-        }
-
-        onChange(event as any)
+        const value = [...choices, ...newValue]
+        handleChange('choices', value)
     }
 
     const handleChangeChoice = (
@@ -46,47 +37,26 @@ export default function OneInTwoView(props: {
         const value = choices.map((el) =>
             el.id === id ? { ...el, [e.target.name]: e.target.value } : el
         )
-        const event = {
-            target: {
-                name: 'choices',
-                value,
-            },
-        }
-
-        onChange(event as any)
+        handleChange('choices', value)
     }
 
     const handleCopyStyle = (id: string) => {
         const choice = _.find(choices, { id })
         if (choice) {
-            const { buttonColor, backgroundColor } = choice
+            const { buttonColor, bgcolor } = choice
             const value = _.map(choices, (el) => ({
                 ...el,
                 buttonColor,
-                backgroundColor,
+                bgcolor,
             }))
 
-            const event = {
-                target: {
-                    name: 'choices',
-                    value,
-                },
-            }
-
-            onChange(event as any)
+            handleChange('choices', value)
         }
     }
 
     const handleDeleteChoice = (id: string) => {
         const value = choices.filter((el) => el.id !== id)
-        const event = {
-            target: {
-                name: 'choices',
-                value,
-            },
-        }
-
-        onChange(event as any)
+        handleChange('choices', value)
     }
 
     return (
@@ -94,9 +64,10 @@ export default function OneInTwoView(props: {
             <StyledTextField
                 variant="standard"
                 placeholder="請輸入您的文字"
-                name="title"
-                value={title}
-                onChange={onChange}
+                value={_.get(title, 'text', '')}
+                onChange={(e) =>
+                    handleChange('title', { ...title, text: e.target.value })
+                }
                 multiline
             />
 
@@ -184,18 +155,4 @@ export default function OneInTwoView(props: {
             </Button>
         </>
     )
-}
-
-function getDeviceValue(
-    device: DeviceType,
-    value: { xs: any; sm: any; lg: any }
-) {
-    switch (device) {
-        case 'mobile':
-            return value.xs
-        case 'laptop':
-            return value.sm
-        case 'desktop':
-            return value.lg
-    }
 }

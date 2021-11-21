@@ -20,6 +20,8 @@ import type {
     DraggerChoiceType,
     Component,
     Tags,
+    DeviceType,
+    Responsive,
 } from 'common/types'
 import { getMuiColor, colors } from 'theme/palette'
 
@@ -79,6 +81,12 @@ export function toNumber(value: any) {
     return num
 }
 
+export function toNumOrStr(value: any) {
+    let val: any = value === '' ? undefined : value
+    val = Number(val) || val
+    return val
+}
+
 export function parseJson<T extends object = {}>(
     val: string | T,
     fallback: T
@@ -122,17 +130,10 @@ export function getDefaultSurvey(data: Partial<Survey>): Survey {
         createdAt,
         mode,
         updatedAt: createdAt,
-        quizzes: [
-            {
-                id: setId(),
-                mode: QuizMode.page,
-                title: '',
-            },
-            quiz,
-        ],
+        quizzes: [getDefaultQuiz(setId(), QuizMode.page), quiz],
         tags: {},
         results: { selectedTags: [], list: {} },
-        setting: { showProgress: true },
+        setting: { showProgress: true, maxWidth: 800 },
         final: { mode: FinalMode.info, components: [], data: {} },
         trackingId: [],
         enable: false,
@@ -144,11 +145,24 @@ export function getDefaultQuiz(id: string, mode: QuizMode): QuizType {
     const defaultQuiz: Quiz = {
         id,
         mode,
-        title: '',
-        buttonText: '下一題',
-        buttonVariant: 'contained',
-        imageWidth: 'auto',
-        imageHeight: 'auto',
+        title: {
+            text: '',
+            variant: 'h6',
+        },
+        button: {
+            text: '下一題',
+            variant: 'contained',
+            size: 'large',
+        },
+        cover: {
+            image: '',
+            width: {
+                xs: 'auto',
+                sm: 'auto',
+                lg: 'auto',
+            },
+            height: 'auto',
+        },
     }
 
     switch (mode) {
@@ -220,14 +234,18 @@ export function getDefaultQuiz(id: string, mode: QuizMode): QuizType {
                 ...defaultQuiz,
                 left: {
                     id: leftId,
-                    buttonText: '左選項',
-                    buttonVariant: 'contained',
+                    text: '左選項',
+                    variant: 'contained',
+                    size: 'large',
+                    textColor: '#ffffff',
                     buttonColor: colors[0][500],
                 },
                 right: {
                     id: setId(),
-                    buttonText: '右選項',
-                    buttonVariant: 'contained',
+                    text: '右選項',
+                    variant: 'contained',
+                    size: 'large',
+                    textColor: '#ffffff',
                     buttonColor: colors[1][500],
                 },
                 choices: [getDefaultDraggerChoice(leftId)],
@@ -266,8 +284,8 @@ export function getDefaultChoice() {
         label: '',
         tags: {},
         image: '',
-        buttonColor: '#7879F1',
-        backgroundColor: '#ffffff',
+        buttonColor: '#3892FC',
+        bgcolor: '#ffffff',
     }
     return choice
 }
@@ -334,6 +352,19 @@ export function getDefaultComponent(type: ComponentType) {
             }
             return component
         }
+        case ComponentType.button: {
+            const component: Component = {
+                ...defaultComponent,
+                value: '',
+                display: 'inline-block',
+                align: 'center',
+                typoVariant: 'button',
+                color: '#ffffff',
+                buttonColor: '#3892FC',
+                width: 'auto',
+            }
+            return component
+        }
         case ComponentType.link: {
             const component: Component = {
                 ...defaultComponent,
@@ -343,7 +374,7 @@ export function getDefaultComponent(type: ComponentType) {
                 display: 'inline-block',
                 align: 'center',
                 typoVariant: 'button',
-                color: '#7879F1',
+                color: '#3892FC',
                 width: '100%',
             }
             return component
@@ -355,8 +386,8 @@ export function getDefaultComponent(type: ComponentType) {
                 display: 'block',
                 align: 'center',
                 typoVariant: 'h6',
-                color: '#7879F1',
-                buttonColor: '#7879F1',
+                color: '#3892FC',
+                buttonColor: '#3892FC',
                 width: '100%',
             }
             return component
@@ -417,4 +448,17 @@ export function replaceByData<T>(
     const val = _.split(value, separator)
     const list = _.zip(val, data)
     return _.compact(_.flatten(list))
+}
+
+export function getDeviceValue<T>(device: DeviceType, value?: Responsive<T>) {
+    if (value && _.isObject(value)) {
+        switch (device) {
+            case 'mobile':
+                return value.xs
+            case 'laptop':
+                return value.sm
+            case 'desktop':
+                return value.lg
+        }
+    }
 }

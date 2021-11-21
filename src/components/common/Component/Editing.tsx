@@ -2,7 +2,7 @@ import * as React from 'react'
 import _ from 'lodash'
 import ImageUploader from 'components/common/ImageUploader'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
-import { styled } from '@mui/material/styles'
+import { styled, useTheme } from '@mui/material/styles'
 import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
 import Link from '@mui/material/Link'
@@ -12,6 +12,7 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Box from '@mui/material/Box'
 import StyledButton from 'components/common/StyledButton'
+import CustomButton from 'components/common/CustomButton'
 import AddIcon from 'mdi-react/AddIcon'
 import { ComponentType } from 'common/types'
 import type { Component, OnChangeInput } from 'common/types'
@@ -30,6 +31,7 @@ const options = [
     { value: ComponentType.title, label: '標題' },
     { value: ComponentType.typography, label: '內文' },
     { value: ComponentType.image, label: '圖片' },
+    { value: ComponentType.button, label: '按鈕' },
     { value: ComponentType.link, label: '超連結' },
     { value: ComponentType.clipboard, label: '剪貼簿' },
     { value: ComponentType.card, label: '卡片' },
@@ -108,6 +110,8 @@ function ComponentItem(
 ) {
     const { component, idPath, selectedComponent, onAdd, onSelect, onChange } =
         props
+
+    const theme = useTheme()
 
     const {
         id,
@@ -188,6 +192,29 @@ function ComponentItem(
                         fullWidth
                     />
                 </Link>
+            )
+        }
+        case ComponentType.button: {
+            return (
+                <CustomButton
+                    defaultText="按鈕"
+                    variant="contained"
+                    sx={{
+                        whiteSpace: 'nowrap',
+                        fontWeight,
+                        display,
+                        width,
+                        height,
+                    }}
+                    customProps={{
+                        text: value,
+                        buttonColor,
+                        textColor: color,
+                        fontSize: typoVariant
+                            ? theme.typography[typoVariant].fontSize
+                            : undefined,
+                    }}
+                />
             )
         }
         case ComponentType.clipboard: {

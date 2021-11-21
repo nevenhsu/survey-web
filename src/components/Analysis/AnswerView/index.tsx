@@ -62,7 +62,7 @@ export default function AnswerView() {
         _.forEach(quizzes, (el) => {
             const { id, title, mode } = el
             if (mode !== QuizMode.page) {
-                quizKeys[id] = title
+                quizKeys[id] = title.text ?? ''
                 if (mode === QuizMode.slider) {
                     numericQuiz.push(id)
                 }

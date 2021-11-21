@@ -24,12 +24,17 @@ export const fakeAnswerData: AnswerData[] = _.fill(Array(200), {
 
 const quizzes = [
     {
-        buttonText: '開始改變',
-        buttonVariant: 'contained',
         id: '5bd3b8',
         mode: 'page',
         required: false,
-        title: '閱讀，讓世界慢了下來，一起閱讀，改變世界。',
+        title: {
+            text: '閱讀，讓世界慢了下來，一起閱讀，改變世界。',
+            variant: 'h6',
+        },
+        button: {
+            text: '開始改變',
+            variant: 'contained',
+        },
     },
     {
         showImage: false,
@@ -72,24 +77,24 @@ const quizzes = [
                 label: '未命名選項',
             },
         ],
-        buttonText: '下一題',
-        buttonVariant: 'contained',
-        direction: 'column',
         id: '82a6f6',
         mode: 'selection',
         required: false,
         showLabel: 'true',
         tagsId: ['ae6968', 'b00000', '2ba50f'],
-        title: '你覺得「閱讀」對你而言有什麼吸引力？',
+        title: {
+            text: '你覺得「閱讀」對你而言有什麼吸引力？',
+            variant: 'h6',
+        },
+        button: {
+            text: '下一題',
+            variant: 'contained',
+        },
     },
     {
-        buttonText: '下一題',
-        buttonVariant: 'contained',
-        direction: 'column',
         id: '9cf1cb',
         mode: 'sort',
         required: false,
-        title: '你最常閱讀以下哪幾種類型的書籍？（選你會讀的排序）',
         showImage: false,
         maxChoices: 3,
         choices: [
@@ -114,25 +119,14 @@ const quizzes = [
                 label: '財經管理',
             },
         ],
-    },
-    {
-        buttonText: '下一題',
-        buttonVariant: 'contained',
-        id: 'f4b956',
-        mode: 'fill',
-        required: false,
-        title: '如！果！你可以在讀書節抽到一本書，你希望是哪一本？',
-        value: '',
-    },
-    {
-        buttonText: '下一題',
-        buttonVariant: 'contained',
-        id: 'dc504f',
-        mode: 'slider',
-        required: false,
-        title: '如果你給自己打分數，你會給幾分？',
-        min: 0,
-        max: 100,
+        title: {
+            text: '你最常閱讀以下哪幾種類型的書籍？（選你會讀的排序）',
+            variant: 'h6',
+        },
+        button: {
+            text: '下一題',
+            variant: 'contained',
+        },
     },
 ] as any
 
@@ -174,7 +168,7 @@ export const fakeSurveyData: Survey = {
             },
         },
     },
-    setting: { showProgress: true },
+    setting: { showProgress: true, maxWidth: 800 },
     final: { mode: FinalMode.info, components: [], data: {} },
     trackingId: ['facebook'],
     enable: true,

@@ -26,7 +26,11 @@ export default function ChoiceView(props: {
         label = '',
         image = '',
         buttonColor = theme.palette.primary.main,
-        backgroundColor = theme.palette.common.white,
+        bgcolor = theme.palette.common.white,
+        fontSize,
+        padding,
+        border,
+        borderRadius,
     } = value
 
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
@@ -49,15 +53,15 @@ export default function ChoiceView(props: {
                 sx={() => {
                     const { color } = getContrastText(
                         theme,
-                        backgroundColor,
+                        bgcolor,
                         theme.palette.text.primary
                     )
 
                     const emphasizedColor = emphasizeColor(
                         theme,
-                        backgroundColor,
+                        bgcolor,
                         0.08,
-                        backgroundColor
+                        bgcolor
                     )
 
                     const hoverTextColor = getContrastText(
@@ -69,10 +73,13 @@ export default function ChoiceView(props: {
                     return {
                         width: '100%',
                         color,
+                        fontSize,
+                        padding,
+                        border,
+                        borderRadius,
+                        bgcolor,
                         borderColor: buttonColor,
-                        backgroundColor,
                         flexDirection: 'column',
-                        padding: showImage ? '0 0 5px' : '5px 15px',
                         overflow: 'hidden',
                         '&:hover': {
                             color: hoverTextColor,
@@ -80,7 +87,10 @@ export default function ChoiceView(props: {
                             backgroundColor: emphasizedColor,
                         },
                         '& .MuiTouchRipple-root': {
-                            color: buttonColor || backgroundColor,
+                            color: buttonColor || bgcolor,
+                        },
+                        '& *': {
+                            fontSize: 'inherit',
                         },
                     }
                 }}
@@ -142,23 +152,67 @@ export default function ChoiceView(props: {
                     />
 
                     <TextField
-                        label="按鈕顏色"
+                        label="文字大小"
+                        variant="standard"
+                        name="fontSize"
+                        value={fontSize}
+                        onChange={onChange}
+                        placeholder="16"
+                        fullWidth
+                        sx={{ mb: 3 }}
+                    />
+
+                    <TextField
+                        label="邊框顏色"
                         name="buttonColor"
                         variant="standard"
                         value={buttonColor}
                         onChange={onChange}
-                        placeholder="#7879F1"
+                        placeholder="#3892FC"
                         fullWidth
                         sx={{ mb: 3 }}
                     />
 
                     <TextField
                         label="背景顏色"
-                        name="backgroundColor"
+                        name="bgcolor"
                         variant="standard"
-                        value={backgroundColor}
+                        value={bgcolor}
                         onChange={onChange}
                         placeholder="#fffffff"
+                        fullWidth
+                        sx={{ mb: 3 }}
+                    />
+
+                    <TextField
+                        label="按鈕留白"
+                        variant="standard"
+                        name="padding"
+                        value={padding}
+                        onChange={onChange}
+                        placeholder="22px 8px"
+                        fullWidth
+                        sx={{ mb: 3 }}
+                    />
+
+                    <TextField
+                        label="按鈕邊框"
+                        variant="standard"
+                        name="border"
+                        value={border}
+                        onChange={onChange}
+                        placeholder="0px solid #3892FC"
+                        fullWidth
+                        sx={{ mb: 3 }}
+                    />
+
+                    <TextField
+                        label="按鈕圓角"
+                        variant="standard"
+                        name="borderRadius"
+                        value={borderRadius}
+                        onChange={onChange}
+                        placeholder="1"
                         fullWidth
                         sx={{ mb: 3 }}
                     />

@@ -63,7 +63,18 @@ export default function FinalView() {
     }
 
     return (
-        <Box sx={{ bgcolor, minHeight: '100vh' }}>
+        <Box sx={{ minHeight: '100vh' }}>
+            <Box
+                sx={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100vw',
+                    height: '100vh',
+                    bgcolor,
+                }}
+            />
+
             <ComponentList components={components} />
             <Box sx={{ width: '100%', maxWidth: 480, mx: 'auto', my: 4 }}>
                 <InfoForm

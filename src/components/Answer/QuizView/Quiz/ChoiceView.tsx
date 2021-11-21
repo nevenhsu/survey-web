@@ -14,93 +14,82 @@ type ChoiceViewProps = ButtonProps & {
 }
 
 type StyledButtonProps = ButtonProps & {
-    showImage: boolean
-    buttonColor: string
-    backgroundColor: string
+    choice: ChoiceType
     selected?: boolean
     component?: React.ElementType
 }
 
 const StyledButton = styled(Button, {
-    shouldForwardProp: (prop) =>
-        !_.includes(
-            ['showImage', 'buttonColor', 'backgroundColor', 'selected'],
-            prop
-        ),
-})<StyledButtonProps>(
-    ({ theme, buttonColor, backgroundColor, showImage, selected }) => {
-        const { color } = getContrastText(
-            theme,
-            backgroundColor,
-            theme.palette.text.primary
-        )
+    shouldForwardProp: (prop) => !_.includes(['choice', 'selected'], prop),
+})<StyledButtonProps>(({ theme, choice, selected }) => {
+    const {
+        buttonColor = theme.palette.primary.main,
+        bgcolor = theme.palette.common.white,
+        fontSize,
+        padding,
+        border,
+        borderRadius,
+    } = choice
 
-        const emphasizedColor2 = emphasizeColor(
-            theme,
-            buttonColor,
-            0.08,
-            backgroundColor
-        )
+    const { color } = getContrastText(
+        theme,
+        bgcolor,
+        theme.palette.text.primary
+    )
 
-        const activeColor = getContrastText(
-            theme,
-            buttonColor,
-            theme.palette.common.white
-        ).color
+    const emphasizedColor2 = emphasizeColor(theme, buttonColor, 0.08, bgcolor)
 
-        const emphasizedColor = emphasizeColor(
-            theme,
-            backgroundColor,
-            0.08,
-            backgroundColor
-        )
+    const activeColor = getContrastText(
+        theme,
+        buttonColor,
+        theme.palette.common.white
+    ).color
 
-        const hoverTextColor = getContrastText(
-            theme,
-            emphasizedColor,
-            theme.palette.text.primary
-        ).color
+    const emphasizedColor = emphasizeColor(theme, bgcolor, 0.08, bgcolor)
 
-        return {
-            width: '100%',
-            color: selected ? activeColor : color,
+    const hoverTextColor = getContrastText(
+        theme,
+        emphasizedColor,
+        theme.palette.text.primary
+    ).color
+
+    return {
+        width: '100%',
+        color: selected ? activeColor : color,
+        borderColor: buttonColor,
+        backgroundColor: selected ? buttonColor : bgcolor,
+        flexDirection: 'column',
+        fontSize,
+        padding,
+        border,
+        borderRadius,
+        overflow: 'hidden',
+        '&:hover': {
+            color: selected ? activeColor : hoverTextColor,
             borderColor: buttonColor,
-            backgroundColor: selected ? buttonColor : backgroundColor,
-            flexDirection: 'column',
-            padding: showImage ? '0 0 5px' : '5px 15px',
-            overflow: 'hidden',
-            '&:hover': {
-                color: selected ? activeColor : hoverTextColor,
-                borderColor: buttonColor,
-                backgroundColor: selected ? emphasizedColor2 : emphasizedColor,
-            },
-            '& .MuiTouchRipple-root': {
-                color: buttonColor || backgroundColor,
-            },
-        }
+            backgroundColor: selected ? emphasizedColor2 : emphasizedColor,
+        },
+        '& .MuiTouchRipple-root': {
+            color: buttonColor || bgcolor,
+        },
+        '& *': {
+            fontSize: 'inherit',
+        },
     }
-)
+})
 
 export default function ChoiceView(props: ChoiceViewProps) {
     const theme = useTheme()
     const { choice, showImage = false, ...rest } = props
 
-    const {
-        id,
-        label = '',
-        image = '',
-        buttonColor = theme.palette.primary.main,
-        backgroundColor = theme.palette.common.white,
-    } = choice
+    const { id, label = '', image = '' } = choice
 
     return (
         <StyledButton
             id={id}
             component="div"
             variant="outlined"
-            showImage={showImage}
-            buttonColor={buttonColor}
-            backgroundColor={backgroundColor}
+            choice={choice}
             {...rest}
         >
             {showImage && (

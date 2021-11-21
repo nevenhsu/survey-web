@@ -6,7 +6,7 @@ import User from 'utils/user'
 import ThemeProvider from 'theme/ThemeProvider'
 import { Contexts } from 'components/common/Component'
 import { ComponentList, getComponent } from 'components/common/Component'
-import { getDefaultComponent, setId } from 'utils/helper'
+import { getDefaultComponent, setId, toNumOrStr } from 'utils/helper'
 import { useAppDispatch } from 'hooks'
 import { updateComponent, setResult } from 'store/slices/survey'
 import { ComponentType } from 'common/types'
@@ -57,8 +57,7 @@ export default function EditingResult(props: EditingQuizProps) {
         const { name, value } = event.target
 
         if (surveyId && resultId && selectedComponent) {
-            let val: any = value === '' ? undefined : value
-            val = Number(val) || val
+            const val = toNumOrStr(value)
 
             const newValue = {
                 ...selectedComponent,

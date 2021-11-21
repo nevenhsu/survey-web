@@ -3,26 +3,23 @@ import _ from 'lodash'
 import Box from '@mui/material/Box'
 import Slider from '@mui/material/Slider'
 import Typography from '@mui/material/Typography'
-import CustomButton, {
-    CustomButtonProps,
-} from 'components/Answer/QuizView/Quiz/CustomButton'
-import type { OnChangeInput, SliderType } from 'common/types'
+import CustomButton, { CustomButtonProps } from 'components/common/CustomButton'
+import type { OnChangeInput, SliderQuiz } from 'common/types'
 
 type SliderViewProps = {
-    title: string
-    quizProps: SliderType
+    quizProps: SliderQuiz
     buttonProps: CustomButtonProps
     onChange: OnChangeInput
 }
 
 export default function SliderView(props: SliderViewProps) {
-    const { title, quizProps, buttonProps, onChange } = props
-    const { min, max, value } = quizProps
+    const { quizProps, buttonProps, onChange } = props
+    const { title, button, min, max, value } = quizProps
 
     return (
         <>
             <Typography variant="h6" sx={{ mb: 4 }}>
-                {title}
+                {title?.text}
             </Typography>
 
             <Box sx={{ width: 4 / 5 }}>
@@ -40,7 +37,7 @@ export default function SliderView(props: SliderViewProps) {
 
             <Box sx={{ height: 16 }} />
 
-            <CustomButton {...buttonProps} />
+            <CustomButton {...buttonProps} customProps={button} />
         </>
     )
 }

@@ -78,33 +78,65 @@ export enum QuizMode {
 }
 
 export type CustomButtonType = {
-    buttonText?: string
-    buttonTextColor?: string
+    text?: string
+    textColor?: string
+    fontSize?: number | string
     buttonColor?: string
-    buttonVariant?: 'contained' | 'outlined' | 'text'
-    buttonSize?: 'small' | 'medium' | 'large'
+    variant?: 'contained' | 'outlined' | 'text'
+    size?: 'small' | 'medium' | 'large'
+    padding?: string | number
+    border?: string
+    borderRadius?: number
 }
 
-export type Quiz = CustomButtonType & {
+export type TextType = {
+    text?: string
+    color?: string
+    bgcolor?: string
+    variant?: Variant
+    fontWeight?: string
+    padding?: string | number
+}
+
+export type CoverType = {
+    image?: string
+    width?: Responsive<number | string>
+    height?: number | string
+}
+
+export type Quiz = {
     id: string
     mode: QuizMode
-    title: string
+    title: TextType
+    cover: CoverType
+    button: CustomButtonType
     required?: boolean
     backgroundColor?: string
     backgroundImage?: string
-    image?: string
-    imageWidth?: number | string
-    imageHeight?: number | string
 }
 
-export type ChoiceType = {
+export type ChoiceStyle = {
+    fontSize?: number | string
+    buttonColor?: string
+    bgcolor?: string
+    padding?: string | number
+    border?: string
+    borderRadius?: number
+}
+
+export type ChoiceType = ChoiceStyle & {
     id: string
     label: string
     tags: { [tagId: string]: string[] }
     image?: string
     next?: string
-    buttonColor?: string
-    backgroundColor?: string
+}
+
+export type DraggerChoiceType = ChoiceStyle & {
+    id: string
+    label: string
+    answer: string // DraggerButton id
+    image?: string
 }
 
 export type SelectionType = {
@@ -113,8 +145,8 @@ export type SelectionType = {
     tagsId: string[]
     maxChoices: number
     showImage: boolean
-    responsive: Responsive
-    px: Padding
+    responsive: Responsive<GridSize>
+    px: Responsive
 }
 
 export type SelectionQuiz = Quiz & SelectionType
@@ -124,22 +156,15 @@ export type OneInTwoType = {
     values: string[] // choice id
     tagsId: string[]
     showImage: boolean
-    responsive: Responsive
-    px: Padding
+    responsive: Responsive<GridSize>
+    px: Responsive
 }
 
 export type OneInTwoQuiz = Quiz & OneInTwoType
 
 export type DraggerButton = CustomButtonType & {
     id: string
-}
-
-export type DraggerChoiceType = {
-    id: string
-    label: string
-    answer: string // DraggerButton id
     image?: string
-    bgcolor?: string
 }
 
 export type DraggerType = {
@@ -186,6 +211,7 @@ export enum ComponentType {
     clipboard = 'clipboard',
     image = 'image',
     link = 'link',
+    button = 'button',
     card = 'card',
 }
 
@@ -225,6 +251,7 @@ export type Results = {
 
 export type Setting = {
     showProgress: boolean
+    maxWidth: number
 }
 
 export enum FinalMode {
@@ -233,14 +260,8 @@ export enum FinalMode {
 
 export type DeviceType = 'mobile' | 'laptop' | 'desktop'
 
-export type Responsive = {
-    xs: GridSize
-    sm: GridSize
-    lg: GridSize
-}
-
-export type Padding = {
-    xs: number
-    sm: number
-    lg: number
+export type Responsive<T = number> = {
+    xs: T
+    sm: T
+    lg: T
 }

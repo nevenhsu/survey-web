@@ -1,13 +1,14 @@
 import * as React from 'react'
+import _ from 'lodash'
 import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
-import Button, { ButtonProps } from '@mui/material/Button'
 import MenuItem from '@mui/material/MenuItem'
 import Popover from '@mui/material/Popover'
-import { getStringLength } from 'utils/helper'
-import { emphasizeColor } from 'theme/palette'
-import type { CustomButtonType, OnChangeInput } from 'common/types'
+import CustomButton, { CustomButtonProps } from 'components/common/CustomButton'
+import { variantOptions, sizeOptions } from 'components/common/options'
+import { getStringLength, toNumOrStr, toNumber } from 'utils/helper'
+import type { OnChangeInput, CustomButtonType } from 'common/types'
 import type { Variant } from '@mui/material/styles/createTypography'
 
 export type StyledTextFieldProps = TextFieldProps & {
@@ -35,26 +36,23 @@ export const StyledTextField = styled(TextField, {
     }
 })
 
-const variants = [
-    { value: 'contained', label: '實心' },
+export type StyledCustomButtonProps = CustomButtonProps & {
+    onCustomize: (value: CustomButtonType) => void
+}
 
-    { value: 'outlined', label: '空心' },
-    { value: 'text', label: '文字' },
-]
-
-export const CustomButton = (props: {
-    customProps: CustomButtonType
-    buttonProps?: ButtonProps
-    onChange: OnChangeInput
-    defaultText?: string
-}) => {
-    const { customProps, buttonProps, onChange, defaultText = '下一題' } = props
+export const StyledCustomButton = (props: StyledCustomButtonProps) => {
+    const { customProps, onCustomize, defaultText = '下一題', ...rest } = props
     const {
-        buttonVariant = 'contained',
-        buttonText = '',
+        text = '',
+        textColor = '',
         buttonColor = '',
-        buttonTextColor = '',
-    } = customProps
+        variant = 'contained',
+        size = 'large',
+        fontSize,
+        padding,
+        border,
+        borderRadius,
+    } = customProps ?? {}
 
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
         null
@@ -68,23 +66,33 @@ export const CustomButton = (props: {
 
     const open = Boolean(anchorEl)
 
+    const handleChange: OnChangeInput = (event) => {
+        const { name, value: val } = event.target
+        let value: any = val
+
+        if (_.includes(['fontSize', 'borderRadius'], name)) {
+            value = toNumber(val)
+        }
+
+        if (name === 'padding') {
+            value = toNumOrStr(val)
+        }
+
+        const buttonValue = {
+            ...customProps,
+            [name]: value,
+        }
+
+        onCustomize(buttonValue)
+    }
+
     return (
         <>
-            <Button
-                {...buttonProps}
-                variant={buttonVariant}
+            <CustomButton
+                customProps={customProps}
+                {...rest}
                 onClick={handleClick}
-                sx={{
-                    color: buttonTextColor,
-                    backgroundColor: buttonColor,
-                    '&:hover': {
-                        backgroundColor: (theme) =>
-                            emphasizeColor(theme, buttonColor, 0.08, ''),
-                    },
-                }}
-            >
-                {buttonText || defaultText}
-            </Button>
+            />
 
             <Popover
                 open={open}
@@ -99,9 +107,20 @@ export const CustomButton = (props: {
                     <TextField
                         label="按鈕文字"
                         variant="standard"
-                        name="buttonText"
-                        value={buttonText}
-                        onChange={onChange}
+                        name="text"
+                        value={text}
+                        onChange={handleChange}
+                        fullWidth
+                        sx={{ mb: 3 }}
+                    />
+
+                    <TextField
+                        label="文字大小"
+                        variant="standard"
+                        name="fontSize"
+                        value={fontSize}
+                        onChange={handleChange}
+                        placeholder="16"
                         fullWidth
                         sx={{ mb: 3 }}
                     />
@@ -109,9 +128,9 @@ export const CustomButton = (props: {
                     <TextField
                         label="文字顏色"
                         variant="standard"
-                        name="buttonTextColor"
-                        value={buttonTextColor}
-                        onChange={onChange}
+                        name="textColor"
+                        value={textColor}
+                        onChange={handleChange}
                         placeholder="#fffffff"
                         fullWidth
                         sx={{ mb: 3 }}
@@ -122,7 +141,7 @@ export const CustomButton = (props: {
                         variant="standard"
                         name="buttonColor"
                         value={buttonColor}
-                        onChange={onChange}
+                        onChange={handleChange}
                         placeholder="#1565c0"
                         fullWidth
                         sx={{ mb: 3 }}
@@ -130,19 +149,70 @@ export const CustomButton = (props: {
 
                     <TextField
                         label="按鈕樣式"
-                        name="buttonVariant"
+                        name="variant"
                         variant="standard"
-                        value={buttonVariant}
-                        onChange={onChange}
+                        value={variant}
+                        onChange={handleChange}
                         fullWidth
                         select
+                        sx={{ mb: 3 }}
                     >
-                        {variants.map((el) => (
+                        {variantOptions.map((el) => (
                             <MenuItem key={el.value} value={el.value}>
                                 {el.label}
                             </MenuItem>
                         ))}
                     </TextField>
+
+                    <TextField
+                        label="按鈕大小"
+                        name="size"
+                        variant="standard"
+                        value={size}
+                        onChange={handleChange}
+                        fullWidth
+                        select
+                        sx={{ mb: 3 }}
+                    >
+                        {sizeOptions.map((el) => (
+                            <MenuItem key={el.value} value={el.value}>
+                                {el.label}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+
+                    <TextField
+                        label="按鈕留白"
+                        variant="standard"
+                        name="padding"
+                        value={padding}
+                        onChange={handleChange}
+                        placeholder="22px 8px"
+                        fullWidth
+                        sx={{ mb: 3 }}
+                    />
+
+                    <TextField
+                        label="按鈕邊框"
+                        variant="standard"
+                        name="border"
+                        value={border}
+                        onChange={handleChange}
+                        placeholder="0px solid #ffffff"
+                        fullWidth
+                        sx={{ mb: 3 }}
+                    />
+
+                    <TextField
+                        label="按鈕圓角"
+                        variant="standard"
+                        name="borderRadius"
+                        value={borderRadius}
+                        onChange={handleChange}
+                        placeholder="1"
+                        fullWidth
+                        sx={{ mb: 3 }}
+                    />
                 </Box>
             </Popover>
         </>

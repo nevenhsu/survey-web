@@ -1,28 +1,33 @@
 import * as React from 'react'
+import _ from 'lodash'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import {
     StyledTextField,
-    CustomButton,
+    StyledCustomButton,
 } from 'components/Survey/QuizForm/Shares'
-import type { CustomButtonType, OnChangeInput } from 'common/types'
+import type { OnChangeInput, FillQuiz } from 'common/types'
 
 export default function FillView(props: {
-    title: string
-    value: string
-    customProps: CustomButtonType
+    quizProps: FillQuiz
     onChange: OnChangeInput
 }) {
-    const { title, value, customProps, onChange } = props
+    const { quizProps, onChange } = props
+    const { title, value, button } = quizProps
+
+    const handleChange = (name: string, value: any) => {
+        onChange({ target: { name, value } } as any)
+    }
 
     return (
         <>
             <StyledTextField
                 variant="standard"
                 placeholder="請輸入測驗問題"
-                name="title"
-                value={title}
-                onChange={onChange}
+                value={_.get(title, 'text', '')}
+                onChange={(e) =>
+                    handleChange('title', { ...title, text: e.target.value })
+                }
                 multiline
             />
 
@@ -39,7 +44,10 @@ export default function FillView(props: {
                 multiline
             />
             <Box sx={{ height: 16 }} />
-            <CustomButton customProps={customProps} onChange={onChange} />
+            <StyledCustomButton
+                customProps={button}
+                onCustomize={(value) => handleChange('button', value)}
+            />
         </>
     )
 }

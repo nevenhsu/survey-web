@@ -169,7 +169,7 @@ export default function AnswerTable(props: AnswerTableProps) {
                                                         key={o.id}
                                                         value={o.id}
                                                     >
-                                                        {o.buttonText ?? ''}
+                                                        {o.text ?? ''}
                                                     </MenuItem>
                                                 )
                                             )}
