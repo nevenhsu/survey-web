@@ -143,7 +143,7 @@ export default function QuizView() {
                 }
                 case QuizMode.dragger: {
                     return (
-                        <BarChart data={data} barSize={48} layout="vertical">
+                        <BarChart data={data} barSize={36} layout="vertical">
                             <CartesianGrid strokeDasharray="3 3" />
                             <YAxis dataKey="name" type="category" />
                             <XAxis
@@ -161,13 +161,13 @@ export default function QuizView() {
                             <Bar
                                 name="正確次數"
                                 dataKey="true"
-                                fill={colors[0][500]}
+                                fill={theme.palette.primary.main}
                                 stackId="num"
                             />
                             <Bar
                                 name="錯誤次數"
                                 dataKey="false"
-                                fill={colors[1][500]}
+                                fill={theme.palette.secondary.main}
                                 stackId="num"
                             />
                         </BarChart>

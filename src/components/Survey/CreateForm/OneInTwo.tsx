@@ -34,21 +34,33 @@ export default function OneInTwo() {
 
     return (
         <Box sx={{ p: 3, pb: 6 }}>
-            <Box sx={{ mb: 8 }}>
-                <Typography variant="h5" gutterBottom>
+            <Box
+                sx={{
+                    mb: 8,
+                    pb: 8,
+                    borderBottom: 1,
+                    borderColor: (theme) => theme.palette.grey[400],
+                }}
+            >
+                <Typography variant="h5" fontWeight="700" gutterBottom>
                     模組特色
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 3 }}>
-                    範本特色說明
+                    本模組具三大特色，能協助你輕鬆設計遊戲化測驗
                 </Typography>
 
                 <Stack
                     direction="row"
                     justifyContent="space-evenly"
                     alignItems="center"
-                    spacing={2}
+                    spacing={4}
                 >
-                    <Box sx={{ textAlign: 'center', width: '100%' }}>
+                    <Box
+                        sx={{
+                            textAlign: 'center',
+                            maxWidth: 350,
+                        }}
+                    >
                         <ImageBox
                             imageUrl="images/one-in-two/survey-1-1.png"
                             sx={{ mb: 2, borderRadius: 8, overflow: 'hidden' }}
@@ -57,7 +69,7 @@ export default function OneInTwo() {
                             可以根據溝通需求，透過測驗了解受眾的偏好或狀態，進而更精準的分眾
                         </Typography>
                     </Box>
-                    <Box sx={{ textAlign: 'center', width: '100%' }}>
+                    <Box sx={{ textAlign: 'center', maxWidth: 350 }}>
                         <ImageBox
                             imageUrl="images/one-in-two/survey-1-2.png"
                             sx={{ mb: 2, borderRadius: 8, overflow: 'hidden' }}
@@ -66,7 +78,7 @@ export default function OneInTwo() {
                             透過快速二選一的固定題型，降低題目設計門檻，節省工作時間
                         </Typography>
                     </Box>
-                    <Box sx={{ textAlign: 'center', width: '100%' }}>
+                    <Box sx={{ textAlign: 'center', maxWidth: 350 }}>
                         <ImageBox
                             imageUrl="images/one-in-two/survey-1-3.png"
                             sx={{ mb: 2, borderRadius: 8, overflow: 'hidden' }}
@@ -78,18 +90,18 @@ export default function OneInTwo() {
                 </Stack>
             </Box>
 
-            <Grid container spacing={4}>
+            <Grid container spacing={8}>
                 <Grid
                     item
                     sx={{
-                        width: 288,
+                        width: 320,
                         position: 'sticky',
                         height: 'fit-content',
                         top: 0,
                     }}
                 >
-                    <Typography variant="h6" sx={{ mb: 3 }}>
-                        來看看二選一在做什麼
+                    <Typography variant="h5" fontWeight="700" sx={{ mb: 3 }}>
+                        模組如何運作
                     </Typography>
                     <Tabs
                         orientation="vertical"
@@ -174,7 +186,11 @@ export default function OneInTwo() {
                 <Grid item xs sx={{ width: `calc(100vw - 288px)` }}>
                     <Element name={BlockName.a}>
                         <Box sx={{ mb: 5 }}>
-                            <Typography variant="h6" gutterBottom>
+                            <Typography
+                                variant="h6"
+                                fontWeight="700"
+                                gutterBottom
+                            >
                                 參與測驗
                             </Typography>
                             <Typography variant="body2" sx={{ mb: 2 }}>
@@ -262,7 +278,11 @@ export default function OneInTwo() {
                                 spacing={2}
                             >
                                 <Box sx={{ flex: '0 0 33%' }}>
-                                    <Typography variant="h6" gutterBottom>
+                                    <Typography
+                                        variant="h6"
+                                        fontWeight="700"
+                                        gutterBottom
+                                    >
                                         測驗模組產生個人化結果
                                     </Typography>
                                     <Typography variant="body2">
@@ -291,7 +311,11 @@ export default function OneInTwo() {
                                 spacing={2}
                             >
                                 <Box sx={{ flex: '0 0 33%' }}>
-                                    <Typography variant="h6" gutterBottom>
+                                    <Typography
+                                        variant="h6"
+                                        fontWeight="700"
+                                        gutterBottom
+                                    >
                                         個人化結果預覽
                                     </Typography>
                                     <Typography variant="body2">
@@ -311,7 +335,11 @@ export default function OneInTwo() {
                     </Element>
                     <Element name={BlockName.d}>
                         <Box sx={{ mb: 5 }}>
-                            <Typography variant="h6" gutterBottom>
+                            <Typography
+                                variant="h6"
+                                fontWeight="700"
+                                gutterBottom
+                            >
                                 查看分析
                             </Typography>
                             <Typography variant="body2" sx={{ mb: 2 }}>

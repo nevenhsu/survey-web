@@ -350,17 +350,30 @@ export const correlationData: Array<ListData> = [
 
 export const quizzesData: Array<QuizData> = [
     {
+        id: 'deu3a1',
+        mode: QuizMode.oneInTwo,
+        title: '這兩個標語哪個比較吸引妳？',
+        data: [
+            { name: 'Reciprocity', value: 480 },
+            { name: 'Authority', value: 300 },
+            { name: 'Rarity', value: 320 },
+            { name: 'Commitment', value: 200 },
+            { name: 'Preference', value: 150 },
+            { name: 'Identity', value: 150 },
+        ],
+    },
+    {
         id: 'eifq19',
         mode: QuizMode.dragger,
-        title: '請選擇適合的目標',
+        title: '把垃圾丟進對的類別裡！',
         data: [
-            { name: 'TargetA', true: 480, false: 120 },
-            { name: 'TargetB', true: 300, false: 300 },
-            { name: 'TargetC', true: 320, false: 280 },
-            { name: 'TargetD', true: 200, false: 400 },
-            { name: 'TargetE', true: 150, false: 450 },
-            { name: 'TargetF', true: 120, false: 480 },
-            { name: 'TargetG', true: 220, false: 380 },
+            { name: '寶特瓶瓶蓋', true: 480, false: 120 },
+            { name: '橡皮擦的尾巴', true: 300, false: 300 },
+            { name: '紅寶石戒指', true: 320, false: 280 },
+            { name: '吸管的轉彎處', true: 200, false: 400 },
+            { name: '咖啡杯的瓦愣紙套', true: 150, false: 450 },
+            { name: '拖把的柄', true: 120, false: 480 },
+            { name: '橡皮筋', true: 220, false: 380 },
         ],
     },
     {

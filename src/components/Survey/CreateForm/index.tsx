@@ -1,5 +1,6 @@
 import * as React from 'react'
 import _ from 'lodash'
+import { styled } from '@mui/material/styles'
 import Stack from '@mui/material/Stack'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
@@ -18,6 +19,9 @@ const OneInTwo = React.lazy(
 )
 const Dragger = React.lazy(() => import('components/Survey/CreateForm/Dragger'))
 
+const Grow = styled('div')({
+    flexGrow: 1,
+})
 export default function CreateForm() {
     const dispatch = useAppDispatch()
 
@@ -86,7 +90,7 @@ export default function CreateForm() {
                     alignItems="center"
                     sx={{
                         position: 'relative',
-                        height: 'calc(100vh - 240px)',
+                        height: 500,
                         p: 3,
                     }}
                     spacing={4}
@@ -139,12 +143,15 @@ export default function CreateForm() {
                             </Stack>
                         </Stack>
                     </Box>
-                    <Box sx={{ p: 3 }}>
+
+                    <Grow />
+                    <Box sx={{ p: 6, maxWidth: 700 }}>
                         <ImageBox
+                            justifySelf="end"
                             imageUrl={
                                 isOneInTwo
-                                    ? 'images/one-in-two/cover.svg'
-                                    : 'images/dragger/cover.svg'
+                                    ? 'images/one-in-two/cover-lg.png'
+                                    : 'images/dragger/cover-lg.png'
                             }
                             objectFit="contain"
                         />

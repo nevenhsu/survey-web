@@ -1,13 +1,21 @@
 import * as React from 'react'
 import _ from 'lodash'
+import { styled } from '@mui/material/styles'
+import AppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import ImageBox from 'components/common/ImageBox'
+import ThemeProvider from 'theme/ThemeProvider'
 import { useAppDispatch } from 'hooks'
 import { setMode, setStep } from 'store/slices/survey'
 import { Mode, SurveyStep } from 'common/types'
+
+const Grow = styled('div')({
+    flexGrow: 1,
+})
 
 export default function StartForm() {
     const dispatch = useAppDispatch()
@@ -29,9 +37,22 @@ export default function StartForm() {
                 bgcolor: 'white',
             }}
         >
-            <Box sx={{ textAlign: 'center', py: 6 }}>
-                <Typography variant="h4" fontWeight="bold" gutterBottom>
-                    用好玩的測驗提升品牌知名度＆好感度！
+            <ThemeProvider mode="dark">
+                <AppBar position="static">
+                    <Toolbar>
+                        <Typography variant="h6" component="div">
+                            超市調
+                        </Typography>
+                        <Grow />
+                        <Button color="inherit">Login</Button>
+                    </Toolbar>
+                </AppBar>
+            </ThemeProvider>
+            <Box sx={{ textAlign: 'center', py: 5 }}>
+                <Typography variant="h3" fontWeight="bold" gutterBottom>
+                    用好玩的測驗
+                    <br />
+                    提升品牌知名度＆好感度！
                 </Typography>
                 <Typography variant="body1">
                     透過測驗模組讓測驗製作更簡單、省時
@@ -39,11 +60,11 @@ export default function StartForm() {
             </Box>
             <Stack
                 direction="row"
-                alignItems="center"
                 justifyContent="center"
+                alignItems="flex-start"
                 sx={{
-                    height: 'calc(100vh - 172px)',
                     bgcolor: (theme) => theme.palette.grey[50],
+                    py: 6,
                 }}
             >
                 <Box
@@ -54,7 +75,7 @@ export default function StartForm() {
                     }}
                 >
                     <ImageBox
-                        imageUrl="images/one-in-two/cover.svg"
+                        imageUrl="images/one-in-two/cover.png"
                         objectFit="contain"
                         sx={{ height: 300, mb: 4 }}
                     />
@@ -90,7 +111,7 @@ export default function StartForm() {
                     }}
                 >
                     <ImageBox
-                        imageUrl="images/dragger/cover.svg"
+                        imageUrl="images/dragger/cover.png"
                         objectFit="contain"
                         sx={{ height: 300, mb: 4 }}
                     />
