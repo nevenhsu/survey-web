@@ -144,7 +144,7 @@ export const setStyles: (theme: Theme) => StylesConfig = (theme) => ({
 
         return {
             ...base,
-            minHeight: 56,
+            minHeight: 36,
             borderRadius: 4,
             borderWidth: focused ? 2 : 1,
             borderColor: focused

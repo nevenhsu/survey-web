@@ -188,7 +188,7 @@ export default function AnswerView() {
             <Box sx={{ p: 3, borderBottom: '1px solid' }}>
                 <Typography variant="h6">回應明細</Typography>
                 <Typography variant="body1">
-                    說明文字說明文字說明文字說明文字說明文字說明文字說明文字
+                    查看測驗回應的原始資料，或匯出相關資料以供後續利用
                 </Typography>
             </Box>
             <Box sx={{ p: 3, height: 'calc(100vh - 256px)' }}>

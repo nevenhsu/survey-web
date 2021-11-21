@@ -16,11 +16,13 @@ export default function CustomButton(props: CustomButtonProps) {
         buttonVariant = 'contained',
         buttonColor = '',
         buttonTextColor = '',
+        buttonSize = 'large',
     } = customProps
 
     return (
         <Button
             variant={buttonVariant}
+            size={buttonSize}
             sx={{
                 color: buttonTextColor,
                 backgroundColor: buttonColor,

@@ -82,6 +82,7 @@ export type CustomButtonType = {
     buttonTextColor?: string
     buttonColor?: string
     buttonVariant?: 'contained' | 'outlined' | 'text'
+    buttonSize?: 'small' | 'medium' | 'large'
 }
 
 export type Quiz = CustomButtonType & {

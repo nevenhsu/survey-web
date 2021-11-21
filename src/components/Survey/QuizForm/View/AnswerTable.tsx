@@ -8,6 +8,7 @@ import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
+import Typography from '@mui/material/Typography'
 import Paper from '@mui/material/Paper'
 import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
@@ -93,26 +94,40 @@ export default function AnswerTable(props: AnswerTableProps) {
 
     return (
         <Root className={classes.root} elevation={6} square>
-            <Toolbar sx={{ minHeight: '48px !important' }}>
-                <div style={{ flex: 1 }} />
-                <Tooltip title="增加答項">
-                    <IconButton onClick={handleAddChoice}>
-                        <AddIcon />
-                    </IconButton>
-                </Tooltip>
-            </Toolbar>
-            <TableContainer>
+            <TableContainer
+                sx={{
+                    bgcolor: (theme) => theme.palette.grey[700],
+                }}
+            >
                 <Table
+                    size="small"
                     sx={{
+                        bgcolor: (theme) => theme.palette.grey[700],
                         '& .MuiTableCell-root': {
-                            height: 72,
+                            height: 64,
                         },
                     }}
                 >
                     <TableHead>
                         <TableRow>
-                            <TableCell>名稱</TableCell>
-                            <TableCell>正確答案</TableCell>
+                            <TableCell>
+                                <Typography variant="body1">名稱</Typography>
+                            </TableCell>
+                            <TableCell>
+                                <Typography variant="body1">
+                                    正確答案
+                                </Typography>
+                            </TableCell>
+                            <TableCell>
+                                <Toolbar variant="dense">
+                                    <div style={{ flex: 1 }} />
+                                    <Tooltip title="增加答項">
+                                        <IconButton onClick={handleAddChoice}>
+                                            <AddIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                </Toolbar>
+                            </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -125,9 +140,11 @@ export default function AnswerTable(props: AnswerTableProps) {
                                 <TableRow key={el.id}>
                                     <TableCell component="th" scope="row">
                                         <TextField
+                                            variant="standard"
                                             value={el.label}
                                             name="label"
                                             placeholder="請命名答項"
+                                            fullWidth
                                             onChange={(event) =>
                                                 handleChange(event, el.id)
                                             }
@@ -137,8 +154,10 @@ export default function AnswerTable(props: AnswerTableProps) {
                                     <TableCell component="th" scope="row">
                                         <TextField
                                             value={el.answer}
+                                            size="small"
                                             name="answer"
                                             placeholder="請選擇答案"
+                                            fullWidth
                                             onChange={(event) =>
                                                 handleChange(event, el.id)
                                             }
@@ -156,6 +175,7 @@ export default function AnswerTable(props: AnswerTableProps) {
                                             )}
                                         </TextField>
                                     </TableCell>
+                                    <TableCell />
                                 </TableRow>
                             ))}
                         {emptyRows > 0 && (
@@ -180,6 +200,9 @@ export default function AnswerTable(props: AnswerTableProps) {
                 ) => {
                     setRowsPerPage(parseInt(event.target.value, 10))
                     setPage(0)
+                }}
+                sx={{
+                    bgcolor: (theme) => theme.palette.grey[700],
                 }}
             />
         </Root>

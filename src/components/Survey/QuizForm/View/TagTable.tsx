@@ -12,6 +12,7 @@ import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import Toolbar from '@mui/material/Toolbar'
 import Tooltip from '@mui/material/Tooltip'
+import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
 import components, { setStyles } from 'components/common/MuiSelectComponents'
@@ -32,6 +33,8 @@ import type {
     OnChangeInput,
 } from 'common/types'
 import type { ActionMeta, OnChangeValue, MultiValue } from 'react-select'
+import { autocompleteClasses } from '@mui/material'
+import { flexbox } from '@mui/system'
 
 type TagTableProps = {
     quiz?: SelectionQuiz
@@ -69,7 +72,7 @@ export default function TagTable(props: TagTableProps) {
 
     const theme = useTheme()
     const [page, setPage] = React.useState(0)
-    const [rowsPerPage, setRowsPerPage] = React.useState(5)
+    const [rowsPerPage, setRowsPerPage] = React.useState(10)
 
     const { id: surveyId, tags } = useAppSelector(selectCurrentSurvey)
     const tagsOptions = getTagsOptions(_.values(tags), ids)
@@ -246,36 +249,23 @@ export default function TagTable(props: TagTableProps) {
 
     return (
         <Root className={classes.root} elevation={6} square>
-            <Toolbar sx={{ minHeight: '48px !important' }}>
-                <div style={{ flex: 1 }} />
-                <Tooltip title="增加答項">
-                    <IconButton onClick={handleAddChoice} sx={{ mr: 1 }}>
-                        <AddIcon />
-                    </IconButton>
-                </Tooltip>
-
-                <Tooltip title={disabledAdd ? '類別已達上限' : '增加類別'}>
-                    <span>
-                        <IconButton
-                            onClick={handleAddTag}
-                            disabled={disabledAdd}
-                        >
-                            <TagPlusIcon />
-                        </IconButton>
-                    </span>
-                </Tooltip>
-            </Toolbar>
             <TableContainer>
                 <Table
+                    size="small"
                     sx={{
+                        bgcolor: (theme) => theme.palette.grey[700],
                         '& .MuiTableCell-root': {
-                            height: 72,
+                            height: 64,
                         },
                     }}
                 >
                     <TableHead>
                         <TableRow>
-                            <TableCell>名稱</TableCell>
+                            <TableCell>
+                                <Typography variant="body1">
+                                    答項名稱
+                                </Typography>
+                            </TableCell>
                             {tagsId.map((id, index) => (
                                 <TableCell key={id || `${index}`}>
                                     <CreatableSelect<TagsOption>
@@ -305,6 +295,41 @@ export default function TagTable(props: TagTableProps) {
                                     />
                                 </TableCell>
                             ))}
+                            <TableCell sx={{ maxWidth: 60 }} padding="none">
+                                <Toolbar variant="dense">
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                        }}
+                                    />
+                                    <Tooltip title="增加答項">
+                                        <IconButton
+                                            onClick={handleAddChoice}
+                                            sx={{ mr: 1 }}
+                                        >
+                                            <AddIcon />
+                                        </IconButton>
+                                    </Tooltip>
+
+                                    <Tooltip
+                                        title={
+                                            disabledAdd
+                                                ? '類別已達上限'
+                                                : '增加類別'
+                                        }
+                                    >
+                                        <span>
+                                            <IconButton
+                                                onClick={handleAddTag}
+                                                disabled={disabledAdd}
+                                            >
+                                                <TagPlusIcon />
+                                            </IconButton>
+                                        </span>
+                                    </Tooltip>
+                                </Toolbar>
+                            </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -317,10 +342,13 @@ export default function TagTable(props: TagTableProps) {
                                 <TableRow key={el.id}>
                                     <TableCell component="th" scope="row">
                                         <TextField
+                                            variant="standard"
+                                            size="small"
                                             name={el.id}
                                             value={el.label}
                                             placeholder="請命名答項"
                                             onChange={handleChangeLabel}
+                                            fullWidth
                                         />
                                     </TableCell>
 
@@ -406,6 +434,7 @@ export default function TagTable(props: TagTableProps) {
                                             </TableCell>
                                         )
                                     })}
+                                    <TableCell />
                                 </TableRow>
                             ))}
                         {emptyRows > 0 && (
@@ -431,6 +460,7 @@ export default function TagTable(props: TagTableProps) {
                     setRowsPerPage(parseInt(event.target.value, 10))
                     setPage(0)
                 }}
+                sx={{ bgcolor: (theme) => theme.palette.grey[700] }}
             />
         </Root>
     )
