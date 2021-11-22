@@ -33,7 +33,7 @@ export default function Dragger() {
     }
 
     return (
-        <Box sx={{ p: 3, pb: 6 }}>
+        <Box sx={{ p: 6, pb: 6 }}>
             <Box
                 sx={{
                     mb: 8,
@@ -65,29 +65,47 @@ export default function Dragger() {
                             imageUrl="images/dragger/survey-1-1.png"
                             sx={{ mb: 2, borderRadius: 8, overflow: 'hidden' }}
                         />
-                        <Typography variant="body2">
-                            適合喜歡自我挑戰或自我充實的受眾
-                            <br />
-                            測驗主題可以很知識性，也能純粹好玩
-                        </Typography>
+                        <Box
+                            sx={{
+                                px: 6,
+                            }}
+                        >
+                            <Typography variant="body2">
+                                適合喜歡自我挑戰或自我充實的受眾
+                                <br />
+                                測驗主題可以很知識性，也能純粹好玩
+                            </Typography>
+                        </Box>
                     </Box>
                     <Box sx={{ textAlign: 'center', maxWidth: 350 }}>
                         <ImageBox
                             imageUrl="images/dragger/survey-1-2.png"
                             sx={{ mb: 2, borderRadius: 8, overflow: 'hidden' }}
                         />
-                        <Typography variant="body2">
-                            透過隨機出題的固定題型，降低題目設計門檻，節省工作時間
-                        </Typography>
+                        <Box
+                            sx={{
+                                px: 6,
+                            }}
+                        >
+                            <Typography variant="body2">
+                                透過隨機出題的固定題型，降低題目設計門檻，節省工作時間
+                            </Typography>
+                        </Box>
                     </Box>
                     <Box sx={{ textAlign: 'center', maxWidth: 350 }}>
                         <ImageBox
                             imageUrl="images/dragger/survey-1-3.png"
                             sx={{ mb: 2, borderRadius: 8, overflow: 'hidden' }}
                         />
-                        <Typography variant="body2">
-                            最後有得分讓填答者想跟他人分享比較，或多玩幾次
-                        </Typography>
+                        <Box
+                            sx={{
+                                px: 6,
+                            }}
+                        >
+                            <Typography variant="body2">
+                                最後有得分讓填答者想跟他人分享比較，或多玩幾次
+                            </Typography>
+                        </Box>
                     </Box>
                 </Stack>
             </Box>

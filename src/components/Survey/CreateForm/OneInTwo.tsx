@@ -33,7 +33,7 @@ export default function OneInTwo() {
     }
 
     return (
-        <Box sx={{ p: 3, pb: 6 }}>
+        <Box sx={{ p: 6, pb: 6 }}>
             <Box
                 sx={{
                     mb: 8,
@@ -65,27 +65,45 @@ export default function OneInTwo() {
                             imageUrl="images/one-in-two/survey-1-1.png"
                             sx={{ mb: 2, borderRadius: 8, overflow: 'hidden' }}
                         />
-                        <Typography variant="body2">
-                            可以根據溝通需求，透過測驗了解受眾的偏好或狀態，進而更精準的分眾
-                        </Typography>
+                        <Box
+                            sx={{
+                                px: 6,
+                            }}
+                        >
+                            <Typography variant="body2">
+                                可以根據溝通需求，透過測驗了解受眾的偏好或狀態，進而更精準的分眾
+                            </Typography>
+                        </Box>
                     </Box>
                     <Box sx={{ textAlign: 'center', maxWidth: 350 }}>
                         <ImageBox
                             imageUrl="images/one-in-two/survey-1-2.png"
                             sx={{ mb: 2, borderRadius: 8, overflow: 'hidden' }}
                         />
-                        <Typography variant="body2">
-                            透過快速二選一的固定題型，降低題目設計門檻，節省工作時間
-                        </Typography>
+                        <Box
+                            sx={{
+                                px: 6,
+                            }}
+                        >
+                            <Typography variant="body2">
+                                透過快速二選一的固定題型，降低題目設計門檻，節省工作時間
+                            </Typography>
+                        </Box>
                     </Box>
                     <Box sx={{ textAlign: 'center', maxWidth: 350 }}>
                         <ImageBox
                             imageUrl="images/one-in-two/survey-1-3.png"
                             sx={{ mb: 2, borderRadius: 8, overflow: 'hidden' }}
                         />
-                        <Typography variant="body2">
-                            個人化的測驗結果幫助填答者自我洞察，若有收穫，將因正向回饋提高品牌好感度
-                        </Typography>
+                        <Box
+                            sx={{
+                                px: 6,
+                            }}
+                        >
+                            <Typography variant="body2">
+                                個人化的測驗結果幫助填答者自我洞察，若有收穫，將因正向回饋提高品牌好感度
+                            </Typography>
+                        </Box>
                     </Box>
                 </Stack>
             </Box>

@@ -48,8 +48,8 @@ export default function StartForm() {
                     </Toolbar>
                 </AppBar>
             </ThemeProvider>
-            <Box sx={{ textAlign: 'center', py: 5 }}>
-                <Typography variant="h3" fontWeight="bold" gutterBottom>
+            <Box sx={{ textAlign: 'center', py: 3, height: 180 }}>
+                <Typography variant="h4" fontWeight="bold" gutterBottom>
                     用好玩的測驗
                     <br />
                     提升品牌知名度＆好感度！
@@ -63,24 +63,25 @@ export default function StartForm() {
                 justifyContent="center"
                 alignItems="flex-start"
                 sx={{
-                    bgcolor: (theme) => theme.palette.grey[50],
-                    py: 6,
+                    bgcolor: '#FFE5BF',
+                    py: 3,
                 }}
             >
                 <Box
                     sx={{
                         width: '50%',
                         textAlign: 'center',
-                        p: 6,
+                        p: 4,
+                        height: 'calc( 100vh - 250px)',
                     }}
                 >
                     <ImageBox
                         imageUrl="images/one-in-two/cover.png"
                         objectFit="contain"
-                        sx={{ height: 300, mb: 4 }}
+                        sx={{ height: 230, mb: 2 }}
                     />
 
-                    <Typography variant="h4" fontWeight="bold" gutterBottom>
+                    <Typography variant="h5" fontWeight="bold" gutterBottom>
                         二選一
                     </Typography>
 
@@ -89,7 +90,7 @@ export default function StartForm() {
                             px: 10,
                         }}
                     >
-                        <Typography variant="body1" sx={{ mb: 4 }}>
+                        <Typography variant="body1" sx={{ mb: 2, px: 6 }}>
                             適合用來設計「心理測驗」般產出個人結果的測驗，像是：「從你的衣櫃偷窺你的戀愛性格」、「從你的飲食習慣推判你的健康狀態」
                         </Typography>
                     </Box>
@@ -107,16 +108,16 @@ export default function StartForm() {
                     sx={{
                         width: '50%',
                         textAlign: 'center',
-                        p: 6,
+                        p: 4,
                     }}
                 >
                     <ImageBox
                         imageUrl="images/dragger/cover.png"
                         objectFit="contain"
-                        sx={{ height: 300, mb: 4 }}
+                        sx={{ height: 230, mb: 2 }}
                     />
 
-                    <Typography variant="h4" fontWeight="bold" gutterBottom>
+                    <Typography variant="h5" fontWeight="bold" gutterBottom>
                         左右拖曳
                     </Typography>
 
@@ -125,7 +126,7 @@ export default function StartForm() {
                             px: 10,
                         }}
                     >
-                        <Typography variant="body1" sx={{ mb: 4 }}>
+                        <Typography variant="body1" sx={{ mb: 2, px: 6 }}>
                             適合用來設計「挑戰型」測驗，像是：「測測看假新聞判讀你能拿幾分？」、「這些垃圾，你能丟對多少？」
                         </Typography>
                     </Box>

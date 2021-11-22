@@ -71,7 +71,7 @@ export default function CreateForm() {
 
     return (
         <Box sx={{ p: 4, pt: 1, bgcolor: 'grey.100' }}>
-            <Box sx={{ mb: 1 }}>
+            <Box sx={{ mb: 1, maxWidth: 1200, mx: 'auto' }}>
                 <Button
                     startIcon={<ArrowLeftIcon />}
                     onClick={handleClickBack}
@@ -81,17 +81,19 @@ export default function CreateForm() {
                 </Button>
             </Box>
 
-            <Box sx={{ p: 3, bgcolor: 'white' }}>
-                <Typography variant="body1" fontWeight="bold">
+            <Box sx={{ bgcolor: 'white', maxWidth: 1200, mx: 'auto' }}>
+                {/* <Typography variant="body1" fontWeight="bold">
                     測驗範本推薦
-                </Typography>
+                </Typography> */}
+
                 <Stack
                     direction="row"
                     alignItems="center"
                     sx={{
                         position: 'relative',
                         height: 500,
-                        p: 3,
+                        p: 6,
+                        bgcolor: '#FFE5BF',
                     }}
                     spacing={4}
                 >
