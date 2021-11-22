@@ -147,7 +147,7 @@ export default function CreateForm() {
                     </Box>
 
                     <Grow />
-                    <Box sx={{ p: 6, maxWidth: 700 }}>
+                    <Box sx={{ p: 2, maxWidth: 700 }}>
                         <ImageBox
                             justifySelf="end"
                             imageUrl={
