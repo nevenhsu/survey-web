@@ -16,6 +16,8 @@ const StyledBox = styled(Box)({
     width: '100%',
 })
 
+const interval = 200
+
 export default function CountDownProgress(props: CountDownProgressProps) {
     const { countDown, onEnd, ...rest } = props
 
@@ -25,13 +27,14 @@ export default function CountDownProgress(props: CountDownProgressProps) {
     )
 
     const count = useCountdown(endTime, {
-        interval: 1000,
+        interval,
         onEnd,
     })
 
-    const progress = _.round(((countDown - count * 1000) / countDown) * 100)
-
-    const txtLength = `${count}`.length + 2
+    const elapsed = count * interval
+    const progress = _.round(((countDown - elapsed) / countDown) * 100)
+    const elapsedSeconds = _.round(elapsed / 1000)
+    const txtLength = `${elapsedSeconds}`.length + 2
 
     return (
         <StyledBox {...rest}>
@@ -40,12 +43,13 @@ export default function CountDownProgress(props: CountDownProgressProps) {
                     variant="determinate"
                     value={progress}
                     sx={{ width: '100%', height: 16, borderRadius: 99 }}
+                    color="inherit"
                 />
                 <Typography
                     variant="h6"
-                    color="primary.main"
+                    color="primary.text"
                     sx={{ minWidth: `${txtLength}ch` }}
-                >{`${count}秒`}</Typography>
+                >{`${elapsedSeconds}秒`}</Typography>
             </Stack>
         </StyledBox>
     )

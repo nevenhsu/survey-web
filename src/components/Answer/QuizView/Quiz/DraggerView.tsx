@@ -100,84 +100,90 @@ export default function DraggerView(props: DraggerViewProps) {
                 />
             )}
 
-            <Typography variant="h6">{title.text}</Typography>
-            <Box sx={{ height: 16 }} />
-
             <Box
-                sx={{
-                    width: '60vh',
-                    textAlign: 'center',
-                }}
+            sx={{}}
             >
-                {Boolean(left.image) && (
-                    <ImageBox
-                        className="absolute-center"
-                        sx={{ left: -24, maxWidth: '20vw' }}
-                        imageUrl={left.image}
-                    />
-                )}
+                <Typography variant="h6">{title.text}</Typography>
+                <Box sx={{ height: 16 }} />
 
-                {Boolean(right.image) && (
-                    <ImageBox
-                        className="absolute-center"
-                        sx={{
-                            right: -24,
-                            left: 'unset',
-                            transform: 'translate(50%, -50%)',
-                            maxWidth: '20vw',
-                        }}
-                        imageUrl={right.image}
-                    />
-                )}
-
-                <MotionDraggerChoiceView
-                    animate={controls}
-                    choice={choice}
-                    style={{ x, rotate, border, originX: 0.5 }}
-                    drag="x"
-                    dragConstraints={{ left: -1000, right: 1000 }}
-                    onDragEnd={(event, info) => {
-                        // If the card is dragged only upto 150 on x-axis
-                        // bring it back to initial position
-                        if (Math.abs(info.offset.x) <= 150) {
-                            controls.start({ x: 0 })
-                        } else {
-                            // If card is dragged beyond 150
-                            // make it disappear
-                            // making use of ternary operator
-                            const negative = info.offset.x < 0
-                            controls.start({
-                                x: negative ? -200 : 200,
-                            })
-                            const answerId = negative ? left.id : right.id
-                            handleAnswer(answerId)
-                        }
+                <Box
+                    sx={{
+                        width: '100%',
+                        maxWidth: '60vh',
+                        textAlign: 'center',
+                        userSelect: 'none',
                     }}
-                />
+                >
+                    {Boolean(left.image) && (
+                        <ImageBox
+                            className="absolute-center"
+                            sx={{ left: 0, maxWidth: '20vw' }}
+                            imageUrl={left.image}
+                        />
+                    )}
+
+                    {Boolean(right.image) && (
+                        <ImageBox
+                            className="absolute-center"
+                            sx={{
+                                right: 0,
+                                left: 'unset',
+                                transform: 'translate(50%, -50%)',
+                                maxWidth: '20vw',
+                            }}
+                            imageUrl={right.image}
+                        />
+                    )}
+
+                    <MotionDraggerChoiceView
+                        animate={controls}
+                        choice={choice}
+                        style={{ x, rotate, border, originX: 0.5 }}
+                        drag="x"
+                        dragConstraints={{ left: -1000, right: 1000 }}
+                        onDragEnd={(event, info) => {
+                            // If the card is dragged only upto 150 on x-axis
+                            // bring it back to initial position
+                            if (Math.abs(info.offset.x) <= 150) {
+                                controls.start({ x: 0 })
+                            } else {
+                                // If card is dragged beyond 150
+                                // make it disappear
+                                // making use of ternary operator
+                                const negative = info.offset.x < 0
+                                controls.start({
+                                    x: negative ? -200 : 200,
+                                })
+                                const answerId = negative ? left.id : right.id
+                                handleAnswer(answerId)
+                            }
+                        }}
+                    />
+                </Box>
+
+                <Box sx={{ height: 16 }} />
+
+                <Stack
+                    direction="row"
+                    justifyContent="space-evenly"
+                    alignItems="center"
+                    spacing={2}
+                    sx={{ width: '60vh' }}
+                >
+                    <CustomButton
+                        customProps={{ ...left, buttonColor: leftColor }}
+                        size="large"
+                        defaultText="左選項"
+                        onClick={(event) => handleAnswer(left.id)}
+                    />
+                    <CustomButton
+                        customProps={{ ...right, buttonColor: rightColor }}
+                        size="large"
+                        defaultText="右選項"
+                        onClick={(event) => handleAnswer(right.id)}
+                    />
+                </Stack>
             </Box>
-
-            <Box sx={{ height: 16 }} />
-
-            <Stack
-                direction="row"
-                justifyContent="space-evenly"
-                alignItems="center"
-                spacing={2}
-                sx={{ width: '60vh' }}
-            >
-                <CustomButton
-                    customProps={{ ...left, buttonColor: leftColor }}
-                    size="large"
-                    defaultText="左選項"
-                    onClick={(event) => handleAnswer(left.id)}
-                />
-                <CustomButton
-                    customProps={{ ...right, buttonColor: rightColor }}
-                    size="large"
-                    defaultText="右選項"
-                    onClick={(event) => handleAnswer(right.id)}
-                />
-            </Stack>
         </>
     )
 }

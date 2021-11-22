@@ -55,7 +55,6 @@ export default function OneInTwoView(props: OneInTwoViewProps) {
             onDone()
         }
     }, [choiceGroups, current])
-
     return (
         <>
             <Box sx={{ position: 'fixed', top: 8, width: '100%', px: 2 }}>
@@ -64,10 +63,11 @@ export default function OneInTwoView(props: OneInTwoViewProps) {
                         variant="determinate"
                         value={progress}
                         sx={{ width: '100%', height: 16, borderRadius: 99 }}
+                        color="inherit"
                     />
                     <Typography
                         variant="h6"
-                        color="primary.main"
+                        color="primary.text"
                         sx={{ minWidth: `${progressText.length}ch` }}
                     >
                         {progressText}
@@ -81,7 +81,7 @@ export default function OneInTwoView(props: OneInTwoViewProps) {
                 <Grid
                     container
                     direction="row"
-                    alignItems="center"
+                    // alignItems="center"
                     justifyContent="center"
                     spacing={2}
                 >

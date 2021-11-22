@@ -107,7 +107,7 @@ export default function OneInTwoView(props: {
                             <Grid
                                 container
                                 direction="row"
-                                alignItems="center"
+                                // alignItems="center"
                                 justifyContent="center"
                                 spacing={2}
                             >

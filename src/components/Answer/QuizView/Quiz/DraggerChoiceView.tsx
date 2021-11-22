@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography'
 import AspectRatioBox from 'components/common/AspectRatioBox'
 import ImageBox from 'components/common/ImageBox'
 import type { DraggerChoiceType } from 'common/types'
+import { mq } from 'utils/helper'
 
 type DraggerChoiceViewProps = {
     choice?: DraggerChoiceType
@@ -32,6 +33,11 @@ const DraggerChoiceView = React.forwardRef<unknown, DraggerChoiceViewProps>(
                     boxShadow: 4,
                     borderRadius: 1,
                     overflow: 'hidden',
+                    width: '50%',
+                    marginX: 'auto',
+                    [mq(768)]: {
+                        width: 'auto',
+                    },
                 }}
                 ref={ref}
             >

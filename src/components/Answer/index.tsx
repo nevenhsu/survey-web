@@ -96,6 +96,7 @@ export default function Survey() {
                             <LinearProgress
                                 variant="determinate"
                                 value={progress}
+                                color="inherit"
                                 sx={{
                                     position: 'fixed',
                                     top: 0,
@@ -139,7 +140,7 @@ export default function Survey() {
                         position: 'absolute',
                         left: 4,
                         top: 4,
-                        color: 'primary.main',
+                        color: 'primary.text',
                     }}
                 >
                     預覽模式

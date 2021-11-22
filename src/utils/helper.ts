@@ -463,3 +463,7 @@ export function getDeviceValue<T>(device: DeviceType, value?: Responsive<T>) {
         }
     }
 }
+
+export function mq(bp: Number) {
+    return `@media (min-width: ${bp}px)`;
+}

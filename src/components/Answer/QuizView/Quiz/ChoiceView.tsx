@@ -55,6 +55,7 @@ const StyledButton = styled(Button, {
 
     return {
         width: '100%',
+        height: '100%',
         color: selected ? activeColor : color,
         borderColor: buttonColor,
         backgroundColor: selected ? buttonColor : bgcolor,

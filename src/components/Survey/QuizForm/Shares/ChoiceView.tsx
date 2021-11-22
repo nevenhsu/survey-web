@@ -72,6 +72,7 @@ export default function ChoiceView(props: {
 
                     return {
                         width: '100%',
+                        height: '100%',
                         color,
                         fontSize,
                         padding,
