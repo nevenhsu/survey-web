@@ -35,6 +35,7 @@ export default function StartForm() {
                 height: '100vh',
                 zIndex: 'tooltip',
                 bgcolor: 'white',
+                overflow: 'auto',
             }}
         >
             <ThemeProvider mode="dark">
