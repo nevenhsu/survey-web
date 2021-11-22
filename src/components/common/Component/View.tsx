@@ -222,6 +222,7 @@ export function ComponentList(props: ComponentListProps) {
                     sx={{
                         width: el.width,
                         height: el.height,
+                        position: 'relative',
                     }}
                     item
                 >

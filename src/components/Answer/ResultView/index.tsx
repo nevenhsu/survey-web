@@ -114,6 +114,8 @@ export default function ResultView() {
         }
     }, [result])
 
+    console.log(isOneInTwoMode, draggerResult)
+
     return (
         <Box sx={{ py: 3, minHeight: '100vh' }}>
             <Box
@@ -130,7 +132,7 @@ export default function ResultView() {
             <ComponentList components={components} />
 
             {!isOneInTwoMode && draggerResult && (
-                <Box sx={{ textAlign: 'center', py: 3 }}>
+                <Box sx={{ textAlign: 'center', py: 3, position: 'relative' }}>
                     <Typography variant="h5" gutterBottom>
                         總得分{draggerResult.score}
                     </Typography>
