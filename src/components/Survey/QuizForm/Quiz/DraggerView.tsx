@@ -163,11 +163,15 @@ export default function DraggerView(props: {
                     customProps={left}
                     onCustomize={(value) => handleChange('left', value)}
                     defaultText="左選項"
+                    showImage
+                    circle
                 />
                 <StyledCustomButton
                     customProps={right}
                     onCustomize={(value) => handleChange('right', value)}
                     defaultText="右選項"
+                    showImage
+                    circle
                 />
             </Stack>
         </>

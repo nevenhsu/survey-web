@@ -6,9 +6,11 @@ import Typography from '@mui/material/Typography'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
 import InputAdornment from '@mui/material/InputAdornment'
+import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import Popover from '@mui/material/Popover'
 import CustomButton, { CustomButtonProps } from 'components/common/CustomButton'
+import ImageUploader from 'components/common/ImageUploader'
 import PencilIcon from 'mdi-react/PencilIcon'
 import { variantOptions, sizeOptions } from 'components/common/options'
 import { getStringLength, toNumOrStr, toNumber } from 'utils/helper'
@@ -201,10 +203,17 @@ export function StyledTextField(props: StyledTextFieldProps) {
 
 export type StyledCustomButtonProps = CustomButtonProps & {
     onCustomize: (value: CustomButtonType) => void
+    showImage?: boolean
 }
 
 export const StyledCustomButton = (props: StyledCustomButtonProps) => {
-    const { customProps, onCustomize, defaultText = '下一題', ...rest } = props
+    const {
+        customProps,
+        onCustomize,
+        defaultText = '下一題',
+        showImage = false,
+        ...rest
+    } = props
     const {
         text = '',
         textColor = '',
@@ -215,6 +224,7 @@ export const StyledCustomButton = (props: StyledCustomButtonProps) => {
         padding,
         border,
         borderRadius,
+        image,
     } = customProps ?? {}
 
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
@@ -231,15 +241,7 @@ export const StyledCustomButton = (props: StyledCustomButtonProps) => {
 
     const handleChange: OnChangeInput = (event) => {
         const { name, value: val } = event.target
-        let value: any = val
-
-        if (_.includes(['fontSize', 'borderRadius'], name)) {
-            value = toNumber(val)
-        }
-
-        if (name === 'padding') {
-            value = toNumOrStr(val)
-        }
+        const value = toNumOrStr(val)
 
         const buttonValue = {
             ...customProps,
@@ -345,17 +347,6 @@ export const StyledCustomButton = (props: StyledCustomButtonProps) => {
                     </TextField>
 
                     <TextField
-                        label="按鈕留白"
-                        variant="standard"
-                        name="padding"
-                        value={padding}
-                        onChange={handleChange}
-                        placeholder="22px 8px"
-                        fullWidth
-                        sx={{ mb: 3 }}
-                    />
-
-                    <TextField
                         label="按鈕邊框"
                         variant="standard"
                         name="border"
@@ -366,16 +357,75 @@ export const StyledCustomButton = (props: StyledCustomButtonProps) => {
                         sx={{ mb: 3 }}
                     />
 
-                    <TextField
-                        label="按鈕圓角"
-                        variant="standard"
-                        name="borderRadius"
-                        value={borderRadius}
-                        onChange={handleChange}
-                        placeholder="1"
-                        fullWidth
-                        sx={{ mb: 3 }}
-                    />
+                    {showImage ? (
+                        <>
+                            <Typography
+                                sx={{
+                                    transform: `scale(0.75)`,
+                                    transformOrigin: 'top left',
+                                    color: 'text.secondary',
+                                    mb: 0.5,
+                                }}
+                            >
+                                背景圖片
+                            </Typography>
+                            <Box sx={{ position: 'relative', mb: 3 }}>
+                                <ImageUploader
+                                    onUploaded={(value) => {
+                                        handleChange({
+                                            target: {
+                                                name: 'image',
+                                                value,
+                                            },
+                                        } as any)
+                                    }}
+                                    sx={{ width: 104 }}
+                                    hideImage
+                                    hideDeleteButton
+                                />
+                                <Button
+                                    className="absolute-vertical"
+                                    color="error"
+                                    sx={{ right: 0 }}
+                                    disabled={!Boolean(image)}
+                                    onClick={() => {
+                                        handleChange({
+                                            target: {
+                                                name: 'image',
+                                                value: undefined,
+                                            },
+                                        } as any)
+                                    }}
+                                >
+                                    清除
+                                </Button>
+                            </Box>
+                        </>
+                    ) : (
+                        <>
+                            <TextField
+                                label="按鈕留白"
+                                variant="standard"
+                                name="padding"
+                                value={padding}
+                                onChange={handleChange}
+                                placeholder="22px 8px"
+                                fullWidth
+                                sx={{ mb: 3 }}
+                            />
+
+                            <TextField
+                                label="按鈕圓角"
+                                variant="standard"
+                                name="borderRadius"
+                                value={borderRadius}
+                                onChange={handleChange}
+                                placeholder="1"
+                                fullWidth
+                                sx={{ mb: 3 }}
+                            />
+                        </>
+                    )}
                 </Box>
             </Popover>
         </>

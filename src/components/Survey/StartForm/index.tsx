@@ -59,89 +59,96 @@ export default function StartForm() {
                     透過測驗模組讓測驗製作更簡單、省時
                 </Typography>
             </Box>
-            <Stack
-                direction="row"
-                justifyContent="center"
-                alignItems="flex-start"
-                sx={{
-                    bgcolor: '#FFE5BF',
-                    py: 3,
-                }}
-            >
-                <Box
+            <Box sx={{ minHeight: 'calc(100vh - 244px)', bgcolor: '#FFE5BF' }}>
+                <Stack
+                    direction="row"
+                    justifyContent="center"
+                    alignItems="flex-start"
                     sx={{
-                        width: '50%',
-                        textAlign: 'center',
-                        p: 4,
-                        height: 'calc( 100vh - 250px)',
+                        py: 3,
                     }}
                 >
-                    <ImageBox
-                        imageUrl="images/one-in-two/cover.png"
-                        objectFit="contain"
-                        sx={{ height: 230, mb: 2 }}
-                    />
-
-                    <Typography variant="h5" fontWeight="bold" gutterBottom>
-                        二選一
-                    </Typography>
-
                     <Box
                         sx={{
-                            px: 10,
+                            width: '50%',
+                            height: '100%',
+                            textAlign: 'center',
+                            p: 4,
                         }}
                     >
-                        <Typography variant="body1" sx={{ mb: 2, px: 6 }}>
-                            適合用來設計「心理測驗」般產出個人結果的測驗，像是：「從你的衣櫃偷窺你的戀愛性格」、「從你的飲食習慣推判你的健康狀態」
+                        <ImageBox
+                            imageUrl="images/one-in-two/cover.png"
+                            objectFit="contain"
+                            sx={{ height: 232, mb: 2 }}
+                        />
+
+                        <Typography variant="h5" fontWeight="bold" gutterBottom>
+                            二選一
                         </Typography>
+
+                        <Box
+                            sx={{
+                                px: 10,
+                            }}
+                        >
+                            <Typography
+                                variant="body1"
+                                sx={{ mb: 2, px: { lg: 6 } }}
+                            >
+                                適合用來設計「心理測驗」般產出個人結果的測驗，像是：「從你的衣櫃偷窺你的戀愛性格」、「從你的飲食習慣推判你的健康狀態」
+                            </Typography>
+                        </Box>
+
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            size="large"
+                            onClick={() => handleClick(Mode.oneInTwo)}
+                        >
+                            選擇測驗
+                        </Button>
                     </Box>
-
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        size="large"
-                        onClick={() => handleClick(Mode.oneInTwo)}
-                    >
-                        選擇測驗
-                    </Button>
-                </Box>
-                <Box
-                    sx={{
-                        width: '50%',
-                        textAlign: 'center',
-                        p: 4,
-                    }}
-                >
-                    <ImageBox
-                        imageUrl="images/dragger/cover.png"
-                        objectFit="contain"
-                        sx={{ height: 230, mb: 2 }}
-                    />
-
-                    <Typography variant="h5" fontWeight="bold" gutterBottom>
-                        左右拖曳
-                    </Typography>
-
                     <Box
                         sx={{
-                            px: 10,
+                            width: '50%',
+                            textAlign: 'center',
+                            p: 4,
                         }}
                     >
-                        <Typography variant="body1" sx={{ mb: 2, px: 6 }}>
-                            適合用來設計「挑戰型」測驗，像是：「測測看假新聞判讀你能拿幾分？」、「這些垃圾，你能丟對多少？」
-                        </Typography>
-                    </Box>
+                        <ImageBox
+                            imageUrl="images/dragger/cover.png"
+                            objectFit="contain"
+                            sx={{ height: 232, mb: 2 }}
+                        />
 
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        size="large"
-                        onClick={() => handleClick(Mode.dragger)}
-                    >
-                        選擇測驗
-                    </Button>
-                </Box>
-            </Stack>
+                        <Typography variant="h5" fontWeight="bold" gutterBottom>
+                            左右拖曳
+                        </Typography>
+
+                        <Box
+                            sx={{
+                                px: 10,
+                            }}
+                        >
+                            <Typography
+                                variant="body1"
+                                sx={{ mb: 2, px: { lg: 6 } }}
+                            >
+                                適合用來設計「挑戰型」測驗，像是：「測測看假新聞判讀你能拿幾分？」、「這些垃圾，你能丟對多少？」
+                            </Typography>
+                        </Box>
+
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            size="large"
+                            onClick={() => handleClick(Mode.dragger)}
+                        >
+                            選擇測驗
+                        </Button>
+                    </Box>
+                </Stack>
+            </Box>
         </Box>
     )
 }

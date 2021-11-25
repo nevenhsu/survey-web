@@ -114,8 +114,6 @@ export default function ResultView() {
         }
     }, [result])
 
-    console.log(isOneInTwoMode, draggerResult)
-
     return (
         <Box sx={{ py: 3, minHeight: '100vh' }}>
             <Box

@@ -184,7 +184,6 @@ export function getContrastText(
 
         return { bgcolor, color }
     } catch (err) {
-        console.error(err)
         return { bgcolor, color: fallback }
     }
 }
@@ -205,7 +204,6 @@ export function lightenColor(
         const lightColor = lighten(val, coefficient)
         return lightColor
     } catch (err) {
-        console.error(err)
         return fallback
     }
 }
@@ -226,7 +224,6 @@ export function emphasizeColor(
         const emphasizeColor = emphasize(val, coefficient)
         return emphasizeColor
     } catch (err) {
-        console.error(err)
         return fallback
     }
 }

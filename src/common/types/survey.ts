@@ -87,6 +87,7 @@ export type CustomButtonType = {
     padding?: string | number
     border?: string
     borderRadius?: number
+    image?: string
 }
 
 export type TextType = {
@@ -133,7 +134,7 @@ export type ChoiceType = ChoiceStyle & {
 }
 
 export type DraggerChoiceType = ChoiceStyle &
-    TextType & {
+    Omit<TextType, 'text'> & {
         id: string
         label: string
         answer: string // DraggerButton id
@@ -165,7 +166,6 @@ export type OneInTwoQuiz = Quiz & OneInTwoType
 
 export type DraggerButton = CustomButtonType & {
     id: string
-    image?: string
 }
 
 export type DraggerType = {

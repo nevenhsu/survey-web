@@ -57,11 +57,22 @@ export default function SelectionView(props: {
     const handleCopyStyle = (id: string) => {
         const choice = _.find(choices, { id })
         if (choice) {
-            const { buttonColor, bgcolor } = choice
+            const {
+                buttonColor,
+                bgcolor,
+                fontSize,
+                padding,
+                border,
+                borderRadius,
+            } = choice
             const value = _.map(choices, (el) => ({
                 ...el,
                 buttonColor,
                 bgcolor,
+                fontSize,
+                padding,
+                border,
+                borderRadius,
             }))
 
             handleChange('choices', value)

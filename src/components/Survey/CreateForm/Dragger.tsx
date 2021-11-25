@@ -52,13 +52,13 @@ export default function Dragger() {
                 <Stack
                     direction="row"
                     justifyContent="space-evenly"
-                    alignItems="center"
+                    alignItems="start"
                     spacing={2}
                 >
                     <Box
                         sx={{
                             textAlign: 'center',
-                            maxWidth: 350,
+                            maxWidth: 360,
                         }}
                     >
                         <ImageBox
@@ -77,7 +77,7 @@ export default function Dragger() {
                             </Typography>
                         </Box>
                     </Box>
-                    <Box sx={{ textAlign: 'center', maxWidth: 350 }}>
+                    <Box sx={{ textAlign: 'center', maxWidth: 360 }}>
                         <ImageBox
                             imageUrl="images/dragger/survey-1-2.png"
                             sx={{ mb: 2, borderRadius: 8, overflow: 'hidden' }}
@@ -92,7 +92,7 @@ export default function Dragger() {
                             </Typography>
                         </Box>
                     </Box>
-                    <Box sx={{ textAlign: 'center', maxWidth: 350 }}>
+                    <Box sx={{ textAlign: 'center', maxWidth: 360 }}>
                         <ImageBox
                             imageUrl="images/dragger/survey-1-3.png"
                             sx={{ mb: 2, borderRadius: 8, overflow: 'hidden' }}
@@ -219,8 +219,7 @@ export default function Dragger() {
 
                             <Stack
                                 direction="row"
-                                justifyContent="space-evenly"
-                                alignItems="center"
+                                alignItems="stretch"
                                 spacing={1}
                             >
                                 <Box
@@ -234,17 +233,14 @@ export default function Dragger() {
                                             overflow: 'hidden',
                                         }}
                                     />
-                                    <Typography
-                                        variant="body2"
-                                        sx={{ height: 48 }}
-                                    >
+                                    <Typography variant="body2">
                                         透過測驗主題設計與封面圖片營造，提高填答意願與動機
                                     </Typography>
                                 </Box>
 
                                 <Box sx={{ textAlign: 'center' }}>
+                                    <Box sx={{ height: 'calc(50% - 24px)' }} />
                                     <ArrowRightIcon />
-                                    <Box sx={{ height: 24 }} />
                                 </Box>
 
                                 <Box
@@ -258,16 +254,13 @@ export default function Dragger() {
                                             overflow: 'hidden',
                                         }}
                                     />
-                                    <Typography
-                                        variant="body2"
-                                        sx={{ height: 48 }}
-                                    >
+                                    <Typography variant="body2">
                                         填答者憑直覺回答測驗的問題
                                     </Typography>
                                 </Box>
                                 <Box sx={{ textAlign: 'center' }}>
+                                    <Box sx={{ height: 'calc(50% - 24px)' }} />
                                     <ArrowRightIcon />
-                                    <Box sx={{ height: 24 }} />
                                 </Box>
                                 <Box
                                     sx={{ textAlign: 'center', width: '100%' }}
@@ -280,10 +273,7 @@ export default function Dragger() {
                                             overflow: 'hidden',
                                         }}
                                     />
-                                    <Typography
-                                        variant="body2"
-                                        sx={{ height: 48 }}
-                                    >
+                                    <Typography variant="body2">
                                         獲得等級結果，並想知道正確答案，可引導至更完整內容
                                     </Typography>
                                 </Box>
@@ -367,12 +357,7 @@ export default function Dragger() {
                             </Typography>
                         </Box>
 
-                        <Stack
-                            direction="row"
-                            justifyContent="space-evenly"
-                            alignItems="center"
-                            spacing={2}
-                        >
+                        <Stack direction="row" alignItems="start" spacing={2}>
                             <Box sx={{ textAlign: 'center', width: '100%' }}>
                                 <ImageBox
                                     imageUrl="images/dragger/survey-3-1.png"
@@ -382,7 +367,7 @@ export default function Dragger() {
                                         overflow: 'hidden',
                                     }}
                                 />
-                                <Typography variant="body2" sx={{ height: 48 }}>
+                                <Typography variant="body2">
                                     流量來源管理與分析，可用於分流管理分析，來調整投放測驗資源配置
                                 </Typography>
                             </Box>
@@ -395,7 +380,7 @@ export default function Dragger() {
                                         overflow: 'hidden',
                                     }}
                                 />
-                                <Typography variant="body2" sx={{ height: 48 }}>
+                                <Typography variant="body2">
                                     可以分析答題分佈，瞭解受眾認知或偏好
                                 </Typography>
                             </Box>
@@ -408,7 +393,7 @@ export default function Dragger() {
                                         overflow: 'hidden',
                                     }}
                                 />
-                                <Typography variant="body2" sx={{ height: 48 }}>
+                                <Typography variant="body2">
                                     找出錯誤最多或偏好最高的項目做後續推廣
                                 </Typography>
                             </Box>

@@ -26,9 +26,8 @@ export default function DraggerChoiceView(props: DraggerChoiceViewProps) {
 
     const handleChange = (name: string, value: any) => {
         // use label, remove text,
-        const { text, ...rest } = rawChoice
         const val = {
-            ...rest,
+            ...rawChoice,
             [name]: value,
         }
         onChange(val)
@@ -75,12 +74,12 @@ export default function DraggerChoiceView(props: DraggerChoiceViewProps) {
                         placeholder="請輸入名稱"
                         textProps={choice}
                         onCustomize={(value) => {
-                            const { text: t1, label, ...r } = rawChoice
-                            const { text: t2, ...v } = value
+                            const { label, ...r } = rawChoice
+                            const { text, ...v } = value
                             const newValue: DraggerChoiceType = {
                                 ...r,
                                 ...v,
-                                label: `${t2 || label || ''}`,
+                                label: `${text || label || ''}`,
                             }
                             onChange(newValue)
                         }}

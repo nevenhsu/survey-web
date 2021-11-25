@@ -140,7 +140,7 @@ export default function Survey() {
                         position: 'absolute',
                         left: 4,
                         top: 4,
-                        color: 'primary.text',
+                        color: 'text.primary',
                     }}
                 >
                     預覽模式

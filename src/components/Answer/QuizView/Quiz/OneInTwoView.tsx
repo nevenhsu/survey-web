@@ -67,7 +67,7 @@ export default function OneInTwoView(props: OneInTwoViewProps) {
                     />
                     <Typography
                         variant="h6"
-                        color="primary.text"
+                        color="text.primary"
                         sx={{ minWidth: `${progressText.length}ch` }}
                     >
                         {progressText}

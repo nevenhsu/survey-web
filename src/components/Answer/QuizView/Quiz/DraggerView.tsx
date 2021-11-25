@@ -6,12 +6,13 @@ import {
     useTransform,
     useAnimation,
 } from 'framer-motion'
+import { useTheme } from '@mui/material/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
 import Stack from '@mui/material/Stack'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import DraggerChoiceView from 'components/Answer/QuizView/Quiz/DraggerChoiceView'
 import CustomButton from 'components/common/CustomButton'
-import ImageBox from 'components/common/ImageBox'
 import CountDownProgress from 'components/common/CountDownProgress'
 import { shuffle } from 'utils/helper'
 import { colors } from 'theme/palette'
@@ -27,6 +28,7 @@ const MotionDraggerChoiceView = motion(DraggerChoiceView)
 
 export default function DraggerView(props: DraggerViewProps) {
     const { quizProps, onChange, onDone } = props
+
     const {
         title,
         values = [],
@@ -34,10 +36,14 @@ export default function DraggerView(props: DraggerViewProps) {
         left,
         right,
         countDown,
-        showImage,
     } = quizProps
 
+    const theme = useTheme()
+    const matches = useMediaQuery(theme.breakpoints.up('sm'))
+    const width = matches ? 'calc(100vh - 120px)' : '100%'
+
     const [current, setCurrent] = React.useState(0)
+
     const choices = React.useMemo(() => {
         return shuffle(rawChoices)
     }, [rawChoices])
@@ -48,6 +54,7 @@ export default function DraggerView(props: DraggerViewProps) {
 
     // for framer
     const controls = useAnimation()
+
     const x = useMotionValue(0)
     const border = useTransform(
         x,
@@ -71,7 +78,6 @@ export default function DraggerView(props: DraggerViewProps) {
             } as any)
         }
         setCurrent((state) => (state += 1))
-        controls.start({ x: 0 })
     }
 
     const handleEnd = () => {
@@ -79,12 +85,94 @@ export default function DraggerView(props: DraggerViewProps) {
     }
 
     React.useEffect(() => {
+        controls.start({ x: 0, transition: { duration: 0 } })
+
         if (_.isEmpty(rawChoices)) {
             onDone()
         } else if (current >= rawChoices.length) {
             onDone()
         }
     }, [rawChoices, current])
+
+    const leftButton = () => (
+        <CustomButton
+            customProps={{ ...left, buttonColor: leftColor }}
+            defaultText="左選項"
+            onClick={(event) => handleAnswer(left.id)}
+            circle
+        />
+    )
+
+    const rightButton = () => (
+        <CustomButton
+            customProps={{ ...right, buttonColor: rightColor }}
+            defaultText="右選項"
+            onClick={(event) => handleAnswer(right.id)}
+            circle
+        />
+    )
+
+    const cards = () => {
+        const choice = choices[current]
+        const nextChoice = choices[current + 1]
+
+        return (
+            <Box
+                sx={{ position: 'relative', width: '100%', zIndex: 'tooltip' }}
+            >
+                {Boolean(choice) && (
+                    <Box sx={{ position: 'relative', zIndex: 1 }}>
+                        <MotionDraggerChoiceView
+                            animate={controls}
+                            choice={choice}
+                            style={{ x, rotate, border, originX: 0.5 }}
+                            drag="x"
+                            dragConstraints={{ left: -1000, right: 1000 }}
+                            onDragEnd={(event, info) => {
+                                // If the card is dragged only upto 150 on x-axis
+                                // bring it back to initial position
+                                if (Math.abs(info.offset.x) <= 150) {
+                                    controls.start({ x: 0 })
+                                } else {
+                                    // If card is dragged beyond 150
+                                    // make it disappear
+                                    // making use of ternary operator
+                                    const negative = info.offset.x < 0
+                                    controls.start({
+                                        x: negative ? -200 : 200,
+                                    })
+                                    const answerId = negative
+                                        ? left.id
+                                        : right.id
+                                    handleAnswer(answerId)
+                                }
+                            }}
+                        />
+                    </Box>
+                )}
+                {Boolean(nextChoice) && (
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            width: '100%',
+                            zIndex: 0,
+                            bottom: -8,
+                            pointerEvents: 'none',
+                            transform: 'scale(0.98)',
+                            transformOrigin: 'bottom center',
+                        }}
+                    >
+                        <MotionDraggerChoiceView
+                            choice={nextChoice}
+                            style={{ originX: 0.5 }}
+                            drag="x"
+                            dragConstraints={{ left: -1000, right: 1000 }}
+                        />
+                    </Box>
+                )}
+            </Box>
+        )
+    }
 
     return (
         <>
@@ -100,90 +188,42 @@ export default function DraggerView(props: DraggerViewProps) {
                 />
             )}
 
+            <Typography variant="h6">{title.text}</Typography>
+            <Box sx={{ height: 16 }} />
+
             <Box
-            sx={{}}
+                sx={{
+                    width,
+                    textAlign: 'center',
+                    userSelect: 'none',
+                }}
             >
-                <Typography variant="h6">{title.text}</Typography>
-                <Box sx={{ height: 16 }} />
-
-                <Box
-                    sx={{
-                        width: '100%',
-                        maxWidth: '60vh',
-                        textAlign: 'center',
-                        userSelect: 'none',
-                    }}
-                >
-                    {Boolean(left.image) && (
-                        <ImageBox
-                            className="absolute-center"
-                            sx={{ left: 0, maxWidth: '20vw' }}
-                            imageUrl={left.image}
-                        />
-                    )}
-
-                    {Boolean(right.image) && (
-                        <ImageBox
-                            className="absolute-center"
-                            sx={{
-                                right: 0,
-                                left: 'unset',
-                                transform: 'translate(50%, -50%)',
-                                maxWidth: '20vw',
-                            }}
-                            imageUrl={right.image}
-                        />
-                    )}
-
-                    <MotionDraggerChoiceView
-                        animate={controls}
-                        choice={choice}
-                        style={{ x, rotate, border, originX: 0.5 }}
-                        drag="x"
-                        dragConstraints={{ left: -1000, right: 1000 }}
-                        onDragEnd={(event, info) => {
-                            // If the card is dragged only upto 150 on x-axis
-                            // bring it back to initial position
-                            if (Math.abs(info.offset.x) <= 150) {
-                                controls.start({ x: 0 })
-                            } else {
-                                // If card is dragged beyond 150
-                                // make it disappear
-                                // making use of ternary operator
-                                const negative = info.offset.x < 0
-                                controls.start({
-                                    x: negative ? -200 : 200,
-                                })
-                                const answerId = negative ? left.id : right.id
-                                handleAnswer(answerId)
-                            }
-                        }}
-                    />
-                </Box>
-
-                <Box sx={{ height: 16 }} />
-
-                <Stack
-                    direction="row"
-                    justifyContent="space-evenly"
-                    alignItems="center"
-                    spacing={2}
-                    sx={{ width: '60vh' }}
-                >
-                    <CustomButton
-                        customProps={{ ...left, buttonColor: leftColor }}
-                        size="large"
-                        defaultText="左選項"
-                        onClick={(event) => handleAnswer(left.id)}
-                    />
-                    <CustomButton
-                        customProps={{ ...right, buttonColor: rightColor }}
-                        size="large"
-                        defaultText="右選項"
-                        onClick={(event) => handleAnswer(right.id)}
-                    />
-                </Stack>
+                {matches ? (
+                    <Stack direction="row" alignItems="center" spacing={2}>
+                        {leftButton()}
+                        {cards()}
+                        {rightButton()}
+                    </Stack>
+                ) : (
+                    cards()
+                )}
             </Box>
+
+            <Box sx={{ height: 16 }} />
+
+            {!matches && (
+                <Box sx={{ width }}>
+                    <Stack
+                        direction="row"
+                        justifyContent="space-evenly"
+                        alignItems="center"
+                        spacing={2}
+                    >
+                        {leftButton()}
+                        {rightButton()}
+                    </Stack>
+                </Box>
+            )}
         </>
     )
 }

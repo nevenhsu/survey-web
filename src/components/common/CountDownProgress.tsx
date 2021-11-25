@@ -47,7 +47,7 @@ export default function CountDownProgress(props: CountDownProgressProps) {
                 />
                 <Typography
                     variant="h6"
-                    color="primary.text"
+                    color="text.primary"
                     sx={{ minWidth: `${txtLength}ch` }}
                 >{`${elapsedSeconds}秒`}</Typography>
             </Stack>

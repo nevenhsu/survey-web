@@ -6,6 +6,7 @@ import {
     Draggable,
     DropResult,
 } from 'react-beautiful-dnd'
+import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
@@ -34,7 +35,8 @@ type OptionsType = {
 }
 
 export default function SortView(props: SortViewProps) {
-    const matches = useMediaQuery('(min-width:600px)')
+    const theme = useTheme()
+    const matches = useMediaQuery(theme.breakpoints.up('sm'))
 
     const { quizProps, buttonProps, onChange } = props
     const {
