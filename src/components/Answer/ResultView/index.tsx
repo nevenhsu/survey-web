@@ -12,8 +12,10 @@ import {
     updateStep,
     updateAnswerData,
 } from 'store/slices/answer'
+import surveyApi from 'services/surveyApi'
 import { AnswerStep, QuizMode, Mode, FinalMode } from 'common/types'
 import type {
+    Answer,
     Result,
     QuizType,
     AnswerValue,
@@ -33,7 +35,7 @@ export default function ResultView() {
     const survey = useAppSelector(selectSurvey)
     const answer = useAppSelector(selectAnswer)
 
-    const { answers } = answer ?? {}
+    const { id: answerId, answers } = answer ?? {}
 
     const { id: surveyId, mode, results, quizzes = [], final } = survey ?? {}
     const { mode: finalMode } = final ?? {}
@@ -55,6 +57,15 @@ export default function ResultView() {
         if (!noFinal) {
             dispatch(updateStep(AnswerStep.final))
         }
+    }
+
+    const submit = async (data: Answer) => {
+        if (surveyId && answerId)
+            try {
+                await surveyApi.putAnswer(surveyId, answerId, data)
+            } catch (err) {
+                console.error(err)
+            }
     }
 
     React.useEffect(() => {
@@ -116,7 +127,9 @@ export default function ResultView() {
 
     React.useEffect(() => {
         if (result) {
-            dispatch(updateAnswerData({ resultId: result.id }))
+            const resultId = result.id
+            dispatch(updateAnswerData({ resultId }))
+            submit({ ...answer, resultId })
         }
     }, [result])
 

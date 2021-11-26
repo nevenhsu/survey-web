@@ -226,6 +226,7 @@ export default function ResultForm() {
                         return {
                             ...newVal,
                             components: oldVal.components,
+                            bgcolor: oldVal.bgcolor,
                         }
                     })
 
