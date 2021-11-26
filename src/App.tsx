@@ -16,6 +16,7 @@ import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import ThemeProvider from 'theme/ThemeProvider'
 import { useAppSelector } from 'hooks'
+import { SurveyStep } from 'common/types'
 
 const Survey = React.lazy(() => import('components/Survey'))
 const Answer = React.lazy(() => import('components/Answer'))
@@ -43,11 +44,14 @@ const StyledTab = styled(Tab)(({ theme }) => ({
 }))
 
 export default function App() {
+    const step = useAppSelector((state) => state.survey.step)
     const pathname = useAppSelector((state) => state.router.location.pathname)
     const paths = {
         survey: { path: '/survey', label: '編輯' },
         analysis: { path: '/analysis', label: '報告' },
     }
+
+    const hideTab = pathname === '/survey' && step === SurveyStep.start
 
     const history = useHistory()
 
@@ -72,19 +76,21 @@ export default function App() {
                                 超市調
                             </Typography>
                             <Grow />
-                            <StyledTabs
-                                value={pathname}
-                                onChange={handleChangePath}
-                                centered
-                            >
-                                {_.map(paths, ({ label, path }) => (
-                                    <StyledTab
-                                        key={path}
-                                        label={label}
-                                        value={path}
-                                    />
-                                ))}
-                            </StyledTabs>
+                            {!hideTab && (
+                                <StyledTabs
+                                    value={pathname}
+                                    onChange={handleChangePath}
+                                    centered
+                                >
+                                    {_.map(paths, ({ label, path }) => (
+                                        <StyledTab
+                                            key={path}
+                                            label={label}
+                                            value={path}
+                                        />
+                                    ))}
+                                </StyledTabs>
+                            )}
                             <Grow />
                             <Button color="inherit">Login</Button>
                         </Toolbar>
