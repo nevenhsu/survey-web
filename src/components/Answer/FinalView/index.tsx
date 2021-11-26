@@ -21,7 +21,8 @@ export default function FinalView() {
 
     const survey = useAppSelector(selectSurvey)
     const { id: surveyId, final, enable } = survey ?? {}
-    const { components = [], data, bgcolor } = final ?? {}
+    const { components = [], bgcolor, setting } = final ?? {}
+    const { info } = setting ?? {}
 
     const [uploading, setUploading] = React.useState(false)
     const [done, setDone] = React.useState(false)
@@ -79,6 +80,7 @@ export default function FinalView() {
             <Box sx={{ width: '100%', maxWidth: 480, mx: 'auto', my: 4 }}>
                 <InfoForm
                     data={answer?.final ?? {}}
+                    setting={info}
                     onChange={handleChangeData}
                 />
             </Box>

@@ -4,21 +4,32 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import User from 'utils/user'
 import ThemeProvider from 'theme/ThemeProvider'
-import { Contexts } from 'components/common/Component'
-import { ComponentList, getComponent } from 'components/common/Component'
+import { StyledCustomButton } from 'components/Survey/QuizForm/Shares'
+import {
+    ComponentList,
+    getComponent,
+    Contexts,
+} from 'components/common/Component'
 import { getDefaultComponent, setId, toNumOrStr } from 'utils/helper'
-import { useAppDispatch } from 'hooks'
-import { updateComponent, setResult } from 'store/slices/survey'
+import { useAppDispatch, useAppSelector } from 'hooks'
+import {
+    updateComponent,
+    setResult,
+    selectCurrentSurvey,
+    setResults,
+} from 'store/slices/survey'
 import { ComponentType } from 'common/types'
-import type { Component, Result } from 'common/types'
+import type { Component, Result, CustomButtonType } from 'common/types'
 
 type EditingQuizProps = {
-    surveyId?: string
     result?: Result
 }
 
 export default function EditingResult(props: EditingQuizProps) {
     const dispatch = useAppDispatch()
+
+    const { id: surveyId, results } = useAppSelector(selectCurrentSurvey)
+    const { button } = results ?? {}
 
     const instance = Contexts.getInstance('result')
     const { Context } = instance.getValue()
@@ -32,7 +43,8 @@ export default function EditingResult(props: EditingQuizProps) {
         reset,
     } = React.useContext(Context)
 
-    const { surveyId, result } = props
+    const { result } = props
+
     const { id: resultId, components = [], bgcolor } = result ?? {}
 
     const selectedComponent = React.useMemo(() => {
@@ -71,6 +83,12 @@ export default function EditingResult(props: EditingQuizProps) {
                     newValue,
                 })
             )
+        }
+    }
+
+    const handleChangeButton = (button: CustomButtonType) => {
+        if (surveyId) {
+            dispatch(setResults({ surveyId, newValue: { button } }))
         }
     }
 
@@ -125,22 +143,31 @@ export default function EditingResult(props: EditingQuizProps) {
                 }}
             >
                 {Boolean(resultId) ? (
-                    <ComponentList
-                        components={components}
-                        idPath={[]}
-                        selectedComponent={selectedComponent}
-                        onAdd={handleAdd}
-                        onSelect={(component, idPath: string[]) => {
-                            if (setSelectedId) {
-                                setSelectedId(component.id)
-                            }
+                    <>
+                        <ComponentList
+                            components={components}
+                            idPath={[]}
+                            selectedComponent={selectedComponent}
+                            onAdd={handleAdd}
+                            onSelect={(component, idPath: string[]) => {
+                                if (setSelectedId) {
+                                    setSelectedId(component.id)
+                                }
 
-                            if (setIdPath) {
-                                setIdPath(idPath)
-                            }
-                        }}
-                        onChange={handleChange}
-                    />
+                                if (setIdPath) {
+                                    setIdPath(idPath)
+                                }
+                            }}
+                            onChange={handleChange}
+                        />
+                        <Box sx={{ textAlign: 'center', py: 4 }}>
+                            <StyledCustomButton
+                                defaultText="下一步"
+                                customProps={button}
+                                onCustomize={handleChangeButton}
+                            />
+                        </Box>
+                    </>
                 ) : (
                     <Typography
                         variant="h6"

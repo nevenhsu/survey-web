@@ -25,8 +25,8 @@ export default function ChoiceView(props: {
         id,
         label = '',
         image = '',
-        buttonColor = theme.palette.primary.main,
-        bgcolor = theme.palette.common.white,
+        buttonColor = '',
+        bgcolor = '',
         fontSize,
         padding,
         border,
@@ -51,18 +51,15 @@ export default function ChoiceView(props: {
                 variant="outlined"
                 onClick={handleClick}
                 sx={() => {
+                    const bg = bgcolor || theme.palette.common.white
+
                     const { color } = getContrastText(
                         theme,
-                        bgcolor,
+                        bg,
                         theme.palette.text.primary
                     )
 
-                    const emphasizedColor = emphasizeColor(
-                        theme,
-                        bgcolor,
-                        0.08,
-                        bgcolor
-                    )
+                    const emphasizedColor = emphasizeColor(theme, bg, 0.08, bg)
 
                     const hoverTextColor = getContrastText(
                         theme,
@@ -78,7 +75,7 @@ export default function ChoiceView(props: {
                         padding,
                         border,
                         borderRadius,
-                        bgcolor,
+                        bgcolor: bg,
                         borderColor: buttonColor,
                         flexDirection: 'column',
                         overflow: 'hidden',
@@ -146,7 +143,7 @@ export default function ChoiceView(props: {
                         label="選項文字"
                         name="label"
                         variant="standard"
-                        value={label}
+                        value={label ?? ''}
                         onChange={onChange}
                         fullWidth
                         sx={{ mb: 3 }}
@@ -156,7 +153,7 @@ export default function ChoiceView(props: {
                         label="文字大小"
                         variant="standard"
                         name="fontSize"
-                        value={fontSize}
+                        value={fontSize ?? ''}
                         onChange={onChange}
                         placeholder="16"
                         fullWidth
@@ -167,7 +164,7 @@ export default function ChoiceView(props: {
                         label="邊框顏色"
                         name="buttonColor"
                         variant="standard"
-                        value={buttonColor}
+                        value={buttonColor ?? ''}
                         onChange={onChange}
                         placeholder="#3892FC"
                         fullWidth
@@ -178,7 +175,7 @@ export default function ChoiceView(props: {
                         label="背景顏色"
                         name="bgcolor"
                         variant="standard"
-                        value={bgcolor}
+                        value={bgcolor ?? ''}
                         onChange={onChange}
                         placeholder="#fffffff"
                         fullWidth
@@ -189,7 +186,7 @@ export default function ChoiceView(props: {
                         label="按鈕留白"
                         variant="standard"
                         name="padding"
-                        value={padding}
+                        value={padding ?? ''}
                         onChange={onChange}
                         placeholder="22px 8px"
                         fullWidth
@@ -200,7 +197,7 @@ export default function ChoiceView(props: {
                         label="按鈕邊框"
                         variant="standard"
                         name="border"
-                        value={border}
+                        value={border ?? ''}
                         onChange={onChange}
                         placeholder="0px solid #3892FC"
                         fullWidth
@@ -211,7 +208,7 @@ export default function ChoiceView(props: {
                         label="按鈕圓角"
                         variant="standard"
                         name="borderRadius"
-                        value={borderRadius}
+                        value={borderRadius ?? ''}
                         onChange={onChange}
                         placeholder="1"
                         fullWidth

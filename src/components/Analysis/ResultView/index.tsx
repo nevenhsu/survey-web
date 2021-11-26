@@ -4,6 +4,7 @@ import numeral from 'numeral'
 import { styled } from '@mui/material/styles'
 import Stack from '@mui/material/Stack'
 import Grid from '@mui/material/Grid'
+import Button from '@mui/material/Button'
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
@@ -30,7 +31,6 @@ import {
     insertReg,
 } from 'assets/data/analysis'
 import { treeData, productTreeData } from 'assets/data/tree'
-import { Button } from '@mui/material'
 
 const overall = [{ label: '消費者行為', value: ResultName.consumerBehavior }]
 

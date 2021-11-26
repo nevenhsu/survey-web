@@ -114,6 +114,8 @@ export default function Editor(props: EditorProps) {
                     <SelectionView
                         quizProps={quiz as SelectionQuiz}
                         onChange={(event) => {
+                            const { name, value } = event.target
+
                             handleUpdateQuiz({
                                 [event.target.name]: event.target.value,
                             })

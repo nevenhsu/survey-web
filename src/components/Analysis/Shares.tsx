@@ -5,12 +5,14 @@ import { styled } from '@mui/material/styles'
 import Stack from '@mui/material/Stack'
 import Box, { BoxProps } from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
+import IconButton, { IconButtonProps } from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
 import List from '@mui/material/List'
 import ListSubheader from '@mui/material/ListSubheader'
 import ListItemButton from '@mui/material/ListItemButton'
+import DownloadIcon from 'mdi-react/DownloadIcon'
 import ThemeProvider from 'theme/ThemeProvider'
 import type { OnChangeInput, OptionType } from 'common/types'
 
@@ -29,6 +31,10 @@ type SelectorBarProps = {
     sources?: Array<OptionType>
     onChange?: OnChangeInput
 }
+
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+}))
 
 export function LinkList(props: LinkListProps) {
     const { blocks = [], blockId } = props
@@ -84,22 +90,28 @@ export function ElementBox(
     )
 }
 
-export function Title(props: { title?: string; text?: string }) {
-    const { title, text } = props
+export function Title(props: {
+    title?: string
+    text?: string
+    buttonProps?: IconButtonProps
+}) {
+    const { title, text, buttonProps } = props
     return (
-        <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            sx={{ mb: 1 }}
-        >
-            <Box>
-                <Typography variant="subtitle1" gutterBottom>
-                    {title}
-                </Typography>
-                <Typography variant="body2">{text}</Typography>
-            </Box>
-        </Stack>
+        <Box sx={{ mb: 2 }}>
+            <Stack direction="row" alignItems="start">
+                <Box sx={{ width: '100%' }}>
+                    <Typography variant="h6">{title}</Typography>
+                    <Typography variant="body2" sx={{ mt: 1 }}>
+                        {text}
+                    </Typography>
+                </Box>
+                <Box>
+                    <StyledIconButton size="small" {...buttonProps}>
+                        <DownloadIcon />
+                    </StyledIconButton>
+                </Box>
+            </Stack>
+        </Box>
     )
 }
 

@@ -42,16 +42,16 @@ export default function SelectionView(props: {
     }
 
     const handleChangeChoice = (
-        e: React.ChangeEvent<HTMLInputElement>,
+        event: React.ChangeEvent<HTMLInputElement>,
         id: string
     ) => {
-        const value = choices.map((el) =>
-            el.id === id
-                ? { ...el, [e.target.name]: toNumOrStr(e.target.value) }
-                : el
+        const { name, value } = event.target
+
+        const newValue = choices.map((el) =>
+            el.id === id ? { ...el, [name]: toNumOrStr(value) } : el
         )
 
-        handleChange('choices', value)
+        handleChange('choices', newValue)
     }
 
     const handleCopyStyle = (id: string) => {

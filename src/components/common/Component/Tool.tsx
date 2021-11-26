@@ -1,5 +1,6 @@
 import * as React from 'react'
 import _ from 'lodash'
+import NumberFormat from 'react-number-format'
 import { styled } from '@mui/material'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
@@ -13,6 +14,9 @@ import MenuItem from '@mui/material/MenuItem'
 import TextField from '@mui/material/TextField'
 import ImageUploader from 'components/common/ImageUploader'
 import { typoOptions, fontWeightOptions } from 'components/common/options'
+import { useAppDispatch, useAppSelector } from 'hooks'
+import { updateSurvey, selectCurrentSurvey } from 'store/slices/survey'
+import { toNumOrStr } from 'utils/helper'
 import { ComponentType } from 'common/types'
 import type { Component } from 'common/types'
 
@@ -80,6 +84,11 @@ const Header = (props: { title: string }) => {
 }
 
 export default function ComponentTool(props: ComponentToolProps) {
+    const dispatch = useAppDispatch()
+
+    const survey = useAppSelector(selectCurrentSurvey)
+    const { id: surveyId, setting } = survey ?? {}
+
     const { page, component, onChange, onDelete, handleChangePage } = props
 
     const {
@@ -99,6 +108,24 @@ export default function ComponentTool(props: ComponentToolProps) {
         buttonColor,
     } = component ?? {}
 
+    const handleChangeSetting = (name: string, value: any) => {
+        if (surveyId) {
+            const newValue = {
+                setting: {
+                    ...setting,
+                    [name]: value,
+                },
+            }
+
+            dispatch(
+                updateSurvey({
+                    id: surveyId,
+                    newValue,
+                })
+            )
+        }
+    }
+
     return (
         <TableContainer
             sx={{
@@ -112,6 +139,26 @@ export default function ComponentTool(props: ComponentToolProps) {
             <Table size="small">
                 <TableBody>
                     <Header title="頁面設定" />
+
+                    <TableRow>
+                        <TableCell>最大寬度</TableCell>
+                        <TableCell>
+                            <NumberFormat
+                                customInput={StyledTextField}
+                                variant="standard"
+                                value={setting?.maxWidth ?? ''}
+                                onValueChange={({ value }) => {
+                                    handleChangeSetting(
+                                        'maxWidth',
+                                        toNumOrStr(value)
+                                    )
+                                }}
+                                placeholder="800"
+                                fullWidth
+                            />
+                        </TableCell>
+                    </TableRow>
+
                     <TableRow>
                         <TableCell>頁面顏色</TableCell>
                         <TableCell>

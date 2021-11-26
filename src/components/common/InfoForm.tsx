@@ -13,11 +13,12 @@ import { FinalInfo, OnChangeInput } from 'common/types'
 
 type InfoFormProps = {
     data?: FinalInfo
+    setting?: { [key: string]: boolean }
     onChange?: OnChangeInput
 }
 
 export default function InfoForm(props: InfoFormProps) {
-    const { data, onChange } = props
+    const { data, setting, onChange } = props
 
     const { name, gender, birthday, mobile, email } = data ?? {}
 
@@ -32,6 +33,10 @@ export default function InfoForm(props: InfoFormProps) {
         }
     }
 
+    const showField = (name: string) => {
+        return _.get(setting, name, false)
+    }
+
     return (
         <Stack
             direction="column"
@@ -40,67 +45,84 @@ export default function InfoForm(props: InfoFormProps) {
             spacing={2}
             sx={{ p: 2 }}
         >
-            <TextField
-                label="姓名"
-                name="name"
-                variant="outlined"
-                value={name ?? ''}
-                onChange={onChange}
-                fullWidth
-            />
-
-            <FormControl component="fieldset">
-                <FormLabel component="legend">性別</FormLabel>
-                <RadioGroup
-                    row
-                    name="gender"
-                    value={gender ?? ''}
+            {showField('name') && (
+                <TextField
+                    label="姓名"
+                    name="name"
+                    variant="outlined"
+                    value={name ?? ''}
                     onChange={onChange}
-                >
-                    <FormControlLabel
-                        value="female"
-                        control={<Radio />}
-                        label="女生"
-                    />
-                    <FormControlLabel
-                        value="male"
-                        control={<Radio />}
-                        label="男生"
-                    />
-                    <FormControlLabel
-                        value="other"
-                        control={<Radio />}
-                        label="不公開"
-                    />
-                </RadioGroup>
-            </FormControl>
+                    fullWidth
+                />
+            )}
 
-            <MobileDatePicker
-                label="生日"
-                inputFormat="MM/dd/yyyy"
-                renderInput={(params) => <TextField fullWidth {...params} />}
-                value={toDate(birthday) ?? null}
-                onChange={handleChangeDate}
-                maxDate={new Date()}
-            />
+            {showField('gender') && (
+                <FormControl component="fieldset">
+                    <FormLabel component="legend">性別</FormLabel>
+                    <RadioGroup
+                        row
+                        name="gender"
+                        value={gender ?? ''}
+                        onChange={onChange}
+                    >
+                        <FormControlLabel
+                            value="female"
+                            control={<Radio />}
+                            label="女生"
+                        />
+                        <FormControlLabel
+                            value="male"
+                            control={<Radio />}
+                            label="男生"
+                        />
+                        <FormControlLabel
+                            value="other"
+                            control={<Radio />}
+                            label="其他"
+                        />
+                        <FormControlLabel
+                            value="none"
+                            control={<Radio />}
+                            label="不公開"
+                        />
+                    </RadioGroup>
+                </FormControl>
+            )}
 
-            <TextField
-                label="手機"
-                name="mobile"
-                variant="outlined"
-                value={mobile ?? ''}
-                onChange={onChange}
-                fullWidth
-            />
+            {showField('birthday') && (
+                <MobileDatePicker
+                    label="生日"
+                    inputFormat="MM/dd/yyyy"
+                    renderInput={(params) => (
+                        <TextField fullWidth {...params} />
+                    )}
+                    value={toDate(birthday) ?? null}
+                    onChange={handleChangeDate}
+                    maxDate={new Date()}
+                />
+            )}
 
-            <TextField
-                label="信箱"
-                name="email"
-                variant="outlined"
-                value={email ?? ''}
-                onChange={onChange}
-                fullWidth
-            />
+            {showField('mobile') && (
+                <TextField
+                    label="手機"
+                    name="mobile"
+                    variant="outlined"
+                    value={mobile ?? ''}
+                    onChange={onChange}
+                    fullWidth
+                />
+            )}
+
+            {showField('email') && (
+                <TextField
+                    label="信箱"
+                    name="email"
+                    variant="outlined"
+                    value={email ?? ''}
+                    onChange={onChange}
+                    fullWidth
+                />
+            )}
         </Stack>
     )
 }

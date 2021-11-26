@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles'
 import Chip, { ChipProps } from '@mui/material/Chip'
-import { getMuiColor, getContrastText } from 'theme/palette'
+import { getMuiColor, getContrastText, emphasizeColor } from 'theme/palette'
 
 type StyledChipProps = ChipProps & {
     colorName: string
@@ -10,7 +10,7 @@ const StyledChip = styled(Chip, {
     shouldForwardProp: (prop) => prop !== 'colorName',
 })<StyledChipProps>(({ theme, colorName, variant }) => {
     const { color } = getMuiColor(colorName)
-    const backgroundColor = variant === 'outlined' ? color[200] : color[300]
+    const backgroundColor = color[300]
 
     return {
         color: getContrastText(theme, backgroundColor, '#ffffff').color,

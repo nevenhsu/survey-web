@@ -353,7 +353,7 @@ export default function TagTable(props: TagTableProps) {
                                     {tagsId.map((id, i) => {
                                         const backgroundColor = getMuiColor(
                                             tags[id]?.color
-                                        ).color[500]
+                                        ).color[300]
 
                                         const { color } = getContrastText(
                                             theme,

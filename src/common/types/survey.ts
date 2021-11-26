@@ -42,6 +42,9 @@ export type Final = {
     components: Component[]
     data: FinalInfo
     bgcolor?: string
+    setting: {
+        info: { [key: string]: boolean }
+    }
 }
 
 export type FinalInfo = {
@@ -248,6 +251,7 @@ export type ResultList = { [id: string]: Result }
 export type Results = {
     selectedTags: [string?, string?]
     list: ResultList
+    button: CustomButtonType
 }
 
 export type Setting = {
@@ -256,6 +260,7 @@ export type Setting = {
 }
 
 export enum FinalMode {
+    none = 'none',
     info = 'info',
 }
 

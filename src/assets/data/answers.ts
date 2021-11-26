@@ -167,9 +167,15 @@ export const fakeSurveyData: Survey = {
                 ],
             },
         },
+        button: {},
     },
     setting: { showProgress: true, maxWidth: 800 },
-    final: { mode: FinalMode.info, components: [], data: {} },
+    final: {
+        mode: FinalMode.info,
+        components: [],
+        data: {},
+        setting: { info: {} },
+    },
     trackingId: ['facebook'],
     enable: true,
 }

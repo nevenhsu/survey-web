@@ -37,7 +37,8 @@ export function surveyFormatter(survey: Survey): Survey {
         ...others
     } = survey
 
-    const { list, ...r } = results ?? {}
+    const { list, button: btnRaw, ...r } = results ?? {}
+    const button = customButtonFormatter(btnRaw)
 
     _.forEach(list, (value, id) => {
         list[id] = resultFormatter(value)
@@ -64,6 +65,7 @@ export function surveyFormatter(survey: Survey): Survey {
         results: {
             ...r,
             list: list ?? {},
+            button,
         },
         final: finalFormatter(final),
         setting: {
@@ -97,12 +99,7 @@ export function quizFormatter(value: QuizType): QuizType {
               padding: toNumOrStr(titleRaw.padding),
           }
 
-    const button: CustomButtonType = {
-        ...btnRaw,
-        padding: toNumOrStr(btnRaw.padding),
-        fontSize: toNumOrStr(btnRaw.fontSize),
-        borderRadius: toNumber(btnRaw.borderRadius),
-    }
+    const button = customButtonFormatter(btnRaw)
 
     const cover: CoverType = {
         ...coverRaw,
@@ -298,14 +295,22 @@ export function componentFormatter(value: Component): Component {
 }
 
 export function finalFormatter(value: Final): Final {
-    const { components: compRaw = [], mode, ...rest } = value
+    const { components: compRaw = [], mode, setting: setRaw, ...rest } = value
 
     const components = _.map(compRaw, (el) => componentFormatter(el))
+
+    const setting = { info: {} }
+    const { info } = setRaw ?? {}
+
+    _.forEach(info, (val, key) => {
+        _.set(setting, ['info', key], toBool(val))
+    })
 
     return {
         ...rest,
         mode: FinalMode[mode],
         components,
+        setting,
     }
 }
 
@@ -362,4 +367,14 @@ function responsiveFormatter<T>(
     } as Responsive<T>
 
     return responsive
+}
+
+function customButtonFormatter(btn?: CustomButtonType) {
+    const button: CustomButtonType = {
+        ...btn,
+        padding: toNumOrStr(btn?.padding),
+        fontSize: toNumOrStr(btn?.fontSize),
+        borderRadius: toNumber(btn?.borderRadius),
+    }
+    return button
 }

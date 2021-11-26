@@ -16,7 +16,6 @@ import {
 import { useTheme } from '@mui/material/styles'
 import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
-import Paper from '@mui/material/Paper'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
@@ -26,8 +25,9 @@ import {
     Title,
     LinkList,
 } from 'components/Analysis/Shares'
+import { chartColors } from 'theme/palette'
 import { BehaviorName } from 'common/types'
-import type { ConversionRatioData, ProductCtrData } from 'common/types'
+import type { ConversionRatioData } from 'common/types'
 import { behaviorData, optionsData } from 'assets/data/analysis'
 
 const conversionRatio = [
@@ -163,6 +163,9 @@ export default function BehaviorView() {
                                             data={behaviorData.productCtr.data}
                                             barGap={-32}
                                             barSize={32}
+                                            margin={{
+                                                left: 48,
+                                            }}
                                         >
                                             <CartesianGrid strokeDasharray="3 3" />
                                             <XAxis
@@ -212,26 +215,20 @@ export default function BehaviorView() {
                                                 xAxisId="integer"
                                                 dataKey="views"
                                                 name="觀看數"
-                                                fill={
-                                                    theme.palette.primary.main
-                                                }
+                                                fill={chartColors[1]}
                                             />
                                             <Bar
                                                 xAxisId="integer"
                                                 dataKey="hits"
                                                 name="點擊數"
-                                                fill={
-                                                    theme.palette.secondary.main
-                                                }
+                                                fill={chartColors[0]}
                                             />
                                             <Line
                                                 xAxisId="percent"
                                                 type="monotone"
                                                 dataKey="ctr"
                                                 name="觀看率"
-                                                stroke={
-                                                    theme.palette.error.main
-                                                }
+                                                stroke={chartColors[2]}
                                             />
                                         </ComposedChart>
                                     </ResponsiveContainer>
@@ -261,11 +258,13 @@ export default function BehaviorView() {
                                         name: BehaviorName.deviceTraffic,
                                         data: behaviorData.flow.deviceTraffic,
                                         title: '裝置流量',
+                                        ml: 0,
                                     },
                                     {
                                         name: BehaviorName.trafficSource,
                                         data: behaviorData.flow.trafficSource,
                                         title: '渠道流量',
+                                        ml: 24,
                                     },
                                 ].map((el) => (
                                     <ElementBox
@@ -292,6 +291,9 @@ export default function BehaviorView() {
                                                     data={el.data}
                                                     barGap={-32}
                                                     barSize={32}
+                                                    margin={{
+                                                        left: el.ml,
+                                                    }}
                                                 >
                                                     <CartesianGrid strokeDasharray="3 3" />
                                                     <XAxis
@@ -321,10 +323,7 @@ export default function BehaviorView() {
                                                     <Bar
                                                         name="流量"
                                                         dataKey="value"
-                                                        fill={
-                                                            theme.palette
-                                                                .primary.main
-                                                        }
+                                                        fill={chartColors[0]}
                                                     />
                                                 </BarChart>
                                             </ResponsiveContainer>
@@ -356,6 +355,9 @@ export default function BehaviorView() {
                                             }
                                             barGap={-32}
                                             barSize={32}
+                                            margin={{
+                                                left: 24,
+                                            }}
                                         >
                                             <CartesianGrid strokeDasharray="3 3" />
                                             <XAxis
@@ -385,17 +387,13 @@ export default function BehaviorView() {
                                                 name="手機"
                                                 dataKey="mobile"
                                                 stackId="device"
-                                                fill={
-                                                    theme.palette.primary.main
-                                                }
+                                                fill={chartColors[0]}
                                             />
                                             <Bar
                                                 name="電腦"
                                                 dataKey="desktop"
                                                 stackId="device"
-                                                fill={
-                                                    theme.palette.secondary.main
-                                                }
+                                                fill={chartColors[1]}
                                             />
                                         </BarChart>
                                     </ResponsiveContainer>
@@ -422,6 +420,7 @@ export default function BehaviorView() {
                                     title: '跳出率',
                                     text: '針對跳出率過高的題目，重新設計',
                                     format: '0.0%',
+                                    ml: 32,
                                 },
                                 {
                                     key: BehaviorName.dwellTime,
@@ -430,6 +429,7 @@ export default function BehaviorView() {
                                     title: '停留時間',
                                     text: '如果題目的填答時間比預期的長、短很多，重新調整題目設計',
                                     format: '00:00:00',
+                                    ml: 32,
                                 },
                             ].map((el) => (
                                 <ElementBox
@@ -456,6 +456,9 @@ export default function BehaviorView() {
                                                 data={el.data}
                                                 barGap={-32}
                                                 barSize={32}
+                                                margin={{
+                                                    left: el.ml,
+                                                }}
                                             >
                                                 <CartesianGrid strokeDasharray="3 3" />
                                                 <XAxis
@@ -485,10 +488,7 @@ export default function BehaviorView() {
                                                 <Bar
                                                     name={el.name}
                                                     dataKey="value"
-                                                    fill={
-                                                        theme.palette.primary
-                                                            .main
-                                                    }
+                                                    fill={chartColors[0]}
                                                 />
                                             </BarChart>
                                         </ResponsiveContainer>

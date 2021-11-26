@@ -132,9 +132,22 @@ export function getDefaultSurvey(data: Partial<Survey>): Survey {
         updatedAt: createdAt,
         quizzes: [getDefaultQuiz(setId(), QuizMode.page), quiz],
         tags: {},
-        results: { selectedTags: [], list: {} },
+        results: { selectedTags: [], list: {}, button: {} },
         setting: { showProgress: true, maxWidth: 800 },
-        final: { mode: FinalMode.info, components: [], data: {} },
+        final: {
+            mode: FinalMode.info,
+            components: [],
+            data: {},
+            setting: {
+                info: {
+                    name: true,
+                    gender: true,
+                    birthday: true,
+                    mobile: true,
+                    email: true,
+                },
+            },
+        },
         trackingId: [],
         enable: false,
     }
@@ -465,5 +478,5 @@ export function getDeviceValue<T>(device: DeviceType, value?: Responsive<T>) {
 }
 
 export function mq(bp: Number) {
-    return `@media (min-width: ${bp}px)`;
+    return `@media (min-width: ${bp}px)`
 }

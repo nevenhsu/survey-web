@@ -1,66 +1,67 @@
 import _ from 'lodash'
-import {
-    amber,
-    blue,
-    blueGrey,
-    brown,
-    cyan,
-    deepOrange,
-    deepPurple,
-    green,
-    grey,
-    indigo,
-    lightBlue,
-    lightGreen,
-    lime,
-    orange,
-    pink,
-    purple,
-    red,
-    teal,
-    yellow,
-} from '@mui/material/colors'
 import styleFunctionSx from '@mui/system/styleFunctionSx'
 import { lighten, emphasize } from '@mui/material/styles'
 import type { PaletteMode, PaletteOptions } from '@mui/material'
 import type { Theme } from '@mui/material/styles/createTheme'
 
 export type Color = {
-    50: string
     100: string
-    200: string
     300: string
-    400: string
     500: string
-    600: string
-    700: string
-    800: string
-    900: string
-    A100: string
-    A200: string
-    A400: string
-    A700: string
 }
 
+const purple: Color = {
+    100: '#F9D6FF',
+    300: '#BA68C8',
+    500: '#9C27B0',
+}
+const indigo: Color = {
+    100: '#D7DDFF',
+    300: '#7986CB',
+    500: '#3F51B5',
+}
+const teal: Color = {
+    100: '#CAF6F2',
+    300: '#4DB6AC',
+    500: '#009688',
+}
+const lightGreen: Color = {
+    100: '#E7FECC',
+    300: '#AED581',
+    500: '#8BC34A',
+}
+const orange: Color = {
+    100: '#FFE5BF',
+    300: '#FFB74D',
+    500: '#FF9800',
+}
+const yellow: Color = {
+    100: '#FFF9C7',
+    300: '#FFF176',
+    500: '#FFEB3B',
+}
+const red: Color = {
+    100: '#FFCBCB',
+    300: '#E57373',
+    500: '#F44336',
+}
+const grey: Color = {
+    100: '#E0E0E0',
+    300: '#BDBDBD',
+    500: '#9E9E9E',
+}
+
+export const chartColors = ['#7986CB', '#FFB74D', '#4DB6AC']
+
+// for tags
 export const colors = [
-    lightBlue,
     lightGreen,
     orange,
     red,
-    blue,
-    green,
-    amber,
-    pink,
-    cyan,
-    lime,
-    deepOrange,
     purple,
     indigo,
     teal,
     yellow,
-    deepPurple,
-    blueGrey,
-    brown,
     grey,
 ]
 
@@ -122,25 +123,14 @@ export function getMuiColor(name?: string) {
     const colors: {
         [name: string]: Color
     } = {
-        amber,
-        blue,
-        blueGrey,
-        brown,
-        cyan,
-        deepOrange,
-        deepPurple,
-        green,
-        grey,
-        indigo,
-        lightBlue,
         lightGreen,
-        lime,
         orange,
-        pink,
-        purple,
         red,
+        purple,
+        indigo,
         teal,
         yellow,
+        grey,
     }
 
     if (name && colors[name]) {

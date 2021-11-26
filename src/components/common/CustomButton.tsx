@@ -47,6 +47,7 @@ const StyledButton = styled(Button, {
         background: image ? `center/cover no-repeat url(${image})` : '',
         backgroundColor: buttonColor,
         ...circleStyle,
+        textTransform: 'unset',
         '&:hover': {
             border,
             color,

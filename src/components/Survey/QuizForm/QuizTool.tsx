@@ -94,7 +94,7 @@ export default function QuizTool(props: QuizToolProps) {
     const { surveyId, quiz } = props
 
     const survey = useAppSelector(selectCurrentSurvey)
-    const { setting } = survey
+    const { setting } = survey ?? {}
 
     const {
         id: quizId,

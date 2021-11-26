@@ -254,6 +254,7 @@ export const StyledCustomButton = (props: StyledCustomButtonProps) => {
     return (
         <>
             <CustomButton
+                defaultText={defaultText}
                 customProps={customProps}
                 {...rest}
                 onClick={handleClick}

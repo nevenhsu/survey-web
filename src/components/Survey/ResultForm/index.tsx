@@ -299,7 +299,7 @@ export default function ResultForm() {
                                                             ],
                                                             'grey'
                                                         )
-                                                    ).color[500],
+                                                    ).color[300],
                                                 }}
                                             >
                                                 {index === 0 ? (
@@ -340,7 +340,7 @@ export default function ResultForm() {
                                 <InputAdornment
                                     position="start"
                                     sx={{
-                                        color: getMuiColor('grey').color[500],
+                                        color: getMuiColor('grey').color[300],
                                     }}
                                 >
                                     <Numeric1BoxIcon />
@@ -399,7 +399,6 @@ export default function ResultForm() {
                                 _.compact(_.uniq(labels)).map((el) => (
                                     <StyledChip
                                         key={`${k}${el}`}
-                                        variant="outlined"
                                         size="small"
                                         label={el}
                                         colorName={tags[k].color}
@@ -640,7 +639,6 @@ export default function ResultForm() {
                                         }}
                                     >
                                         <EditingResult
-                                            surveyId={surveyId}
                                             result={selectedResult}
                                         />
                                     </AspectRatioBox>

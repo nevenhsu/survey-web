@@ -8,9 +8,13 @@ import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
 import LoadingButton from '@mui/lab/LoadingButton'
 import Box from '@mui/material/Box'
+import Paper from '@mui/material/Paper'
+import Badge from '@mui/material/Badge'
 import Modal from '@mui/material/Modal'
+import Popper from '@mui/material/Popper'
 import LinearProgress from '@mui/material/LinearProgress'
 import DeviceMode, { getRatio, getWidth } from 'components/common/DeviceMode'
 import AspectRatioBox from 'components/common/AspectRatioBox'
@@ -18,6 +22,8 @@ import QuizTool from 'components/Survey/QuizForm/QuizTool'
 import ModeSelector from 'components/Survey/QuizForm/Shares/ModeSelector'
 import MenuSwapIcon from 'mdi-react/DragHorizontalVariantIcon'
 import AddIcon from 'mdi-react/AddIcon'
+import CloseIcon from 'mdi-react/CloseIcon'
+import AlertCircleIcon from 'mdi-react/AlertCircleIcon'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import usePreview from 'hooks/usePreview'
 import { selectDevice } from 'store/slices/userDefault'
@@ -30,7 +36,12 @@ import {
 import { reorder, setId, getDefaultQuiz } from 'utils/helper'
 import ThemeProvider from 'theme/ThemeProvider'
 import { QuizMode, QuizType, SurveyStep } from 'common/types'
-import type { SelectionQuiz, DraggerQuiz } from 'common/types'
+import type {
+    SelectionQuiz,
+    DraggerQuiz,
+    OneInTwoQuiz,
+    Tags,
+} from 'common/types'
 
 const Editor = React.lazy(
     () => import('components/Survey/QuizForm/View/Editor')
@@ -84,17 +95,15 @@ export default function QuizForm() {
     const survey = useAppSelector(selectCurrentSurvey)
     const { uploading, handlePreview } = usePreview(survey)
 
-    const { id: surveyId, quizzes = [], setting } = survey ?? {}
+    const { id: surveyId, quizzes = [], setting, tags } = survey ?? {}
     const { showProgress } = setting ?? {}
 
     const [selectedId, setSelectedId] = React.useState('')
     const [tab, setTab] = React.useState(0)
     const [progress, setProgress] = React.useState(0)
-
+    const [invalidTag, setInvalidTag] = React.useState<string[]>([])
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
     const [open, setOpen] = React.useState(false)
-    const handleOpen = () => setOpen(true)
-    const handleClose = () => setOpen(false)
-
     const [mode, setMode] = React.useState<QuizMode>(QuizMode.page)
 
     const device = useAppSelector(selectDevice)
@@ -141,7 +150,7 @@ export default function QuizForm() {
         const newValue = getDefaultQuiz(quizId, mode)
         dispatch(addQuiz({ id: surveyId, newValue }))
         setSelectedId(quizId)
-        handleClose()
+        setOpen(false)
     }
 
     const renderView = () => {
@@ -235,6 +244,102 @@ export default function QuizForm() {
             }
         }
     }, [selectedId, quizzes])
+
+    React.useEffect(() => {
+        if (selectedQuiz?.mode === QuizMode.oneInTwo) {
+            const quiz = selectedQuiz as OneInTwoQuiz
+            const invalid = checkInvalidTag(quiz, tags)
+            setInvalidTag(invalid)
+        } else {
+            setInvalidTag([])
+        }
+    }, [selectedQuiz, tags])
+
+    const renderInvalidContent = () => {
+        const [tagId] = invalidTag
+        const { label, values = [] } = tags[tagId] ?? {}
+        const num = values.length
+
+        return (
+            <ThemeProvider mode="dark">
+                <Paper
+                    elevation={4}
+                    sx={{
+                        width: 540,
+                        borderRadius: 2,
+                    }}
+                >
+                    <Stack
+                        direction="row"
+                        alignItems="start"
+                        justifyContent="stretch"
+                        spacing={2}
+                    >
+                        <Box
+                            sx={{
+                                position: 'relative',
+                                color: (theme) => theme.palette.error.main,
+                                height: 180,
+                                flex: '0 0 80px',
+                            }}
+                        >
+                            <AlertCircleIcon
+                                className="absolute-center"
+                                size={32}
+                            />
+                        </Box>
+                        <Box sx={{ py: 3 }}>
+                            <Typography fontWeight="bold" sx={{ mb: 2 }}>
+                                偵測到每個標籤的答項數量不同
+                            </Typography>
+
+                            <Typography sx={{ mb: 3 }}>
+                                我們偵測到{' '}
+                                {invalidTag.map((tagId, index) => {
+                                    const label = _.get(
+                                        tags,
+                                        [tagId, 'label'],
+                                        ''
+                                    )
+                                    return (
+                                        <Box key={tagId} component="span">
+                                            <Box
+                                                component="span"
+                                                sx={{
+                                                    textDecoration: 'underline',
+                                                }}
+                                            >
+                                                {label}
+                                            </Box>
+                                            {index !==
+                                                invalidTag.length - 1 && (
+                                                <span>、</span>
+                                            )}
+                                        </Box>
+                                    )
+                                })}{' '}
+                                類別的標籤，對應到不同數量的答項。
+                            </Typography>
+
+                            <Typography variant="caption">
+                                以 {label} 為例，有 {num} 個標籤，應該就要有為{' '}
+                                {num} 之倍數的答項總數。假設每個標籤有 2
+                                個答項，總共就應該有 {num * 2} 個答項。
+                            </Typography>
+                        </Box>
+                        <Box sx={{ p: 1 }}>
+                            <IconButton
+                                color="error"
+                                onClick={() => setAnchorEl(null)}
+                            >
+                                <CloseIcon />
+                            </IconButton>
+                        </Box>
+                    </Stack>
+                </Paper>
+            </ThemeProvider>
+        )
+    }
 
     return (
         <>
@@ -380,7 +485,9 @@ export default function QuizForm() {
                         <Button
                             variant="outlined"
                             startIcon={<AddIcon />}
-                            onClick={handleOpen}
+                            onClick={() => {
+                                setOpen(true)
+                            }}
                         >
                             增加題目
                         </Button>
@@ -405,14 +512,35 @@ export default function QuizForm() {
                                 onChange={(_, v) => setTab(v)}
                             >
                                 <Tab label="編輯題目" />
+
                                 <Tab
                                     label={
-                                        selectedQuiz?.mode === QuizMode.dragger
-                                            ? '題目邏輯'
-                                            : '答項標籤'
+                                        <Box
+                                            onClick={(event) => {
+                                                if (!_.isEmpty(invalidTag)) {
+                                                    setAnchorEl(
+                                                        event.currentTarget
+                                                    )
+                                                }
+                                            }}
+                                        >
+                                            <Badge
+                                                color="error"
+                                                variant="dot"
+                                                invisible={_.isEmpty(
+                                                    invalidTag
+                                                )}
+                                            >
+                                                {selectedQuiz?.mode ===
+                                                QuizMode.dragger
+                                                    ? '題目邏輯'
+                                                    : '答項標籤'}
+                                            </Badge>
+                                        </Box>
                                     }
                                     disabled={disabledTab}
                                 />
+
                                 <Tab
                                     label="跳題邏輯"
                                     disabled={disabledTab || disabledNext}
@@ -450,7 +578,12 @@ export default function QuizForm() {
                 </ThemeProvider>
             </Stack>
 
-            <Modal open={open} onClose={handleClose}>
+            <Modal
+                open={open}
+                onClose={() => {
+                    setOpen(false)
+                }}
+            >
                 <Box
                     className="absolute-center"
                     sx={{
@@ -483,6 +616,76 @@ export default function QuizForm() {
                     </Box>
                 </Box>
             </Modal>
+
+            <Popper open={Boolean(anchorEl)} anchorEl={anchorEl}>
+                {renderInvalidContent()}
+            </Popper>
         </>
     )
+}
+
+function checkInvalidTag(
+    quiz: OneInTwoQuiz,
+    tags: { [tagId: string]: Tags }
+): string[] {
+    const { choices = [], tagsId = [] } = quiz
+
+    const countTags: {
+        [tagId: string]: {
+            [tag: string]: number
+        }
+    } = {}
+
+    const invalidTag: string[] = []
+
+    if (_.isEmpty(choices) || _.isEmpty(tagsId)) {
+        return invalidTag
+    }
+
+    _.forEach(tagsId, (tagId) => {
+        const tagData = tags[tagId]
+        if (!_.isEmpty(tagData)) {
+            // check choice number
+            const { values = [] } = tagData
+            const val = choices.length % values.length
+            if (val !== 0) {
+                invalidTag.push(tagId)
+            }
+
+            const selectedTag = _.flatten(
+                _.map(choices, (el) => el.tags[tagId])
+            )
+            countTags[tagId] = _.countBy(selectedTag)
+        }
+    })
+
+    // check tag count
+    _.forEach(countTags, (count, tagId) => {
+        const tagData = tags[tagId]
+
+        if (!_.isEmpty(tagData)) {
+            const { values = [] } = tagData
+            let num: number
+
+            _.forEach(values, (tag) => {
+                const number = count[tag]
+
+                if (!_.includes(invalidTag, tagId)) {
+                    if (!Boolean(number)) {
+                        invalidTag.push(tagId)
+                        return
+                    }
+
+                    if (num === undefined) {
+                        num = number
+                    } else if (num !== number) {
+                        invalidTag.push(tagId)
+                        return
+                    }
+                }
+            })
+        }
+    })
+
+    return _.uniq(invalidTag)
 }

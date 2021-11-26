@@ -2,8 +2,8 @@ import * as React from 'react'
 import _ from 'lodash'
 import numeral from 'numeral'
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
+import CustomButton from 'components/common/CustomButton'
 import { ComponentList } from 'components/common/Component/View'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import {
@@ -12,7 +12,7 @@ import {
     updateStep,
     updateAnswerData,
 } from 'store/slices/answer'
-import { AnswerStep, QuizMode, Mode } from 'common/types'
+import { AnswerStep, QuizMode, Mode, FinalMode } from 'common/types'
 import type {
     Result,
     QuizType,
@@ -35,8 +35,12 @@ export default function ResultView() {
 
     const { answers } = answer ?? {}
 
-    const { id: surveyId, mode, results, quizzes = [] } = survey ?? {}
-    const { list, selectedTags: rawSelectedTags } = results ?? {}
+    const { id: surveyId, mode, results, quizzes = [], final } = survey ?? {}
+    const { mode: finalMode } = final ?? {}
+
+    const noFinal = finalMode === FinalMode.none
+
+    const { list, button, selectedTags: rawSelectedTags } = results ?? {}
     const selectedTags = _.compact(rawSelectedTags)
 
     const isOneInTwoMode = mode === Mode.oneInTwo
@@ -48,7 +52,9 @@ export default function ResultView() {
     const { components = [], bgcolor } = result ?? {}
 
     const handleNext = () => {
-        dispatch(updateStep(AnswerStep.final))
+        if (!noFinal) {
+            dispatch(updateStep(AnswerStep.final))
+        }
     }
 
     React.useEffect(() => {
@@ -146,15 +152,15 @@ export default function ResultView() {
                 </Box>
             )}
 
-            <Box sx={{ py: 4, textAlign: 'center' }}>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleNext}
-                >
-                    填寫資料
-                </Button>
-            </Box>
+            {!noFinal && (
+                <Box sx={{ py: 4, textAlign: 'center' }}>
+                    <CustomButton
+                        customProps={button}
+                        defaultText="下一步"
+                        onClick={handleNext}
+                    />
+                </Box>
+            )}
         </Box>
     )
 }
