@@ -38,21 +38,17 @@ export default function StartForm() {
                     透過測驗模組讓測驗製作更簡單、省時
                 </Typography>
             </Box>
-            <Box sx={{ minHeight: 'calc(100vh - 244px)', bgcolor: '#FFE5BF' }}>
+            <Box sx={{ py: 6, bgcolor: '#FFE5BF' }}>
                 <Stack
                     direction="row"
                     justifyContent="center"
-                    alignItems="flex-start"
-                    sx={{
-                        py: 3,
-                    }}
+                    alignItems="center"
                 >
                     <Box
                         sx={{
-                            width: '50%',
-                            height: '100%',
+                            width: '100%',
                             textAlign: 'center',
-                            p: 4,
+                            px: 10,
                         }}
                     >
                         <ImageBox
@@ -65,18 +61,12 @@ export default function StartForm() {
                             二選一
                         </Typography>
 
-                        <Box
-                            sx={{
-                                px: 10,
-                            }}
+                        <Typography
+                            variant="body1"
+                            sx={{ mb: 2, maxWidth: 328, mx: 'auto' }}
                         >
-                            <Typography
-                                variant="body1"
-                                sx={{ mb: 2, px: { lg: 6 } }}
-                            >
-                                適合用來設計「心理測驗」般產出個人結果的測驗，像是：「從你的衣櫃偷窺你的戀愛性格」、「從你的飲食習慣推判你的健康狀態」
-                            </Typography>
-                        </Box>
+                            適合用來設計「心理測驗」般產出個人結果的測驗，像是：「從你的衣櫃偷窺你的戀愛性格」、「從你的飲食習慣推判你的健康狀態」
+                        </Typography>
 
                         <Button
                             variant="contained"
@@ -88,10 +78,13 @@ export default function StartForm() {
                         </Button>
                     </Box>
                     <Box
+                        sx={{ flex: '0 0 1px', height: 'calc(100vh - 340px)' }}
+                    />
+                    <Box
                         sx={{
-                            width: '50%',
+                            width: '100%',
                             textAlign: 'center',
-                            p: 4,
+                            px: 10,
                         }}
                     >
                         <ImageBox
@@ -104,18 +97,12 @@ export default function StartForm() {
                             左右拖曳
                         </Typography>
 
-                        <Box
-                            sx={{
-                                px: 10,
-                            }}
+                        <Typography
+                            variant="body1"
+                            sx={{ mb: 2, maxWidth: 328, mx: 'auto' }}
                         >
-                            <Typography
-                                variant="body1"
-                                sx={{ mb: 2, px: { lg: 6 } }}
-                            >
-                                適合用來設計「挑戰型」測驗，像是：「測測看假新聞判讀你能拿幾分？」、「這些垃圾，你能丟對多少？」
-                            </Typography>
-                        </Box>
+                            適合用來設計「挑戰型」測驗，像是：「測測看假新聞判讀你能拿幾分？」、「這些垃圾，你能丟對多少？」
+                        </Typography>
 
                         <Button
                             variant="contained"
