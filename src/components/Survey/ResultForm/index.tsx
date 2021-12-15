@@ -18,6 +18,7 @@ import InputAdornment from '@mui/material/InputAdornment'
 import StyledChip from 'components/common/StyledChip'
 import DeviceMode, { getRatio, getWidth } from 'components/common/DeviceMode'
 import AspectRatioBox from 'components/common/AspectRatioBox'
+import ScaleBox from 'components/common/ScaleBox'
 import EditingResult from 'components/Survey/ResultForm/EditingResult'
 import ResultTool from 'components/Survey/ResultForm/ResultTool'
 import { Contexts } from 'components/common/Component'
@@ -93,6 +94,7 @@ export default function ResultForm() {
     const { Provider, Context } = instance.getValue()
 
     const { id: surveyId, tags, results, mode, quizzes = [] } = survey ?? {}
+    const deviceWidth = getWidth(device, dimensions)
 
     const isOneInTwoMode = mode === Mode.oneInTwo
     const { list, selectedTags: rawSelectedTags } = results ?? {}
@@ -655,9 +657,14 @@ export default function ResultForm() {
                                             },
                                         }}
                                     >
-                                        <EditingResult
-                                            result={selectedResult}
-                                        />
+                                        <ScaleBox
+                                            device={device}
+                                            containerWidth={deviceWidth}
+                                        >
+                                            <EditingResult
+                                                result={selectedResult}
+                                            />
+                                        </ScaleBox>
                                     </AspectRatioBox>
                                 </Box>
                             </Box>
@@ -705,20 +712,6 @@ function getDeviceStyle(device: DeviceType) {
                 paddingTop: '56.25%',
                 height: 0,
             }
-        }
-    }
-}
-
-function getDeviceWidth(device: DeviceType) {
-    switch (device) {
-        case 'mobile': {
-            return 375
-        }
-        case 'laptop': {
-            return 'calc(100vw - 656px)'
-        }
-        case 'desktop': {
-            return 'calc(100vw - 656px)'
         }
     }
 }

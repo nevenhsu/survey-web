@@ -19,6 +19,7 @@ import Popper from '@mui/material/Popper'
 import LinearProgress from '@mui/material/LinearProgress'
 import DeviceMode, { getRatio, getWidth } from 'components/common/DeviceMode'
 import AspectRatioBox from 'components/common/AspectRatioBox'
+import ScaleBox from 'components/common/ScaleBox'
 import QuizTool from 'components/Survey/QuizForm/QuizTool'
 import ModeSelector from 'components/Survey/QuizForm/Shares/ModeSelector'
 import MenuSwapIcon from 'mdi-react/DragHorizontalVariantIcon'
@@ -108,6 +109,7 @@ export default function QuizForm() {
     const [mode, setMode] = React.useState<QuizMode>(QuizMode.page)
 
     const device = useAppSelector(selectDevice)
+    const deviceWidth = getWidth(device, dimensions)
 
     const selectedQuiz: QuizType | undefined = React.useMemo(() => {
         return _.find(quizzes, { id: selectedId })
@@ -170,17 +172,24 @@ export default function QuizForm() {
                                 sx={{
                                     position: 'relative',
                                     mx: 'auto',
-                                    width: getWidth(device, dimensions),
+                                    width: deviceWidth,
                                 }}
                             >
                                 <AspectRatioBox
                                     ratio={getRatio(device)}
-                                    sx={{ bgcolor: 'white' }}
+                                    sx={{
+                                        bgcolor: 'white',
+                                    }}
                                 >
-                                    <Editor
-                                        surveyId={surveyId}
-                                        quiz={selectedQuiz}
-                                    />
+                                    <ScaleBox
+                                        device={device}
+                                        containerWidth={deviceWidth}
+                                    >
+                                        <Editor
+                                            surveyId={surveyId}
+                                            quiz={selectedQuiz}
+                                        />
+                                    </ScaleBox>
                                 </AspectRatioBox>
 
                                 {showProgress && (
