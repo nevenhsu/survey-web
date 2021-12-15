@@ -9,6 +9,7 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import ImageUploader from 'components/common/ImageUploader'
 import { getContrastText, emphasizeColor } from 'theme/palette'
+import { toNumOrStr } from 'utils/helper'
 import type { ChoiceType, OnChangeInput, OnButtonClink } from 'common/types'
 
 export default function ChoiceView(props: {
@@ -18,7 +19,6 @@ export default function ChoiceView(props: {
     onCopy: OnButtonClink
     showImage?: boolean
 }) {
-    const theme = useTheme()
     const { value, onChange, onCopy, onDelete, showImage = false } = props
 
     const {
@@ -27,11 +27,13 @@ export default function ChoiceView(props: {
         image = '',
         buttonColor = '',
         bgcolor = '',
-        fontSize,
+        fontSize: fontSizeRaw,
         padding,
         border,
         borderRadius,
     } = value
+
+    const fontSize = toNumOrStr(fontSizeRaw)
 
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
         null
@@ -50,7 +52,7 @@ export default function ChoiceView(props: {
             <Button
                 variant="outlined"
                 onClick={handleClick}
-                sx={() => {
+                sx={(theme) => {
                     const bg = bgcolor || theme.palette.common.white
 
                     const { color } = getContrastText(

@@ -43,7 +43,8 @@ function ComponentItem(props: { component: Component }) {
         id,
         type,
         value,
-        underline,
+        link,
+        linkStyle,
         display,
         align,
         width,
@@ -80,29 +81,59 @@ function ComponentItem(props: { component: Component }) {
             )
         }
         case ComponentType.link: {
-            return (
-                <Link
-                    underline={underline}
-                    sx={{
-                        color,
-                        '&.MuiLink-root': { textDecorationColor: 'inherit' },
-                    }}
-                >
-                    <Typography
-                        variant={typoVariant}
+            if (linkStyle === 'button') {
+                return (
+                    <CustomButton
+                        defaultText="超連結"
+                        variant="contained"
                         sx={{
-                            color,
+                            whiteSpace: 'nowrap',
                             fontWeight,
+                            display,
                             width,
                             height,
-                            bgcolor,
-                            textAlign: align,
+                        }}
+                        customProps={{
+                            text: value,
+                            buttonColor,
+                            textColor: color,
+                            fontSize: typoVariant
+                                ? theme.typography[typoVariant].fontSize
+                                : undefined,
+                        }}
+                        onClick={() => {
+                            window.open(link, '_blank')
+                        }}
+                    />
+                )
+            } else {
+                return (
+                    <Link
+                        href={link}
+                        underline="always"
+                        sx={{
+                            color,
+                            '&.MuiLink-root': {
+                                textDecorationColor: 'inherit',
+                            },
                         }}
                     >
-                        {val}
-                    </Typography>
-                </Link>
-            )
+                        <Typography
+                            variant={typoVariant}
+                            sx={{
+                                color,
+                                fontWeight,
+                                width,
+                                height,
+                                bgcolor,
+                                textAlign: align,
+                            }}
+                        >
+                            {val}
+                        </Typography>
+                    </Link>
+                )
+            }
         }
         case ComponentType.button: {
             return (

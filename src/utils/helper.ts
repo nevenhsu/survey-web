@@ -384,12 +384,13 @@ export function getDefaultComponent(type: ComponentType) {
                 ...defaultComponent,
                 value: '',
                 link: '',
-                underline: 'always',
+                linkStyle: 'button',
                 display: 'inline-block',
                 align: 'center',
                 typoVariant: 'button',
-                color: '#3892FC',
-                width: '100%',
+                color: '#ffffff',
+                width: 'auto',
+                buttonColor: '#3892FC',
             }
             return component
         }

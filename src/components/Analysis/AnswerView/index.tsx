@@ -5,7 +5,7 @@ import { fromUnixTime, format } from 'date-fns'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import { Title } from 'components/Analysis/Shares'
+import { Title, SelectorBar } from 'components/Analysis/Shares'
 import VirtualizedTable, {
     ColumnData,
     RenderCell,
@@ -14,6 +14,7 @@ import { toDate } from 'utils/helper'
 import { QuizMode, ComponentType } from 'common/types'
 import type { SelectionQuiz } from 'common/types'
 import { fakeAnswerData, fakeSurveyData } from 'assets/data/answers'
+import { optionsData } from 'assets/data/analysis'
 
 const defaultKeys = {
     id: 'ID',
@@ -191,7 +192,12 @@ export default function AnswerView() {
                     查看測驗回應的原始資料，或匯出相關資料以供後續利用
                 </Typography>
             </Box>
-            <Box sx={{ p: 3, height: 'calc(100vh - 256px)' }}>
+            <SelectorBar
+                devices={optionsData.devices}
+                sources={optionsData.sources}
+            />
+
+            <Box sx={{ p: 3, height: 'calc(100vh - 314px)' }}>
                 <Title
                     title={`總共 ${numeral(data.length).format('0,0')} 筆資料`}
                 />

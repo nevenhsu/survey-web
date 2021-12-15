@@ -220,7 +220,7 @@ export function quizFormatter(value: QuizType): QuizType {
                     buttonColor: colors[0][500],
                     ...left,
                     padding: toNumOrStr(left.padding),
-                    fontSize: toNumOrStr(left.fontSize),
+
                     borderRadius: toNumber(left.borderRadius),
                 },
                 right: {
@@ -228,7 +228,7 @@ export function quizFormatter(value: QuizType): QuizType {
                     buttonColor: colors[1][500],
                     ...right,
                     padding: toNumOrStr(right.padding),
-                    fontSize: toNumOrStr(right.fontSize),
+
                     borderRadius: toNumber(right.borderRadius),
                 },
                 showImage: toBool(showImage),
@@ -245,7 +245,7 @@ export function choiceFormatter(value: ChoiceType): ChoiceType {
     const {
         label = '',
         tags: tagsRaw,
-        fontSize,
+
         padding,
         borderRadius,
         ...rest
@@ -262,7 +262,7 @@ export function choiceFormatter(value: ChoiceType): ChoiceType {
         ...rest,
         label,
         tags,
-        fontSize: toNumOrStr(fontSize),
+
         borderRadius: toNumber(borderRadius),
         padding: toNumOrStr(padding),
     }

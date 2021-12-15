@@ -129,6 +129,9 @@ export default function Editor() {
     }
 
     React.useEffect(() => {
+        if (surveyId) {
+            return
+        }
         const { id } = qs.parse(location.search) as { id?: string }
 
         dispatch(reloadFromLocal(id))
@@ -136,7 +139,7 @@ export default function Editor() {
         setTimeout(() => {
             dispatch(reloadFromCloud(id))
         }, 0)
-    }, [])
+    }, [surveyId])
 
     const renderForm = (step?: SurveyStep) => {
         switch (step) {

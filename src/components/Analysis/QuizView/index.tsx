@@ -23,10 +23,10 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Stack, { StackProps } from '@mui/material/Stack'
 import Divider from '@mui/material/Divider'
-import { StyledBox, Title } from 'components/Analysis/Shares'
+import { StyledBox, Title, SelectorBar } from 'components/Analysis/Shares'
 import { colors, chartColors } from 'theme/palette'
 import { QuizMode } from 'common/types'
-import { quizzesData } from 'assets/data/analysis'
+import { quizzesData, optionsData } from 'assets/data/analysis'
 
 type QuizProps = StackProps & {
     selected: boolean
@@ -504,6 +504,11 @@ export default function QuizView() {
                         bgcolor: (theme) => theme.palette.grey[50],
                     }}
                 >
+                    <SelectorBar
+                        devices={optionsData.devices}
+                        sources={optionsData.sources}
+                    />
+
                     <Box sx={{ height: 'calc(100vh - 218px)', p: 3 }}>
                         {Boolean(selectedQuiz) && (
                             <Typography variant="h6" sx={{ mb: 2 }} noWrap>

@@ -364,13 +364,13 @@ export const surveySlice = createSlice({
             if (surveyData && _.includes(modes, surveyData.mode)) {
                 const survey = surveyFormatter(surveyData)
                 const { id, updatedAt, mode } = survey
-                if (state.mode === mode) {
-                    state.currentId = id
-                    state.surveys[id] = survey
-                    state.lastEditingAt = updatedAt
 
-                    localSurveys.setCurrentId(id)
-                }
+                state.currentId = id
+                state.surveys[id] = survey
+                state.lastEditingAt = updatedAt
+                state.mode = mode
+
+                localSurveys.setCurrentId(id)
             }
         },
     },

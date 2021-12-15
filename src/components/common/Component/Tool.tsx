@@ -44,10 +44,9 @@ const alignOptions = [
     { value: 'justify', label: '齊行' },
 ]
 
-const underlineOptions = [
-    { value: 'always', label: '永遠' },
-    { value: 'hover', label: '游標' },
-    { value: 'none', label: '隱藏' },
+const linkStyleOptions = [
+    { value: 'button', label: '按鈕' },
+    { value: 'text', label: '文字' },
 ] as const
 
 const StyledTextField = styled(TextField)({
@@ -96,7 +95,7 @@ export default function ComponentTool(props: ComponentToolProps) {
         type,
         value,
         link,
-        underline,
+        linkStyle,
         display,
         align,
         typoVariant,
@@ -229,17 +228,17 @@ export default function ComponentTool(props: ComponentToolProps) {
                             </TableRow>
 
                             <TableRow>
-                                <TableCell>底線顯示</TableCell>
+                                <TableCell>連結樣式</TableCell>
                                 <TableCell>
                                     <StyledTextField
-                                        name="underline"
-                                        value={underline || 'always'}
+                                        name="linkStyle"
+                                        value={linkStyle || 'button'}
                                         variant="standard"
                                         onChange={onChange}
                                         select
                                         fullWidth
                                     >
-                                        {underlineOptions.map((el) => (
+                                        {linkStyleOptions.map((el) => (
                                             <MenuItem
                                                 key={el.value}
                                                 value={el.value}
@@ -411,10 +410,12 @@ export default function ComponentTool(props: ComponentToolProps) {
                         </TableRow>
                     )}
 
-                    {_.includes(
+                    {(_.includes(
                         [ComponentType.clipboard, ComponentType.button],
                         type
-                    ) && (
+                    ) ||
+                        (type === ComponentType.link &&
+                            linkStyle === 'button')) && (
                         <TableRow>
                             <TableCell>按鈕顏色</TableCell>
                             <TableCell>

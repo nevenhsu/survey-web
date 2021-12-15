@@ -15,6 +15,7 @@ import Grid from '@mui/material/Grid'
 import Badge from '@mui/material/Badge'
 import ChoiceView from 'components/Answer/QuizView/Quiz/ChoiceView'
 import CustomButton, { CustomButtonProps } from 'components/common/CustomButton'
+import CustomTypography from 'components/common/CustomTypography'
 import { reorder } from 'utils/helper'
 import type { OnChangeInput, SelectionQuiz, ChoiceType } from 'common/types'
 
@@ -301,7 +302,7 @@ export default function SortView(props: SortViewProps) {
 
     return (
         <>
-            <Typography variant="h6">{title?.text}</Typography>
+            <CustomTypography {...title} />
             <Typography variant="caption" color="GrayText">
                 最多可排序{maxChoices}項
             </Typography>

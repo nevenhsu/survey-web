@@ -1,5 +1,6 @@
 import * as React from 'react'
 import _ from 'lodash'
+import clsx from 'clsx'
 import { useDimensionsRef } from 'rooks'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { styled } from '@mui/material/styles'
@@ -539,11 +540,18 @@ export default function QuizForm() {
                                         </Box>
                                     }
                                     disabled={disabledTab}
+                                    className={clsx({
+                                        'c-disabled': disabledTab,
+                                    })}
                                 />
 
                                 <Tab
                                     label="跳題邏輯"
                                     disabled={disabledTab || disabledNext}
+                                    className={clsx({
+                                        'c-disabled':
+                                            disabledTab || disabledNext,
+                                    })}
                                 />
                             </StyledTabs>
                         </Box>

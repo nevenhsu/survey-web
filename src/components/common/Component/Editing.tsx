@@ -31,7 +31,6 @@ const options = [
     { value: ComponentType.title, label: '標題' },
     { value: ComponentType.typography, label: '內文' },
     { value: ComponentType.image, label: '圖片' },
-    { value: ComponentType.button, label: '按鈕' },
     { value: ComponentType.link, label: '超連結' },
     { value: ComponentType.clipboard, label: '剪貼簿' },
     { value: ComponentType.card, label: '卡片' },
@@ -117,7 +116,7 @@ function ComponentItem(
         id,
         type,
         value,
-        underline,
+        linkStyle,
         display,
         align,
         width,
@@ -163,36 +162,62 @@ function ComponentItem(
             )
         }
         case ComponentType.link: {
-            return (
-                <Link
-                    underline={underline}
-                    sx={{
-                        color,
-                        '&.MuiLink-root': { textDecorationColor: 'inherit' },
-                    }}
-                >
-                    <StyledTextField
-                        onChange={onChange}
-                        value={val}
-                        typoVariant={typoVariant}
-                        variant="standard"
-                        name="value"
-                        InputProps={{
-                            disableUnderline: true,
-                            sx: {
-                                color,
-                                textAlign: align,
+            if (linkStyle === 'button') {
+                return (
+                    <CustomButton
+                        defaultText="超連結"
+                        variant="contained"
+                        sx={{
+                            whiteSpace: 'nowrap',
+                            fontWeight,
+                            display,
+                            width,
+                            height,
+                        }}
+                        customProps={{
+                            text: value,
+                            buttonColor,
+                            textColor: color,
+                            fontSize: typoVariant
+                                ? theme.typography[typoVariant].fontSize
+                                : undefined,
+                        }}
+                    />
+                )
+            } else {
+                return (
+                    <Link
+                        underline="always"
+                        sx={{
+                            color,
+                            '&.MuiLink-root': {
+                                textDecorationColor: 'inherit',
                             },
                         }}
-                        placeholder="請輸入文字"
-                        sx={{
-                            height,
-                            bgcolor,
-                        }}
-                        fullWidth
-                    />
-                </Link>
-            )
+                    >
+                        <StyledTextField
+                            onChange={onChange}
+                            value={val}
+                            typoVariant={typoVariant}
+                            variant="standard"
+                            name="value"
+                            InputProps={{
+                                disableUnderline: true,
+                                sx: {
+                                    color,
+                                    textAlign: align,
+                                },
+                            }}
+                            placeholder="請輸入文字"
+                            sx={{
+                                height,
+                                bgcolor,
+                            }}
+                            fullWidth
+                        />
+                    </Link>
+                )
+            }
         }
         case ComponentType.button: {
             return (

@@ -10,10 +10,10 @@ import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Stack from '@mui/material/Stack'
 import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
 import DraggerChoiceView from 'components/Answer/QuizView/Quiz/DraggerChoiceView'
 import CustomButton from 'components/common/CustomButton'
 import CountDownProgress from 'components/common/CountDownProgress'
+import CustomTypography from 'components/common/CustomTypography'
 import { shuffle } from 'utils/helper'
 import { colors } from 'theme/palette'
 import type { OnChangeInput, DraggerQuiz } from 'common/types'
@@ -68,6 +68,7 @@ export default function DraggerView(props: DraggerViewProps) {
     const rotate = useTransform(x, [-200, 200], [-30, 30])
 
     const handleAnswer = (answerId: string) => {
+        controls.start({ opacity: 0, transition: { duration: 0 } })
         const { id: choiceId, answer } = choice ?? {}
         if (choiceId && answer === answerId) {
             onChange({
@@ -77,6 +78,7 @@ export default function DraggerView(props: DraggerViewProps) {
                 },
             } as any)
         }
+
         setCurrent((state) => (state += 1))
     }
 
@@ -85,7 +87,7 @@ export default function DraggerView(props: DraggerViewProps) {
     }
 
     React.useEffect(() => {
-        controls.start({ x: 0, transition: { duration: 0 } })
+        controls.start({ x: 0, opacity: 1, transition: { duration: 0 } })
 
         if (_.isEmpty(rawChoices)) {
             onDone()
@@ -188,7 +190,7 @@ export default function DraggerView(props: DraggerViewProps) {
                 />
             )}
 
-            <Typography variant="h6">{title.text}</Typography>
+            <CustomTypography {...title} />
             <Box sx={{ height: 16 }} />
 
             <Box

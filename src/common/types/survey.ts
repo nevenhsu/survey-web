@@ -224,7 +224,7 @@ export type Component = {
     type: ComponentType
     value?: string
     link?: string
-    underline?: 'always' | 'hover' | 'none'
+    linkStyle?: 'button' | 'text'
     display?: 'block' | 'inline-block'
     align?: 'left' | 'center' | 'right' | 'justify'
     typoVariant?: Variant

@@ -80,7 +80,8 @@
 }
 
 .c-disabled {
-  cursor: not-allowed;
+  cursor: not-allowed !important;
+  pointer-events: unset !important;
 }
 
 .c-zoomIn {

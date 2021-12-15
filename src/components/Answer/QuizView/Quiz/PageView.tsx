@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
+import CustomTypography from 'components/common/CustomTypography'
 import CustomButton, { CustomButtonProps } from 'components/common/CustomButton'
 import { Quiz } from 'common/types'
 
@@ -12,9 +12,10 @@ type PageViewProps = {
 export default function PageView(props: PageViewProps) {
     const { quizProps, buttonProps } = props
     const { title, button } = quizProps ?? {}
+
     return (
         <>
-            <Typography variant="h6">{title.text}</Typography>
+            <CustomTypography {...title} />
 
             <Box sx={{ height: 16 }} />
 

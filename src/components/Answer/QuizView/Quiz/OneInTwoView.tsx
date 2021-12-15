@@ -6,6 +6,7 @@ import LinearProgress from '@mui/material/LinearProgress'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
 import ChoiceView from 'components/Answer/QuizView/Quiz/ChoiceView'
+import CustomTypography from 'components/common/CustomTypography'
 import { shuffle } from 'utils/helper'
 import type { OnChangeInput, OneInTwoQuiz, ChoiceType } from 'common/types'
 
@@ -75,7 +76,7 @@ export default function OneInTwoView(props: OneInTwoViewProps) {
                 </Stack>
             </Box>
 
-            <Typography variant="h6">{title.text}</Typography>
+            <CustomTypography {...title} />
             <Box sx={{ height: 16 }} />
             <Box sx={{ width: '100%', textAlign: 'center', px }}>
                 <Grid

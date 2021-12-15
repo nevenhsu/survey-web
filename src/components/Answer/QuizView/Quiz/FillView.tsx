@@ -2,7 +2,7 @@ import * as React from 'react'
 import _ from 'lodash'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
+import CustomTypography from 'components/common/CustomTypography'
 import CustomButton, { CustomButtonProps } from 'components/common/CustomButton'
 import type { OnChangeInput, FillQuiz } from 'common/types'
 
@@ -17,7 +17,7 @@ export default function FillView(props: FillViewProps) {
     const { title, value, button } = quizProps ?? {}
     return (
         <>
-            <Typography variant="h6">{title.text}</Typography>
+            <CustomTypography {...title} />
 
             <Box sx={{ height: 16 }} />
 

@@ -2,8 +2,8 @@ import * as React from 'react'
 import _ from 'lodash'
 import Box from '@mui/material/Box'
 import Slider from '@mui/material/Slider'
-import Typography from '@mui/material/Typography'
 import CustomButton, { CustomButtonProps } from 'components/common/CustomButton'
+import CustomTypography from 'components/common/CustomTypography'
 import type { OnChangeInput, SliderQuiz } from 'common/types'
 
 type SliderViewProps = {
@@ -18,9 +18,9 @@ export default function SliderView(props: SliderViewProps) {
 
     return (
         <>
-            <Typography variant="h6" sx={{ mb: 4 }}>
-                {title?.text}
-            </Typography>
+            <CustomTypography {...title} />
+
+            <Box sx={{ height: 32 }} />
 
             <Box sx={{ width: 4 / 5 }}>
                 <Slider
