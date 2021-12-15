@@ -66,9 +66,10 @@ const StyledButton = styled(Button, {
         borderRadius,
         overflow: 'hidden',
         '&:hover': {
-            color: selected ? activeColor : hoverTextColor,
+            border,
             borderColor: buttonColor,
             backgroundColor: selected ? emphasizedColor2 : emphasizedColor,
+            color: selected ? activeColor : hoverTextColor,
         },
         '& .MuiTouchRipple-root': {
             color: buttonColor || bgcolor,

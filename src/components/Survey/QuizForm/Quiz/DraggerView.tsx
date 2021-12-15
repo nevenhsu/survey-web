@@ -11,6 +11,8 @@ import {
 } from 'components/Survey/QuizForm/Shares'
 import AddIcon from 'mdi-react/AddIcon'
 import { getDefaultDraggerChoice } from 'utils/helper'
+import { useAppDispatch, useAppSelector } from 'hooks'
+import { updateChoice, selectCurrentId } from 'store/slices/survey'
 import type {
     OnChangeInput,
     OnButtonClink,
@@ -22,8 +24,19 @@ export default function DraggerView(props: {
     quizProps: Omit<DraggerQuiz, 'values'>
     onChange: OnChangeInput
 }) {
+    const dispatch = useAppDispatch()
     const { quizProps, onChange } = props
-    const { title, choices = [], showImage, left, right } = quizProps
+    const {
+        id: quizId,
+        title,
+        choices = [],
+        showImage,
+        left,
+        right,
+    } = quizProps
+
+    const slick = React.useRef<Slick>(null)
+    const surveyId = useAppSelector(selectCurrentId)
 
     const handleChange = (name: string, value: any) => {
         onChange({ target: { name, value } } as any)
@@ -32,14 +45,22 @@ export default function DraggerView(props: {
     const handleAddChoice: OnButtonClink = () => {
         const value = [...choices, getDefaultDraggerChoice(left.id)]
         handleChange('choices', value)
+
+        if (slick.current) {
+            slick.current.slickGoTo(value.length - 1)
+        }
     }
 
-    const handleChangeChoice = (value: DraggerChoiceType, choiceId: string) => {
-        const newChoice = _.map(choices, (el) =>
-            el.id === choiceId ? { ...el, ...value } : el
-        )
+    const handleChangeChoice = (value: DraggerChoiceType, id: string) => {
+        const newValue = { ...value, id }
 
-        handleChange('choices', newChoice)
+        dispatch(
+            updateChoice({
+                surveyId,
+                quizId,
+                newValue,
+            })
+        )
     }
 
     const handleDelete = (choiceId: string) => {
@@ -101,7 +122,14 @@ export default function DraggerView(props: {
                     },
                 }}
             >
-                <Slick slidesToShow={1} slidesToScroll={1} dots arrows infinite>
+                <Slick
+                    ref={slick}
+                    slidesToShow={1}
+                    slidesToScroll={1}
+                    dots
+                    arrows
+                    infinite
+                >
                     {choices.map((el) => (
                         <Box key={el.id} sx={{ p: 1 }}>
                             <DraggerChoiceView

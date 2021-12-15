@@ -212,7 +212,6 @@ export function ComponentList(props: ComponentListProps) {
             direction="row"
             alignItems="center"
             justifyContent="center"
-            sx={{ width: '100%', height: '100%', mt: 0 }}
             spacing={2}
         >
             {components.map((el) => (

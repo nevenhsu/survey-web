@@ -10,6 +10,9 @@ import type {
     Quiz,
     QuizType,
     Results,
+    ChoiceType,
+    DraggerChoiceType,
+    DraggerQuiz,
     Result,
     Component,
     Final,
@@ -25,8 +28,8 @@ type Surveys = {
 interface EditorState {
     currentId: string
     surveys: Surveys
-    step: SurveyStep
     lastEditingAt: number
+    step?: SurveyStep
     mode?: Mode
 }
 
@@ -61,10 +64,7 @@ export const saveSurvey = createAsyncThunk(
 export const reloadFromCloud = createAsyncThunk(
     'survey/reloadFromCloud',
     async (id?: string) => {
-        const localSurveys = LocalSurveys.getInstance()
-        const surveyId = id || localSurveys.getCurrentId() || ''
-
-        const data = await surveyApi.getSurvey(surveyId)
+        const data = await surveyApi.getSurvey(id || '')
         return data
     }
 )
@@ -72,7 +72,6 @@ export const reloadFromCloud = createAsyncThunk(
 const initialState: EditorState = {
     currentId: '',
     surveys: {},
-    step: SurveyStep.start,
     lastEditingAt: 0,
 }
 
@@ -147,6 +146,36 @@ export const surveySlice = createSlice({
             updateLocalSurvey(surveyId, survey)
 
             state.lastEditingAt = Date.now()
+        },
+        updateChoice: (
+            state,
+            action: PayloadAction<{
+                surveyId: string
+                quizId: string
+                newValue: Partial<ChoiceType | DraggerChoiceType>
+            }>
+        ) => {
+            const { surveyId, quizId, newValue } = action.payload
+            const { id: choiceId } = newValue
+            if (surveyId && quizId && choiceId) {
+                const { surveys } = state
+                const survey = surveys[surveyId]
+                const quiz = _.find(survey?.quizzes, {
+                    id: quizId,
+                }) as DraggerQuiz
+                if (quiz) {
+                    const { choices } = quiz
+                    const newChoices = _.map(choices, (el) =>
+                        el.id === choiceId
+                            ? {
+                                  ...el,
+                                  ...newValue,
+                              }
+                            : el
+                    )
+                    quiz.choices = newChoices
+                }
+            }
         },
         deleteQuiz: (
             state,
@@ -335,14 +364,13 @@ export const surveySlice = createSlice({
             if (surveyData && _.includes(modes, surveyData.mode)) {
                 const survey = surveyFormatter(surveyData)
                 const { id, updatedAt, mode } = survey
-                state.currentId = id
-                state.surveys[id] = survey
-                state.lastEditingAt = updatedAt
-                state.mode = mode
+                if (state.mode === mode) {
+                    state.currentId = id
+                    state.surveys[id] = survey
+                    state.lastEditingAt = updatedAt
 
-                localSurveys.setCurrentId(id)
-            } else {
-                state.step = SurveyStep.start
+                    localSurveys.setCurrentId(id)
+                }
             }
         },
     },
@@ -407,8 +435,6 @@ export const surveySlice = createSlice({
                 } else {
                     state.lastEditingAt = Date.now()
                 }
-            } else {
-                state.step = SurveyStep.start
             }
         })
     },
@@ -421,6 +447,7 @@ export const {
     setQuizzes,
     updateQuiz,
     addQuiz,
+    updateChoice,
     deleteQuiz,
     setResults,
     setResult,

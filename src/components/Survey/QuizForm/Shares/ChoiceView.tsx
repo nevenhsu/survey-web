@@ -80,9 +80,10 @@ export default function ChoiceView(props: {
                         flexDirection: 'column',
                         overflow: 'hidden',
                         '&:hover': {
-                            color: hoverTextColor,
+                            border,
                             borderColor: buttonColor,
                             backgroundColor: emphasizedColor,
+                            color: hoverTextColor,
                         },
                         '& .MuiTouchRipple-root': {
                             color: buttonColor || bgcolor,

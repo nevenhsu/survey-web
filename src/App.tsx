@@ -1,12 +1,6 @@
 import * as React from 'react'
 import _ from 'lodash'
-import {
-    Route,
-    Switch,
-    Redirect,
-    useHistory,
-    useRouteMatch,
-} from 'react-router-dom'
+import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom'
 import { styled } from '@mui/material/styles'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
@@ -15,10 +9,13 @@ import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import ThemeProvider from 'theme/ThemeProvider'
-import { useAppSelector } from 'hooks'
+import { useAppSelector, useAppDispatch } from 'hooks'
+import User from 'utils/user'
+import { setStep, setMode } from 'store/slices/survey'
 import { SurveyStep } from 'common/types'
 
 const Survey = React.lazy(() => import('components/Survey'))
+const StartForm = React.lazy(() => import('components/Survey/StartForm'))
 const Answer = React.lazy(() => import('components/Answer'))
 const Analysis = React.lazy(() => import('components/Analysis'))
 
@@ -44,14 +41,15 @@ const StyledTab = styled(Tab)(({ theme }) => ({
 }))
 
 export default function App() {
-    const step = useAppSelector((state) => state.survey.step)
+    const dispatch = useAppDispatch()
     const pathname = useAppSelector((state) => state.router.location.pathname)
+    const step = useAppSelector((state) => state.survey.step)
     const paths = {
         survey: { path: '/survey', label: '編輯' },
         analysis: { path: '/analysis', label: '報告' },
     }
 
-    const hideTab = pathname === '/survey' && step === SurveyStep.start
+    const atHome = pathname === '/'
 
     const history = useHistory()
 
@@ -64,7 +62,26 @@ export default function App() {
         history.push(newValue)
     }
 
-    React.useEffect(() => {}, [])
+    React.useEffect(() => {
+        const user = User.getInstance()
+        const { step, mode } = user.getValue()
+
+        if (!_.isNil(step)) {
+            dispatch(setStep(step))
+        }
+
+        if (!_.isNil(mode)) {
+            dispatch(setMode(mode))
+        }
+    }, [])
+
+    React.useEffect(() => {
+        if (step === SurveyStep.start && !matchSurvey && !atHome) {
+            history.push('/')
+        } else if (step !== SurveyStep.start && atHome) {
+            history.push('/survey')
+        }
+    }, [step])
 
     return (
         <>
@@ -76,7 +93,7 @@ export default function App() {
                                 超市調
                             </Typography>
                             <Grow />
-                            {!hideTab && (
+                            {!atHome && (
                                 <StyledTabs
                                     value={pathname}
                                     onChange={handleChangePath}
@@ -111,11 +128,9 @@ export default function App() {
                         <Analysis />
                     </Route>
 
-                    <Route
-                        exact
-                        path="/"
-                        render={() => <Redirect to={paths.survey.path} />}
-                    />
+                    <Route exact path="/">
+                        <StartForm />
+                    </Route>
                 </Switch>
             </React.Suspense>
         </>

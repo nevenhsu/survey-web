@@ -11,10 +11,8 @@ import ArrowUpCircleIcon from 'mdi-react/ArrowUpCircleIcon'
 import CheckboxMarkedCircleIcon from 'mdi-react/CheckboxMarkedCircleIcon'
 import { lightenColor } from 'theme/palette'
 import { useAppSelector, useAppDispatch } from 'hooks'
-import User from 'utils/user'
 import { setClasses } from 'utils/helper'
 import {
-    modes,
     setStep,
     reloadFromLocal,
     reloadFromCloud,
@@ -25,7 +23,6 @@ import {
 import { SurveyStep, Mode } from 'common/types'
 import type { Survey } from 'common/types'
 
-const StartForm = React.lazy(() => import('components/Survey/StartForm'))
 const CreateForm = React.lazy(() => import('components/Survey/CreateForm'))
 const QuizForm = React.lazy(() => import('components/Survey/QuizForm'))
 const ResultForm = React.lazy(() => import('components/Survey/ResultForm'))
@@ -132,14 +129,7 @@ export default function Editor() {
     }
 
     React.useEffect(() => {
-        const user = User.getInstance()
-        const { step } = user.getValue()
-
         const { id } = qs.parse(location.search) as { id?: string }
-
-        if (!_.isNil(step)) {
-            dispatch(setStep(step))
-        }
 
         dispatch(reloadFromLocal(id))
 
@@ -148,7 +138,7 @@ export default function Editor() {
         }, 0)
     }, [])
 
-    const renderForm = (step: SurveyStep) => {
+    const renderForm = (step?: SurveyStep) => {
         switch (step) {
             case SurveyStep.create:
                 return <CreateForm />
@@ -165,75 +155,67 @@ export default function Editor() {
 
     return (
         <Root className={classes.root}>
-            {step === SurveyStep.start || !_.includes(modes, mode) ? (
-                <StartForm />
-            ) : (
+            {!noSurvey && survey.mode === mode && (
                 <>
-                    {!noSurvey && survey.mode === mode && (
-                        <>
-                            <Tabs
-                                value={step}
-                                onChange={handleChangeStep}
-                                sx={{
-                                    borderBottom: '1px solid',
-                                    borderBottomColor: 'common.black',
-                                }}
-                            >
-                                {_.map(modeSteps, (el) => el).map(
-                                    (el, index) => {
-                                        const { value, label } = el as any
-                                        return (
-                                            <Tab
-                                                key={value}
-                                                label={`${index + 1} ${label}`}
-                                                value={value}
-                                            />
-                                        )
-                                    }
-                                )}
-                            </Tabs>
-                            <Box sx={{ color: 'white' }}>
-                                <LoadingButton
-                                    variant="contained"
-                                    color="inherit"
-                                    loadingPosition="end"
-                                    endIcon={
-                                        updated ? (
-                                            <CheckboxMarkedCircleIcon />
-                                        ) : (
-                                            <ArrowUpCircleIcon />
-                                        )
-                                    }
-                                    loading={uploading}
-                                    disabled={uploading}
-                                    onClick={() => handleSave()}
-                                    sx={{
-                                        position: 'absolute',
-                                        top: 6,
-                                        right: 4,
-                                        bgcolor: 'grey.900',
-                                        '&:hover': {
-                                            bgcolor: (theme) =>
-                                                lightenColor(
-                                                    theme,
-                                                    'grey.900',
-                                                    0.08,
-                                                    'grey.800'
-                                                ),
-                                        },
-                                    }}
-                                >
-                                    儲存
-                                </LoadingButton>
-                            </Box>
-                        </>
-                    )}
-
-                    <React.Suspense fallback={<div />}>
-                        {renderForm(step)}
-                    </React.Suspense>
+                    <Tabs
+                        value={step}
+                        onChange={handleChangeStep}
+                        sx={{
+                            borderBottom: '1px solid',
+                            borderBottomColor: 'common.black',
+                        }}
+                    >
+                        {_.map(modeSteps, (el) => el).map((el, index) => {
+                            const { value, label } = el as any
+                            return (
+                                <Tab
+                                    key={value}
+                                    label={`${index + 1} ${label}`}
+                                    value={value}
+                                />
+                            )
+                        })}
+                    </Tabs>
+                    <Box sx={{ color: 'white' }}>
+                        <LoadingButton
+                            variant="contained"
+                            color="inherit"
+                            loadingPosition="end"
+                            endIcon={
+                                updated ? (
+                                    <CheckboxMarkedCircleIcon />
+                                ) : (
+                                    <ArrowUpCircleIcon />
+                                )
+                            }
+                            loading={uploading}
+                            disabled={uploading}
+                            onClick={() => handleSave()}
+                            sx={{
+                                position: 'absolute',
+                                top: 6,
+                                right: 4,
+                                bgcolor: 'grey.900',
+                                '&:hover': {
+                                    bgcolor: (theme) =>
+                                        lightenColor(
+                                            theme,
+                                            'grey.900',
+                                            0.08,
+                                            'grey.800'
+                                        ),
+                                },
+                            }}
+                        >
+                            儲存
+                        </LoadingButton>
+                    </Box>
                 </>
             )}
+
+            <React.Suspense fallback={<div />}>
+                {renderForm(step)}
+            </React.Suspense>
         </Root>
     )
 }

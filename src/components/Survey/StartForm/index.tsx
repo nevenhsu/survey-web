@@ -1,6 +1,5 @@
 import * as React from 'react'
 import _ from 'lodash'
-import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
@@ -8,12 +7,16 @@ import Button from '@mui/material/Button'
 import ImageBox from 'components/common/ImageBox'
 import { useAppDispatch } from 'hooks'
 import { setMode, setStep } from 'store/slices/survey'
+import User from 'utils/user'
 import { Mode, SurveyStep } from 'common/types'
 
 export default function StartForm() {
     const dispatch = useAppDispatch()
 
     const handleClick = (mode: Mode) => {
+        const user = User.getInstance()
+        user.setValue({ mode })
+
         dispatch(setMode(mode))
         dispatch(setStep(SurveyStep.create))
     }

@@ -211,13 +211,17 @@ export default function ResultForm() {
             const newKeys = _.keys(newList)
             const intersections = _.intersection(oldKeys, newKeys)
 
+            if (_.isEmpty(newKeys)) {
+                return
+            }
+
+            const oldValues = _.values(list)
+            const newValues = _.values(newList)
+
             if (
                 oldKeys.length === newKeys.length &&
                 intersections.length !== newKeys.length
             ) {
-                const oldValues = _.values(list)
-                const newValues = _.values(newList)
-
                 const values: Result[] = Array(newValues.length)
                     .fill(undefined)
                     .map((x, index) => {
@@ -245,11 +249,23 @@ export default function ResultForm() {
                 intersections.length !== newKeys.length ||
                 (newKeys.length === 0 && oldKeys.length > 0)
             ) {
+                const values = _.map(newValues, (el, index) => {
+                    const oldVal = oldValues[index]
+                    return oldVal
+                        ? {
+                              ...el,
+                              components: oldVal.components,
+                              bgcolor: oldVal.bgcolor,
+                          }
+                        : el
+                })
+
+                const newL = _.keyBy(values, 'id')
                 dispatch(
                     setResults({
                         surveyId,
                         newValue: {
-                            list: newList,
+                            list: newL,
                         },
                     })
                 )
