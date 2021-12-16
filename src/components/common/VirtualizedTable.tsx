@@ -7,10 +7,13 @@ import {
     Table,
     TableCellRenderer,
     TableHeaderProps,
+    TableCellProps,
 } from 'react-virtualized'
 import { styled } from '@mui/material/styles'
 import Tooltip from '@mui/material/Tooltip'
-import TableCell from '@mui/material/TableCell'
+import TableCell, {
+    TableCellProps as MuiTableCellProps,
+} from '@mui/material/TableCell'
 import Paper, { PaperProps } from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 import { setClasses } from 'utils/helper'
@@ -38,11 +41,12 @@ type VirtualizedTableProps<T> = {
     rowCount: number
     rowGetter: (row: Row) => T
     onRowClick?: () => void
-
     rowHeight?: number
     headerHeight?: number
     paperProps?: PaperProps
     renderCell?: RenderCell
+    setHeaderProps?: (props: TableHeaderProps) => MuiTableCellProps
+    setCellProps?: (props: TableCellProps) => MuiTableCellProps
 }
 
 export const classes = setClasses('VirtualizedTable', [
@@ -103,6 +107,8 @@ export default function VirtualizedTable<T>(props: VirtualizedTableProps<T>) {
         rowHeight = 96,
         paperProps,
         renderCell,
+        setHeaderProps,
+        setCellProps,
         ...tableProps
     } = props
 
@@ -112,25 +118,36 @@ export default function VirtualizedTable<T>(props: VirtualizedTableProps<T>) {
         })
     }
 
-    const cellRenderer: TableCellRenderer = ({ cellData, columnIndex }) => {
+    const cellRenderer: TableCellRenderer = (data) => {
+        const { cellData, columnIndex } = data
         const columnData = _.get(columns, [columnIndex])
         const { width, numeric = false } = columnData ?? {}
         const align = numeric ? 'right' : 'left'
         const alignItems = !numeric ? 'start' : 'end'
 
+        const cellProps = _.isFunction(setCellProps) ? setCellProps(data) : {}
+        const { sx, className, ...rest } = cellProps
+
         return (
             <TableCell
+                {...rest}
                 component="div"
                 variant="body"
-                className={clsx(classes.tableCell, classes.flexContainer, {
-                    [classes.noClick]: !Boolean(onRowClick),
-                })}
+                className={clsx(
+                    classes.tableCell,
+                    classes.flexContainer,
+                    className,
+                    {
+                        [classes.noClick]: !Boolean(onRowClick),
+                    }
+                )}
                 sx={{
                     width,
                     height: rowHeight,
                     flexDirection: 'column',
                     justifyContent: 'start',
                     alignItems,
+                    ...sx,
                 }}
                 align={align}
             >
@@ -141,28 +158,36 @@ export default function VirtualizedTable<T>(props: VirtualizedTableProps<T>) {
         )
     }
 
-    const headerRenderer = ({
-        columnIndex,
-        label,
-    }: TableHeaderProps & { columnIndex: number }) => {
+    const headerRenderer = (
+        data: TableHeaderProps & { columnIndex: number }
+    ) => {
+        const { columnIndex, label } = data
         const columnData = _.get(columns, [columnIndex])
         const { width, numeric = false } = columnData ?? {}
+
+        const cellProps = _.isFunction(setHeaderProps)
+            ? setHeaderProps(data)
+            : {}
+        const { sx, className, ...rest } = cellProps
 
         return (
             <Tooltip title={`${label || ''}`} placement="top">
                 <TableCell
+                    {...rest}
                     component="div"
                     variant="head"
                     className={clsx(
                         classes.tableCell,
                         classes.flexContainer,
-                        classes.noClick
+                        classes.noClick,
+                        className
                     )}
                     sx={(theme) => ({
-                        width,
-                        height: headerHeight,
                         backgroundColor: theme.palette.grey[100],
                         color: theme.palette.primary.main,
+                        width,
+                        height: headerHeight,
+                        ...sx,
                     })}
                     align={numeric ? 'right' : 'left'}
                 >

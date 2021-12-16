@@ -98,7 +98,7 @@ export default function QuizForm() {
     const { uploading, handlePreview } = usePreview(survey)
 
     const { id: surveyId, quizzes = [], setting, tags } = survey ?? {}
-    const { showProgress } = setting ?? {}
+    const { showProgress, maxWidth } = setting ?? {}
 
     const [selectedId, setSelectedId] = React.useState('')
     const [tab, setTab] = React.useState(0)
@@ -178,17 +178,27 @@ export default function QuizForm() {
                                 <AspectRatioBox
                                     ratio={getRatio(device)}
                                     sx={{
-                                        bgcolor: 'white',
+                                        bgcolor:
+                                            selectedQuiz?.backgroundColor ||
+                                            'white',
                                     }}
                                 >
                                     <ScaleBox
                                         device={device}
                                         containerWidth={deviceWidth}
                                     >
-                                        <Editor
-                                            surveyId={surveyId}
-                                            quiz={selectedQuiz}
-                                        />
+                                        <Box
+                                            sx={{
+                                                maxWidth,
+                                                height: '100%',
+                                                mx: 'auto',
+                                            }}
+                                        >
+                                            <Editor
+                                                surveyId={surveyId}
+                                                quiz={selectedQuiz}
+                                            />
+                                        </Box>
                                     </ScaleBox>
                                 </AspectRatioBox>
 
@@ -393,7 +403,7 @@ export default function QuizForm() {
             <Stack direction="row">
                 <Box
                     sx={{
-                        flex: '0 0 288px',
+                        flex: '0 0 304px',
                         height: '100vh',
                         overflowY: 'auto',
                         bgcolor: 'common.white',
@@ -583,7 +593,7 @@ export default function QuizForm() {
                         <Box
                             sx={{
                                 position: 'relative',
-                                flex: '0 0 288px',
+                                flex: '0 0 304px',
                                 height: '100vh',
                                 overflowY: 'auto',
                                 bgcolor: (theme) => theme.palette.grey[800],

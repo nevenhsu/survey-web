@@ -94,6 +94,7 @@ export default function ResultForm() {
     const { Provider, Context } = instance.getValue()
 
     const { id: surveyId, tags, results, mode, quizzes = [] } = survey ?? {}
+
     const deviceWidth = getWidth(device, dimensions)
 
     const isOneInTwoMode = mode === Mode.oneInTwo
@@ -590,7 +591,7 @@ export default function ResultForm() {
             <Stack direction="row">
                 <Box
                     sx={{
-                        flex: '0 0 288px',
+                        flex: '0 0 304px',
                         height: '100vh',
                         overflowY: 'auto',
                         bgcolor: 'common.white',
@@ -650,11 +651,9 @@ export default function ResultForm() {
                                     <AspectRatioBox
                                         ratio={getRatio(device)}
                                         sx={{
-                                            bgcolor: 'white',
-                                            '& > div': {
-                                                bgcolor:
-                                                    selectedResult?.bgcolor,
-                                            },
+                                            bgcolor:
+                                                selectedResult?.bgcolor ||
+                                                'white',
                                         }}
                                     >
                                         <ScaleBox
@@ -676,7 +675,7 @@ export default function ResultForm() {
                     <Box
                         sx={{
                             position: 'relative',
-                            flex: '0 0 288px',
+                            flex: '0 0 304px',
                             height: '100vh',
                             overflowY: 'auto',
                             bgcolor: (theme) => theme.palette.grey[800],

@@ -25,10 +25,7 @@ const StyledButton = styled(Button, {
     const {
         buttonColor = theme.palette.primary.main,
         bgcolor = theme.palette.common.white,
-        fontSize,
-        padding,
         border,
-        borderRadius,
     } = choice
 
     const { color } = getContrastText(
@@ -57,13 +54,10 @@ const StyledButton = styled(Button, {
         width: '100%',
         height: '100%',
         color: selected ? activeColor : color,
-        borderColor: buttonColor,
         backgroundColor: selected ? buttonColor : bgcolor,
         flexDirection: 'column',
-        fontSize,
-        padding,
         border,
-        borderRadius,
+        borderColor: buttonColor,
         overflow: 'hidden',
         '&:hover': {
             border,
@@ -82,9 +76,16 @@ const StyledButton = styled(Button, {
 
 export default function ChoiceView(props: ChoiceViewProps) {
     const theme = useTheme()
-    const { choice, showImage = false, ...rest } = props
+    const { choice, showImage = false, sx, ...rest } = props
 
-    const { id, label = '', image = '' } = choice
+    const {
+        id,
+        label = '',
+        image = '',
+        fontSize,
+        borderRadius,
+        padding,
+    } = choice
 
     return (
         <StyledButton
@@ -92,6 +93,12 @@ export default function ChoiceView(props: ChoiceViewProps) {
             component="div"
             variant="outlined"
             choice={choice}
+            sx={{
+                ...sx,
+                fontSize,
+                borderRadius,
+                padding,
+            }}
             {...rest}
         >
             {showImage && (

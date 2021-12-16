@@ -199,7 +199,7 @@ export default function FinalForm() {
             <Stack direction="row">
                 <Box
                     sx={{
-                        flex: '0 0 288px',
+                        flex: '0 0 304px',
                         height: '100vh',
                         overflowY: 'auto',
                         bgcolor: 'common.white',
@@ -293,7 +293,7 @@ export default function FinalForm() {
                     <Box
                         sx={{
                             position: 'relative',
-                            flex: '0 0 288px',
+                            flex: '0 0 304px',
                             height: '100vh',
                             overflowY: 'auto',
                             bgcolor: (theme) => theme.palette.grey[800],

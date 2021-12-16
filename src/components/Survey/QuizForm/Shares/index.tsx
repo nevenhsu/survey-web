@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import TextField, { TextFieldProps } from '@mui/material/TextField'
+import TextField, { StandardTextFieldProps } from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
 import InputAdornment from '@mui/material/InputAdornment'
 import Button from '@mui/material/Button'
@@ -18,13 +18,13 @@ import { typoOptions, fontWeightOptions } from 'components/common/options'
 import type { OnChangeInput, CustomButtonType, TextType } from 'common/types'
 import type { Variant } from '@mui/material/styles/createTypography'
 
-export type StyledTextFieldProps = TextFieldProps & {
+export type StyledTextFieldProps = StandardTextFieldProps & {
     typoVariant?: Variant
     textProps: TextType
     onCustomize: (value: TextType) => void
 }
 
-type StyledFieldProps = TextFieldProps & {
+type StyledFieldProps = StandardTextFieldProps & {
     typoVariant?: Variant
 }
 
@@ -45,6 +45,9 @@ const StyledField = styled(TextField, {
             maxWidth: '100%',
             width: str ? `${getStringLength(str)}ch` : undefined,
             textTransform: 'none',
+        },
+        '&:hover .MuiInputAdornment-root': {
+            opacity: 1,
         },
     }
 })
@@ -90,6 +93,7 @@ export function StyledTextField(props: StyledTextFieldProps) {
                 name="text"
                 value={text ?? ''}
                 InputProps={{
+                    disableUnderline: true,
                     endAdornment: (
                         <InputAdornment position="end">
                             <IconButton onClick={handleClick}>
@@ -104,6 +108,11 @@ export function StyledTextField(props: StyledTextFieldProps) {
                             fontWeight,
                             bgcolor,
                             padding,
+                        },
+                        '& .MuiInputAdornment-root': {
+                            position: 'absolute',
+                            right: 0,
+                            opacity: 0,
                         },
                     }),
                 }}

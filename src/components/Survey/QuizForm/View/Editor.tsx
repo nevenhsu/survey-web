@@ -190,6 +190,12 @@ export default function Editor(props: EditorProps) {
                         width: '100%',
                         minHeight: '100%',
                         p: 1,
+                        '& .IUAddButton': {
+                            opacity: 0,
+                        },
+                        '&:hover .IUAddButton': {
+                            opacity: 1,
+                        },
                     }}
                 >
                     <Box sx={{ height: 16 }} />

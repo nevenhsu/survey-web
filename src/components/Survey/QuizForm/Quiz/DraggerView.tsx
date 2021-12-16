@@ -10,7 +10,7 @@ import {
     StyledCustomButton,
 } from 'components/Survey/QuizForm/Shares'
 import AddIcon from 'mdi-react/AddIcon'
-import { getDefaultDraggerChoice } from 'utils/helper'
+import { getDefaultDraggerChoice, setClasses } from 'utils/helper'
 import { useAppDispatch, useAppSelector } from 'hooks'
 import { updateChoice, selectCurrentId } from 'store/slices/survey'
 import type {
@@ -19,6 +19,12 @@ import type {
     DraggerQuiz,
     DraggerChoiceType,
 } from 'common/types'
+
+const classes = setClasses('DraggerView', ['button'])
+const classesSelector = {
+    normal: `& .${classes.button}`,
+    hover: `&:hover .${classes.button}`,
+}
 
 export default function DraggerView(props: {
     quizProps: Omit<DraggerQuiz, 'values'>
@@ -100,85 +106,125 @@ export default function DraggerView(props: {
 
             <Box
                 sx={{
-                    width: 4 / 5,
-                    '& .slick-track': {
-                        display: 'flex',
-                        alignItems: 'center',
+                    position: 'relative',
+                    width: '100%',
+                    '&:hover .slick-arrow': {
+                        display: 'block !important',
                     },
-                    '& .slick-prev:before': {
-                        color: (theme) => theme.palette.primary.main,
+                    '&:hover .slick-dots': {
+                        display: 'block !important',
                     },
-                    '& .slick-next:before': {
-                        color: (theme) => theme.palette.primary.main,
+                    [classesSelector.normal]: {
+                        opacity: '0',
                     },
-                    '& .slick-dots li': {
-                        height: 10,
-                        width: 10,
-                        mx: 0.25,
-                    },
-                    '& .slick-dots button': {
-                        height: 10,
-                        width: 10,
+                    [classesSelector.hover]: {
+                        opacity: '1',
                     },
                 }}
             >
-                <Slick
-                    ref={slick}
-                    slidesToShow={1}
-                    slidesToScroll={1}
-                    dots
-                    arrows
-                    infinite
+                <Box
+                    sx={{
+                        width: 4 / 5,
+                        mx: 'auto',
+                        '& .slick-track': {
+                            display: 'flex',
+                            alignItems: 'center',
+                        },
+                        '& .slick-prev:before': {
+                            color: (theme) => theme.palette.primary.main,
+                        },
+                        '& .slick-next:before': {
+                            color: (theme) => theme.palette.primary.main,
+                        },
+                        '& .slick-dots li': {
+                            height: 10,
+                            width: 10,
+                            mx: 0.25,
+                        },
+                        '& .slick-dots button': {
+                            height: 10,
+                            width: 10,
+                        },
+                        '& .slick-dots': {
+                            display: 'none !important',
+                            bottom: 0,
+                        },
+                        '& .slick-arrow': {
+                            display: 'none !important',
+                        },
+                    }}
                 >
-                    {choices.map((el) => (
-                        <Box key={el.id} sx={{ p: 1 }}>
-                            <DraggerChoiceView
-                                choice={el}
-                                showImage={showImage}
-                                onChange={(choice) =>
-                                    handleChangeChoice(choice, el.id)
-                                }
-                            />
-                            <Stack
-                                direction="row"
-                                alignItems="center"
-                                justifyContent="space-evenly"
-                            >
-                                <Button
-                                    color="primary"
-                                    onClick={() => handleCopyStyle(el.id)}
+                    <Slick
+                        ref={slick}
+                        slidesToShow={1}
+                        slidesToScroll={1}
+                        dots
+                        arrows
+                        infinite
+                    >
+                        {choices.map((el) => (
+                            <Box key={el.id} sx={{ p: 1 }}>
+                                <DraggerChoiceView
+                                    choice={el}
+                                    showImage={showImage}
+                                    onChange={(choice) =>
+                                        handleChangeChoice(choice, el.id)
+                                    }
+                                />
+                                <Box sx={{ height: 16 }} />
+                                <Stack
+                                    direction="row"
+                                    alignItems="center"
+                                    justifyContent="space-evenly"
                                 >
-                                    套用所有
-                                </Button>
-                                <Button
-                                    color="error"
-                                    onClick={() => handleDelete(el.id)}
-                                >
-                                    刪除選項
-                                </Button>
-                            </Stack>
-                        </Box>
-                    ))}
-                </Slick>
+                                    <Button
+                                        className={classes.button}
+                                        color="primary"
+                                        onClick={() => handleCopyStyle(el.id)}
+                                    >
+                                        套用所有
+                                    </Button>
+
+                                    <Button
+                                        className={classes.button}
+                                        color="error"
+                                        onClick={() => handleDelete(el.id)}
+                                    >
+                                        刪除選項
+                                    </Button>
+                                </Stack>
+                            </Box>
+                        ))}
+                    </Slick>
+                </Box>
+
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        width: '100%',
+                        textAlign: 'center',
+                        bottom: -48,
+                    }}
+                >
+                    <Button
+                        className={classes.button}
+                        variant="outlined"
+                        startIcon={<AddIcon />}
+                        onClick={handleAddChoice}
+                        sx={{
+                            mx: 'auto',
+                            bgcolor: 'white',
+                            '&:hover': {
+                                bgcolor: 'white',
+                            },
+                        }}
+                    >
+                        新增選項
+                    </Button>
+                </Box>
             </Box>
 
-            <Box sx={{ height: 16 }} />
-
-            <Button
-                variant="outlined"
-                startIcon={<AddIcon />}
-                onClick={handleAddChoice}
-                sx={{
-                    bgcolor: 'white',
-                    '&:hover': {
-                        bgcolor: 'white',
-                    },
-                }}
-            >
-                新增選項
-            </Button>
-
-            <Box sx={{ height: 16 }} />
+            <Box sx={{ height: 24 }} />
 
             <Stack
                 direction="row"

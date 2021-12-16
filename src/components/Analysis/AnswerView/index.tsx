@@ -151,6 +151,15 @@ export default function AnswerView() {
         })
     }, [answerData, surveyData])
 
+    const setCellProps = ({ dataKey }: { dataKey: string }) => {
+        const isDefault = Boolean(_.get(defaultKeys, [dataKey]))
+        return {
+            sx: {
+                bgcolor: isDefault ? 'common.white' : 'primary.light',
+            },
+        }
+    }
+
     const renderCell: RenderCell = (props) => {
         const { columnData, cellData } = props
         const { quizzes = [] } = surveyData ?? {}
@@ -211,6 +220,7 @@ export default function AnswerView() {
                         elevation: 4,
                     }}
                     renderCell={renderCell}
+                    setCellProps={setCellProps}
                 />
             </Box>
         </>

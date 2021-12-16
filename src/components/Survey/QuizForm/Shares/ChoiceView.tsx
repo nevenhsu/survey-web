@@ -20,6 +20,7 @@ export default function ChoiceView(props: {
     showImage?: boolean
 }) {
     const { value, onChange, onCopy, onDelete, showImage = false } = props
+    const theme = useTheme()
 
     const {
         id,
@@ -27,13 +28,11 @@ export default function ChoiceView(props: {
         image = '',
         buttonColor = '',
         bgcolor = '',
-        fontSize: fontSizeRaw,
+        fontSize,
         padding,
         border,
         borderRadius,
     } = value
-
-    const fontSize = toNumOrStr(fontSizeRaw)
 
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
         null
@@ -73,10 +72,10 @@ export default function ChoiceView(props: {
                         width: '100%',
                         height: '100%',
                         color,
-                        fontSize,
-                        padding,
                         border,
-                        borderRadius,
+                        padding: toNumOrStr(padding),
+                        fontSize: toNumOrStr(fontSize),
+                        borderRadius: toNumOrStr(borderRadius),
                         bgcolor: bg,
                         borderColor: buttonColor,
                         flexDirection: 'column',

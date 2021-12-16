@@ -367,15 +367,22 @@ export function ComponentList(props: ComponentListProps) {
                         }}
                         xs={el.display === 'block' ? 12 : undefined}
                         sx={{
+                            position: 'relative',
                             width: el.width,
                             height: el.height,
-                            borderRadius: 1,
-                            borderWidth: 1,
-                            borderStyle: 'solid',
-                            borderColor:
-                                el.id === selectedComponent?.id
-                                    ? 'primary.light'
-                                    : 'transparent',
+                            '&:after': {
+                                content: '" "',
+                                position: 'absolute',
+                                border: '1px solid',
+                                borderColor: 'primary.light',
+                                borderRadius: 1,
+                                width: '100%',
+                                height: '100%',
+                                top: 8,
+                                left: 8,
+                                opacity:
+                                    el.id === selectedComponent?.id ? 1 : 0,
+                            },
                         }}
                         item
                     >

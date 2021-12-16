@@ -12,13 +12,19 @@ import {
 import AddIcon from 'mdi-react/AddIcon'
 import { useAppSelector } from 'hooks'
 import { selectDevice } from 'store/slices/userDefault'
-import { getDefaultChoice, getDeviceValue, toNumOrStr } from 'utils/helper'
-import type {
-    DeviceType,
-    SelectionQuiz,
-    OnChangeInput,
-    OnButtonClink,
-} from 'common/types'
+import {
+    getDefaultChoice,
+    getDeviceValue,
+    toNumOrStr,
+    setClasses,
+} from 'utils/helper'
+import type { SelectionQuiz, OnChangeInput, OnButtonClink } from 'common/types'
+
+const classes = setClasses('SelectionView', ['button'])
+const classesSelector = {
+    normal: `& .${classes.button}`,
+    hover: `&:hover .${classes.button}`,
+}
 
 export default function SelectionView(props: {
     quizProps: Omit<SelectionQuiz, 'values' | 'tagsId'>
@@ -110,6 +116,12 @@ export default function SelectionView(props: {
                     width: '100%',
                     textAlign: 'center',
                     px: getDeviceValue(device, px),
+                    [classesSelector.normal]: {
+                        opacity: '0',
+                    },
+                    [classesSelector.hover]: {
+                        opacity: '1',
+                    },
                 }}
             >
                 <Grid
@@ -140,6 +152,7 @@ export default function SelectionView(props: {
 
                 <Box sx={{ mt: 3 }}>
                     <Button
+                        className={classes.button}
                         variant="outlined"
                         startIcon={<AddIcon />}
                         onClick={handleAddChoice}

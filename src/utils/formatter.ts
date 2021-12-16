@@ -245,9 +245,9 @@ export function choiceFormatter(value: ChoiceType): ChoiceType {
     const {
         label = '',
         tags: tagsRaw,
-
         padding,
         borderRadius,
+        fontSize,
         ...rest
     } = value ?? {}
 
@@ -262,9 +262,9 @@ export function choiceFormatter(value: ChoiceType): ChoiceType {
         ...rest,
         label,
         tags,
-
         borderRadius: toNumber(borderRadius),
         padding: toNumOrStr(padding),
+        fontSize: toNumOrStr(fontSize),
     }
 }
 

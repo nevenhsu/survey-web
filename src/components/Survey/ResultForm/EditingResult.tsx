@@ -28,7 +28,12 @@ type EditingQuizProps = {
 export default function EditingResult(props: EditingQuizProps) {
     const dispatch = useAppDispatch()
 
-    const { id: surveyId, results } = useAppSelector(selectCurrentSurvey)
+    const {
+        id: surveyId,
+        results,
+        setting,
+    } = useAppSelector(selectCurrentSurvey)
+    const { maxWidth } = setting ?? {}
     const { button } = results ?? {}
 
     const instance = Contexts.getInstance('result')
@@ -148,10 +153,16 @@ export default function EditingResult(props: EditingQuizProps) {
                     width: '100%',
                     height: '100%',
                     overflowY: 'auto',
+                    overflowX: 'hidden',
                 }}
             >
                 {Boolean(resultId) ? (
-                    <>
+                    <Box
+                        sx={{
+                            maxWidth,
+                            mx: 'auto',
+                        }}
+                    >
                         <ComponentList
                             components={components}
                             idPath={[]}
@@ -175,7 +186,7 @@ export default function EditingResult(props: EditingQuizProps) {
                                 onCustomize={handleChangeButton}
                             />
                         </Box>
-                    </>
+                    </Box>
                 ) : (
                     <Typography
                         variant="h6"

@@ -46,6 +46,9 @@ const StyledBox = styled(Box, {
     height: 'auto',
     minWidth: 96,
     minHeight: 32,
+    '&:hover .IUDeleteButton': {
+        opacity: 0.5,
+    },
 }))
 
 export default function ImageUploader(props: ImageUploaderProps) {
@@ -196,7 +199,7 @@ export default function ImageUploader(props: ImageUploaderProps) {
                                         position: 'absolute',
                                         top: 2,
                                         right: 2,
-                                        opacity: 0.5,
+                                        opacity: 0,
                                         '&:hover': {
                                             opacity: 1,
                                         },
