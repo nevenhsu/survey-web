@@ -78,7 +78,7 @@ export default function App() {
     React.useEffect(() => {
         if (step === SurveyStep.start && !matchSurvey && !atHome) {
             history.push('/')
-        } else if (step !== SurveyStep.start && atHome) {
+        } else if (step && step !== SurveyStep.start && atHome) {
             history.push('/survey')
         }
     }, [step])

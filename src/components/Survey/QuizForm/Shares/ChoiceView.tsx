@@ -1,12 +1,19 @@
 import * as React from 'react'
 import _ from 'lodash'
-import { useTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
 import Popover from '@mui/material/Popover'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
+import Drawer from '@mui/material/Drawer'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableRow from '@mui/material/TableRow'
+import ThemeProvider from 'theme/ThemeProvider'
+import { Header, NoUnderlineTextField } from 'components/Survey/QuizForm/Shares'
 import ImageUploader from 'components/common/ImageUploader'
 import { getContrastText, emphasizeColor } from 'theme/palette'
 import { toNumOrStr } from 'utils/helper'
@@ -20,7 +27,6 @@ export default function ChoiceView(props: {
     showImage?: boolean
 }) {
     const { value, onChange, onCopy, onDelete, showImage = false } = props
-    const theme = useTheme()
 
     const {
         id,
@@ -34,23 +40,13 @@ export default function ChoiceView(props: {
         borderRadius,
     } = value
 
-    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
-        null
-    )
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget)
-    }
-    const handleClose = () => {
-        setAnchorEl(null)
-    }
-
-    const open = Boolean(anchorEl)
+    const [open, setOpen] = React.useState(false)
 
     return (
         <>
             <Button
                 variant="outlined"
-                onClick={handleClick}
+                onClick={() => setOpen(true)}
                 sx={(theme) => {
                     const bg = bgcolor || theme.palette.common.white
 
@@ -131,115 +127,158 @@ export default function ChoiceView(props: {
                     {label || '選項'}
                 </Typography>
             </Button>
-            <Popover
-                open={open}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                }}
-            >
-                <Box sx={{ p: 2, maxWidth: 320 }}>
-                    <TextField
-                        label="選項文字"
-                        name="label"
-                        variant="standard"
-                        value={label ?? ''}
-                        onChange={onChange}
-                        fullWidth
-                        sx={{ mb: 3 }}
-                    />
 
-                    <TextField
-                        label="文字大小"
-                        variant="standard"
-                        name="fontSize"
-                        value={fontSize ?? ''}
-                        onChange={onChange}
-                        placeholder="16"
-                        fullWidth
-                        sx={{ mb: 3 }}
-                    />
-
-                    <TextField
-                        label="邊框顏色"
-                        name="buttonColor"
-                        variant="standard"
-                        value={buttonColor ?? ''}
-                        onChange={onChange}
-                        placeholder="#3892FC"
-                        fullWidth
-                        sx={{ mb: 3 }}
-                    />
-
-                    <TextField
-                        label="背景顏色"
-                        name="bgcolor"
-                        variant="standard"
-                        value={bgcolor ?? ''}
-                        onChange={onChange}
-                        placeholder="#fffffff"
-                        fullWidth
-                        sx={{ mb: 3 }}
-                    />
-
-                    <TextField
-                        label="按鈕留白"
-                        variant="standard"
-                        name="padding"
-                        value={padding ?? ''}
-                        onChange={onChange}
-                        placeholder="22px 8px"
-                        fullWidth
-                        sx={{ mb: 3 }}
-                    />
-
-                    <TextField
-                        label="按鈕邊框"
-                        variant="standard"
-                        name="border"
-                        value={border ?? ''}
-                        onChange={onChange}
-                        placeholder="0px solid #3892FC"
-                        fullWidth
-                        sx={{ mb: 3 }}
-                    />
-
-                    <TextField
-                        label="按鈕圓角"
-                        variant="standard"
-                        name="borderRadius"
-                        value={borderRadius ?? ''}
-                        onChange={onChange}
-                        placeholder="1"
-                        fullWidth
-                        sx={{ mb: 3 }}
-                    />
-
-                    <Stack
-                        direction="row"
-                        alignItems="center"
-                        justifyContent="space-between"
-                    >
-                        <Button
-                            variant="outlined"
-                            color="primary"
-                            onClick={onCopy}
+            <ThemeProvider mode="dark">
+                <Drawer
+                    open={open}
+                    anchor="right"
+                    onClose={() => setOpen(false)}
+                    elevation={16}
+                    sx={{
+                        '& .MuiBackdrop-root': {
+                            opacity: '0 !important',
+                        },
+                    }}
+                >
+                    <Box sx={{ width: 320 }}>
+                        <TableContainer
+                            sx={{
+                                '& td': {
+                                    height: 48,
+                                },
+                            }}
                         >
-                            套用全部
-                        </Button>
+                            <Table size="small">
+                                <TableBody>
+                                    <Header title="選項樣式" />
 
-                        <Button
-                            variant="outlined"
-                            color="error"
-                            onClick={onDelete}
-                        >
-                            刪除選項
-                        </Button>
-                    </Stack>
-                </Box>
-            </Popover>
+                                    <TableRow>
+                                        <TableCell>選項文字</TableCell>
+                                        <TableCell>
+                                            <NoUnderlineTextField
+                                                variant="standard"
+                                                name="label"
+                                                value={label ?? ''}
+                                                onChange={onChange}
+                                                placeholder="請輸入文字..."
+                                                fullWidth
+                                            />
+                                        </TableCell>
+                                    </TableRow>
+
+                                    <TableRow>
+                                        <TableCell>文字大小</TableCell>
+                                        <TableCell>
+                                            <NoUnderlineTextField
+                                                variant="standard"
+                                                name="fontSize"
+                                                value={fontSize ?? ''}
+                                                onChange={onChange}
+                                                placeholder="16"
+                                                fullWidth
+                                            />
+                                        </TableCell>
+                                    </TableRow>
+
+                                    <TableRow>
+                                        <TableCell>邊框顏色</TableCell>
+                                        <TableCell>
+                                            <NoUnderlineTextField
+                                                variant="standard"
+                                                name="buttonColor"
+                                                value={buttonColor ?? ''}
+                                                onChange={onChange}
+                                                placeholder="#3892FC"
+                                                fullWidth
+                                            />
+                                        </TableCell>
+                                    </TableRow>
+
+                                    <TableRow>
+                                        <TableCell>背景顏色</TableCell>
+                                        <TableCell>
+                                            <NoUnderlineTextField
+                                                variant="standard"
+                                                name="bgcolor"
+                                                value={bgcolor ?? ''}
+                                                onChange={onChange}
+                                                placeholder="#fffffff"
+                                                fullWidth
+                                            />
+                                        </TableCell>
+                                    </TableRow>
+
+                                    <TableRow>
+                                        <TableCell>按鈕留白</TableCell>
+                                        <TableCell>
+                                            <NoUnderlineTextField
+                                                variant="standard"
+                                                name="padding"
+                                                value={padding ?? ''}
+                                                onChange={onChange}
+                                                placeholder="22px 8px"
+                                                fullWidth
+                                            />
+                                        </TableCell>
+                                    </TableRow>
+
+                                    <TableRow>
+                                        <TableCell>按鈕邊框</TableCell>
+                                        <TableCell>
+                                            <NoUnderlineTextField
+                                                variant="standard"
+                                                name="border"
+                                                value={border ?? ''}
+                                                onChange={onChange}
+                                                placeholder="0px solid #3892FC"
+                                                fullWidth
+                                            />
+                                        </TableCell>
+                                    </TableRow>
+
+                                    <TableRow>
+                                        <TableCell>按鈕圓角</TableCell>
+                                        <TableCell>
+                                            <NoUnderlineTextField
+                                                variant="standard"
+                                                name="borderRadius"
+                                                value={borderRadius ?? ''}
+                                                onChange={onChange}
+                                                placeholder="1"
+                                                fullWidth
+                                            />
+                                        </TableCell>
+                                    </TableRow>
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+
+                        <Box sx={{ p: 2 }}>
+                            <Stack
+                                direction="row"
+                                alignItems="center"
+                                justifyContent="space-between"
+                            >
+                                <Button
+                                    variant="outlined"
+                                    color="primary"
+                                    onClick={onCopy}
+                                >
+                                    套用全部
+                                </Button>
+
+                                <Button
+                                    variant="outlined"
+                                    color="error"
+                                    onClick={onDelete}
+                                >
+                                    刪除選項
+                                </Button>
+                            </Stack>
+                        </Box>
+                    </Box>
+                </Drawer>
+            </ThemeProvider>
         </>
     )
 }

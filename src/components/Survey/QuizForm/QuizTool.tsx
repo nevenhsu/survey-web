@@ -6,17 +6,18 @@ import { GridSize } from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
 import MenuItem from '@mui/material/MenuItem'
+import Switch from '@mui/material/Switch'
+import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
+import Box from '@mui/material/Box'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableRow from '@mui/material/TableRow'
-import Switch from '@mui/material/Switch'
-import Button from '@mui/material/Button'
-import Stack from '@mui/material/Stack'
-import Box from '@mui/material/Box'
-import ImageUploader from 'components/common/ImageUploader'
+import { Header } from 'components/Survey/QuizForm/Shares'
 import ModeSelector from 'components/Survey/QuizForm/Shares/ModeSelector'
+import ImageUploader from 'components/common/ImageUploader'
 import { useAppDispatch, useAppSelector } from 'hooks'
 import {
     updateQuiz,
@@ -31,7 +32,6 @@ import type {
     OnChangeInput,
     QuizType,
     DraggerQuiz,
-    Setting,
 } from 'common/types'
 
 type QuizToolProps = {
@@ -63,30 +63,6 @@ const StyledTextField = styled(TextField)({
         opacity: 0,
     },
 })
-
-const Header = (props: { title: string }) => {
-    const { title } = props
-    return (
-        <TableRow
-            sx={{
-                position: 'relative',
-                height: 48,
-                bgcolor: (theme) => theme.palette.grey[900],
-            }}
-        >
-            <TableCell
-                className="absolute-center"
-                sx={{
-                    borderBottom: 0,
-                }}
-                component="th"
-            >
-                {title}
-            </TableCell>
-            <TableCell sx={{ borderBottom: 0 }}></TableCell>
-        </TableRow>
-    )
-}
 
 export default function QuizTool(props: QuizToolProps) {
     const dispatch = useAppDispatch()

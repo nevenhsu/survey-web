@@ -14,7 +14,11 @@ import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import { setClasses } from 'utils/helper'
-import { selectCurrentSurvey, updateQuiz } from 'store/slices/survey'
+import {
+    selectCurrentSurvey,
+    updateQuiz,
+    updateChoice,
+} from 'store/slices/survey'
 import type { SelectionQuiz } from 'common/types'
 
 type NextTableProps = {
@@ -45,7 +49,7 @@ export default function NextTable(props: NextTableProps) {
     const currentChoices = React.useMemo(
         () =>
             choices.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-        [page, rowsPerPage]
+        [page, rowsPerPage, choices]
     )
 
     const emptyRows =
@@ -53,17 +57,23 @@ export default function NextTable(props: NextTableProps) {
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (quizId) {
-            const { name, value } = event.target
-            const newChoices = choices.map((el) =>
-                el.id !== name ? el : { ...el, next: _.trim(value) }
-            )
-            dispatch(
-                updateQuiz({
-                    surveyId,
-                    quizId,
-                    newValue: { choices: newChoices },
-                })
-            )
+            const { name: choiceId, value } = event.target
+            const choice = _.find(choices, { id: choiceId })
+
+            if (choice) {
+                const newValue = {
+                    ...choice,
+                    next: _.trim(value),
+                }
+
+                dispatch(
+                    updateChoice({
+                        surveyId,
+                        quizId,
+                        newValue,
+                    })
+                )
+            }
         }
     }
 
@@ -110,23 +120,28 @@ export default function NextTable(props: NextTableProps) {
                                             跳到下一題
                                         </MenuItem>
                                         {quizzes
-                                            .filter(
-                                                (quiz, i) =>
-                                                    quiz.id !== quizId &&
-                                                    i !== nextQuizIndex
+                                            .map((quiz, i) =>
+                                                quiz.id !== quizId &&
+                                                i !== nextQuizIndex
+                                                    ? quiz
+                                                    : undefined
                                             )
-                                            .map((quiz, i) => (
-                                                <MenuItem
-                                                    key={quiz.id}
-                                                    value={quiz.id}
-                                                >
-                                                    跳到第{i + 1}題:{' '}
-                                                    {text.substring(0, 18)}
-                                                    {text.length > 18
-                                                        ? '...'
-                                                        : ''}
-                                                </MenuItem>
-                                            ))}
+                                            .map((quiz, i) =>
+                                                quiz ? (
+                                                    <MenuItem
+                                                        key={quiz.id}
+                                                        value={quiz.id}
+                                                    >
+                                                        跳到第{i + 1}題:{' '}
+                                                        {quiz.title.text?.substring(
+                                                            0,
+                                                            18
+                                                        )}
+                                                    </MenuItem>
+                                                ) : (
+                                                    <></>
+                                                )
+                                            )}
                                     </TextField>
                                 </TableCell>
                             </TableRow>
