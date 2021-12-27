@@ -17,6 +17,7 @@ import ImageUploader from 'components/common/ImageUploader'
 import ThemeProvider from 'theme/ThemeProvider'
 import { useAppSelector } from 'hooks'
 import { getDeviceValue } from 'utils/helper'
+import { selectCurrentSurvey } from 'store/slices/survey'
 import { selectDevice } from 'store/slices/userDefault'
 import { QuizMode } from 'common/types'
 import type {
@@ -37,7 +38,11 @@ export default function Editor(props: EditorProps) {
     const { surveyId, quiz } = props
     const dispatch = useAppDispatch()
 
+    const survey = useAppSelector(selectCurrentSurvey)
     const device = useAppSelector(selectDevice)
+
+    const { setting } = survey
+    const { maxWidth } = setting ?? {}
 
     const {
         id: quizId,
@@ -179,63 +184,76 @@ export default function Editor(props: EditorProps) {
                     width: '100%',
                     height: '100%',
                     overflowY: 'auto',
+                    overflowX: 'hidden',
+                    '::-webkit-scrollbar': {
+                        display: 'none',
+                    },
                 }}
             >
-                <Stack
-                    direction="column"
-                    alignItems="center"
-                    justifyContent="center"
-                    spacing={2}
+                <Box
                     sx={{
-                        width: '100%',
-                        minHeight: '100%',
-                        p: 1,
-                        '& .IUAddButton': {
-                            opacity: 0,
-                        },
-                        '&:hover .IUAddButton': {
-                            opacity: 1,
-                        },
+                        position: 'relative',
+                        height: '100%',
+                        maxWidth,
+                        mx: 'auto',
                     }}
                 >
-                    <Box sx={{ height: 16 }} />
+                    <Stack
+                        direction="column"
+                        alignItems="center"
+                        justifyContent="center"
+                        spacing={2}
+                        sx={{
+                            width: '100%',
+                            minHeight: '100%',
+                            p: 1,
+                            '& .IUAddButton': {
+                                opacity: 0,
+                            },
+                            '&:hover .IUAddButton': {
+                                opacity: 1,
+                            },
+                        }}
+                    >
+                        <Box sx={{ height: 16 }} />
 
-                    {required && (
-                        <>
-                            <Typography variant="caption" color="GrayText">
-                                必填
-                            </Typography>
-                            <Box />
-                        </>
-                    )}
+                        {required && (
+                            <>
+                                <Typography variant="caption" color="GrayText">
+                                    必填
+                                </Typography>
+                                <Box />
+                            </>
+                        )}
 
-                    {hasQuiz && mode !== QuizMode.dragger && (
-                        <>
-                            <ImageUploader
-                                bgImage={image}
-                                sx={{
-                                    width: getDeviceValue(
-                                        device,
-                                        cover?.width
-                                    ) as any,
-                                    height: cover?.height,
-                                    mt: `0 !important`,
-                                }}
-                                onUploaded={(image) => {
-                                    handleUpdateQuiz({
-                                        cover: { ...cover, image },
-                                    })
-                                }}
-                                hideButton={Boolean(image)}
-                            />
-                            <Box sx={{ height: 16 }} />
-                        </>
-                    )}
+                        {hasQuiz && mode !== QuizMode.dragger && (
+                            <>
+                                <ImageUploader
+                                    bgImage={image}
+                                    sx={{
+                                        width: getDeviceValue(
+                                            device,
+                                            cover?.width
+                                        ) as any,
+                                        height: cover?.height,
+                                        mt: `0 !important`,
+                                    }}
+                                    onUploaded={(image) => {
+                                        handleUpdateQuiz({
+                                            cover: { ...cover, image },
+                                        })
+                                    }}
+                                    hideButton={Boolean(image)}
+                                />
+                                <Box sx={{ height: 16 }} />
+                            </>
+                        )}
 
-                    {renderQuiz()}
+                        {renderQuiz()}
 
-                    <Box sx={{ height: 16 }} />
-                </Stack>
+                        <Box sx={{ height: 16 }} />
+                    </Stack>
+                </Box>
             </Box>
         </ThemeProvider>
     )

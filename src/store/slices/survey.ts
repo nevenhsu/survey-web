@@ -371,6 +371,8 @@ export const surveySlice = createSlice({
                 state.mode = mode
 
                 localSurveys.setCurrentId(id)
+            } else if (!state.mode) {
+                state.step = SurveyStep.start
             }
         },
     },

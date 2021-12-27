@@ -187,18 +187,10 @@ export default function QuizForm() {
                                         device={device}
                                         containerWidth={deviceWidth}
                                     >
-                                        <Box
-                                            sx={{
-                                                maxWidth,
-                                                height: '100%',
-                                                mx: 'auto',
-                                            }}
-                                        >
-                                            <Editor
-                                                surveyId={surveyId}
-                                                quiz={selectedQuiz}
-                                            />
-                                        </Box>
+                                        <Editor
+                                            surveyId={surveyId}
+                                            quiz={selectedQuiz}
+                                        />
                                     </ScaleBox>
                                 </AspectRatioBox>
 
@@ -407,6 +399,9 @@ export default function QuizForm() {
                         height: '100vh',
                         overflowY: 'auto',
                         bgcolor: 'common.white',
+                        '::-webkit-scrollbar': {
+                            display: 'none',
+                        },
                     }}
                 >
                     <DragDropContext onDragEnd={onDragEnd}>
@@ -597,6 +592,9 @@ export default function QuizForm() {
                                 height: '100vh',
                                 overflowY: 'auto',
                                 bgcolor: (theme) => theme.palette.grey[800],
+                                '::-webkit-scrollbar': {
+                                    display: 'none',
+                                },
                             }}
                         >
                             <QuizTool surveyId={surveyId} quiz={selectedQuiz} />

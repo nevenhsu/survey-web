@@ -12,8 +12,9 @@ export default function EditingFinal() {
     const dispatch = useAppDispatch()
 
     const survey = useAppSelector(selectCurrentSurvey)
-    const { id: surveyId, final } = survey
+    const { id: surveyId, final, setting } = survey
     const { mode, components = [] } = final ?? {}
+    const { maxWidth } = setting ?? {}
 
     const instance = Contexts.getInstance('final')
     const { Context } = instance.getValue()

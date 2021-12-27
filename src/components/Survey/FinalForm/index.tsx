@@ -19,6 +19,7 @@ import FinalTool from 'components/Survey/FinalForm/FinalTool'
 import InfoForm from 'components/common/InfoForm'
 import DeviceMode, { getRatio, getWidth } from 'components/common/DeviceMode'
 import AspectRatioBox from 'components/common/AspectRatioBox'
+import ScaleBox from 'components/common/ScaleBox'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import usePreview from 'hooks/usePreview'
 import { selectDevice } from 'store/slices/userDefault'
@@ -70,11 +71,13 @@ export default function FinalForm() {
     const survey = useAppSelector(selectCurrentSurvey)
     const { id: surveyId, final } = survey
     const { mode, data, bgcolor, setting } = final ?? {}
+    const { maxWidth } = survey.setting ?? {}
     const { info } = setting ?? {}
 
     const { uploading, handlePreview } = usePreview(survey)
 
     const device = useAppSelector(selectDevice)
+    const deviceWidth = getWidth(device, dimensions)
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
 
@@ -203,6 +206,9 @@ export default function FinalForm() {
                         height: '100vh',
                         overflowY: 'auto',
                         bgcolor: 'common.white',
+                        '::-webkit-scrollbar': {
+                            display: 'none',
+                        },
                     }}
                 >
                     <Box
@@ -280,7 +286,37 @@ export default function FinalForm() {
                                                 '& > div': { bgcolor },
                                             }}
                                         >
-                                            {renderMode(mode)}
+                                            <ScaleBox
+                                                device={device}
+                                                containerWidth={deviceWidth}
+                                            >
+                                                <Box
+                                                    sx={{
+                                                        position: 'absolute',
+                                                        top: 0,
+                                                        left: 0,
+                                                        width: '100%',
+                                                        height: '100%',
+                                                        overflowY: 'auto',
+                                                        overflowX: 'visible',
+                                                        '::-webkit-scrollbar': {
+                                                            display: 'none',
+                                                        },
+                                                    }}
+                                                >
+                                                    <Box
+                                                        sx={{
+                                                            position:
+                                                                'relative',
+                                                            height: '100%',
+                                                            maxWidth,
+                                                            mx: 'auto',
+                                                        }}
+                                                    >
+                                                        {renderMode(mode)}
+                                                    </Box>
+                                                </Box>
+                                            </ScaleBox>
                                         </AspectRatioBox>
                                     </ThemeProvider>
                                 </Box>
@@ -297,6 +333,9 @@ export default function FinalForm() {
                             height: '100vh',
                             overflowY: 'auto',
                             bgcolor: (theme) => theme.palette.grey[800],
+                            '::-webkit-scrollbar': {
+                                display: 'none',
+                            },
                         }}
                     >
                         <FinalTool />

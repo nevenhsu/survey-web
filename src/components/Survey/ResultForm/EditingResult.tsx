@@ -146,23 +146,9 @@ export default function EditingResult(props: EditingQuizProps) {
                         reset()
                     }
                 }}
-                sx={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    overflowY: 'auto',
-                    overflowX: 'hidden',
-                }}
             >
                 {Boolean(resultId) ? (
-                    <Box
-                        sx={{
-                            maxWidth,
-                            mx: 'auto',
-                        }}
-                    >
+                    <>
                         <ComponentList
                             components={components}
                             idPath={[]}
@@ -186,7 +172,7 @@ export default function EditingResult(props: EditingQuizProps) {
                                 onCustomize={handleChangeButton}
                             />
                         </Box>
-                    </Box>
+                    </>
                 ) : (
                     <Typography
                         variant="h6"

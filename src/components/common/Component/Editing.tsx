@@ -32,7 +32,7 @@ const options = [
     { value: ComponentType.typography, label: '內文' },
     { value: ComponentType.image, label: '圖片' },
     { value: ComponentType.link, label: '超連結' },
-    { value: ComponentType.clipboard, label: '剪貼簿' },
+    { value: ComponentType.clipboard, label: '折扣碼' },
     { value: ComponentType.card, label: '卡片' },
 ]
 
@@ -376,10 +376,10 @@ export function ComponentList(props: ComponentListProps) {
                                 border: '1px solid',
                                 borderColor: 'primary.light',
                                 borderRadius: 1,
-                                width: '100%',
-                                height: '100%',
-                                top: 8,
-                                left: 8,
+                                width: 'calc(100% - 16px)',
+                                height: 'calc(100% - 16px)',
+                                top: 16,
+                                left: 16,
                                 opacity:
                                     el.id === selectedComponent?.id ? 1 : 0,
                             },

@@ -93,7 +93,15 @@ export default function ResultForm() {
     const instance = Contexts.getInstance('result')
     const { Provider, Context } = instance.getValue()
 
-    const { id: surveyId, tags, results, mode, quizzes = [] } = survey ?? {}
+    const {
+        id: surveyId,
+        tags,
+        results,
+        mode,
+        quizzes = [],
+        setting,
+    } = survey ?? {}
+    const { maxWidth } = setting ?? {}
 
     const deviceWidth = getWidth(device, dimensions)
 
@@ -479,7 +487,7 @@ export default function ResultForm() {
                 <Stack
                     direction="row"
                     alignItems="center"
-                    sx={{ color: 'grey.700', px: '15px', mb: 1 }}
+                    sx={{ color: 'grey.700', px: 2, mb: 1 }}
                     spacing={1}
                 >
                     <Numeric2BoxIcon size={20} />
@@ -595,6 +603,9 @@ export default function ResultForm() {
                         height: '100vh',
                         overflowY: 'auto',
                         bgcolor: 'common.white',
+                        '::-webkit-scrollbar': {
+                            display: 'none',
+                        },
                     }}
                 >
                     <Box
@@ -660,9 +671,33 @@ export default function ResultForm() {
                                             device={device}
                                             containerWidth={deviceWidth}
                                         >
-                                            <EditingResult
-                                                result={selectedResult}
-                                            />
+                                            <Box
+                                                sx={{
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    left: 0,
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    overflowY: 'auto',
+                                                    overflowX: 'visible',
+                                                    '::-webkit-scrollbar': {
+                                                        display: 'none',
+                                                    },
+                                                }}
+                                            >
+                                                <Box
+                                                    sx={{
+                                                        position: 'relative',
+                                                        height: '100%',
+                                                        maxWidth,
+                                                        mx: 'auto',
+                                                    }}
+                                                >
+                                                    <EditingResult
+                                                        result={selectedResult}
+                                                    />
+                                                </Box>
+                                            </Box>
                                         </ScaleBox>
                                     </AspectRatioBox>
                                 </Box>
@@ -679,6 +714,9 @@ export default function ResultForm() {
                             height: '100vh',
                             overflowY: 'auto',
                             bgcolor: (theme) => theme.palette.grey[800],
+                            '::-webkit-scrollbar': {
+                                display: 'none',
+                            },
                         }}
                     >
                         <ResultTool surveyId={surveyId} resultId={selectedId} />
