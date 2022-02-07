@@ -30,6 +30,7 @@ export default function DraggerChoiceView(props: DraggerChoiceViewProps) {
             ...rawChoice,
             [name]: value,
         }
+
         onChange(val)
     }
 
@@ -79,11 +80,12 @@ export default function DraggerChoiceView(props: DraggerChoiceViewProps) {
                             const newValue: DraggerChoiceType = {
                                 ...r,
                                 ...v,
-                                label: `${text || label || ''}`,
+                                label: `${text ?? label ?? ''}`,
                             }
+
                             onChange(newValue)
                         }}
-                        sx={{ pb: 2 }}
+                        sx={{ pb: 2, whiteSpace: 'nowrap' }}
                         multiline
                     />
                 </Stack>

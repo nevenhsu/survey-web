@@ -9,7 +9,7 @@ import {
     TableHeaderProps,
     TableCellProps,
 } from 'react-virtualized'
-import { styled } from '@mui/material/styles'
+import { styled, useTheme } from '@mui/material/styles'
 import Tooltip from '@mui/material/Tooltip'
 import TableCell, {
     TableCellProps as MuiTableCellProps,
@@ -112,6 +112,8 @@ export default function VirtualizedTable<T>(props: VirtualizedTableProps<T>) {
         ...tableProps
     } = props
 
+    const theme = useTheme()
+
     const getRowClassName = ({ index }: Row) => {
         return clsx(classes.tableRow, classes.flexContainer, {
             [classes.tableRowHover]: index !== -1 && Boolean(onRowClick),
@@ -182,13 +184,13 @@ export default function VirtualizedTable<T>(props: VirtualizedTableProps<T>) {
                         classes.noClick,
                         className
                     )}
-                    sx={(theme) => ({
+                    sx={{
                         backgroundColor: theme.palette.grey[100],
                         color: theme.palette.primary.main,
                         width,
                         height: headerHeight,
                         ...sx,
-                    })}
+                    }}
                     align={numeric ? 'right' : 'left'}
                 >
                     <Typography variant="body2" noWrap>

@@ -45,6 +45,15 @@ export default function SelectionView(props: SelectionViewProps) {
                             value: [...values, id],
                         },
                     } as any)
+                } else {
+                    const [removed, ...rest] = values
+
+                    onChange({
+                        target: {
+                            name: 'values',
+                            value: [...rest, id],
+                        },
+                    } as any)
                 }
             }
         }
