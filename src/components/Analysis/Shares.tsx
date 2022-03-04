@@ -137,60 +137,58 @@ export function SelectorBar(props: SelectorBarProps) {
     }
 
     return (
-        <ThemeProvider mode="dark">
-            <Paper
-                elevation={12}
+        <Paper
+            elevation={12}
+            sx={{
+                boxShadow: 'none',
+            }}
+            square
+        >
+            <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="start"
+                spacing={4}
                 sx={{
-                    boxShadow: 'none',
+                    width: '100%',
+                    height: 48,
+                    px: 2,
                 }}
-                square
             >
-                <Stack
-                    direction="row"
-                    alignItems="center"
-                    justifyContent="start"
-                    spacing={4}
-                    sx={{
-                        width: '100%',
-                        height: 48,
-                        px: 2,
-                    }}
+                <Typography>檢視不同流量來源</Typography>
+
+                <TextField
+                    value={device}
+                    onChange={handleChange}
+                    variant="standard"
+                    name="device"
+                    select
+                    InputProps={{ disableUnderline: true }}
                 >
-                    <Typography>檢視不同流量來源</Typography>
+                    <MenuItem value={' '}>所有裝置</MenuItem>
+                    {devices.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                        </MenuItem>
+                    ))}
+                </TextField>
 
-                    <TextField
-                        value={device}
-                        onChange={handleChange}
-                        variant="standard"
-                        name="device"
-                        select
-                        InputProps={{ disableUnderline: true }}
-                    >
-                        <MenuItem value={' '}>所有裝置</MenuItem>
-                        {devices.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-
-                    <TextField
-                        value={source}
-                        onChange={handleChange}
-                        variant="standard"
-                        name="source"
-                        select
-                        InputProps={{ disableUnderline: true }}
-                    >
-                        <MenuItem value={' '}>所有來源</MenuItem>
-                        {sources.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                </Stack>
-            </Paper>
-        </ThemeProvider>
+                <TextField
+                    value={source}
+                    onChange={handleChange}
+                    variant="standard"
+                    name="source"
+                    select
+                    InputProps={{ disableUnderline: true }}
+                >
+                    <MenuItem value={' '}>所有來源</MenuItem>
+                    {sources.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                        </MenuItem>
+                    ))}
+                </TextField>
+            </Stack>
+        </Paper>
     )
 }

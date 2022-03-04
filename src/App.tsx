@@ -8,7 +8,6 @@ import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
-import ThemeProvider from 'theme/ThemeProvider'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import User from 'utils/user'
 import { setStep, setMode } from 'store/slices/survey'
@@ -86,33 +85,36 @@ export default function App() {
     return (
         <>
             {!Boolean(matchSurvey) && (
-                <ThemeProvider mode="dark">
-                    <AppBar position="static">
-                        <Toolbar>
-                            <Typography variant="h6" component="div">
-                                超市調
-                            </Typography>
-                            <Grow />
-                            {!atHome && (
-                                <StyledTabs
-                                    value={pathname}
-                                    onChange={handleChangePath}
-                                    centered
-                                >
-                                    {_.map(paths, ({ label, path }) => (
-                                        <StyledTab
-                                            key={path}
-                                            label={label}
-                                            value={path}
-                                        />
-                                    ))}
-                                </StyledTabs>
-                            )}
-                            <Grow />
-                            <Button color="inherit">Login</Button>
-                        </Toolbar>
-                    </AppBar>
-                </ThemeProvider>
+                <AppBar
+                    className="underline"
+                    position="static"
+                    color="default"
+                    elevation={0}
+                >
+                    <Toolbar>
+                        <Typography variant="h5" letterSpacing="0.05em">
+                            超市調
+                        </Typography>
+                        <Grow />
+                        {!atHome && (
+                            <StyledTabs
+                                value={pathname}
+                                onChange={handleChangePath}
+                                centered
+                            >
+                                {_.map(paths, ({ label, path }) => (
+                                    <StyledTab
+                                        key={path}
+                                        label={label}
+                                        value={path}
+                                    />
+                                ))}
+                            </StyledTabs>
+                        )}
+                        <Grow />
+                        <Button color="inherit">Login</Button>
+                    </Toolbar>
+                </AppBar>
             )}
             <React.Suspense fallback={<div />}>
                 <Switch>

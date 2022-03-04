@@ -306,225 +306,221 @@ export const StyledCustomButton = (props: StyledCustomButtonProps) => {
                 onClick={() => setOpen(true)}
             />
 
-            <ThemeProvider mode="dark">
-                <Drawer
-                    open={open}
-                    anchor="right"
-                    onClose={() => setOpen(false)}
-                    elevation={16}
-                    sx={{
-                        '& .MuiBackdrop-root': {
-                            opacity: '0 !important',
-                        },
-                    }}
-                >
-                    <Box sx={{ width: 320 }}>
-                        <TableContainer
-                            sx={{
-                                '& td': {
-                                    height: 48,
-                                },
-                            }}
-                        >
-                            <Table size="small">
-                                <TableBody>
-                                    <Header title="按鈕樣式" />
+            <Drawer
+                open={open}
+                anchor="right"
+                onClose={() => setOpen(false)}
+                elevation={16}
+                sx={{
+                    '& .MuiBackdrop-root': {
+                        opacity: '0 !important',
+                    },
+                }}
+            >
+                <Box sx={{ width: 320 }}>
+                    <TableContainer
+                        sx={{
+                            '& td': {
+                                height: 48,
+                            },
+                        }}
+                    >
+                        <Table size="small">
+                            <TableBody>
+                                <Header title="按鈕樣式" />
 
-                                    <TableRow>
-                                        <TableCell>按鈕文字</TableCell>
-                                        <TableCell>
-                                            <NoUnderlineTextField
-                                                variant="standard"
-                                                name="text"
-                                                value={text}
-                                                onChange={handleChange}
-                                                fullWidth
-                                            />
-                                        </TableCell>
-                                    </TableRow>
+                                <TableRow>
+                                    <TableCell>按鈕文字</TableCell>
+                                    <TableCell>
+                                        <NoUnderlineTextField
+                                            variant="standard"
+                                            name="text"
+                                            value={text}
+                                            onChange={handleChange}
+                                            fullWidth
+                                        />
+                                    </TableCell>
+                                </TableRow>
 
-                                    <TableRow>
-                                        <TableCell>文字大小</TableCell>
-                                        <TableCell>
-                                            <NoUnderlineTextField
-                                                variant="standard"
-                                                name="fontSize"
-                                                value={fontSize}
-                                                onChange={handleChange}
-                                                placeholder="16"
-                                                fullWidth
-                                            />
-                                        </TableCell>
-                                    </TableRow>
+                                <TableRow>
+                                    <TableCell>文字大小</TableCell>
+                                    <TableCell>
+                                        <NoUnderlineTextField
+                                            variant="standard"
+                                            name="fontSize"
+                                            value={fontSize}
+                                            onChange={handleChange}
+                                            placeholder="16"
+                                            fullWidth
+                                        />
+                                    </TableCell>
+                                </TableRow>
 
-                                    <TableRow>
-                                        <TableCell>文字顏色</TableCell>
-                                        <TableCell>
-                                            <NoUnderlineTextField
-                                                variant="standard"
-                                                name="textColor"
-                                                value={textColor}
-                                                onChange={handleChange}
-                                                placeholder="#fffffff"
-                                                fullWidth
-                                            />
-                                        </TableCell>
-                                    </TableRow>
+                                <TableRow>
+                                    <TableCell>文字顏色</TableCell>
+                                    <TableCell>
+                                        <NoUnderlineTextField
+                                            variant="standard"
+                                            name="textColor"
+                                            value={textColor}
+                                            onChange={handleChange}
+                                            placeholder="#fffffff"
+                                            fullWidth
+                                        />
+                                    </TableCell>
+                                </TableRow>
 
-                                    <TableRow>
-                                        <TableCell>按鈕顏色</TableCell>
-                                        <TableCell>
-                                            <NoUnderlineTextField
-                                                variant="standard"
-                                                name="buttonColor"
-                                                value={buttonColor}
-                                                onChange={handleChange}
-                                                placeholder="#1565c0"
-                                                fullWidth
-                                            />
-                                        </TableCell>
-                                    </TableRow>
+                                <TableRow>
+                                    <TableCell>按鈕顏色</TableCell>
+                                    <TableCell>
+                                        <NoUnderlineTextField
+                                            variant="standard"
+                                            name="buttonColor"
+                                            value={buttonColor}
+                                            onChange={handleChange}
+                                            placeholder="#1565c0"
+                                            fullWidth
+                                        />
+                                    </TableCell>
+                                </TableRow>
 
-                                    <TableRow>
-                                        <TableCell>按鈕樣式</TableCell>
-                                        <TableCell>
-                                            <NoUnderlineTextField
-                                                name="variant"
-                                                variant="standard"
-                                                value={variant}
-                                                onChange={handleChange}
-                                                fullWidth
-                                                select
+                                <TableRow>
+                                    <TableCell>按鈕樣式</TableCell>
+                                    <TableCell>
+                                        <NoUnderlineTextField
+                                            name="variant"
+                                            variant="standard"
+                                            value={variant}
+                                            onChange={handleChange}
+                                            fullWidth
+                                            select
+                                        >
+                                            {variantOptions.map((el) => (
+                                                <MenuItem
+                                                    key={el.value}
+                                                    value={el.value}
+                                                >
+                                                    {el.label}
+                                                </MenuItem>
+                                            ))}
+                                        </NoUnderlineTextField>
+                                    </TableCell>
+                                </TableRow>
+
+                                <TableRow>
+                                    <TableCell>按鈕大小</TableCell>
+                                    <TableCell>
+                                        <NoUnderlineTextField
+                                            variant="standard"
+                                            name="size"
+                                            value={size}
+                                            onChange={handleChange}
+                                            fullWidth
+                                            select
+                                        >
+                                            {sizeOptions.map((el) => (
+                                                <MenuItem
+                                                    key={el.value}
+                                                    value={el.value}
+                                                >
+                                                    {el.label}
+                                                </MenuItem>
+                                            ))}
+                                        </NoUnderlineTextField>
+                                    </TableCell>
+                                </TableRow>
+
+                                <TableRow>
+                                    <TableCell>按鈕邊框</TableCell>
+                                    <TableCell>
+                                        <NoUnderlineTextField
+                                            variant="standard"
+                                            name="border"
+                                            value={border}
+                                            onChange={handleChange}
+                                            placeholder="0px solid #ffffff"
+                                            fullWidth
+                                        />
+                                    </TableCell>
+                                </TableRow>
+
+                                {showImage ? (
+                                    <>
+                                        <TableRow>
+                                            <TableCell>背景圖片</TableCell>
+                                            <TableCell
+                                                sx={{
+                                                    position: 'relative',
+                                                }}
                                             >
-                                                {variantOptions.map((el) => (
-                                                    <MenuItem
-                                                        key={el.value}
-                                                        value={el.value}
-                                                    >
-                                                        {el.label}
-                                                    </MenuItem>
-                                                ))}
-                                            </NoUnderlineTextField>
-                                        </TableCell>
-                                    </TableRow>
-
-                                    <TableRow>
-                                        <TableCell>按鈕大小</TableCell>
-                                        <TableCell>
-                                            <NoUnderlineTextField
-                                                variant="standard"
-                                                name="size"
-                                                value={size}
-                                                onChange={handleChange}
-                                                fullWidth
-                                                select
-                                            >
-                                                {sizeOptions.map((el) => (
-                                                    <MenuItem
-                                                        key={el.value}
-                                                        value={el.value}
-                                                    >
-                                                        {el.label}
-                                                    </MenuItem>
-                                                ))}
-                                            </NoUnderlineTextField>
-                                        </TableCell>
-                                    </TableRow>
-
-                                    <TableRow>
-                                        <TableCell>按鈕邊框</TableCell>
-                                        <TableCell>
-                                            <NoUnderlineTextField
-                                                variant="standard"
-                                                name="border"
-                                                value={border}
-                                                onChange={handleChange}
-                                                placeholder="0px solid #ffffff"
-                                                fullWidth
-                                            />
-                                        </TableCell>
-                                    </TableRow>
-
-                                    {showImage ? (
-                                        <>
-                                            <TableRow>
-                                                <TableCell>背景圖片</TableCell>
-                                                <TableCell
-                                                    sx={{
-                                                        position: 'relative',
+                                                <ImageUploader
+                                                    onUploaded={(value) => {
+                                                        handleChange({
+                                                            target: {
+                                                                name: 'image',
+                                                                value,
+                                                            },
+                                                        } as any)
+                                                    }}
+                                                    sx={{ width: 104 }}
+                                                    hideImage
+                                                    hideDeleteButton
+                                                />
+                                                <Button
+                                                    className="absolute-vertical"
+                                                    color="error"
+                                                    sx={{ right: 0 }}
+                                                    disabled={!Boolean(image)}
+                                                    onClick={() => {
+                                                        handleChange({
+                                                            target: {
+                                                                name: 'image',
+                                                                value: undefined,
+                                                            },
+                                                        } as any)
                                                     }}
                                                 >
-                                                    <ImageUploader
-                                                        onUploaded={(value) => {
-                                                            handleChange({
-                                                                target: {
-                                                                    name: 'image',
-                                                                    value,
-                                                                },
-                                                            } as any)
-                                                        }}
-                                                        sx={{ width: 104 }}
-                                                        hideImage
-                                                        hideDeleteButton
-                                                    />
-                                                    <Button
-                                                        className="absolute-vertical"
-                                                        color="error"
-                                                        sx={{ right: 0 }}
-                                                        disabled={
-                                                            !Boolean(image)
-                                                        }
-                                                        onClick={() => {
-                                                            handleChange({
-                                                                target: {
-                                                                    name: 'image',
-                                                                    value: undefined,
-                                                                },
-                                                            } as any)
-                                                        }}
-                                                    >
-                                                        清除
-                                                    </Button>
-                                                </TableCell>
-                                            </TableRow>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <TableRow>
-                                                <TableCell>按鈕留白</TableCell>
-                                                <TableCell>
-                                                    <NoUnderlineTextField
-                                                        variant="standard"
-                                                        name="padding"
-                                                        value={padding}
-                                                        onChange={handleChange}
-                                                        placeholder="22px 8px"
-                                                        fullWidth
-                                                    />
-                                                </TableCell>
-                                            </TableRow>
+                                                    清除
+                                                </Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    </>
+                                ) : (
+                                    <>
+                                        <TableRow>
+                                            <TableCell>按鈕留白</TableCell>
+                                            <TableCell>
+                                                <NoUnderlineTextField
+                                                    variant="standard"
+                                                    name="padding"
+                                                    value={padding}
+                                                    onChange={handleChange}
+                                                    placeholder="22px 8px"
+                                                    fullWidth
+                                                />
+                                            </TableCell>
+                                        </TableRow>
 
-                                            <TableRow>
-                                                <TableCell>按鈕圓角</TableCell>
-                                                <TableCell>
-                                                    <NoUnderlineTextField
-                                                        variant="standard"
-                                                        name="borderRadius"
-                                                        value={borderRadius}
-                                                        onChange={handleChange}
-                                                        placeholder="1"
-                                                        fullWidth
-                                                    />
-                                                </TableCell>
-                                            </TableRow>
-                                        </>
-                                    )}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </Box>
-                </Drawer>
-            </ThemeProvider>
+                                        <TableRow>
+                                            <TableCell>按鈕圓角</TableCell>
+                                            <TableCell>
+                                                <NoUnderlineTextField
+                                                    variant="standard"
+                                                    name="borderRadius"
+                                                    value={borderRadius}
+                                                    onChange={handleChange}
+                                                    placeholder="1"
+                                                    fullWidth
+                                                />
+                                            </TableCell>
+                                        </TableRow>
+                                    </>
+                                )}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Box>
+            </Drawer>
         </>
     )
 }

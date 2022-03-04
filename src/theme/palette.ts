@@ -46,7 +46,7 @@ const red: Color = {
     500: '#F44336',
 }
 const grey: Color = {
-    100: '#E0E0E0',
+    100: '#F9F8F6',
     300: '#BDBDBD',
     500: '#9E9E9E',
 }
@@ -65,21 +65,22 @@ export const colors = [
     grey,
 ]
 
-const greyPalette = {
-    700: '#444444',
-    800: '#333333',
+export const greyPalette = {
+    50: '#FFFFFF',
+    100: '#F9F8F6',
+    200: '#EAE8E6',
+    500: '#92918F',
+    700: '#212121',
+    800: '#161616',
+    900: '#020202',
 }
 
 export const lightPalette = {
     primary: {
-        light: '#C1E5FF',
-        main: '#3892FC',
-        dark: '#0062BD',
+        main: greyPalette[800],
     },
     secondary: {
-        light: '#D8CEF4',
-        main: '#9E71E8',
-        dark: '#4F0D83',
+        main: greyPalette[50],
     },
     error: {
         light: '#FCDDDD',

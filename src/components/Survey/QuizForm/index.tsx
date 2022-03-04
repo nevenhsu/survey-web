@@ -273,83 +273,76 @@ export default function QuizForm() {
         const num = values.length
 
         return (
-            <ThemeProvider mode="dark">
-                <Paper
-                    elevation={4}
-                    sx={{
-                        width: 540,
-                        borderRadius: 2,
-                    }}
+            <Paper
+                elevation={4}
+                sx={{
+                    width: 540,
+                    borderRadius: 2,
+                }}
+            >
+                <Stack
+                    direction="row"
+                    alignItems="start"
+                    justifyContent="stretch"
+                    spacing={2}
                 >
-                    <Stack
-                        direction="row"
-                        alignItems="start"
-                        justifyContent="stretch"
-                        spacing={2}
+                    <Box
+                        sx={{
+                            position: 'relative',
+                            color: (theme) => theme.palette.error.main,
+                            height: 180,
+                            flex: '0 0 80px',
+                        }}
                     >
-                        <Box
-                            sx={{
-                                position: 'relative',
-                                color: (theme) => theme.palette.error.main,
-                                height: 180,
-                                flex: '0 0 80px',
-                            }}
-                        >
-                            <AlertCircleIcon
-                                className="absolute-center"
-                                size={32}
-                            />
-                        </Box>
-                        <Box sx={{ py: 3 }}>
-                            <Typography fontWeight="bold" sx={{ mb: 2 }}>
-                                偵測到每個標籤的答項數量不同
-                            </Typography>
+                        <AlertCircleIcon
+                            className="absolute-center"
+                            size={32}
+                        />
+                    </Box>
+                    <Box sx={{ py: 3 }}>
+                        <Typography fontWeight="bold" sx={{ mb: 2 }}>
+                            偵測到每個標籤的答項數量不同
+                        </Typography>
 
-                            <Typography sx={{ mb: 3 }}>
-                                我們偵測到{' '}
-                                {invalidTag.map((tagId, index) => {
-                                    const label = _.get(
-                                        tags,
-                                        [tagId, 'label'],
-                                        ''
-                                    )
-                                    return (
-                                        <Box key={tagId} component="span">
-                                            <Box
-                                                component="span"
-                                                sx={{
-                                                    textDecoration: 'underline',
-                                                }}
-                                            >
-                                                {label}
-                                            </Box>
-                                            {index !==
-                                                invalidTag.length - 1 && (
-                                                <span>、</span>
-                                            )}
+                        <Typography sx={{ mb: 3 }}>
+                            我們偵測到{' '}
+                            {invalidTag.map((tagId, index) => {
+                                const label = _.get(tags, [tagId, 'label'], '')
+                                return (
+                                    <Box key={tagId} component="span">
+                                        <Box
+                                            component="span"
+                                            sx={{
+                                                textDecoration: 'underline',
+                                            }}
+                                        >
+                                            {label}
                                         </Box>
-                                    )
-                                })}{' '}
-                                類別的標籤，對應到不同數量的答項。
-                            </Typography>
+                                        {index !== invalidTag.length - 1 && (
+                                            <span>、</span>
+                                        )}
+                                    </Box>
+                                )
+                            })}{' '}
+                            類別的標籤，對應到不同數量的答項。
+                        </Typography>
 
-                            <Typography variant="caption">
-                                以 {label} 為例，有 {num} 個標籤，應該就要有為{' '}
-                                {num} 之倍數的答項總數。假設每個標籤有 2
-                                個答項，總共就應該有 {num * 2} 個答項。
-                            </Typography>
-                        </Box>
-                        <Box sx={{ p: 1 }}>
-                            <IconButton
-                                color="error"
-                                onClick={() => setAnchorEl(null)}
-                            >
-                                <CloseIcon />
-                            </IconButton>
-                        </Box>
-                    </Stack>
-                </Paper>
-            </ThemeProvider>
+                        <Typography variant="caption">
+                            以 {label} 為例，有 {num} 個標籤，應該就要有為 {num}{' '}
+                            之倍數的答項總數。假設每個標籤有 2
+                            個答項，總共就應該有 {num * 2} 個答項。
+                        </Typography>
+                    </Box>
+                    <Box sx={{ p: 1 }}>
+                        <IconButton
+                            color="error"
+                            onClick={() => setAnchorEl(null)}
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                    </Box>
+                </Stack>
+            </Paper>
         )
     }
 

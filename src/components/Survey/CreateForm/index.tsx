@@ -71,21 +71,7 @@ export default function CreateForm() {
 
     return (
         <Box sx={{ p: 4, pt: 1, bgcolor: 'grey.100' }}>
-            <Box sx={{ mb: 1, maxWidth: 1200, mx: 'auto' }}>
-                <Button
-                    startIcon={<ArrowLeftIcon />}
-                    onClick={handleClickBack}
-                    size="small"
-                >
-                    重新選擇
-                </Button>
-            </Box>
-
             <Box sx={{ bgcolor: 'white', maxWidth: 1200, mx: 'auto' }}>
-                {/* <Typography variant="body1" fontWeight="bold">
-                    測驗範本推薦
-                </Typography> */}
-
                 <Stack
                     direction="row"
                     alignItems="center"
@@ -104,6 +90,15 @@ export default function CreateForm() {
                             alignItems="flex-start"
                             spacing={3}
                         >
+                            <Button
+                                className="block"
+                                onClick={handleClickBack}
+                                size="small"
+                            >
+                                <ArrowLeftIcon />
+                                <Typography>測驗範本推薦</Typography>
+                            </Button>
+
                             <Typography variant="h4" fontWeight="bold">
                                 {isOneInTwo ? '二選一' : '左右拖曳'}
                             </Typography>
