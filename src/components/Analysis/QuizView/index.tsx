@@ -36,12 +36,11 @@ const QuizItem = styled(Stack, {
     shouldForwardProp: (prop) => prop !== 'selected',
 })<QuizProps>(({ selected, theme }) => ({
     userSelect: 'none',
-    padding: 8,
-    marginBottom: 8,
-    color: selected ? theme.palette.primary.main : theme.palette.text.primary,
-    backgroundColor: selected
-        ? theme.palette.grey[100]
-        : theme.palette.common.white,
+    marginBottom: 4,
+    height: 36,
+    padding: '2px 16px',
+    color: selected ? theme.palette.common.white : theme.palette.grey[800],
+    backgroundColor: selected ? theme.palette.grey[800] : 'transparent',
 }))
 
 export default function QuizView() {
@@ -432,7 +431,9 @@ export default function QuizView() {
     return (
         <>
             <Box sx={{ p: 3, borderBottom: '1px solid' }}>
-                <Typography variant="h6">單題結果</Typography>
+                <Typography variant="h5" gutterBottom>
+                    單題結果
+                </Typography>
                 <Typography variant="body1">
                     在此可以查看測驗中個別題目的填答數據
                 </Typography>
@@ -444,12 +445,10 @@ export default function QuizView() {
                         width: 288,
                     }}
                 >
-                    <Box
-                        sx={{
-                            backgroundColor: 'common.white',
-                            p: 2,
-                        }}
-                    >
+                    <Typography py={1} px={2} marginBottom={1}>
+                        題目列表
+                    </Typography>
+                    <Box>
                         {quizzes.map((el, index) => (
                             <QuizItem
                                 className="c-pointer"
@@ -486,6 +485,7 @@ export default function QuizView() {
                                     sx={{
                                         whiteSpace: 'nowrap',
                                         textAlign: 'right',
+                                        color: 'inherit',
                                     }}
                                 >
                                     {getModeLabel(el.mode)}
@@ -501,7 +501,7 @@ export default function QuizView() {
                     item
                     sx={{
                         width: 'calc(100% - 290px)',
-                        bgcolor: (theme) => theme.palette.grey[50],
+                        bgcolor: 'grey.200',
                     }}
                 >
                     <SelectorBar

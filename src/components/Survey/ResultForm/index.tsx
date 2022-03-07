@@ -582,7 +582,9 @@ export default function ResultForm() {
                 sx={{ p: 3, borderBottom: '1px solid' }}
             >
                 <Box>
-                    <Typography variant="h6">編輯個人化測驗結果</Typography>
+                    <Typography variant="h5" gutterBottom>
+                        編輯個人化測驗結果
+                    </Typography>
                     <Typography variant="body1">
                         測驗填答者拖曳題目到正確選項中，會得到分數，分數多寡能用以決定個人化結果的分派
                     </Typography>

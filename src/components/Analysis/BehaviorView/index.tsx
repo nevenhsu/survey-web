@@ -70,7 +70,9 @@ export default function BehaviorView() {
     return (
         <>
             <Box sx={{ p: 3, borderBottom: '1px solid' }}>
-                <Typography variant="h6">測驗行為報告</Typography>
+                <Typography variant="h5" gutterBottom>
+                    測驗行為報告
+                </Typography>
                 <Typography variant="body1">
                     填答者的答題狀況與轉換率，建議參考以下數據決定是否需要優化題目設計
                 </Typography>
@@ -95,7 +97,7 @@ export default function BehaviorView() {
                         width: 'calc(100% - 290px)',
                         height: 'calc(100vh - 218px)',
                         overflow: 'auto',
-                        bgcolor: (theme) => theme.palette.grey[50],
+                        bgcolor: 'grey.200',
                     }}
                 >
                     <SelectorBar
@@ -511,7 +513,7 @@ function OverviewView(props: { data: ConversionRatioData }) {
             <Title title={data.label} />
             <Stack
                 direction="row"
-                alignItems="center"
+                alignItems="stretch"
                 justifyContent="center"
                 spacing={3}
             >

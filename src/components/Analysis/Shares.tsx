@@ -50,7 +50,15 @@ export function LinkList(props: LinkListProps) {
             {blocks.map((el) => (
                 <List
                     key={el.label}
-                    subheader={<ListSubheader>{el.label}</ListSubheader>}
+                    subheader={
+                        <ListSubheader
+                            sx={{
+                                bgcolor: 'transparent',
+                            }}
+                        >
+                            {el.label}
+                        </ListSubheader>
+                    }
                     sx={{
                         borderBottom: (theme) =>
                             `1px solid ${theme.palette.grey[300]}`,
@@ -73,11 +81,11 @@ export function LinkList(props: LinkListProps) {
     )
 }
 
-export const StyledBox = styled(Box)({
+export const StyledBox = styled(Box)(({ theme }) => ({
     padding: 16,
     marginBottom: 16,
-    backgroundColor: 'white',
-})
+    backgroundColor: theme.palette.grey[100],
+}))
 
 export function ElementBox(
     props: React.PropsWithChildren<BoxProps & { name: string }>
@@ -141,6 +149,7 @@ export function SelectorBar(props: SelectorBarProps) {
             elevation={12}
             sx={{
                 boxShadow: 'none',
+                backgroundColor: 'transparent',
             }}
             square
         >

@@ -115,7 +115,9 @@ export default function ResultView() {
     return (
         <>
             <Box sx={{ p: 3, borderBottom: '1px solid' }}>
-                <Typography variant="h6">選擇測驗類型</Typography>
+                <Typography variant="h5" gutterBottom>
+                    選擇測驗類型
+                </Typography>
                 <Typography variant="body1">
                     請選擇您的測驗需求，讓我們為您推薦測驗範本
                 </Typography>
@@ -140,7 +142,7 @@ export default function ResultView() {
                         width: 'calc(100% - 290px)',
                         height: 'calc(100vh - 218px)',
                         overflow: 'auto',
-                        bgcolor: (theme) => theme.palette.grey[50],
+                        bgcolor: 'grey.200',
                     }}
                 >
                     <SelectorBar

@@ -203,7 +203,9 @@ export default function FinalForm() {
                 sx={{ p: 3, borderBottom: '1px solid' }}
             >
                 <Box>
-                    <Typography variant="h6">編輯測驗結果</Typography>
+                    <Typography variant="h5" gutterBottom>
+                        編輯測驗結果
+                    </Typography>
                     <Typography variant="body1">
                         在此可以編輯測驗填答者都會看見的共同結果，可用以搜集聯繫方式等相關必要資訊
                     </Typography>

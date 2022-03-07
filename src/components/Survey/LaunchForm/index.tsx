@@ -94,7 +94,7 @@ export default function LaunchForm() {
             <Box sx={{ px: 3, mb: 12 }}>
                 <Box sx={{ pt: 12, mb: 6 }}>
                     <Box sx={{ mb: 3 }}>
-                        <Typography variant="h4" fontWeight="bold" gutterBottom>
+                        <Typography variant="h4" gutterBottom>
                             {enable
                                 ? '恭喜！測驗發布完成！'
                                 : '恭喜！測驗設定完成！'}

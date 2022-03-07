@@ -372,7 +372,9 @@ export default function QuizForm() {
                 sx={{ p: 3, borderBottom: '1px solid' }}
             >
                 <Box>
-                    <Typography variant="h5">編輯測驗內容</Typography>
+                    <Typography variant="h5" gutterBottom>
+                        編輯測驗內容
+                    </Typography>
                     <Typography variant="body1">
                         直接從預覽畫面中編輯測驗內容
                     </Typography>

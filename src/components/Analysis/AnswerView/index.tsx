@@ -196,32 +196,40 @@ export default function AnswerView() {
     return (
         <>
             <Box sx={{ p: 3, borderBottom: '1px solid' }}>
-                <Typography variant="h6">回應明細</Typography>
+                <Typography variant="h5" gutterBottom>
+                    回應明細
+                </Typography>
                 <Typography variant="body1">
                     查看測驗回應的原始資料，或匯出相關資料以供後續利用
                 </Typography>
             </Box>
-            <SelectorBar
-                devices={optionsData.devices}
-                sources={optionsData.sources}
-            />
+            <Box sx={{ bgcolor: 'grey.200' }}>
+                <Box sx={{ px: 1 }}>
+                    <SelectorBar
+                        devices={optionsData.devices}
+                        sources={optionsData.sources}
+                    />
+                </Box>
 
-            <Box sx={{ p: 3, height: 'calc(100vh - 314px)' }}>
-                <Title
-                    title={`總共 ${numeral(data.length).format('0,0')} 筆資料`}
-                />
-                <VirtualizedTable
-                    rowCount={data.length}
-                    columns={columns}
-                    rowGetter={({ index }) => {
-                        return _.get(data, [index], {})
-                    }}
-                    paperProps={{
-                        elevation: 4,
-                    }}
-                    renderCell={renderCell}
-                    setCellProps={setCellProps}
-                />
+                <Box sx={{ p: 3, height: 'calc(100vh - 314px)' }}>
+                    <Title
+                        title={`總共 ${numeral(data.length).format(
+                            '0,0'
+                        )} 筆資料`}
+                    />
+                    <VirtualizedTable
+                        rowCount={data.length}
+                        columns={columns}
+                        rowGetter={({ index }) => {
+                            return _.get(data, [index], {})
+                        }}
+                        paperProps={{
+                            elevation: 4,
+                        }}
+                        renderCell={renderCell}
+                        setCellProps={setCellProps}
+                    />
+                </Box>
             </Box>
         </>
     )
