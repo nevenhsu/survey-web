@@ -3,14 +3,14 @@ import _ from 'lodash'
 import utils from 'utility'
 import NumberFormat from 'react-number-format'
 import { useDimensionsRef } from 'rooks'
-import { styled } from '@mui/material/styles'
+import { styled, useTheme } from '@mui/material/styles'
 import Stack from '@mui/material/Stack'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import LoadingButton from '@mui/lab/LoadingButton'
-import Box, { BoxProps } from '@mui/material/Box'
+import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
 import Slider from '@mui/material/Slider'
@@ -21,13 +21,17 @@ import AspectRatioBox from 'components/common/AspectRatioBox'
 import ScaleBox from 'components/common/ScaleBox'
 import EditingResult from 'components/Survey/ResultForm/EditingResult'
 import ResultTool from 'components/Survey/ResultForm/ResultTool'
-import { Contexts } from 'components/common/Component'
+import { Contexts, AddButton } from 'components/common/Component'
 import { getDefaultComponent } from 'utils/helper'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import usePreview from 'hooks/usePreview'
-import { selectCurrentSurvey, setResults, setStep } from 'store/slices/survey'
+import {
+    selectCurrentSurvey,
+    setResults,
+    setStep,
+    updateComponent,
+} from 'store/slices/survey'
 import { selectDevice } from 'store/slices/userDefault'
-import ThemeProvider from 'theme/ThemeProvider'
 import { getMuiColor } from 'theme/palette'
 import Numeric1BoxIcon from 'mdi-react/Numeric1BoxIcon'
 import Numeric2BoxIcon from 'mdi-react/Numeric2BoxIcon'
@@ -42,49 +46,44 @@ import type {
     DraggerQuiz,
 } from 'common/types'
 
-type StyledBoxProps = BoxProps & {
-    device: DeviceType
-}
-
 const StyledTabs = styled(Tabs)(({ theme }) => ({
+    position: 'relative',
+    '&::after': {
+        content: '""',
+        position: 'absolute',
+        width: '100%',
+        height: 1,
+        bottom: 0,
+        left: 0,
+        backgroundColor: theme.palette.grey[500],
+    },
     '& .MuiTab-root': {
-        color: theme.palette.common.white,
+        color: theme.palette.grey[500],
+        borderRight: `1px solid ${theme.palette.grey[500]}`,
     },
     '& .Mui-selected': {
-        backgroundColor: theme.palette.grey[700],
+        color: theme.palette.grey[800],
+        '&::after': {
+            content: '""',
+            position: 'absolute',
+            width: '100%',
+            height: 1,
+            bottom: 0,
+            left: 0,
+            borderBottom: `1px solid ${theme.palette.grey[200]}`,
+            zIndex: 1,
+        },
     },
     '& .MuiTabs-indicator': {
         display: 'none',
     },
     '& .Mui-disabled': {
-        color: theme.palette.grey[700],
+        color: theme.palette.grey[300],
     },
 }))
 
-const StyledBox = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'device',
-})<StyledBoxProps>(({ theme, device }) => {
-    const style = getDeviceStyle(device)
-
-    return {
-        ...style,
-        position: 'relative',
-        backgroundColor: theme.palette.common.white,
-        '& > div': {
-            display: 'flex',
-            alignItems: 'start',
-            justifyContent: 'center',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            overflowY: 'auto',
-        },
-    }
-})
-
 export default function ResultForm() {
+    const theme = useTheme()
     const dispatch = useAppDispatch()
     const device = useAppSelector(selectDevice)
     const survey = useAppSelector(selectCurrentSurvey)
@@ -144,6 +143,21 @@ export default function ResultForm() {
                 },
             })
         )
+    }
+
+    const handleAdd = (type: ComponentType) => {
+        const { id: resultId } = selectedResult ?? {}
+        if (surveyId && resultId) {
+            const newValue = getDefaultComponent(type)
+            dispatch(
+                updateComponent({
+                    surveyId,
+                    resultId,
+                    idPath: [],
+                    newValue,
+                })
+            )
+        }
     }
 
     // Initiate Tags Options on OneInTwoMode
@@ -575,8 +589,7 @@ export default function ResultForm() {
                 </Box>
                 <Box>
                     <LoadingButton
-                        variant="contained"
-                        color="inherit"
+                        variant="outlined"
                         loading={uploading}
                         disabled={uploading}
                         onClick={handlePreview}
@@ -587,11 +600,7 @@ export default function ResultForm() {
                         component="span"
                         sx={{ display: 'inline-block', width: 8 }}
                     />
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={nextStep}
-                    >
+                    <Button variant="contained" onClick={nextStep}>
                         編輯測驗結果
                     </Button>
                 </Box>
@@ -602,10 +611,10 @@ export default function ResultForm() {
                         flex: '0 0 304px',
                         height: '100vh',
                         overflowY: 'auto',
-                        bgcolor: 'common.white',
                         '::-webkit-scrollbar': {
                             display: 'none',
                         },
+                        borderRight: `1px solid ${theme.palette.grey[500]}`,
                     }}
                 >
                     <Box
@@ -624,14 +633,10 @@ export default function ResultForm() {
                         position: 'relative',
                         width: '100%',
                         height: '100vh',
-                        bgcolor: (theme) => theme.palette.grey[700],
+                        bgcolor: 'grey.200',
                     }}
                 >
-                    <Box
-                        sx={{
-                            bgcolor: (theme) => theme.palette.grey[800],
-                        }}
-                    >
+                    <Box>
                         <StyledTabs value={0}>
                             <Tab label="編輯結果" />
                         </StyledTabs>
@@ -643,6 +648,7 @@ export default function ResultForm() {
                             position: 'relative',
                             width: '100%',
                             height: 'calc(100vh - 48px)',
+                            borderRight: `1px solid ${theme.palette.grey[500]}`,
                         }}
                     >
                         <Box
@@ -702,22 +708,43 @@ export default function ResultForm() {
                             </Box>
                         </Box>
 
-                        <DeviceMode sx={{ mb: 2 }} />
+                        <Stack
+                            direction="row"
+                            spacing={3}
+                            alignItems="center"
+                            justifyContent="center"
+                            sx={{ mb: 4 }}
+                        >
+                            <DeviceMode />
+
+                            <AddButton
+                                onAdd={(type) => {
+                                    handleAdd(type)
+                                }}
+                            />
+                        </Stack>
                     </Box>
                 </Box>
 
                 <Box
                     sx={{
                         position: 'relative',
-                        flex: '0 0 304px',
+                        flex: '0 0 312px',
                         height: '100vh',
                         overflowY: 'auto',
-                        bgcolor: (theme) => theme.palette.grey[800],
+                        bgcolor: 'grey.200',
                         '::-webkit-scrollbar': {
                             display: 'none',
                         },
                     }}
                 >
+                    <Box
+                        sx={{
+                            position: 'relative',
+                            height: 48,
+                            borderBottom: `1px solid ${theme.palette.grey[500]}`,
+                        }}
+                    />
                     <ResultTool surveyId={surveyId} resultId={selectedId} />
                 </Box>
             </Stack>

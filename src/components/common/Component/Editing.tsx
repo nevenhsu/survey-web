@@ -22,7 +22,6 @@ export type ComponentListProps = {
     components: Component[]
     idPath: string[]
     selectedComponent?: Component
-    onAdd: (idPath: string[], type: ComponentType) => void
     onSelect: (component: Component, idPath: string[]) => void
     onChange: OnChangeInput
 }
@@ -33,7 +32,6 @@ const options = [
     { value: ComponentType.image, label: '圖片' },
     { value: ComponentType.link, label: '超連結' },
     { value: ComponentType.clipboard, label: '折扣碼' },
-    { value: ComponentType.card, label: '卡片' },
 ]
 
 type StyledTextFieldProps = TextFieldProps & {
@@ -52,11 +50,8 @@ const StyledTextField = styled(TextField, {
     },
 }))
 
-const AddButton = (props: {
-    idPath: string[]
-    onAdd: (idPath: string[], type: ComponentType) => void
-}) => {
-    const { idPath, onAdd } = props
+export const AddButton = (props: { onAdd: (type: ComponentType) => void }) => {
+    const { onAdd } = props
 
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
         null
@@ -73,18 +68,14 @@ const AddButton = (props: {
         type: ComponentType
     ) => {
         setAnchorEl(null)
-        onAdd(idPath, type)
+        onAdd(type)
     }
 
     const open = Boolean(anchorEl)
 
     return (
         <>
-            <Button
-                variant="contained"
-                startIcon={<AddIcon />}
-                onClick={handleClick}
-            >
+            <Button variant="contained" onClick={handleClick}>
                 新增元件
             </Button>
 
@@ -107,8 +98,7 @@ const AddButton = (props: {
 function ComponentItem(
     props: { component: Component } & Omit<ComponentListProps, 'components'>
 ) {
-    const { component, idPath, selectedComponent, onAdd, onSelect, onChange } =
-        props
+    const { component, idPath, selectedComponent, onSelect, onChange } = props
 
     const theme = useTheme()
 
@@ -330,7 +320,6 @@ function ComponentItem(
                         components={components}
                         idPath={idPath}
                         selectedComponent={selectedComponent}
-                        onAdd={onAdd}
                         onSelect={onSelect}
                         onChange={onChange}
                     />
@@ -344,7 +333,6 @@ export function ComponentList(props: ComponentListProps) {
         components = [],
         selectedComponent,
         idPath,
-        onAdd,
         onSelect,
         onChange,
     } = props
@@ -390,22 +378,17 @@ export function ComponentList(props: ComponentListProps) {
                             component={el}
                             idPath={[...idPath, el.id]}
                             selectedComponent={selectedComponent}
-                            onAdd={onAdd}
                             onSelect={onSelect}
                             onChange={onChange}
                         />
                     </Grid>
                 ))}
-
-                <Grid xs={12} item>
-                    <Box sx={{ py: 2, textAlign: 'center' }}>
-                        <AddButton idPath={idPath} onAdd={onAdd} />
-                    </Box>
-                </Grid>
             </Grid>
         </Box>
     )
 }
+
+//  {/* <AddButton idPath={idPath} onAdd={onAdd} /> */}
 
 export function getComponent(
     components: Component[],

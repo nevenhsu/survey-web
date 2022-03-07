@@ -32,13 +32,6 @@ export default function EditingFinal() {
         return getComponent(components, [...idPath, selectedId])
     }, [selectedId, idPath, components])
 
-    const handleAdd = (idPath: string[], type: ComponentType) => {
-        if (surveyId) {
-            const newValue = getDefaultComponent(type)
-            dispatch(updateFinalComponents({ surveyId, idPath, newValue }))
-        }
-    }
-
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target
 
@@ -77,7 +70,6 @@ export default function EditingFinal() {
                 components={components}
                 idPath={[]}
                 selectedComponent={selectedComponent}
-                onAdd={handleAdd}
                 onSelect={(component, idPath: string[]) => {
                     if (setSelectedId) {
                         setSelectedId(component.id)

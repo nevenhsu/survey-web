@@ -589,7 +589,7 @@ export default function QuizForm() {
                     <Box
                         sx={{
                             position: 'relative',
-                            flex: '0 0 304px',
+                            flex: '0 0 312px',
                             height: '100vh',
                             overflowY: 'auto',
                             bgcolor: 'grey.200',

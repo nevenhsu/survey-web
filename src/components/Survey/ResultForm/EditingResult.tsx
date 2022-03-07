@@ -3,14 +3,13 @@ import _ from 'lodash'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import User from 'utils/user'
-import ThemeProvider from 'theme/ThemeProvider'
 import { StyledCustomButton } from 'components/Survey/QuizForm/Shares'
 import {
     ComponentList,
     getComponent,
     Contexts,
 } from 'components/common/Component'
-import { getDefaultComponent, setId, toNumOrStr } from 'utils/helper'
+import { setId, toNumOrStr } from 'utils/helper'
 import { useAppDispatch, useAppSelector } from 'hooks'
 import {
     updateComponent,
@@ -18,7 +17,6 @@ import {
     selectCurrentSurvey,
     setResults,
 } from 'store/slices/survey'
-import { ComponentType } from 'common/types'
 import type { Component, Result, CustomButtonType } from 'common/types'
 
 type EditingQuizProps = {
@@ -55,20 +53,6 @@ export default function EditingResult(props: EditingQuizProps) {
     const selectedComponent = React.useMemo(() => {
         return getComponent(components, [...idPath, selectedId])
     }, [selectedId, idPath, components])
-
-    const handleAdd = (idPath: string[], type: ComponentType) => {
-        if (surveyId && resultId) {
-            const newValue = getDefaultComponent(type)
-            dispatch(
-                updateComponent({
-                    surveyId,
-                    resultId,
-                    idPath,
-                    newValue,
-                })
-            )
-        }
-    }
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target
@@ -139,54 +123,51 @@ export default function EditingResult(props: EditingQuizProps) {
     }, [selectedComponent])
 
     return (
-        <ThemeProvider mode="light">
-            <Box
-                onClick={() => {
-                    if (reset) {
-                        reset()
-                    }
-                }}
-            >
-                {Boolean(resultId) ? (
-                    <>
-                        <ComponentList
-                            components={components}
-                            idPath={[]}
-                            selectedComponent={selectedComponent}
-                            onAdd={handleAdd}
-                            onSelect={(component, idPath: string[]) => {
-                                if (setSelectedId) {
-                                    setSelectedId(component.id)
-                                }
+        <Box
+            onClick={() => {
+                if (reset) {
+                    reset()
+                }
+            }}
+        >
+            {Boolean(resultId) ? (
+                <>
+                    <ComponentList
+                        components={components}
+                        idPath={[]}
+                        selectedComponent={selectedComponent}
+                        onSelect={(component, idPath: string[]) => {
+                            if (setSelectedId) {
+                                setSelectedId(component.id)
+                            }
 
-                                if (setIdPath) {
-                                    setIdPath(idPath)
-                                }
-                            }}
-                            onChange={handleChange}
-                        />
-                        <Box sx={{ textAlign: 'center', py: 4 }}>
-                            <StyledCustomButton
-                                defaultText="下一步"
-                                customProps={button}
-                                onCustomize={handleChangeButton}
-                            />
-                        </Box>
-                    </>
-                ) : (
-                    <Typography
-                        variant="h6"
-                        sx={{
-                            py: 4,
-                            textAlign: 'center',
-                            color: 'text.secondary',
+                            if (setIdPath) {
+                                setIdPath(idPath)
+                            }
                         }}
-                    >
-                        請先選擇一個結果
-                    </Typography>
-                )}
-            </Box>
-        </ThemeProvider>
+                        onChange={handleChange}
+                    />
+                    <Box sx={{ textAlign: 'center', py: 4 }}>
+                        <StyledCustomButton
+                            defaultText="下一步"
+                            customProps={button}
+                            onCustomize={handleChangeButton}
+                        />
+                    </Box>
+                </>
+            ) : (
+                <Typography
+                    variant="h6"
+                    sx={{
+                        py: 4,
+                        textAlign: 'center',
+                        color: 'text.secondary',
+                    }}
+                >
+                    請先選擇一個結果
+                </Typography>
+            )}
+        </Box>
     )
 }
 

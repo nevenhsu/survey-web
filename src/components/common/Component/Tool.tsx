@@ -1,7 +1,7 @@
 import * as React from 'react'
 import _ from 'lodash'
 import NumberFormat from 'react-number-format'
-import { styled } from '@mui/material'
+import { styled, useTheme } from '@mui/material'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Table from '@mui/material/Table'
@@ -65,11 +65,9 @@ const Header = (props: { title: string }) => {
             sx={{
                 position: 'relative',
                 height: 48,
-                bgcolor: (theme) => theme.palette.grey[900],
             }}
         >
             <TableCell
-                className="absolute-center"
                 sx={{
                     borderBottom: 0,
                 }}
@@ -83,6 +81,7 @@ const Header = (props: { title: string }) => {
 }
 
 export default function ComponentTool(props: ComponentToolProps) {
+    const theme = useTheme()
     const dispatch = useAppDispatch()
 
     const survey = useAppSelector(selectCurrentSurvey)
@@ -129,9 +128,11 @@ export default function ComponentTool(props: ComponentToolProps) {
         <TableContainer
             sx={{
                 '& td': {
-                    height: 48,
+                    height: 36,
                     minWidth: 96,
                     maxWidth: 192,
+                    py: 0,
+                    border: 'none',
                 },
             }}
         >
@@ -171,6 +172,12 @@ export default function ComponentTool(props: ComponentToolProps) {
                             />
                         </TableCell>
                     </TableRow>
+
+                    <TableRow
+                        sx={{
+                            borderBottom: `1px solid ${theme.palette.grey[500]}`,
+                        }}
+                    />
 
                     <Header title="元件設定" />
 
@@ -447,8 +454,16 @@ export default function ComponentTool(props: ComponentToolProps) {
                 </TableBody>
             </Table>
 
-            <Box sx={{ textAlign: 'center', py: 2 }}>
-                <Button variant="outlined" color="error" onClick={onDelete}>
+            <Box sx={{ pt: 4, pb: 8 }}>
+                <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={onDelete}
+                    sx={{
+                        position: 'relative',
+                        left: 16,
+                    }}
+                >
                     刪除元件
                 </Button>
             </Box>

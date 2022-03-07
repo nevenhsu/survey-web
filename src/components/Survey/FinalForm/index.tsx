@@ -1,7 +1,7 @@
 import * as React from 'react'
 import _ from 'lodash'
 import { useDimensionsRef } from 'rooks'
-import { styled } from '@mui/material/styles'
+import { styled, useTheme } from '@mui/material/styles'
 import Stack from '@mui/material/Stack'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
@@ -13,7 +13,7 @@ import Box from '@mui/material/Box'
 import FormGroup from '@mui/material/FormGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
-import { Contexts } from 'components/common/Component'
+import { Contexts, AddButton } from 'components/common/Component'
 import EditingFinal from 'components/Survey/FinalForm/EditingFinal'
 import FinalTool from 'components/Survey/FinalForm/FinalTool'
 import InfoForm from 'components/common/InfoForm'
@@ -22,29 +22,52 @@ import AspectRatioBox from 'components/common/AspectRatioBox'
 import ScaleBox from 'components/common/ScaleBox'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import usePreview from 'hooks/usePreview'
+import { getDefaultComponent } from 'utils/helper'
 import { selectDevice } from 'store/slices/userDefault'
 import {
     selectCurrentSurvey,
+    updateFinalComponents,
     updateFinal,
     updateFinalData,
     setStep,
 } from 'store/slices/survey'
 import ThemeProvider from 'theme/ThemeProvider'
 import { FinalMode, SurveyStep } from 'common/types'
-import type { OnChangeInput } from 'common/types'
+import type { OnChangeInput, ComponentType } from 'common/types'
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
+    position: 'relative',
+    '&::after': {
+        content: '""',
+        position: 'absolute',
+        width: '100%',
+        height: 1,
+        bottom: 0,
+        left: 0,
+        backgroundColor: theme.palette.grey[500],
+    },
     '& .MuiTab-root': {
-        color: theme.palette.common.white,
+        color: theme.palette.grey[500],
+        borderRight: `1px solid ${theme.palette.grey[500]}`,
     },
     '& .Mui-selected': {
-        backgroundColor: theme.palette.grey[700],
+        color: theme.palette.grey[800],
+        '&::after': {
+            content: '""',
+            position: 'absolute',
+            width: '100%',
+            height: 1,
+            bottom: 0,
+            left: 0,
+            borderBottom: `1px solid ${theme.palette.grey[200]}`,
+            zIndex: 1,
+        },
     },
     '& .MuiTabs-indicator': {
         display: 'none',
     },
     '& .Mui-disabled': {
-        color: theme.palette.grey[700],
+        color: theme.palette.grey[300],
     },
 }))
 
@@ -62,6 +85,7 @@ const infoFields = [
 ]
 
 export default function FinalForm() {
+    const theme = useTheme()
     const dispatch = useAppDispatch()
     const [ref, dimensions] = useDimensionsRef()
 
@@ -118,6 +142,13 @@ export default function FinalForm() {
         }
     }
 
+    const handleAdd = (type: ComponentType) => {
+        if (surveyId) {
+            const newValue = getDefaultComponent(type)
+            dispatch(updateFinalComponents({ surveyId, idPath: [], newValue }))
+        }
+    }
+
     React.useEffect(() => {
         setAnchorEl(null)
     }, [mode])
@@ -146,6 +177,7 @@ export default function FinalForm() {
                                                 : event.currentTarget
                                         )
                                     }
+                                    sx={{ fontSize: 14, px: '4px !important' }}
                                 >
                                     編輯欄位
                                 </Button>
@@ -178,8 +210,7 @@ export default function FinalForm() {
                 </Box>
                 <Box>
                     <LoadingButton
-                        variant="contained"
-                        color="inherit"
+                        variant="outlined"
                         loading={uploading}
                         disabled={uploading}
                         onClick={handlePreview}
@@ -190,11 +221,7 @@ export default function FinalForm() {
                         component="span"
                         sx={{ display: 'inline-block', width: 8 }}
                     />
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={nextStep}
-                    >
+                    <Button variant="contained" onClick={nextStep}>
                         發布測驗
                     </Button>
                 </Box>
@@ -205,36 +232,32 @@ export default function FinalForm() {
                         flex: '0 0 304px',
                         height: '100vh',
                         overflowY: 'auto',
-                        bgcolor: 'common.white',
                         '::-webkit-scrollbar': {
                             display: 'none',
                         },
+                        borderRight: `1px solid ${theme.palette.grey[500]}`,
                     }}
                 >
-                    <Box
-                        sx={{
-                            p: 2,
-                        }}
-                    >
-                        {modeOptions.map((el) => (
-                            <Box
-                                key={el.value}
-                                sx={{
-                                    p: 1,
-                                    mb: 1,
-                                    border: (theme) =>
-                                        `1px solid ${theme.palette.grey[300]}`,
-                                    bgcolor: (theme) =>
-                                        mode === el.value
-                                            ? theme.palette.grey[100]
-                                            : theme.palette.common.white,
-                                }}
-                                onClick={() => updateMode(el.value)}
-                            >
-                                <Typography>{el.label}</Typography>
-                            </Box>
-                        ))}
-                    </Box>
+                    <Typography py={1} px={2} marginBottom={1}>
+                        結尾模式
+                    </Typography>
+
+                    {modeOptions.map((el) => (
+                        <Box
+                            key={el.value}
+                            sx={{
+                                padding: '8px 16px',
+                                bgcolor:
+                                    mode === el.value
+                                        ? 'grey.800'
+                                        : 'transparent',
+                                color: mode === el.value ? 'white' : 'grey.800',
+                            }}
+                            onClick={() => updateMode(el.value)}
+                        >
+                            <Typography color="inherit">{el.label}</Typography>
+                        </Box>
+                    ))}
                 </Box>
 
                 <Box
@@ -242,14 +265,10 @@ export default function FinalForm() {
                         position: 'relative',
                         width: '100%',
                         height: '100vh',
-                        bgcolor: (theme) => theme.palette.grey[700],
+                        bgcolor: 'grey.200',
                     }}
                 >
-                    <Box
-                        sx={{
-                            bgcolor: (theme) => theme.palette.grey[800],
-                        }}
-                    >
+                    <Box>
                         <StyledTabs value={0}>
                             <Tab label="編輯內容" />
                         </StyledTabs>
@@ -261,6 +280,7 @@ export default function FinalForm() {
                             position: 'relative',
                             width: '100%',
                             height: 'calc(100vh - 48px)',
+                            borderRight: `1px solid ${theme.palette.grey[500]}`,
                         }}
                     >
                         <Box
@@ -320,22 +340,43 @@ export default function FinalForm() {
                             </Box>
                         </Box>
 
-                        <DeviceMode sx={{ mb: 2 }} />
+                        <Stack
+                            direction="row"
+                            spacing={3}
+                            alignItems="center"
+                            justifyContent="center"
+                            sx={{ mb: 4 }}
+                        >
+                            <DeviceMode />
+
+                            <AddButton
+                                onAdd={(type) => {
+                                    handleAdd(type)
+                                }}
+                            />
+                        </Stack>
                     </Box>
                 </Box>
 
                 <Box
                     sx={{
                         position: 'relative',
-                        flex: '0 0 304px',
+                        flex: '0 0 312px',
                         height: '100vh',
                         overflowY: 'auto',
-                        bgcolor: (theme) => theme.palette.grey[800],
+                        bgcolor: 'grey.200',
                         '::-webkit-scrollbar': {
                             display: 'none',
                         },
                     }}
                 >
+                    <Box
+                        sx={{
+                            position: 'relative',
+                            height: 48,
+                            borderBottom: `1px solid ${theme.palette.grey[500]}`,
+                        }}
+                    />
                     <FinalTool />
                 </Box>
             </Stack>
