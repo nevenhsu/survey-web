@@ -1,6 +1,6 @@
 import * as React from 'react'
 import _ from 'lodash'
-import { styled } from '@mui/material'
+import { styled, useTheme } from '@mui/material'
 import NumberFormat from 'react-number-format'
 import { GridSize } from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
@@ -65,6 +65,7 @@ const StyledTextField = styled(TextField)({
 })
 
 export default function QuizTool(props: QuizToolProps) {
+    const theme = useTheme()
     const dispatch = useAppDispatch()
 
     const { surveyId, quiz } = props
@@ -178,8 +179,13 @@ export default function QuizTool(props: QuizToolProps) {
     return (
         <TableContainer
             sx={{
+                '& th': {
+                    border: 'none',
+                },
                 '& td': {
-                    height: 48,
+                    height: 36,
+                    border: 'none',
+                    py: 0,
                 },
             }}
         >
@@ -189,7 +195,17 @@ export default function QuizTool(props: QuizToolProps) {
                     <TableRow>
                         <TableCell>題目類型</TableCell>
                         <TableCell>
-                            <ModeSelector surveyId={surveyId} quiz={quiz} />
+                            <ModeSelector
+                                surveyId={surveyId}
+                                quiz={quiz}
+                                formControlProps={{
+                                    sx: {
+                                        '& .MuiInput-root': {
+                                            border: 'none',
+                                        },
+                                    },
+                                }}
+                            />
                         </TableCell>
                     </TableRow>
                     <TableRow>
@@ -204,6 +220,12 @@ export default function QuizTool(props: QuizToolProps) {
                             />
                         </TableCell>
                     </TableRow>
+
+                    <TableRow
+                        sx={{
+                            borderBottom: `1px solid ${theme.palette.grey[500]}`,
+                        }}
+                    />
 
                     <Header title="外觀設定" />
 
@@ -288,7 +310,7 @@ export default function QuizTool(props: QuizToolProps) {
                             <TableRow
                                 sx={{
                                     position: 'relative',
-                                    height: 64,
+                                    height: 48,
                                 }}
                             >
                                 <TableCell
@@ -428,7 +450,12 @@ export default function QuizTool(props: QuizToolProps) {
                                         backgroundImage,
                                     })
                                 }}
-                                sx={{ width: 104 }}
+                                sx={{
+                                    width: 104,
+                                    '& .MuiButton-root': {
+                                        padding: '4px 12px 4px 20px',
+                                    },
+                                }}
                                 hideImage
                                 hideDeleteButton
                             />
@@ -467,6 +494,11 @@ export default function QuizTool(props: QuizToolProps) {
                         mode
                     ) && (
                         <>
+                            <TableRow
+                                sx={{
+                                    borderBottom: `1px solid ${theme.palette.grey[500]}`,
+                                }}
+                            />
                             <Header title="答項設定" />
 
                             <TableRow>
@@ -476,7 +508,7 @@ export default function QuizTool(props: QuizToolProps) {
                             <TableRow
                                 sx={{
                                     position: 'relative',
-                                    height: 64,
+                                    height: 48,
                                 }}
                             >
                                 <TableCell
@@ -576,7 +608,7 @@ export default function QuizTool(props: QuizToolProps) {
                             <TableRow
                                 sx={{
                                     position: 'relative',
-                                    height: 64,
+                                    height: 48,
                                 }}
                             >
                                 <TableCell
@@ -692,8 +724,16 @@ export default function QuizTool(props: QuizToolProps) {
                 </TableBody>
             </Table>
 
-            <Box sx={{ textAlign: 'center', py: 2 }}>
-                <Button variant="outlined" color="error" onClick={handleDelete}>
+            <Box sx={{ pt: 4, pb: 8 }}>
+                <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={handleDelete}
+                    sx={{
+                        position: 'relative',
+                        left: 16,
+                    }}
+                >
                     刪除題目
                 </Button>
             </Box>

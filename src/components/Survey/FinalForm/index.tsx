@@ -237,110 +237,107 @@ export default function FinalForm() {
                     </Box>
                 </Box>
 
-                <ThemeProvider mode="dark">
+                <Box
+                    sx={{
+                        position: 'relative',
+                        width: '100%',
+                        height: '100vh',
+                        bgcolor: (theme) => theme.palette.grey[700],
+                    }}
+                >
                     <Box
+                        sx={{
+                            bgcolor: (theme) => theme.palette.grey[800],
+                        }}
+                    >
+                        <StyledTabs value={0}>
+                            <Tab label="編輯內容" />
+                        </StyledTabs>
+                    </Box>
+
+                    <Box
+                        ref={ref as any}
                         sx={{
                             position: 'relative',
                             width: '100%',
-                            height: '100vh',
-                            bgcolor: (theme) => theme.palette.grey[700],
+                            height: 'calc(100vh - 48px)',
                         }}
                     >
                         <Box
                             sx={{
-                                bgcolor: (theme) => theme.palette.grey[800],
-                            }}
-                        >
-                            <StyledTabs value={0}>
-                                <Tab label="編輯內容" />
-                            </StyledTabs>
-                        </Box>
-
-                        <Box
-                            ref={ref as any}
-                            sx={{
                                 position: 'relative',
                                 width: '100%',
-                                height: 'calc(100vh - 48px)',
+                                py: 3,
                             }}
                         >
                             <Box
                                 sx={{
                                     position: 'relative',
-                                    width: '100%',
-                                    py: 3,
+                                    mx: 'auto',
+                                    width: getWidth(device, dimensions),
                                 }}
                             >
-                                <Box
-                                    sx={{
-                                        position: 'relative',
-                                        mx: 'auto',
-                                        width: getWidth(device, dimensions),
-                                    }}
-                                >
-                                    <ThemeProvider mode="light">
-                                        <AspectRatioBox
-                                            ratio={getRatio(device)}
-                                            sx={{
-                                                bgcolor: 'white',
-                                                '& > div': { bgcolor },
-                                            }}
+                                <ThemeProvider mode="light">
+                                    <AspectRatioBox
+                                        ratio={getRatio(device)}
+                                        sx={{
+                                            bgcolor: 'white',
+                                            '& > div': { bgcolor },
+                                        }}
+                                    >
+                                        <ScaleBox
+                                            device={device}
+                                            containerWidth={deviceWidth}
                                         >
-                                            <ScaleBox
-                                                device={device}
-                                                containerWidth={deviceWidth}
+                                            <Box
+                                                sx={{
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    left: 0,
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    overflowY: 'auto',
+                                                    overflowX: 'visible',
+                                                    '::-webkit-scrollbar': {
+                                                        display: 'none',
+                                                    },
+                                                }}
                                             >
                                                 <Box
                                                     sx={{
-                                                        position: 'absolute',
-                                                        top: 0,
-                                                        left: 0,
-                                                        width: '100%',
+                                                        position: 'relative',
                                                         height: '100%',
-                                                        overflowY: 'auto',
-                                                        overflowX: 'visible',
-                                                        '::-webkit-scrollbar': {
-                                                            display: 'none',
-                                                        },
+                                                        maxWidth,
+                                                        mx: 'auto',
                                                     }}
                                                 >
-                                                    <Box
-                                                        sx={{
-                                                            position:
-                                                                'relative',
-                                                            height: '100%',
-                                                            maxWidth,
-                                                            mx: 'auto',
-                                                        }}
-                                                    >
-                                                        {renderMode(mode)}
-                                                    </Box>
+                                                    {renderMode(mode)}
                                                 </Box>
-                                            </ScaleBox>
-                                        </AspectRatioBox>
-                                    </ThemeProvider>
-                                </Box>
+                                            </Box>
+                                        </ScaleBox>
+                                    </AspectRatioBox>
+                                </ThemeProvider>
                             </Box>
-
-                            <DeviceMode sx={{ mb: 2 }} />
                         </Box>
-                    </Box>
 
-                    <Box
-                        sx={{
-                            position: 'relative',
-                            flex: '0 0 304px',
-                            height: '100vh',
-                            overflowY: 'auto',
-                            bgcolor: (theme) => theme.palette.grey[800],
-                            '::-webkit-scrollbar': {
-                                display: 'none',
-                            },
-                        }}
-                    >
-                        <FinalTool />
+                        <DeviceMode sx={{ mb: 2 }} />
                     </Box>
-                </ThemeProvider>
+                </Box>
+
+                <Box
+                    sx={{
+                        position: 'relative',
+                        flex: '0 0 304px',
+                        height: '100vh',
+                        overflowY: 'auto',
+                        bgcolor: (theme) => theme.palette.grey[800],
+                        '::-webkit-scrollbar': {
+                            display: 'none',
+                        },
+                    }}
+                >
+                    <FinalTool />
+                </Box>
             </Stack>
 
             <Popover

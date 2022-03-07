@@ -180,6 +180,7 @@ export default function ImageUploader(props: ImageUploaderProps) {
                                 component="div"
                                 sx={{
                                     whiteSpace: 'nowrap',
+                                    fontSize: 14,
                                 }}
                                 {...loadingButtonProps}
                             >

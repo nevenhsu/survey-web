@@ -16,7 +16,6 @@ import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import CustomButton, { CustomButtonProps } from 'components/common/CustomButton'
 import ImageUploader from 'components/common/ImageUploader'
-import ThemeProvider from 'theme/ThemeProvider'
 import PencilIcon from 'mdi-react/PencilIcon'
 import { variantOptions, sizeOptions } from 'components/common/options'
 import { getStringLength, toNumOrStr } from 'utils/helper'
@@ -123,136 +122,133 @@ export function StyledTextField(props: StyledTextFieldProps) {
                 }}
                 onChange={handleChange}
             />
-            <ThemeProvider mode="dark">
-                <Drawer
-                    open={open}
-                    anchor="right"
-                    onClose={() => setOpen(false)}
-                    elevation={16}
-                    sx={{
-                        '& .MuiBackdrop-root': {
-                            opacity: '0 !important',
-                        },
-                    }}
-                >
-                    <Box sx={{ width: 320 }}>
-                        <TableContainer
-                            sx={{
-                                '& td': {
-                                    height: 48,
-                                },
-                            }}
-                        >
-                            <Table size="small">
-                                <TableBody>
-                                    <Header title="文字樣式" />
 
-                                    <TableRow>
-                                        <TableCell>字體大小</TableCell>
-                                        <TableCell>
-                                            <NoUnderlineTextField
-                                                name="variant"
-                                                value={variant || 'body1'}
-                                                variant="standard"
-                                                onChange={handleChange}
-                                                InputProps={{
-                                                    sx: (theme) => ({
-                                                        '& .MuiTypography-root':
-                                                            {
-                                                                ...theme
-                                                                    .typography
-                                                                    .body1,
-                                                            },
-                                                    }),
-                                                }}
-                                                select
-                                                fullWidth
-                                            >
-                                                {typoOptions.map((el) => (
-                                                    <MenuItem
-                                                        key={el.value}
-                                                        value={el.value}
-                                                    >
-                                                        <Typography
-                                                            variant={el.value}
-                                                            noWrap
-                                                        >
-                                                            {el.label}
-                                                        </Typography>
-                                                    </MenuItem>
-                                                ))}
-                                            </NoUnderlineTextField>
-                                        </TableCell>
-                                    </TableRow>
+            <Drawer
+                open={open}
+                anchor="right"
+                onClose={() => setOpen(false)}
+                elevation={16}
+                sx={{
+                    '& .MuiBackdrop-root': {
+                        opacity: '0 !important',
+                    },
+                }}
+            >
+                <Box sx={{ width: 320 }}>
+                    <TableContainer
+                        sx={{
+                            '& td': {
+                                height: 48,
+                            },
+                        }}
+                    >
+                        <Table size="small">
+                            <TableBody>
+                                <Header title="文字樣式" />
 
-                                    <TableRow>
-                                        <TableCell>字重</TableCell>
-                                        <TableCell>
-                                            <NoUnderlineTextField
-                                                variant="standard"
-                                                name="fontWeight"
-                                                value={fontWeight || 'bold'}
-                                                onChange={handleChange}
-                                                select
-                                                fullWidth
-                                            >
-                                                {fontWeightOptions.map((el) => (
-                                                    <MenuItem
-                                                        key={el.value}
-                                                        value={el.value}
+                                <TableRow>
+                                    <TableCell>字體大小</TableCell>
+                                    <TableCell>
+                                        <NoUnderlineTextField
+                                            name="variant"
+                                            value={variant || 'body1'}
+                                            variant="standard"
+                                            onChange={handleChange}
+                                            InputProps={{
+                                                sx: (theme) => ({
+                                                    '& .MuiTypography-root': {
+                                                        ...theme.typography
+                                                            .body1,
+                                                    },
+                                                }),
+                                            }}
+                                            select
+                                            fullWidth
+                                        >
+                                            {typoOptions.map((el) => (
+                                                <MenuItem
+                                                    key={el.value}
+                                                    value={el.value}
+                                                >
+                                                    <Typography
+                                                        variant={el.value}
+                                                        noWrap
                                                     >
                                                         {el.label}
-                                                    </MenuItem>
-                                                ))}
-                                            </NoUnderlineTextField>
-                                        </TableCell>
-                                    </TableRow>
+                                                    </Typography>
+                                                </MenuItem>
+                                            ))}
+                                        </NoUnderlineTextField>
+                                    </TableCell>
+                                </TableRow>
 
-                                    <TableRow>
-                                        <TableCell>文字顏色</TableCell>
-                                        <TableCell>
-                                            <NoUnderlineTextField
-                                                variant="standard"
-                                                name="color"
-                                                value={color}
-                                                onChange={handleChange}
-                                                placeholder="#212121"
-                                                fullWidth
-                                            />
-                                        </TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell>背景顏色</TableCell>
-                                        <TableCell>
-                                            <NoUnderlineTextField
-                                                variant="standard"
-                                                name="bgcolor"
-                                                value={bgcolor}
-                                                onChange={handleChange}
-                                                placeholder="#ffffff"
-                                                fullWidth
-                                            />
-                                        </TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell>留白</TableCell>
-                                        <TableCell>
-                                            <NoUnderlineTextField
-                                                variant="standard"
-                                                name="padding"
-                                                value={padding}
-                                                onChange={handleChange}
-                                                placeholder="8px 4px"
-                                                fullWidth
-                                            />
-                                        </TableCell>
-                                    </TableRow>
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </Box>
-                </Drawer>
-            </ThemeProvider>
+                                <TableRow>
+                                    <TableCell>字重</TableCell>
+                                    <TableCell>
+                                        <NoUnderlineTextField
+                                            variant="standard"
+                                            name="fontWeight"
+                                            value={fontWeight || 'bold'}
+                                            onChange={handleChange}
+                                            select
+                                            fullWidth
+                                        >
+                                            {fontWeightOptions.map((el) => (
+                                                <MenuItem
+                                                    key={el.value}
+                                                    value={el.value}
+                                                >
+                                                    {el.label}
+                                                </MenuItem>
+                                            ))}
+                                        </NoUnderlineTextField>
+                                    </TableCell>
+                                </TableRow>
+
+                                <TableRow>
+                                    <TableCell>文字顏色</TableCell>
+                                    <TableCell>
+                                        <NoUnderlineTextField
+                                            variant="standard"
+                                            name="color"
+                                            value={color}
+                                            onChange={handleChange}
+                                            placeholder="#212121"
+                                            fullWidth
+                                        />
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>背景顏色</TableCell>
+                                    <TableCell>
+                                        <NoUnderlineTextField
+                                            variant="standard"
+                                            name="bgcolor"
+                                            value={bgcolor}
+                                            onChange={handleChange}
+                                            placeholder="#ffffff"
+                                            fullWidth
+                                        />
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>留白</TableCell>
+                                    <TableCell>
+                                        <NoUnderlineTextField
+                                            variant="standard"
+                                            name="padding"
+                                            value={padding}
+                                            onChange={handleChange}
+                                            placeholder="8px 4px"
+                                            fullWidth
+                                        />
+                                    </TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Box>
+            </Drawer>
         </>
     )
 }
@@ -532,19 +528,10 @@ export function Header(props: { title: string }) {
             sx={{
                 position: 'relative',
                 height: 48,
-                bgcolor: (theme) => theme.palette.grey[900],
             }}
         >
-            <TableCell
-                className="absolute-center"
-                sx={{
-                    borderBottom: 0,
-                }}
-                component="th"
-            >
-                {title}
-            </TableCell>
-            <TableCell sx={{ borderBottom: 0 }}></TableCell>
+            <TableCell component="th">{title}</TableCell>
+            <TableCell></TableCell>
         </TableRow>
     )
 }

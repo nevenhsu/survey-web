@@ -3,7 +3,7 @@ import _ from 'lodash'
 import clsx from 'clsx'
 import { useDimensionsRef } from 'rooks'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-import { styled } from '@mui/material/styles'
+import { styled, useTheme } from '@mui/material/styles'
 import Stack, { StackProps } from '@mui/material/Stack'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
@@ -22,8 +22,6 @@ import AspectRatioBox from 'components/common/AspectRatioBox'
 import ScaleBox from 'components/common/ScaleBox'
 import QuizTool from 'components/Survey/QuizForm/QuizTool'
 import ModeSelector from 'components/Survey/QuizForm/Shares/ModeSelector'
-import MenuSwapIcon from 'mdi-react/DragHorizontalVariantIcon'
-import AddIcon from 'mdi-react/AddIcon'
 import CloseIcon from 'mdi-react/CloseIcon'
 import AlertCircleIcon from 'mdi-react/AlertCircleIcon'
 import { useAppSelector, useAppDispatch } from 'hooks'
@@ -36,7 +34,6 @@ import {
     setStep,
 } from 'store/slices/survey'
 import { reorder, setId, getDefaultQuiz } from 'utils/helper'
-import ThemeProvider from 'theme/ThemeProvider'
 import { QuizMode, QuizType, SurveyStep } from 'common/types'
 import type {
     SelectionQuiz,
@@ -67,30 +64,50 @@ const QuizItem = styled(Stack, {
     shouldForwardProp: (prop) => !_.includes(['isDragging', 'isEditing'], prop),
 })<QuizProps>(({ isDragging, isEditing, theme }) => ({
     userSelect: 'none',
-    padding: 8,
-    marginBottom: 8,
-    color: isDragging ? theme.palette.primary.main : theme.palette.text.primary,
-    backgroundColor: isEditing
-        ? theme.palette.grey[100]
-        : theme.palette.common.white,
+    marginBottom: 4,
+    padding: '2px 8px',
+    color: isEditing ? theme.palette.common.white : theme.palette.grey[800],
+    backgroundColor: isEditing ? theme.palette.grey[800] : 'transparent',
 }))
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
+    position: 'relative',
+    '&::after': {
+        content: '""',
+        position: 'absolute',
+        width: '100%',
+        height: 1,
+        bottom: 0,
+        left: 0,
+        backgroundColor: theme.palette.grey[500],
+    },
     '& .MuiTab-root': {
-        color: theme.palette.common.white,
+        color: theme.palette.grey[500],
+        borderRight: `1px solid ${theme.palette.grey[500]}`,
     },
     '& .Mui-selected': {
-        backgroundColor: theme.palette.grey[700],
+        color: theme.palette.grey[800],
+        '&::after': {
+            content: '""',
+            position: 'absolute',
+            width: '100%',
+            height: 1,
+            bottom: 0,
+            left: 0,
+            borderBottom: `1px solid ${theme.palette.grey[200]}`,
+            zIndex: 1,
+        },
     },
     '& .MuiTabs-indicator': {
         display: 'none',
     },
     '& .Mui-disabled': {
-        color: theme.palette.grey[700],
+        color: theme.palette.grey[300],
     },
 }))
 
 export default function QuizForm() {
+    const theme = useTheme()
     const dispatch = useAppDispatch()
 
     const [ref, dimensions] = useDimensionsRef()
@@ -386,21 +403,21 @@ export default function QuizForm() {
                         flex: '0 0 304px',
                         height: '100vh',
                         overflowY: 'auto',
-                        bgcolor: 'common.white',
                         '::-webkit-scrollbar': {
                             display: 'none',
                         },
+                        borderRight: `1px solid ${theme.palette.grey[500]}`,
                     }}
                 >
+                    <Typography py={1} px={2} marginBottom={1}>
+                        題目列表
+                    </Typography>
                     <DragDropContext onDragEnd={onDragEnd}>
                         <Droppable droppableId="droppable">
                             {(provided) => (
                                 <Box
                                     {...provided.droppableProps}
                                     ref={provided.innerRef}
-                                    sx={{
-                                        p: 2,
-                                    }}
                                 >
                                     {quizzes.map((el, index) => (
                                         <Draggable
@@ -419,10 +436,11 @@ export default function QuizForm() {
                                                     isEditing={
                                                         el.id === selectedId
                                                     }
-                                                    style={
-                                                        provided.draggableProps
-                                                            .style
-                                                    }
+                                                    style={{
+                                                        ...provided
+                                                            .draggableProps
+                                                            .style,
+                                                    }}
                                                     direction="row"
                                                     justifyContent="space-between"
                                                     alignItems="center"
@@ -437,15 +455,10 @@ export default function QuizForm() {
                                                             width: `calc(100% - 56px)`,
                                                         }}
                                                     >
-                                                        <MenuSwapIcon
-                                                            className="absolute-vertical"
-                                                            size={16}
-                                                        />
-
                                                         <Box
                                                             sx={{
-                                                                pl: 3,
                                                                 display: 'flex',
+                                                                px: 1,
                                                             }}
                                                         >
                                                             <Typography
@@ -472,6 +485,15 @@ export default function QuizForm() {
                                                         <ModeSelector
                                                             surveyId={surveyId}
                                                             quiz={el}
+                                                            formControlProps={{
+                                                                sx: {
+                                                                    '& .MuiSelect-select':
+                                                                        {
+                                                                            px: '4px !important',
+                                                                        },
+                                                                },
+                                                            }}
+                                                            showArrow={false}
                                                         />
                                                     </Box>
                                                 </QuizItem>
@@ -484,10 +506,9 @@ export default function QuizForm() {
                         </Droppable>
                     </DragDropContext>
 
-                    <Box sx={{ textAlign: 'center' }}>
+                    <Box sx={{ px: 2, py: 4 }}>
                         <Button
                             variant="outlined"
-                            startIcon={<AddIcon />}
                             onClick={() => {
                                 setOpen(true)
                             }}
@@ -496,99 +517,98 @@ export default function QuizForm() {
                         </Button>
                     </Box>
                 </Box>
-                <ThemeProvider mode="dark">
+
+                <Box
+                    sx={{
+                        position: 'relative',
+                        width: '100%',
+                        height: '100vh',
+                        bgcolor: 'grey.200',
+                    }}
+                >
+                    <Box sx={{ position: 'relative' }}>
+                        <StyledTabs
+                            value={tabValue}
+                            onChange={(_, v) => setTab(v)}
+                        >
+                            <Tab label="編輯題目" />
+
+                            <Tab
+                                label={
+                                    <Box
+                                        onClick={(event) => {
+                                            if (!_.isEmpty(invalidTag)) {
+                                                setAnchorEl(event.currentTarget)
+                                            }
+                                        }}
+                                    >
+                                        <Badge
+                                            color="error"
+                                            variant="dot"
+                                            invisible={_.isEmpty(invalidTag)}
+                                        >
+                                            {selectedQuiz?.mode ===
+                                            QuizMode.dragger
+                                                ? '題目邏輯'
+                                                : '答項標籤'}
+                                        </Badge>
+                                    </Box>
+                                }
+                                disabled={disabledTab}
+                                className={clsx({
+                                    'c-disabled': disabledTab,
+                                })}
+                            />
+
+                            <Tab
+                                label="跳題邏輯"
+                                disabled={disabledTab || disabledNext}
+                                className={clsx({
+                                    'c-disabled': disabledTab || disabledNext,
+                                })}
+                            />
+                        </StyledTabs>
+                    </Box>
+
                     <Box
+                        ref={ref as any}
                         sx={{
                             position: 'relative',
                             width: '100%',
+                            height: 'calc(100vh - 48px)',
+                            borderRight: `1px solid ${theme.palette.grey[500]}`,
+                        }}
+                    >
+                        <React.Suspense fallback={<div />}>
+                            {renderView()}
+                        </React.Suspense>
+                    </Box>
+                </Box>
+
+                {tab === 0 && (
+                    <Box
+                        sx={{
+                            position: 'relative',
+                            flex: '0 0 304px',
                             height: '100vh',
-                            bgcolor: (theme) => theme.palette.grey[700],
+                            overflowY: 'auto',
+                            bgcolor: 'grey.200',
+                            '::-webkit-scrollbar': {
+                                display: 'none',
+                            },
                         }}
                     >
                         <Box
                             sx={{
-                                bgcolor: (theme) => theme.palette.grey[800],
-                            }}
-                        >
-                            <StyledTabs
-                                value={tabValue}
-                                onChange={(_, v) => setTab(v)}
-                            >
-                                <Tab label="編輯題目" />
-
-                                <Tab
-                                    label={
-                                        <Box
-                                            onClick={(event) => {
-                                                if (!_.isEmpty(invalidTag)) {
-                                                    setAnchorEl(
-                                                        event.currentTarget
-                                                    )
-                                                }
-                                            }}
-                                        >
-                                            <Badge
-                                                color="error"
-                                                variant="dot"
-                                                invisible={_.isEmpty(
-                                                    invalidTag
-                                                )}
-                                            >
-                                                {selectedQuiz?.mode ===
-                                                QuizMode.dragger
-                                                    ? '題目邏輯'
-                                                    : '答項標籤'}
-                                            </Badge>
-                                        </Box>
-                                    }
-                                    disabled={disabledTab}
-                                    className={clsx({
-                                        'c-disabled': disabledTab,
-                                    })}
-                                />
-
-                                <Tab
-                                    label="跳題邏輯"
-                                    disabled={disabledTab || disabledNext}
-                                    className={clsx({
-                                        'c-disabled':
-                                            disabledTab || disabledNext,
-                                    })}
-                                />
-                            </StyledTabs>
-                        </Box>
-
-                        <Box
-                            ref={ref as any}
-                            sx={{
                                 position: 'relative',
-                                width: '100%',
-                                height: 'calc(100vh - 48px)',
+                                height: 48,
+                                borderBottom: `1px solid ${theme.palette.grey[500]}`,
                             }}
-                        >
-                            <React.Suspense fallback={<div />}>
-                                {renderView()}
-                            </React.Suspense>
-                        </Box>
+                        />
+
+                        <QuizTool surveyId={surveyId} quiz={selectedQuiz} />
                     </Box>
-
-                    {tab === 0 && (
-                        <Box
-                            sx={{
-                                position: 'relative',
-                                flex: '0 0 304px',
-                                height: '100vh',
-                                overflowY: 'auto',
-                                bgcolor: (theme) => theme.palette.grey[800],
-                                '::-webkit-scrollbar': {
-                                    display: 'none',
-                                },
-                            }}
-                        >
-                            <QuizTool surveyId={surveyId} quiz={selectedQuiz} />
-                        </Box>
-                    )}
-                </ThemeProvider>
+                )}
             </Stack>
 
             <Modal
@@ -615,7 +635,9 @@ export default function QuizForm() {
                         quiz={{ mode } as any}
                         formControlProps={{
                             variant: 'outlined',
-                            sx: { my: 2 },
+                            sx: {
+                                my: 2,
+                            },
                         }}
                         onChange={(event) =>
                             setMode(event.target.value as QuizMode)

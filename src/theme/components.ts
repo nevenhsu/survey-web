@@ -84,5 +84,58 @@ export function getComponents(
                 disableRipple: true, // No more ripple!
             },
         },
+        MuiSelect: {
+            styleOverrides: {
+                outlined: {
+                    padding: '8px 16px',
+                },
+            },
+        },
+        MuiMenuItem: {
+            styleOverrides: {
+                root: {
+                    '&:hover': {
+                        color: greyPalette[800],
+                        backgroundColor: greyPalette[100],
+                    },
+                    '&.Mui-selected': {
+                        color: greyPalette[50],
+                        backgroundColor: `${greyPalette[800]} !important`,
+                    },
+
+                    '&.Mui-selected.Mui-focusVisible': {
+                        backgroundColor: greyPalette[800],
+                    },
+                },
+            },
+            defaultProps: {
+                disableRipple: true,
+            },
+        },
+        MuiTableCell: {
+            styleOverrides: {
+                root: {
+                    borderBottom: `1px solid ${greyPalette[500]}`,
+                },
+            },
+        },
+        MuiDivider: {
+            styleOverrides: {
+                root: {
+                    borderColor: greyPalette[500],
+                },
+            },
+        },
+        MuiSwitch: {
+            styleOverrides: {
+                track: {
+                    backgroundColor: `${greyPalette[200]} !important`,
+                    border: `1px solid ${greyPalette[500]} !important`,
+                },
+                thumb: {
+                    border: `1px solid ${greyPalette[800]} !important`,
+                },
+            },
+        },
     }
 }

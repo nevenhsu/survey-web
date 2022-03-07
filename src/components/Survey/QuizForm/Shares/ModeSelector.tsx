@@ -12,6 +12,7 @@ type ModeSelectorProps = {
     quiz?: QuizType
     formControlProps?: FormControlProps
     onChange?: (event: SelectChangeEvent<string>) => void
+    showArrow?: boolean
 }
 
 const quizModes = {
@@ -48,7 +49,13 @@ const quizModes = {
 export default function ModeSelector(props: ModeSelectorProps) {
     const dispatch = useAppDispatch()
 
-    const { surveyId, quiz, formControlProps, onChange } = props
+    const {
+        surveyId,
+        quiz,
+        formControlProps,
+        onChange,
+        showArrow = true,
+    } = props
     const { id: quizId, mode = '' } = quiz ?? {}
 
     const handleChange = (event: SelectChangeEvent) => {
@@ -76,6 +83,11 @@ export default function ModeSelector(props: ModeSelectorProps) {
                 sx={{
                     '&.MuiInput-root:before': { opacity: 0 },
                     '&.MuiInput-root:after': { opacity: 0 },
+                    color: 'grey.500',
+                    borderBottom: '1px solid #92918F',
+                    '& .MuiSelect-icon': {
+                        display: showArrow ? 'block' : 'none',
+                    },
                 }}
             >
                 {_.map(quizModes, (el) => (

@@ -189,7 +189,7 @@ export default function Editor() {
                     right: 24,
                     width: 120,
                     height: 40,
-                    zIndex: 2000,
+                    zIndex: 1,
                 }}
             >
                 <LoadingButton
@@ -198,7 +198,7 @@ export default function Editor() {
                     endIcon={
                         updated ? (
                             <CheckboxMarkedCircleIcon
-                                color={theme.palette.success.main}
+                                color={theme.palette.success.light}
                             />
                         ) : (
                             <ArrowUpCircleIcon />

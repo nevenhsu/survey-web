@@ -57,6 +57,10 @@ const Root = styled(Paper)(({ theme }) => ({
     [`& .${classes.selectContainer} > div`]: {
         backgroundColor: 'transparent',
     },
+    '& .MuiTableHead-root': {
+        height: 64,
+        padding: '0 16px',
+    },
 }))
 
 export default function TagTable(props: TagTableProps) {
@@ -246,23 +250,21 @@ export default function TagTable(props: TagTableProps) {
     }
 
     return (
-        <Root className={classes.root} elevation={6} square>
+        <Root className={classes.root} elevation={0} square>
             <TableContainer>
                 <Table
                     size="small"
                     sx={{
-                        bgcolor: (theme) => theme.palette.grey[700],
+                        bgcolor: 'grey.200',
                         '& .MuiTableCell-root': {
-                            height: 64,
+                            height: 40,
                         },
                     }}
                 >
                     <TableHead>
                         <TableRow>
                             <TableCell>
-                                <Typography variant="body1">
-                                    答項名稱
-                                </Typography>
+                                <Typography variant="body1">答項</Typography>
                             </TableCell>
                             {tagsId.map((id, index) => (
                                 <TableCell key={id || `${index}`}>
@@ -347,6 +349,9 @@ export default function TagTable(props: TagTableProps) {
                                             placeholder="請命名答項"
                                             onChange={handleChangeLabel}
                                             fullWidth
+                                            InputProps={{
+                                                disableUnderline: true,
+                                            }}
                                         />
                                     </TableCell>
 
@@ -458,7 +463,7 @@ export default function TagTable(props: TagTableProps) {
                     setRowsPerPage(parseInt(event.target.value, 10))
                     setPage(0)
                 }}
-                sx={{ bgcolor: (theme) => theme.palette.grey[700] }}
+                sx={{ bgcolor: 'grey.200' }}
             />
         </Root>
     )

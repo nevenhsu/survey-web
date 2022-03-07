@@ -14,11 +14,7 @@ import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import { setClasses } from 'utils/helper'
-import {
-    selectCurrentSurvey,
-    updateQuiz,
-    updateChoice,
-} from 'store/slices/survey'
+import { selectCurrentSurvey, updateChoice } from 'store/slices/survey'
 import type { SelectionQuiz } from 'common/types'
 
 type NextTableProps = {
@@ -30,6 +26,15 @@ const classes = setClasses('NextTable', ['root', 'selectContainer'])
 const Root = styled(Paper)(({ theme }) => ({
     [`&.${classes.root}`]: {
         width: '100%',
+    },
+    '& .MuiTableCell-root': {
+        padding: '4px 16px',
+    },
+    '& .MuiTableHead-root': {
+        height: 64,
+    },
+    '& .MuiTableCell-head': {
+        padding: '0 16px',
     },
 }))
 
@@ -78,20 +83,25 @@ export default function NextTable(props: NextTableProps) {
     }
 
     return (
-        <Root className={classes.root} elevation={6} square>
-            <TableContainer>
+        <Root className={classes.root} elevation={0} square>
+            <TableContainer
+                sx={{
+                    bgcolor: 'grey.200',
+                }}
+            >
                 <Table
                     size="small"
                     sx={{
-                        bgcolor: (theme) => theme.palette.grey[700],
                         '& .MuiTableCell-root': {
-                            height: 64,
+                            height: 32,
                         },
                     }}
                 >
                     <TableHead>
                         <TableRow>
-                            <TableCell>答項</TableCell>
+                            <TableCell>
+                                <Typography variant="body1">答項</Typography>
+                            </TableCell>
                             <TableCell>跳答</TableCell>
                         </TableRow>
                     </TableHead>
@@ -102,7 +112,7 @@ export default function NextTable(props: NextTableProps) {
                                     <Typography
                                         sx={{
                                             color: Boolean(choice.label)
-                                                ? 'common.white'
+                                                ? 'grey.800'
                                                 : 'grey.500',
                                         }}
                                     >
@@ -169,6 +179,7 @@ export default function NextTable(props: NextTableProps) {
                     setRowsPerPage(parseInt(event.target.value, 10))
                     setPage(0)
                 }}
+                sx={{ bgcolor: 'grey.200' }}
             />
         </Root>
     )

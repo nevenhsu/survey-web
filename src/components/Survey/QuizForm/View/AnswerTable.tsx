@@ -1,6 +1,6 @@
 import * as React from 'react'
 import _ from 'lodash'
-import { styled, useTheme } from '@mui/material/styles'
+import { styled } from '@mui/material/styles'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -19,7 +19,7 @@ import AddIcon from 'mdi-react/AddIcon'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import { setClasses, getDefaultDraggerChoice } from 'utils/helper'
 import { selectCurrentSurvey, updateQuiz } from 'store/slices/survey'
-import type { DraggerQuiz, OnChangeInput } from 'common/types'
+import type { DraggerQuiz } from 'common/types'
 
 type AnswerTableProps = {
     quiz?: DraggerQuiz
@@ -31,11 +31,16 @@ const Root = styled(Paper)(({ theme }) => ({
     [`&.${classes.root}`]: {
         width: '100%',
     },
+    '& .MuiTableHead-root': {
+        height: 64,
+    },
+    '& .MuiTableCell-head': {
+        padding: '0 16px',
+    },
 }))
 
 export default function AnswerTable(props: AnswerTableProps) {
     const dispatch = useAppDispatch()
-    const theme = useTheme()
 
     const { quiz } = props
     const { id: quizId, choices = [], left, right } = quiz ?? {}
@@ -93,25 +98,24 @@ export default function AnswerTable(props: AnswerTableProps) {
     }
 
     return (
-        <Root className={classes.root} elevation={6} square>
+        <Root className={classes.root} elevation={0} square>
             <TableContainer
                 sx={{
-                    bgcolor: (theme) => theme.palette.grey[700],
+                    bgcolor: 'grey.200',
                 }}
             >
                 <Table
                     size="small"
                     sx={{
-                        bgcolor: (theme) => theme.palette.grey[700],
                         '& .MuiTableCell-root': {
-                            height: 64,
+                            height: 40,
                         },
                     }}
                 >
                     <TableHead>
                         <TableRow>
                             <TableCell>
-                                <Typography variant="body1">名稱</Typography>
+                                <Typography variant="body1">題目</Typography>
                             </TableCell>
                             <TableCell>
                                 <Typography variant="body1">
@@ -148,6 +152,9 @@ export default function AnswerTable(props: AnswerTableProps) {
                                             onChange={(event) =>
                                                 handleChange(event, el.id)
                                             }
+                                            InputProps={{
+                                                disableUnderline: true,
+                                            }}
                                         />
                                     </TableCell>
 
@@ -202,7 +209,7 @@ export default function AnswerTable(props: AnswerTableProps) {
                     setPage(0)
                 }}
                 sx={{
-                    bgcolor: (theme) => theme.palette.grey[700],
+                    bgcolor: 'grey.200',
                 }}
             />
         </Root>
