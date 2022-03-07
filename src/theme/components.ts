@@ -98,13 +98,13 @@ export function getComponents(
                         color: greyPalette[800],
                         backgroundColor: greyPalette[100],
                     },
-                    '&.Mui-selected': {
-                        color: greyPalette[50],
-                        backgroundColor: `${greyPalette[800]} !important`,
-                    },
-
                     '&.Mui-selected.Mui-focusVisible': {
                         backgroundColor: greyPalette[800],
+                    },
+                    '&.Mui-selected': {
+                        color: `${greyPalette[50]} !important`,
+                        backgroundColor: `${greyPalette[800]} !important`,
+                        opacity: `1 !important`,
                     },
                 },
             },

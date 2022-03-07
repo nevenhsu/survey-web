@@ -114,7 +114,7 @@ export default function ResultView() {
 
     return (
         <>
-            <Box sx={{ p: 3, borderBottom: '1px solid' }}>
+            <Box sx={{ px: 3, py: 1.75, borderBottom: '1px solid' }}>
                 <Typography variant="h5" gutterBottom>
                     選擇測驗類型
                 </Typography>

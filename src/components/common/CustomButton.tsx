@@ -48,7 +48,9 @@ const StyledButton = styled(Button, {
         backgroundColor: buttonColor,
         ...circleStyle,
         textTransform: 'unset',
+        boxShadow: 'none',
         '&:hover': {
+            boxShadow: 'none',
             border,
             color,
             backgroundColor: emphasizeColor(theme, buttonColor, 0.08, ''),

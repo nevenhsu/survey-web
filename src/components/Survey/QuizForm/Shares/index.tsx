@@ -1,6 +1,6 @@
 import * as React from 'react'
 import _ from 'lodash'
-import { styled } from '@mui/material/styles'
+import { styled, useTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import TextField, { StandardTextFieldProps } from '@mui/material/TextField'
@@ -67,6 +67,7 @@ export const NoUnderlineTextField = styled(TextField)({
 })
 
 export function StyledTextField(props: StyledTextFieldProps) {
+    const theme = useTheme()
     const { onCustomize, textProps, ...rest } = props
 
     const { text, color, bgcolor, variant, fontWeight, padding } =
@@ -138,13 +139,25 @@ export function StyledTextField(props: StyledTextFieldProps) {
                     <TableContainer
                         sx={{
                             '& td': {
+                                height: 36,
+                                border: 'none',
+                                py: 0,
+                            },
+                            '& th': {
                                 height: 48,
+                                border: 'none',
                             },
                         }}
                     >
                         <Table size="small">
                             <TableBody>
                                 <Header title="文字樣式" />
+
+                                <TableRow
+                                    sx={{
+                                        borderBottom: `1px solid ${theme.palette.grey[500]}`,
+                                    }}
+                                />
 
                                 <TableRow>
                                     <TableCell>字體大小</TableCell>
@@ -259,6 +272,8 @@ export type StyledCustomButtonProps = CustomButtonProps & {
 }
 
 export const StyledCustomButton = (props: StyledCustomButtonProps) => {
+    const theme = useTheme()
+
     const {
         customProps,
         onCustomize,
@@ -317,13 +332,25 @@ export const StyledCustomButton = (props: StyledCustomButtonProps) => {
                     <TableContainer
                         sx={{
                             '& td': {
+                                height: 36,
+                                border: 'none',
+                                py: 0,
+                            },
+                            '& th': {
                                 height: 48,
+                                border: 'none',
                             },
                         }}
                     >
                         <Table size="small">
                             <TableBody>
                                 <Header title="按鈕樣式" />
+
+                                <TableRow
+                                    sx={{
+                                        borderBottom: `1px solid ${theme.palette.grey[500]}`,
+                                    }}
+                                />
 
                                 <TableRow>
                                     <TableCell>按鈕文字</TableCell>

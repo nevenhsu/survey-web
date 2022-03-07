@@ -416,16 +416,22 @@ export default function ResultForm() {
                             overflowX: 'auto',
                             p: 1,
                             mb: 1,
-                            border: (theme) =>
-                                `1px solid ${theme.palette.grey[300]}`,
-                            bgcolor: (theme) =>
+                            color: (theme) =>
                                 selectedId === el.id
-                                    ? theme.palette.grey[100]
-                                    : theme.palette.common.white,
+                                    ? 'white !important'
+                                    : theme.palette.grey[800],
+                            backgroundColor:
+                                selectedId === el.id
+                                    ? theme.palette.grey[800]
+                                    : 'transparent',
                         }}
                         onClick={() => setSelectedId(el.id)}
                     >
-                        <Typography noWrap sx={{ minWidth: '12ch' }}>
+                        <Typography
+                            color="inherit"
+                            noWrap
+                            sx={{ minWidth: '12ch' }}
+                        >
                             {el.title ||
                                 _.find(el.components, {
                                     type: ComponentType.title,
@@ -538,16 +544,22 @@ export default function ResultForm() {
                             overflowX: 'auto',
                             p: 1,
                             mb: 1,
-                            border: (theme) =>
-                                `1px solid ${theme.palette.grey[300]}`,
-                            bgcolor: (theme) =>
+                            color: (theme) =>
                                 selectedId === el.id
-                                    ? theme.palette.grey[100]
-                                    : theme.palette.common.white,
+                                    ? 'white !important'
+                                    : theme.palette.grey[800],
+                            backgroundColor:
+                                selectedId === el.id
+                                    ? theme.palette.grey[800]
+                                    : 'transparent',
                         }}
                         onClick={() => setSelectedId(el.id)}
                     >
-                        <Typography noWrap sx={{ minWidth: '12ch' }}>
+                        <Typography
+                            color="inherit"
+                            noWrap
+                            sx={{ minWidth: '12ch' }}
+                        >
                             {el.title ||
                                 _.find(el.components, {
                                     type: ComponentType.title,
@@ -579,7 +591,7 @@ export default function ResultForm() {
                 direction="row"
                 alignItems="center"
                 justifyContent="space-between"
-                sx={{ p: 3, borderBottom: '1px solid' }}
+                sx={{ px: 3, height: 80, borderBottom: '1px solid' }}
             >
                 <Box>
                     <Typography variant="h5" gutterBottom>

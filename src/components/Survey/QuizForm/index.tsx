@@ -64,7 +64,7 @@ const QuizItem = styled(Stack, {
     shouldForwardProp: (prop) => !_.includes(['isDragging', 'isEditing'], prop),
 })<QuizProps>(({ isDragging, isEditing, theme }) => ({
     userSelect: 'none',
-    marginBottom: 4,
+    marginBottom: 8,
     padding: '2px 8px',
     color: isEditing ? theme.palette.common.white : theme.palette.grey[800],
     backgroundColor: isEditing ? theme.palette.grey[800] : 'transparent',
@@ -369,7 +369,7 @@ export default function QuizForm() {
                 direction="row"
                 alignItems="center"
                 justifyContent="space-between"
-                sx={{ p: 3, borderBottom: '1px solid' }}
+                sx={{ px: 3, height: 80, borderBottom: '1px solid' }}
             >
                 <Box>
                     <Typography variant="h5" gutterBottom>
@@ -411,7 +411,7 @@ export default function QuizForm() {
                         borderRight: `1px solid ${theme.palette.grey[500]}`,
                     }}
                 >
-                    <Typography py={1} px={2} marginBottom={1}>
+                    <Typography py={2} px={2} marginBottom={1}>
                         題目列表
                     </Typography>
                     <DragDropContext onDragEnd={onDragEnd}>
@@ -508,7 +508,7 @@ export default function QuizForm() {
                         </Droppable>
                     </DragDropContext>
 
-                    <Box sx={{ px: 2, py: 4 }}>
+                    <Box sx={{ px: 2, py: 3 }}>
                         <Button
                             variant="outlined"
                             onClick={() => {

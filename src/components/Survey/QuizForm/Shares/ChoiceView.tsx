@@ -1,10 +1,9 @@
 import * as React from 'react'
 import _ from 'lodash'
+import { useTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
-import Popover from '@mui/material/Popover'
-import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import Drawer from '@mui/material/Drawer'
 import Table from '@mui/material/Table'
@@ -12,7 +11,6 @@ import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableRow from '@mui/material/TableRow'
-import ThemeProvider from 'theme/ThemeProvider'
 import { Header, NoUnderlineTextField } from 'components/Survey/QuizForm/Shares'
 import ImageUploader from 'components/common/ImageUploader'
 import { getContrastText, emphasizeColor } from 'theme/palette'
@@ -26,6 +24,7 @@ export default function ChoiceView(props: {
     onCopy: OnButtonClink
     showImage?: boolean
 }) {
+    const theme = useTheme()
     const { value, onChange, onCopy, onDelete, showImage = false } = props
 
     const {
@@ -76,11 +75,13 @@ export default function ChoiceView(props: {
                         borderColor: buttonColor,
                         flexDirection: 'column',
                         overflow: 'hidden',
+                        boxShadow: 'none',
                         '&:hover': {
                             border,
                             borderColor: buttonColor,
                             backgroundColor: emphasizedColor,
                             color: hoverTextColor,
+                            boxShadow: 'none',
                         },
                         '& .MuiTouchRipple-root': {
                             color: buttonColor || bgcolor,
@@ -143,13 +144,25 @@ export default function ChoiceView(props: {
                     <TableContainer
                         sx={{
                             '& td': {
+                                height: 36,
+                                border: 'none',
+                                py: 0,
+                            },
+                            '& th': {
                                 height: 48,
+                                border: 'none',
                             },
                         }}
                     >
                         <Table size="small">
                             <TableBody>
                                 <Header title="選項樣式" />
+
+                                <TableRow
+                                    sx={{
+                                        borderBottom: `1px solid ${theme.palette.grey[500]}`,
+                                    }}
+                                />
 
                                 <TableRow>
                                     <TableCell>選項文字</TableCell>
@@ -258,11 +271,7 @@ export default function ChoiceView(props: {
                             alignItems="center"
                             justifyContent="space-between"
                         >
-                            <Button
-                                variant="outlined"
-                                color="primary"
-                                onClick={onCopy}
-                            >
+                            <Button variant="outlined" onClick={onCopy}>
                                 套用全部
                             </Button>
 

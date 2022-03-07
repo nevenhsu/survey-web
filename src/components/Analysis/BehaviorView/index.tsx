@@ -69,7 +69,9 @@ export default function BehaviorView() {
 
     return (
         <>
-            <Box sx={{ p: 3, borderBottom: '1px solid' }}>
+            <Box
+                sx={{ px: 3, py: 1.75, height: 80, borderBottom: '1px solid' }}
+            >
                 <Typography variant="h5" gutterBottom>
                     測驗行為報告
                 </Typography>

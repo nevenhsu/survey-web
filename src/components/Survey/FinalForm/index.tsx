@@ -200,7 +200,7 @@ export default function FinalForm() {
                 direction="row"
                 alignItems="center"
                 justifyContent="space-between"
-                sx={{ p: 3, borderBottom: '1px solid' }}
+                sx={{ px: 3, height: 80, borderBottom: '1px solid' }}
             >
                 <Box>
                     <Typography variant="h5" gutterBottom>

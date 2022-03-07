@@ -195,7 +195,7 @@ export default function AnswerView() {
 
     return (
         <>
-            <Box sx={{ p: 3, borderBottom: '1px solid' }}>
+            <Box sx={{ px: 3, py: 1.75, borderBottom: '1px solid' }}>
                 <Typography variant="h5" gutterBottom>
                     回應明細
                 </Typography>

@@ -36,7 +36,7 @@ const QuizItem = styled(Stack, {
     shouldForwardProp: (prop) => prop !== 'selected',
 })<QuizProps>(({ selected, theme }) => ({
     userSelect: 'none',
-    marginBottom: 4,
+    marginBottom: 8,
     height: 36,
     padding: '2px 16px',
     color: selected ? theme.palette.common.white : theme.palette.grey[800],
@@ -430,7 +430,7 @@ export default function QuizView() {
 
     return (
         <>
-            <Box sx={{ p: 3, borderBottom: '1px solid' }}>
+            <Box sx={{ px: 3, py: 1.75, borderBottom: '1px solid' }}>
                 <Typography variant="h5" gutterBottom>
                     單題結果
                 </Typography>
@@ -445,7 +445,7 @@ export default function QuizView() {
                         width: 288,
                     }}
                 >
-                    <Typography py={1} px={2} marginBottom={1}>
+                    <Typography py={2} px={2} marginBottom={1}>
                         題目列表
                     </Typography>
                     <Box>
