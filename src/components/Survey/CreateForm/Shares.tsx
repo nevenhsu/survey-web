@@ -6,8 +6,10 @@ export function TabItem(props: { label: string; text: string }) {
     const { label, text } = props
     return (
         <Box sx={{ textAlign: 'left' }}>
-            <Typography color="inherit">{label}</Typography>
-            <Typography variant="caption" color="inherit">
+            <Typography variant="h5" color="inherit" marginBottom={1}>
+                {label}
+            </Typography>
+            <Typography variant="body1" color="inherit">
                 {text}
             </Typography>
         </Box>

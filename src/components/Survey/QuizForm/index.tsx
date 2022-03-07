@@ -355,15 +355,14 @@ export default function QuizForm() {
                 sx={{ p: 3, borderBottom: '1px solid' }}
             >
                 <Box>
-                    <Typography variant="h6">編輯測驗內容</Typography>
+                    <Typography variant="h5">編輯測驗內容</Typography>
                     <Typography variant="body1">
                         直接從預覽畫面中編輯測驗內容
                     </Typography>
                 </Box>
                 <Box>
                     <LoadingButton
-                        variant="contained"
-                        color="inherit"
+                        variant="outlined"
                         loading={uploading}
                         disabled={uploading}
                         onClick={handlePreview}
@@ -375,11 +374,7 @@ export default function QuizForm() {
                         component="span"
                         sx={{ display: 'inline-block', width: 8 }}
                     />
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={nextStep}
-                    >
+                    <Button variant="contained" onClick={nextStep}>
                         編輯個人化測驗結果
                     </Button>
                 </Box>

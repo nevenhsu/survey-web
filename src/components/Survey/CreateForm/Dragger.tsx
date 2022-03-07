@@ -42,10 +42,10 @@ export default function Dragger() {
                     borderColor: (theme) => theme.palette.grey[400],
                 }}
             >
-                <Typography variant="h5" fontWeight="700" gutterBottom>
+                <Typography variant="h4" gutterBottom>
                     模組特色
                 </Typography>
-                <Typography variant="body1" sx={{ mb: 3 }}>
+                <Typography variant="h5" sx={{ mb: 1 }}>
                     本模組具三大特色，能協助你輕鬆設計遊戲化測驗
                 </Typography>
 
@@ -70,7 +70,7 @@ export default function Dragger() {
                                 px: 6,
                             }}
                         >
-                            <Typography variant="body2">
+                            <Typography variant="body1">
                                 適合喜歡自我挑戰或自我充實的受眾
                                 <br />
                                 測驗主題可以很知識性，也能純粹好玩
@@ -87,7 +87,7 @@ export default function Dragger() {
                                 px: 6,
                             }}
                         >
-                            <Typography variant="body2">
+                            <Typography variant="body1">
                                 透過隨機出題的固定題型，降低題目設計門檻，節省工作時間
                             </Typography>
                         </Box>
@@ -102,7 +102,7 @@ export default function Dragger() {
                                 px: 6,
                             }}
                         >
-                            <Typography variant="body2">
+                            <Typography variant="body1">
                                 最後有得分讓填答者想跟他人分享比較，或多玩幾次
                             </Typography>
                         </Box>
@@ -114,14 +114,14 @@ export default function Dragger() {
                 <Grid
                     item
                     sx={{
-                        width: 320,
+                        width: 360,
                         position: 'sticky',
                         height: 'fit-content',
                         top: 0,
                     }}
                 >
-                    <Typography variant="h5" fontWeight="700" sx={{ mb: 3 }}>
-                        模組如何運作
+                    <Typography variant="h4" sx={{ mb: 3 }}>
+                        使用流程
                     </Typography>
                     <Tabs
                         orientation="vertical"
@@ -149,6 +149,7 @@ export default function Dragger() {
                             '& .MuiTab-root': {
                                 alignItems: 'start',
                                 justifyContent: 'start',
+                                mb: 4,
                             },
                         }}
                     >
@@ -206,14 +207,10 @@ export default function Dragger() {
                 <Grid item xs sx={{ width: `calc(100vw - 288px)` }}>
                     <Element name={BlockName.a}>
                         <Box sx={{ mb: 5 }}>
-                            <Typography
-                                variant="h6"
-                                fontWeight="700"
-                                gutterBottom
-                            >
+                            <Typography variant="h4" gutterBottom>
                                 參與測驗
                             </Typography>
-                            <Typography variant="body2" sx={{ mb: 2 }}>
+                            <Typography variant="body1" sx={{ mb: 3 }}>
                                 參與者完成遊戲化測驗，產生個人化結果
                             </Typography>
 
@@ -287,15 +284,11 @@ export default function Dragger() {
                                 alignItems="center"
                                 spacing={2}
                             >
-                                <Box sx={{ flex: '0 0 33%' }}>
-                                    <Typography
-                                        variant="h6"
-                                        fontWeight="700"
-                                        gutterBottom
-                                    >
+                                <Box sx={{ flex: '0 0 40%' }}>
+                                    <Typography variant="h5" gutterBottom>
                                         測驗模組產生個人化結果
                                     </Typography>
-                                    <Typography variant="body2">
+                                    <Typography variant="body1" gutterBottom>
                                         只要根據測驗題型設定題目與一定數量的選項，並在每個選項貼上標籤，平台將自動統計標籤數量，提供填答者個人化結果！
                                     </Typography>
                                     <Typography variant="caption">
@@ -320,15 +313,11 @@ export default function Dragger() {
                                 alignItems="center"
                                 spacing={2}
                             >
-                                <Box sx={{ flex: '0 0 33%' }}>
-                                    <Typography
-                                        variant="h6"
-                                        fontWeight="700"
-                                        gutterBottom
-                                    >
+                                <Box sx={{ flex: '0 0 40%' }}>
+                                    <Typography variant="h5" gutterBottom>
                                         個人化結果預覽
                                     </Typography>
-                                    <Typography variant="body2">
+                                    <Typography variant="body1" gutterBottom>
                                         個人化的結果是測驗中很重要的環節，若填答者認為測驗結果有收穫，或有趣，將大幅提高分享意願
                                     </Typography>
                                 </Box>
@@ -345,14 +334,10 @@ export default function Dragger() {
                     </Element>
                     <Element name={BlockName.d}>
                         <Box sx={{ mb: 5 }}>
-                            <Typography
-                                variant="h6"
-                                fontWeight="700"
-                                gutterBottom
-                            >
+                            <Typography variant="h5" gutterBottom>
                                 查看分析
                             </Typography>
-                            <Typography variant="body2" sx={{ mb: 2 }}>
+                            <Typography variant="body1" sx={{ mb: 1 }}>
                                 自動產生基於填答者行為的分析
                             </Typography>
                         </Box>
@@ -367,7 +352,7 @@ export default function Dragger() {
                                         overflow: 'hidden',
                                     }}
                                 />
-                                <Typography variant="body2">
+                                <Typography variant="body1">
                                     流量來源管理與分析，可用於分流管理分析，來調整投放測驗資源配置
                                 </Typography>
                             </Box>
@@ -380,7 +365,7 @@ export default function Dragger() {
                                         overflow: 'hidden',
                                     }}
                                 />
-                                <Typography variant="body2">
+                                <Typography variant="body1">
                                     可以分析答題分佈，瞭解受眾認知或偏好
                                 </Typography>
                             </Box>
@@ -393,7 +378,7 @@ export default function Dragger() {
                                         overflow: 'hidden',
                                     }}
                                 />
-                                <Typography variant="body2">
+                                <Typography variant="body1">
                                     找出錯誤最多或偏好最高的項目做後續推廣
                                 </Typography>
                             </Box>

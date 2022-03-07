@@ -27,7 +27,6 @@ export default function StartForm() {
                 position: 'relative',
                 width: '100vw',
                 height: 'calc(100vh - 64px)',
-                bgcolor: 'white',
                 overflow: 'auto',
             }}
         >

@@ -10,20 +10,25 @@ div,
 span,
 td,
 textarea {
-  border: none;
-  text-decoration: none;
+    border: none;
+    text-decoration: none;
 
-  &:focus {
-      outline: none !important;
-  }
+    &:focus {
+        outline: none !important;
+    }
+}
+
+body {
+    background-color: #f9f8f6 !important;
+    color: #212121 !important;
 }
 
 /*=====================
   Library
 =======================*/
 
-@import "~slick-carousel/slick/slick";
-@import "~slick-carousel/slick/slick-theme";
+@import '~slick-carousel/slick/slick';
+@import '~slick-carousel/slick/slick-theme';
 
 /*=====================
   Custom Class

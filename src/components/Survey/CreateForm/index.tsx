@@ -71,15 +71,14 @@ export default function CreateForm() {
 
     return (
         <Box sx={{ p: 4, pt: 1, bgcolor: 'grey.100' }}>
-            <Box sx={{ bgcolor: 'white', maxWidth: 1200, mx: 'auto' }}>
+            <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
                 <Stack
                     direction="row"
                     alignItems="center"
                     sx={{
                         position: 'relative',
                         height: 500,
-                        p: 6,
-                        bgcolor: '#FFE5BF',
+                        px: 6,
                     }}
                     spacing={4}
                 >
@@ -94,9 +93,15 @@ export default function CreateForm() {
                                 className="block"
                                 onClick={handleClickBack}
                                 size="small"
+                                sx={{
+                                    display: 'block',
+                                    textAlign: 'left',
+                                }}
                             >
                                 <ArrowLeftIcon />
-                                <Typography>測驗範本推薦</Typography>
+                                <Typography fontSize={18}>
+                                    測驗範本推薦
+                                </Typography>
                             </Button>
 
                             <Typography variant="h4" fontWeight="bold">
@@ -115,8 +120,7 @@ export default function CreateForm() {
                                 spacing={1}
                             >
                                 <Button
-                                    variant="outlined"
-                                    color="inherit"
+                                    variant="contained"
                                     size="large"
                                     onClick={() => {
                                         openWindow()
@@ -131,7 +135,7 @@ export default function CreateForm() {
                                     startIcon={<AddIcon />}
                                     onClick={handleClick}
                                     disabled={!mode}
-                                    variant="contained"
+                                    variant="outlined"
                                     color="primary"
                                     size="large"
                                 >
@@ -154,6 +158,9 @@ export default function CreateForm() {
                         />
                     </Box>
                 </Stack>
+                <Box sx={{ p: 6 }}>
+                    <Box className="underline" />
+                </Box>
                 <React.Suspense fallback={<div />}>
                     {renderView()}
                 </React.Suspense>

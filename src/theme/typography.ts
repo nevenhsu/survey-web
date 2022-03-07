@@ -26,7 +26,7 @@ const typography: TypographyOptions = {
         lineHeight: '135%',
     },
     button: {
-        fotSize: 16,
+        fontSize: 16,
         lineHeight: '135%',
         fontWeight: 400,
     },
@@ -38,7 +38,7 @@ const typography: TypographyOptions = {
         fontWeight: 400,
     },
     overline: {
-        fotSize: 12,
+        fontSize: 12,
         lineHeight: '17px',
         fontWeight: 400,
     },

@@ -28,14 +28,16 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
         overflow: 'unset !important',
     },
     '& .MuiTabs-indicator': {
-        backgroundColor: theme.palette.common.white,
+        backgroundColor: theme.palette.common.black,
+        height: 4,
         bottom: -6,
     },
 }))
 
 const StyledTab = styled(Tab)(({ theme }) => ({
+    color: theme.palette.grey[500],
     '&.Mui-selected': {
-        color: theme.palette.common.white,
+        color: theme.palette.grey[800],
     },
 }))
 
@@ -112,7 +114,6 @@ export default function App() {
                             </StyledTabs>
                         )}
                         <Grow />
-                        <Button color="inherit">Login</Button>
                     </Toolbar>
                 </AppBar>
             )}

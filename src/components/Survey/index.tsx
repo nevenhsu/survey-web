@@ -2,14 +2,13 @@ import * as React from 'react'
 import _ from 'lodash'
 import qs from 'query-string'
 import { VariantType, useSnackbar } from 'notistack'
-import { styled } from '@mui/material/styles'
+import { styled, useTheme } from '@mui/material/styles'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Box from '@mui/material/Box'
 import LoadingButton from '@mui/lab/LoadingButton'
 import ArrowUpCircleIcon from 'mdi-react/ArrowUpCircleIcon'
 import CheckboxMarkedCircleIcon from 'mdi-react/CheckboxMarkedCircleIcon'
-import { lightenColor } from 'theme/palette'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import { setClasses } from 'utils/helper'
 import {
@@ -72,6 +71,7 @@ const Root = styled(Box)(({ theme }) => ({
 }))
 
 export default function Editor() {
+    const theme = useTheme()
     const dispatch = useAppDispatch()
     const { enqueueSnackbar } = useSnackbar()
 
@@ -179,42 +179,38 @@ export default function Editor() {
                             )
                         })}
                     </Tabs>
-                    <Box sx={{ color: 'white' }}>
-                        <LoadingButton
-                            variant="contained"
-                            color="inherit"
-                            loadingPosition="end"
-                            endIcon={
-                                updated ? (
-                                    <CheckboxMarkedCircleIcon />
-                                ) : (
-                                    <ArrowUpCircleIcon />
-                                )
-                            }
-                            loading={uploading}
-                            disabled={uploading}
-                            onClick={() => handleSave()}
-                            sx={{
-                                position: 'absolute',
-                                top: 6,
-                                right: 4,
-                                bgcolor: 'grey.900',
-                                '&:hover': {
-                                    bgcolor: (theme) =>
-                                        lightenColor(
-                                            theme,
-                                            'grey.900',
-                                            0.08,
-                                            'grey.800'
-                                        ),
-                                },
-                            }}
-                        >
-                            儲存
-                        </LoadingButton>
-                    </Box>
                 </>
             )}
+
+            <Box
+                sx={{
+                    position: 'fixed',
+                    bottom: 16,
+                    right: 24,
+                    width: 120,
+                    height: 40,
+                    zIndex: 2000,
+                }}
+            >
+                <LoadingButton
+                    variant="contained"
+                    loadingPosition="end"
+                    endIcon={
+                        updated ? (
+                            <CheckboxMarkedCircleIcon
+                                color={theme.palette.success.main}
+                            />
+                        ) : (
+                            <ArrowUpCircleIcon />
+                        )
+                    }
+                    loading={uploading}
+                    disabled={uploading}
+                    onClick={() => handleSave()}
+                >
+                    儲存
+                </LoadingButton>
+            </Box>
 
             <React.Suspense fallback={<div />}>
                 {renderForm(step)}
