@@ -96,6 +96,7 @@ export default function CreateForm() {
                                 sx={{
                                     display: 'block',
                                     textAlign: 'left',
+                                    padding: 1,
                                 }}
                             >
                                 <ArrowLeftIcon />

@@ -7,10 +7,9 @@ import Toolbar from '@mui/material/Toolbar'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
-import Button from '@mui/material/Button'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import User from 'utils/user'
-import { setStep, setMode } from 'store/slices/survey'
+import { setStep, setMode, selectCurrentSurvey } from 'store/slices/survey'
 import { SurveyStep } from 'common/types'
 
 const Survey = React.lazy(() => import('components/Survey'))
@@ -49,6 +48,7 @@ export default function App() {
         survey: { path: '/survey', label: '編輯' },
         analysis: { path: '/analysis', label: '報告' },
     }
+    const survey = useAppSelector(selectCurrentSurvey)
 
     const atHome = pathname === '/'
 
@@ -98,7 +98,7 @@ export default function App() {
                             超市調
                         </Typography>
                         <Grow />
-                        {!atHome && (
+                        {!atHome && !_.isEmpty(survey) && (
                             <StyledTabs
                                 value={pathname}
                                 onChange={handleChangePath}

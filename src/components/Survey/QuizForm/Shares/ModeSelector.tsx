@@ -2,10 +2,10 @@ import _ from 'lodash'
 import FormControl, { FormControlProps } from '@mui/material/FormControl'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
-import { QuizMode, QuizType } from 'common/types'
+import { QuizMode, QuizType, Mode } from 'common/types'
 import { getDefaultQuiz } from 'utils/helper'
-import { useAppDispatch } from 'hooks'
-import { updateQuiz } from 'store/slices/survey'
+import { useAppDispatch, useAppSelector } from 'hooks'
+import { updateQuiz, selectCurrentSurvey } from 'store/slices/survey'
 
 type ModeSelectorProps = {
     surveyId?: string
@@ -49,6 +49,9 @@ const quizModes = {
 export default function ModeSelector(props: ModeSelectorProps) {
     const dispatch = useAppDispatch()
 
+    const survey = useAppSelector(selectCurrentSurvey)
+    const { mode: surveyMode } = survey
+
     const {
         surveyId,
         quiz,
@@ -74,6 +77,8 @@ export default function ModeSelector(props: ModeSelectorProps) {
         )
     }
 
+    const quizModes = getQuizModes(surveyMode)
+
     return (
         <FormControl variant="standard" {...formControlProps}>
             <Select
@@ -98,4 +103,50 @@ export default function ModeSelector(props: ModeSelectorProps) {
             </Select>
         </FormControl>
     )
+}
+
+function getQuizModes(surveyMode: Mode): {
+    [key: string]: {
+        value: QuizMode
+        label: string
+    }
+} {
+    switch (surveyMode) {
+        case Mode.dragger: {
+            return {
+                [QuizMode.page]: {
+                    value: QuizMode.page,
+                    label: '圖文',
+                },
+                [QuizMode.fill]: {
+                    value: QuizMode.fill,
+                    label: '填空',
+                },
+                [QuizMode.dragger]: {
+                    value: QuizMode.dragger,
+                    label: '拖曳',
+                },
+            }
+        }
+        case Mode.oneInTwo: {
+            return {
+                [QuizMode.page]: {
+                    value: QuizMode.page,
+                    label: '圖文',
+                },
+                [QuizMode.fill]: {
+                    value: QuizMode.fill,
+                    label: '填空',
+                },
+                [QuizMode.selection]: {
+                    value: QuizMode.selection,
+                    label: '選擇',
+                },
+                [QuizMode.oneInTwo]: {
+                    value: QuizMode.oneInTwo,
+                    label: '二選一',
+                },
+            }
+        }
+    }
 }
