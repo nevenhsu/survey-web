@@ -59,6 +59,29 @@ export function getComponents(
                         color: greyPalette[100],
                     },
                 },
+                text: {
+                    padding: '8px 4px',
+                    '&::after': {
+                        content: '""',
+                        position: 'absolute',
+                        bottom: 0,
+                        width: '100%',
+                        height: 1,
+                        borderBottom: `1px solid ${greyPalette[800]}`,
+                    },
+                    '&:hover': {
+                        backgroundColor: 'transparent',
+                    },
+                    '&:hover&::after': {
+                        borderBottomWidth: 2,
+                    },
+                    '&:active&::after': {
+                        borderBottomWidth: 3,
+                    },
+                    '&.Mui-disabled&::after': {
+                        borderColor: greyPalette[300],
+                    },
+                },
             },
             defaultProps: {
                 disableRipple: true, // No more ripple!

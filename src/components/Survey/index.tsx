@@ -7,6 +7,7 @@ import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Box from '@mui/material/Box'
 import LoadingButton from '@mui/lab/LoadingButton'
+import { classes as QuizClasses } from 'components/Survey/QuizForm'
 import ArrowUpCircleIcon from 'mdi-react/ArrowUpCircleIcon'
 import CheckboxMarkedCircleIcon from 'mdi-react/CheckboxMarkedCircleIcon'
 import { useAppSelector, useAppDispatch } from 'hooks'
@@ -161,6 +162,7 @@ export default function Editor() {
             {!noSurvey && survey.mode === mode && (
                 <>
                     <Tabs
+                        className={QuizClasses[1]}
                         value={step}
                         onChange={handleChangeStep}
                         sx={{

@@ -1,6 +1,7 @@
 import * as React from 'react'
 import _ from 'lodash'
 import clsx from 'clsx'
+import Joyride, { Step } from 'react-joyride'
 import { useDimensionsRef } from 'rooks'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { styled, useTheme } from '@mui/material/styles'
@@ -33,7 +34,7 @@ import {
     addQuiz,
     setStep,
 } from 'store/slices/survey'
-import { reorder, setId, getDefaultQuiz } from 'utils/helper'
+import { reorder, setId, getDefaultQuiz, setClasses } from 'utils/helper'
 import { QuizMode, QuizType, SurveyStep } from 'common/types'
 import type {
     SelectionQuiz,
@@ -41,6 +42,12 @@ import type {
     OneInTwoQuiz,
     Tags,
 } from 'common/types'
+
+export const classes = setClasses('QuizForm', ['1', '2', '3', '4', '5', '6'])
+
+const Grow = styled('div')({
+    flexGrow: 1,
+})
 
 const Editor = React.lazy(
     () => import('components/Survey/QuizForm/View/Editor')
@@ -106,6 +113,58 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
     },
 }))
 
+const steps: Array<Step> = [
+    {
+        placement: 'center',
+        target: 'body',
+        title: '第一次使用超市調？',
+        content: '跟著我們的小小導覽，帶您熟悉如何建立第一個自己的測驗！',
+    },
+    {
+        placement: 'bottom',
+        target: `.${classes[1]}`,
+        title: '這裡是導覽列',
+        content:
+            '導覽列會告訴您完成一個測驗所需要的步驟，也會顯示現在所在的步驟以及說明',
+    },
+    {
+        placement: 'right',
+        target: `.${classes[2]}`,
+        title: '題目列表',
+        content: '點擊可以編輯測驗中的不同題目，拖曳可以改變順序',
+    },
+    {
+        disableBeacon: true,
+        placement: 'bottom',
+        offset: -240,
+        target: `.${classes[3]}`,
+        title: '題目編輯區域',
+        content:
+            '在這裡你可以編輯測驗的不同題目以及調整設定，在畫面中可以即時預覽',
+    },
+    {
+        placement: 'left',
+        target: `.${classes[4]}`,
+        title: '題目設定區域',
+        content:
+            '在這裡你可以編輯測驗的不同題目以及調整設定，在畫面中可以即時預覽',
+    },
+    {
+        placement: 'bottom',
+        target: `.${classes[5]}`,
+        title: '設定功能切換',
+        content:
+            '這邊的 tab 可以選擇要編輯該題目答案的標籤，或是選擇不同答案之後的跳題邏輯',
+    },
+    {
+        placement: 'bottom',
+        target: `.${classes[6]}`,
+        title: '預覽測驗/下一步',
+        content:
+            '編輯測驗中，隨時可以預覽。點擊此按鈕會開新視窗讓您測試目前的測驗。確定都沒問題後，就可以到下一步囉！',
+    },
+]
+
 export default function QuizForm() {
     const theme = useTheme()
     const dispatch = useAppDispatch()
@@ -117,6 +176,7 @@ export default function QuizForm() {
     const { id: surveyId, quizzes = [], setting, tags } = survey ?? {}
     const { showProgress, maxWidth } = setting ?? {}
 
+    const [run, setRun] = React.useState(true)
     const [selectedId, setSelectedId] = React.useState('')
     const [tab, setTab] = React.useState(0)
     const [progress, setProgress] = React.useState(0)
@@ -365,6 +425,73 @@ export default function QuizForm() {
 
     return (
         <>
+            <Joyride
+                run={run}
+                steps={steps}
+                continuous={true}
+                styles={{
+                    tooltip: {
+                        width: 540,
+                        padding: 24,
+                    },
+                }}
+                tooltipComponent={({
+                    continuous,
+                    index,
+                    step,
+                    backProps,
+                    closeProps,
+                    primaryProps,
+                    tooltipProps,
+                }) => (
+                    <Paper
+                        {...tooltipProps}
+                        sx={{
+                            width: 540,
+                            borderRadius: 2,
+                            p: 3,
+                        }}
+                    >
+                        <Box textAlign="center" pb={5}>
+                            {step.title && (
+                                <Typography
+                                    variant={index === 0 ? 'h4' : 'h5'}
+                                    gutterBottom
+                                >
+                                    {step.title}
+                                </Typography>
+                            )}
+                            <Typography variant="body1" px={9} gutterBottom>
+                                {step.content}
+                            </Typography>
+                        </Box>
+                        <Stack direction="row" spacing={1}>
+                            <Button
+                                variant="text"
+                                onClick={() => setRun(false)}
+                            >
+                                跳過
+                            </Button>
+                            <Grow />
+                            {index > 0 && (
+                                <Button {...backProps} variant="outlined">
+                                    回上一步
+                                </Button>
+                            )}
+                            {index < steps.length - 1 && (
+                                <Button {...primaryProps} variant="contained">
+                                    {`下一步 ${index + 1}/${steps.length}`}
+                                </Button>
+                            )}
+                            {index === steps.length - 1 && (
+                                <Button {...closeProps} variant="contained">
+                                    {`完成 ${index + 1}/${steps.length}`}
+                                </Button>
+                            )}
+                        </Stack>
+                    </Paper>
+                )}
+            />
             <Stack
                 direction="row"
                 alignItems="center"
@@ -379,7 +506,7 @@ export default function QuizForm() {
                         直接從預覽畫面中編輯測驗內容
                     </Typography>
                 </Box>
-                <Box>
+                <Box className={classes[6]}>
                     <LoadingButton
                         variant="outlined"
                         loading={uploading}
@@ -401,6 +528,7 @@ export default function QuizForm() {
 
             <Stack direction="row">
                 <Box
+                    className={classes[2]}
                     sx={{
                         flex: '0 0 304px',
                         height: '100vh',
@@ -521,6 +649,7 @@ export default function QuizForm() {
                 </Box>
 
                 <Box
+                    className={classes[3]}
                     sx={{
                         position: 'relative',
                         width: '100%',
@@ -528,7 +657,7 @@ export default function QuizForm() {
                         bgcolor: 'grey.200',
                     }}
                 >
-                    <Box sx={{ position: 'relative' }}>
+                    <Box className={classes[5]} sx={{ position: 'relative' }}>
                         <StyledTabs
                             value={tabValue}
                             onChange={(_, v) => setTab(v)}
@@ -589,6 +718,7 @@ export default function QuizForm() {
 
                 {tab === 0 && (
                     <Box
+                        className={classes[4]}
                         sx={{
                             position: 'relative',
                             flex: '0 0 312px',
