@@ -27,7 +27,11 @@ import CloseIcon from 'mdi-react/CloseIcon'
 import AlertCircleIcon from 'mdi-react/AlertCircleIcon'
 import { useAppSelector, useAppDispatch } from 'hooks'
 import usePreview from 'hooks/usePreview'
-import { selectDevice } from 'store/slices/userDefault'
+import {
+    selectDevice,
+    selectJoyride,
+    setJoyride,
+} from 'store/slices/userDefault'
 import {
     selectCurrentSurvey,
     setQuizzes,
@@ -176,7 +180,6 @@ export default function QuizForm() {
     const { id: surveyId, quizzes = [], setting, tags } = survey ?? {}
     const { showProgress, maxWidth } = setting ?? {}
 
-    const [run, setRun] = React.useState(true)
     const [selectedId, setSelectedId] = React.useState('')
     const [tab, setTab] = React.useState(0)
     const [progress, setProgress] = React.useState(0)
@@ -185,6 +188,7 @@ export default function QuizForm() {
     const [open, setOpen] = React.useState(false)
     const [mode, setMode] = React.useState<QuizMode>(QuizMode.page)
 
+    const run = useAppSelector(selectJoyride)
     const device = useAppSelector(selectDevice)
     const deviceWidth = getWidth(device, dimensions)
 
@@ -205,6 +209,10 @@ export default function QuizForm() {
         ) || (selectedQuiz as SelectionQuiz)?.maxChoices > 1
 
     const tabValue = disabledTab ? 0 : disabledNext && tab === 2 ? 0 : tab
+
+    const closeJoyRide = () => {
+        dispatch(setJoyride(false))
+    }
 
     const nextStep = () => {
         dispatch(setStep(SurveyStep.result))
@@ -468,7 +476,7 @@ export default function QuizForm() {
                         <Stack direction="row" spacing={1}>
                             <Button
                                 variant="text"
-                                onClick={() => setRun(false)}
+                                onClick={() => closeJoyRide()}
                             >
                                 跳過
                             </Button>
@@ -484,7 +492,11 @@ export default function QuizForm() {
                                 </Button>
                             )}
                             {index === steps.length - 1 && (
-                                <Button {...closeProps} variant="contained">
+                                <Button
+                                    {...closeProps}
+                                    variant="contained"
+                                    onClick={() => closeJoyRide()}
+                                >
                                     {`完成 ${index + 1}/${steps.length}`}
                                 </Button>
                             )}
