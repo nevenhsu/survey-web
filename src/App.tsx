@@ -63,6 +63,10 @@ export default function App() {
         history.push(newValue)
     }
 
+    const handleLogo = () => {
+        dispatch(setStep(SurveyStep.start))
+    }
+
     React.useEffect(() => {
         const user = User.getInstance()
         const { step, mode } = user.getValue()
@@ -94,7 +98,12 @@ export default function App() {
                     elevation={0}
                 >
                     <Toolbar>
-                        <Typography variant="h5" letterSpacing="0.05em">
+                        <Typography
+                            className="c-pointer"
+                            variant="h5"
+                            letterSpacing="0.05em"
+                            onClick={handleLogo}
+                        >
                             超市調
                         </Typography>
                         <Grow />

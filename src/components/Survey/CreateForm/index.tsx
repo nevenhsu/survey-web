@@ -97,6 +97,9 @@ export default function CreateForm() {
                                     display: 'block',
                                     textAlign: 'left',
                                     padding: 1,
+                                    '&::after': {
+                                        opacity: 0,
+                                    },
                                 }}
                             >
                                 <ArrowLeftIcon />

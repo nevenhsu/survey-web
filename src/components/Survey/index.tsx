@@ -30,10 +30,6 @@ const FinalForm = React.lazy(() => import('components/Survey/FinalForm'))
 const LaunchForm = React.lazy(() => import('components/Survey/LaunchForm'))
 
 const steps = {
-    [SurveyStep.create]: {
-        value: SurveyStep.create,
-        label: '建立測驗',
-    },
     [SurveyStep.quiz]: {
         value: SurveyStep.quiz,
         label: '編輯測驗內容',
@@ -53,10 +49,8 @@ const steps = {
 } as const
 
 const getModeSteps = (survey?: Survey, mode?: Mode) => {
-    const { create } = steps
-
     if (!survey || survey.mode !== mode) {
-        return { create }
+        return {}
     }
 
     return steps

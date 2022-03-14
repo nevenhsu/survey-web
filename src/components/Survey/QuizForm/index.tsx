@@ -633,6 +633,14 @@ export default function QuizForm() {
                                                                         {
                                                                             px: '4px !important',
                                                                         },
+                                                                    '& .MuiSelect-root':
+                                                                        {
+                                                                            color:
+                                                                                el.id ===
+                                                                                selectedId
+                                                                                    ? 'grey.200'
+                                                                                    : 'grey.500',
+                                                                        },
                                                                 },
                                                             }}
                                                             showArrow={false}
