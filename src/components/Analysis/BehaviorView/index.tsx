@@ -31,7 +31,7 @@ import type { ConversionRatioData } from 'common/types'
 import { behaviorData, optionsData } from 'assets/data/analysis'
 
 const conversionRatio = [
-    { label: '答題況狀', value: BehaviorName.status },
+    { label: '答題狀況', value: BehaviorName.status },
     { label: '點擊率', value: BehaviorName.ctr },
     { label: '推薦商品點擊率', value: BehaviorName.productCtr },
 ]

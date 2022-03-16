@@ -200,7 +200,7 @@ export default function FinalForm() {
                 direction="row"
                 alignItems="center"
                 justifyContent="space-between"
-                sx={{ px: 3, height: 80, borderBottom: '1px solid' }}
+                sx={{ px: 2, height: 80, borderBottom: '1px solid' }}
             >
                 <Box>
                     <Typography variant="h5" gutterBottom>
@@ -247,6 +247,7 @@ export default function FinalForm() {
                     {modeOptions.map((el) => (
                         <Box
                             key={el.value}
+                            className="c-pointer"
                             sx={{
                                 padding: '8px 16px',
                                 bgcolor:

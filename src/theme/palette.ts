@@ -51,7 +51,7 @@ const grey: Color = {
     500: '#9E9E9E',
 }
 
-export const chartColors = ['#2C6197', '#60D897', '#F69763']
+export const chartColors = ['#3F51B5', '#80CBC4', '#F69763']
 
 // for tags
 export const colors = [

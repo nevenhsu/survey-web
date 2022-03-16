@@ -188,24 +188,26 @@ export default function Editor() {
                     zIndex: 1,
                 }}
             >
-                <LoadingButton
-                    variant="contained"
-                    loadingPosition="end"
-                    endIcon={
-                        updated ? (
-                            <CheckboxMarkedCircleIcon
-                                color={theme.palette.success.light}
-                            />
-                        ) : (
-                            <ArrowUpCircleIcon />
-                        )
-                    }
-                    loading={uploading}
-                    disabled={uploading}
-                    onClick={() => handleSave()}
-                >
-                    儲存
-                </LoadingButton>
+                {step !== SurveyStep.create && (
+                    <LoadingButton
+                        variant="contained"
+                        loadingPosition="end"
+                        endIcon={
+                            updated ? (
+                                <CheckboxMarkedCircleIcon
+                                    color={theme.palette.success.light}
+                                />
+                            ) : (
+                                <ArrowUpCircleIcon />
+                            )
+                        }
+                        loading={uploading}
+                        disabled={uploading}
+                        onClick={() => handleSave()}
+                    >
+                        儲存
+                    </LoadingButton>
+                )}
             </Box>
 
             <React.Suspense fallback={<div />}>

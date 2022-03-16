@@ -97,7 +97,7 @@ export default function App() {
                     color="default"
                     elevation={0}
                 >
-                    <Toolbar>
+                    <Toolbar sx={{ px: '16px !important' }}>
                         <Typography
                             className="c-pointer"
                             variant="h5"

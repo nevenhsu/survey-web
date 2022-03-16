@@ -77,6 +77,7 @@ const QuizItem = styled(Stack, {
     userSelect: 'none',
     marginBottom: 8,
     padding: '2px 8px',
+    height: 36,
     color: isEditing ? theme.palette.common.white : theme.palette.grey[800],
     backgroundColor: isEditing ? theme.palette.grey[800] : 'transparent',
 }))
@@ -508,7 +509,7 @@ export default function QuizForm() {
                 direction="row"
                 alignItems="center"
                 justifyContent="space-between"
-                sx={{ px: 3, height: 80, borderBottom: '1px solid' }}
+                sx={{ px: 2, height: 80, borderBottom: '1px solid' }}
             >
                 <Box>
                     <Typography variant="h5" gutterBottom>
@@ -631,10 +632,11 @@ export default function QuizForm() {
                                                                 sx: {
                                                                     '& .MuiSelect-select':
                                                                         {
-                                                                            px: '4px !important',
+                                                                            p: '0 !important',
                                                                         },
                                                                     '& .MuiSelect-root':
                                                                         {
+                                                                            height: 20,
                                                                             color:
                                                                                 el.id ===
                                                                                 selectedId

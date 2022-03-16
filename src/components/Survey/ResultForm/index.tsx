@@ -32,7 +32,7 @@ import {
     updateComponent,
 } from 'store/slices/survey'
 import { selectDevice } from 'store/slices/userDefault'
-import { getMuiColor } from 'theme/palette'
+import { getMuiColor, greyPalette } from 'theme/palette'
 import Numeric1BoxIcon from 'mdi-react/Numeric1BoxIcon'
 import Numeric2BoxIcon from 'mdi-react/Numeric2BoxIcon'
 import { ComponentType, Mode, SurveyStep, QuizMode } from 'common/types'
@@ -409,6 +409,7 @@ export default function ResultForm() {
                 {resultItems.map((el) => (
                     <Stack
                         key={el.id}
+                        className="c-pointer"
                         direction="row"
                         justifyContent="space-between"
                         alignItems="center"
@@ -420,10 +421,14 @@ export default function ResultForm() {
                                 selectedId === el.id
                                     ? 'white !important'
                                     : theme.palette.grey[800],
-                            backgroundColor:
+                            bgcolor:
                                 selectedId === el.id
-                                    ? theme.palette.grey[800]
+                                    ? `${greyPalette[800]} !important`
                                     : 'transparent',
+                            '&:hover': {
+                                color: `grey.800`,
+                                bgcolor: 'grey.200',
+                            },
                         }}
                         onClick={() => setSelectedId(el.id)}
                     >
@@ -537,6 +542,7 @@ export default function ResultForm() {
                 {resultItems.map((el, index) => (
                     <Stack
                         key={el.id}
+                        className="c-pointer"
                         direction="row"
                         justifyContent="space-between"
                         alignItems="center"
@@ -544,14 +550,18 @@ export default function ResultForm() {
                             overflowX: 'auto',
                             p: 1,
                             mb: 1,
-                            color: (theme) =>
+                            color:
                                 selectedId === el.id
                                     ? 'white !important'
-                                    : theme.palette.grey[800],
-                            backgroundColor:
+                                    : 'grey.800',
+                            bgcolor:
                                 selectedId === el.id
-                                    ? theme.palette.grey[800]
+                                    ? `${greyPalette[800]} !important`
                                     : 'transparent',
+                            '&:hover': {
+                                color: `grey.800`,
+                                bgcolor: 'grey.200',
+                            },
                         }}
                         onClick={() => setSelectedId(el.id)}
                     >
@@ -591,7 +601,7 @@ export default function ResultForm() {
                 direction="row"
                 alignItems="center"
                 justifyContent="space-between"
-                sx={{ px: 3, height: 80, borderBottom: '1px solid' }}
+                sx={{ px: 2, height: 80, borderBottom: '1px solid' }}
             >
                 <Box>
                     <Typography variant="h5" gutterBottom>
